@@ -11,6 +11,7 @@ export default {
       { name: 'Settings', icon: 'mdi-cog' },
     ],
     siteLogo: require('@/assets/images/reed-compbio-logo.png'),
-    footerMessage: '',
+    footerHTML:
+      '<div> 2020 © Graphery </div> <div> Built With ❤ By <a href="https://vuejs.org" alt="VUE" target="_blank">Vue</a></div>',
   },
 };
