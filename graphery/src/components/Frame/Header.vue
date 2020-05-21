@@ -24,7 +24,7 @@
         text
         v-for="button in buttons"
         :key="button.name"
-        :to="{ name: button.name }"
+        :to="button.name == 'Home' ? '/' : { name: button.name }"
       >
         {{ button.name }}
       </v-btn>

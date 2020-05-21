@@ -5,7 +5,7 @@
         <v-list-item
           v-for="button in buttons"
           :key="button.name"
-          :to="{ name: button.name }"
+          :to="button.name == 'Home' ? '/' : { name: button.name }"
         >
           <v-list-item-icon>
             <v-icon>{{ button.icon }}</v-icon>
