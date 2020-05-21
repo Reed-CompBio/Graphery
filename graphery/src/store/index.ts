@@ -9,7 +9,18 @@ export default new Vuex.Store({
   modules: {
     meta,
   },
-  state: {},
-  mutations: {},
-  actions: {},
+  state: {
+    drawer: false,
+  },
+  mutations: {
+    CHANGE_DRAWER_STATE(state, value) {
+      state.drawer = value;
+    },
+  },
+  actions: {
+    //
+    changeDrawerState({ commit }, value) {
+      commit('CHANGE_DRAWER_STATE', value);
+    },
+  },
 });
