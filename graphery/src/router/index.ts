@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
-import Home from '../views/Home.vue';
 
 Vue.use(VueRouter);
 
@@ -8,7 +7,7 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    component: () => import('@/views/Home.vue'),
   },
   {
     path: '/tutorials',
@@ -52,7 +51,7 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/views/Settings.vue'),
   },
   {
-    path: '*',
+    path: '/*',
     name: '404 Not Found',
     // $route will make the matched path a variable named `pathMatch`
     component: () => {

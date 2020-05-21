@@ -8,9 +8,8 @@
       <v-card-text>
         {{ details }}
       </v-card-text>
-      <v-card-text>
-        I you think there is a problem with this application, <br />please file
-        a issue on
+      <v-card-text v-if="warning || error">
+        I you think there is a problem, please file a issue on
         <a
           href="https://github.com/FlickerSoul/Graphery/issues"
           target="_blank"
@@ -46,8 +45,10 @@
           return 'mdi-information';
         } else if (this.warning) {
           return 'mdi-comment-processing';
-        } else {
+        } else if (this.error) {
           return 'mdi-close-circle';
+        } else {
+          return '';
         }
       },
       whichColor() {
@@ -55,8 +56,10 @@
           return 'info';
         } else if (this.warning) {
           return 'warning';
-        } else {
+        } else if (this.error) {
           return 'error';
+        } else {
+          return '';
         }
       },
     },
