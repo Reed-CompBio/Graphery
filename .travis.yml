@@ -6,6 +6,6 @@ before_script:
   - npm install
   - cd graphery
 
-  script:
+script:
   - npm run build
   - npm run test:unit
