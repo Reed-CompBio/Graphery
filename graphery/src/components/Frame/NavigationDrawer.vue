@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer app right v-model="drawer">
+  <v-navigation-drawer app right temporary v-model="drawer">
     <v-list rounded>
       <v-list-item-group>
         <v-list-item

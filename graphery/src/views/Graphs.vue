@@ -1,3 +1,5 @@
 <template>
-  <div></div>
+  <div>
+    This is a page for graphs
+  </div>
 </template>

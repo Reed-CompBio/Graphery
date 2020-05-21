@@ -11,5 +11,6 @@ export default {
       { name: 'Settings', icon: 'mdi-cog' },
     ],
     siteLogo: require('@/assets/images/reed-compbio-logo.png'),
+    footerMessage: '',
   },
 };

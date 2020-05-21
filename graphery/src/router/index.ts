@@ -13,32 +13,24 @@ const routes: Array<RouteConfig> = [
   {
     path: '/tutorials',
     name: 'Tutorials',
-    component: () => {
-      import('@/views/Tutorials.vue');
-    },
+    component: () => import('@/views/Tutorials.vue'),
   },
   {
     path: '/tutorial/:name',
     name: 'Tutorial',
     props: true,
-    component: () => {
-      import('@/views/Tutorial.vue');
-    },
+    component: () => import('@/views/Tutorial.vue'),
   },
   {
     path: '/graphs',
     name: 'Graphs',
-    component: () => {
-      import('@/views/Graphs.vue');
-    },
+    component: () => import('@/views/Graphs.vue'),
   },
   {
-    path: '/graph',
+    path: '/graph/:name',
     name: 'Graph',
     props: true,
-    component: () => {
-      import('@/views/Graph.vue');
-    },
+    component: () => import('@/views/Graph.vue'),
   },
   {
     path: '/about',
@@ -52,9 +44,12 @@ const routes: Array<RouteConfig> = [
   {
     path: '/loggin',
     name: 'Loggin',
-    component: () => {
-      import('@/views/Loggin.vue');
-    },
+    component: () => import('@/views/Loggin.vue'),
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('@/views/Settings.vue'),
   },
   {
     path: '*',

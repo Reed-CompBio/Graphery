@@ -16,11 +16,12 @@
     <v-spacer></v-spacer>
     <!-- navigation buttons when the screen is bigger than  md-->
     <div class="hidden-sm-and-down">
+      <!-- TODO bug:the home button is always active -->
       <!-- page buttons -->
       <v-btn
-        class="ma-2"
+        class="ma-1"
         rounded
-        outlined
+        text
         v-for="button in buttons"
         :key="button.name"
         :to="{ name: button.name }"

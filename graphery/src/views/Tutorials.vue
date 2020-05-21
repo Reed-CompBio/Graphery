@@ -1,3 +1,5 @@
 <template>
-  <div></div>
+  <div>
+    This is the page for tutorials
+  </div>
 </template>
