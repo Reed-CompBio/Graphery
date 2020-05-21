@@ -14,6 +14,6 @@ export default {
     ],
     siteLogo: require('@/assets/images/reed-compbio-logo.png'),
     footerHTML:
-      '<div> 2020 © Graphery </div> <div class="ft"> Built With <i class="fa fa-heart throb" style="color: rgb(212, 63, 87);"></i> By <a href="https://vuejs.org" alt="VUE" target="_blank">Vue</a></div>',
+      '<div> 2020 © Graphery </div> <div class="ft"> Built With <i class="fa fa-heart throb" style="color: rgb(212, 63, 87);"></i> and <a href="https://vuejs.org" alt="VUE" target="_blank">Vue</a></div>',
   } as MetaState,
 };
