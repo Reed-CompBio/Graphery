@@ -1,0 +1,7 @@
+language: node_js
+before_script:
+  - npm install
+  - cd graphery
+script:
+  - npm run build
+  - npm run test:unit
