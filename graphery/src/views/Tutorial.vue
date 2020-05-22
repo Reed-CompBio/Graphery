@@ -16,8 +16,10 @@
 <script>
   export default {
     props: ['name'],
-    data: {
-      articleHtml: '',
+    data() {
+      return {
+        articleHtml: '',
+      };
     },
     methods: {
       getPageContent() {
