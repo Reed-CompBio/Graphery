@@ -1,10 +1,10 @@
 <template>
-  <v-container fluid class="pb-3 fill-height">
-    <v-row class="fill-height">
+  <v-container fluid class="pb-3 fill-height tutorial-container">
+    <v-row class="fill-height tutorial-row">
       <!-- this is for displaying graph -->
       <!-- cytoscape moubting point -->
-      <CytoscapeWrapper></CytoscapeWrapper>
-      <TutorialArticle></TutorialArticle>
+      <CytoscapeWrapper class="tutorial-content"></CytoscapeWrapper>
+      <TutorialArticle class="tutorial-content"></TutorialArticle>
     </v-row>
   </v-container>
 </template>
@@ -45,3 +45,5 @@
     },
   };
 </script>
+
+<style scoped></style>

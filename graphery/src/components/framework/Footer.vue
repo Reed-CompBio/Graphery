@@ -1,5 +1,5 @@
 <template>
-  <v-footer app>
+  <v-footer>
     <v-card-text
       v-html="footerHtml"
       class="text-center"

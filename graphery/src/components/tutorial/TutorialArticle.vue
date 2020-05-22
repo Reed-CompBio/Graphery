@@ -1,8 +1,10 @@
 <template>
-  <v-col>
-    <!--do not make v-rol the root element-->
-    <v-skeleton-loader type="article" v-if="value"></v-skeleton-loader>
-    <v-card id="article" v-html="article" v-else></v-card>
+  <v-col class="fill-height article-col">
+    <!-- do not make v-rol the root element-->
+    <v-skeleton-loader type="article" v-if="articleEmpty"></v-skeleton-loader>
+    <v-card id="article-card" v-else class="article-card">
+      <v-card-text v-html="content"> </v-card-text>
+    </v-card>
   </v-col>
 </template>
 
@@ -25,3 +27,25 @@
     },
   };
 </script>
+
+<!-- style does not work -->
+<style scoped>
+  .article-col {
+    display: flex;
+  }
+
+  .article-card {
+    max-height: 100%;
+    max-width: 100%;
+  }
+
+  .article-card > .article {
+    flex: 1 1 auto;
+  }
+
+  .article-card > .v-card__text {
+    backface-visibility: hidden;
+    overflow-y: auto;
+    flex: 1 1 auto;
+  }
+</style>
