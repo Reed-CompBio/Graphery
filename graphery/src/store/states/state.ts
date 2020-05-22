@@ -16,9 +16,12 @@ export interface NotificationState {
 }
 
 export interface TutorialState {
-  article: string;
-  graphs: {
-    [id: string]: { name: string; cyjs: object | string; info: string };
-  } | null;
+  articleId: string | null;
+  article: string | null;
+  graphIDs: string[] | null;
+  // use v-for to spread graphs and make :key bind to id (or serial code?)
+  graphs:
+    | { id: string; name: string; cyjs: object | string; info: string }[]
+    | null;
   codes: { [id: string]: { graphId: string; codes: string } } | null;
 }
