@@ -12,10 +12,10 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import Header from '@/components/frame/Header.vue';
-  import Footer from '@/components/frame/Footer.vue';
-  import NavigationDrawer from '@/components/frame/NavigationDrawer.vue';
-  import Notification from '@/components/frame/Notification.vue';
+  import Header from '@/components/framework/Header.vue';
+  import Footer from '@/components/framework/Footer.vue';
+  import NavigationDrawer from '@/components/framework/NavigationDrawer.vue';
+  import Notification from '@/components/framework/Notification.vue';
 
   export default Vue.extend({
     name: 'App',
