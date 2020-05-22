@@ -2,9 +2,7 @@ import { ActionTree, MutationTree, GetterTree } from 'vuex';
 import { RootState, NotificationState } from '@/store/states/state';
 
 const state: NotificationState = {
-  info: false,
-  warning: false,
-  error: false,
+  status: '',
   message: '',
   details: '',
 };
@@ -12,22 +10,16 @@ const state: NotificationState = {
 const mutations: MutationTree<NotificationState> = {
   PUT_NOTIFICATION: (
     state,
-    value: { type: string; messasge: string; details: string }
+    value: { status: string; message: string; details: string }
   ) => {
-    state.message = value.messasge;
-    state.details = value.details;
-    if (value.type == 'i') {
-      state.info = true;
-    } else if (value.type == 'w') {
-      state.warning = true;
-    } else if (value.type == 'e') {
-      state.error = true;
-    }
+    ({
+      status: state.status,
+      message: state.message,
+      details: state.details,
+    } = value);
   },
   CLEAR_NORIFICATION: (state) => {
-    state.info = false;
-    state.warning = false;
-    state.error = false;
+    state.status = '';
     state.message = '';
     state.details = '';
   },
@@ -36,8 +28,9 @@ const mutations: MutationTree<NotificationState> = {
 const actions: ActionTree<NotificationState, RootState> = {
   putNotification(
     { commit },
-    value: { type: string; messasge: string; details: string }
+    value: { status: string; message: string; details: string }
   ) {
+    // TODO what about multiple notifications?
     commit('PUT_NOTIFICATION', value);
   },
   clearNotification({ commit }) {
@@ -47,7 +40,7 @@ const actions: ActionTree<NotificationState, RootState> = {
 
 const getters: GetterTree<NotificationState, RootState> = {
   show(state) {
-    return state.info || state.warning || state.error;
+    return state.status != '';
   },
 };
 

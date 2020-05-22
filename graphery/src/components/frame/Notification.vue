@@ -1,10 +1,11 @@
 <template>
   <v-dialog persistent retain-focus scrollable max-width="500" v-model="show">
     <v-card>
-      <v-card-title primary-title class="headline lighten-2">
-        <v-icon :color="whichColor">{{ iconType }} </v-icon>
-        <div class="pa-1">{{ message }}</div>
-      </v-card-title>
+      <div class="mx-5 mt-5">
+        <v-alert dense outlined :type="status">
+          {{ message }}
+        </v-alert>
+      </div>
       <v-card-text>
         {{ details }}
       </v-card-text>
@@ -32,36 +33,8 @@
   import { mapState, mapGetters } from 'vuex';
   export default {
     computed: {
-      ...mapState('notifications', [
-        'info',
-        'warning',
-        'error',
-        'message',
-        'details',
-      ]),
+      ...mapState('notifications', ['status', 'message', 'details']),
       ...mapGetters('notifications', ['show']),
-      iconType() {
-        if (this.info) {
-          return 'mdi-information';
-        } else if (this.warning) {
-          return 'mdi-comment-processing';
-        } else if (this.error) {
-          return 'mdi-close-circle';
-        } else {
-          return '';
-        }
-      },
-      whichColor() {
-        if (this.info) {
-          return 'info';
-        } else if (this.warning) {
-          return 'warning';
-        } else if (this.error) {
-          return 'error';
-        } else {
-          return '';
-        }
-      },
     },
     methods: {
       close() {

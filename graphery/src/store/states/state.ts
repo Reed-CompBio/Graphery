@@ -10,9 +10,7 @@ export interface MetaState {
 }
 
 export interface NotificationState {
-  info: boolean;
-  warning: boolean;
-  error: boolean;
+  status: string;
   message: string;
   details: string;
 }

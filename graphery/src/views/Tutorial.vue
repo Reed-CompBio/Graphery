@@ -1,9 +1,14 @@
 <template>
-  <div>This is the tutorial page for {{ name }}</div>
+  <v-container grid-list-xs> </v-container>
 </template>
 
 <script>
   export default {
     props: ['name'],
+    methods: {
+      getPageContent() {
+        // TODO API Calls to get page conentent
+      },
+    },
   };
 </script>
