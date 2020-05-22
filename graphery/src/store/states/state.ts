@@ -17,7 +17,7 @@ export interface NotificationState {
 
 export interface TutorialState {
   articleId: string | null;
-  article: string | null;
+  article: { title: string; content: string } | null;
   graphIDs: string[] | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
   graphs:

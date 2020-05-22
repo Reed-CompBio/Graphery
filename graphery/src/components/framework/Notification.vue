@@ -9,7 +9,7 @@
       <v-card-text>
         {{ details }}
       </v-card-text>
-      <v-card-text v-if="warning || error">
+      <v-card-text v-if="status === 'warning' || status === 'error'">
         I you think there is a problem, please file a issue on
         <a
           href="https://github.com/FlickerSoul/Graphery/issues"

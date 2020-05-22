@@ -61,13 +61,13 @@ const actions: ActionTree<TutorialState, RootState> = {
 
 const getters: GetterTree<TutorialState, RootState> = {
   articleEmpty(state) {
-    return (state.article = null);
+    return state.article === null;
   },
   graphsEmpty(state) {
-    return (state.graphs = null);
+    return state.graphs === null;
   },
   codesEmpty(state) {
-    return (state.codes = null);
+    return state.codes === null;
   },
   getGraphById: (state) => (id: string) => {
     return state.graphs ? state.graphs.find((graph) => graph.id == id) : null;

@@ -1,27 +1,23 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <!-- this is for displaying graph -->
-        <div>
-          <!-- cytoscape mouting point -->
-          <CytoscapeWrapper></CytoscapeWrapper>
-        </div>
-      </v-col>
-      <v-col>
-        <div id="article"></div>
-      </v-col>
+  <v-container fluid class="pb-3 fill-height">
+    <v-row class="fill-height">
+      <!-- this is for displaying graph -->
+      <!-- cytoscape moubting point -->
+      <CytoscapeWrapper></CytoscapeWrapper>
+      <TutorialArticle></TutorialArticle>
     </v-row>
   </v-container>
 </template>
 
 <script>
   import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper.vue';
+  import TutorialArticle from '../components/tutorial/TutorialArticle';
 
   export default {
     props: ['name'],
     components: {
       CytoscapeWrapper,
+      TutorialArticle,
     },
     data() {
       return {};
