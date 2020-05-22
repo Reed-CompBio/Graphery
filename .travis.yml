@@ -3,8 +3,8 @@ language: node_js
 cache: npm
 
 before_script:
-  - npm install
   - cd graphery
+  - npm install
 
 script:
   - npm run build
