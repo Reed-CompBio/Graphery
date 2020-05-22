@@ -1,5 +1,5 @@
 <template>
-  <v-col class="fill-height article-col">
+  <v-col class="fill-height article-col" cols="6">
     <!-- do not make v-rol the root element-->
     <v-skeleton-loader type="article" v-if="articleEmpty"></v-skeleton-loader>
     <v-card id="article-card" v-else class="article-card">

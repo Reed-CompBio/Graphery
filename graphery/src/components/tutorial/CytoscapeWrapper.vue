@@ -1,5 +1,5 @@
 <template>
-  <v-col>
+  <v-col cols="6">
     <!-- do not make v-rol the root element -->
     <v-skeleton-loader v-if="loading" type="image" class="fill-height">
     </v-skeleton-loader>
@@ -142,6 +142,7 @@
       this.$nextTick(() => {
         this.resizeGraph();
       });
+
       this.loading = false;
     },
     methods: {
