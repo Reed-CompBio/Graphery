@@ -7,6 +7,7 @@
       id="article-card"
       style="max-height: 100%"
     >
+      <v-toolbar-title> {{ title }}</v-toolbar-title>
       <v-card-text v-html="content" style="max-height: 90%; overflow: auto;">
       </v-card-text>
     </v-content>
