@@ -1,8 +1,9 @@
 <template>
-  <v-col class="fill-height article-col" cols="6">
+  <v-col class="fill-height " cols="6">
     <!-- do not make v-rol the root element-->
-    <v-skeleton-loader type="article" v-if="articleEmpty"></v-skeleton-loader>
-    <v-card id="article-card" v-else class="article-card">
+    <!-- make a new loading indicator -->
+    <PostLoadIndicator number="7"></PostLoadIndicator>
+    <v-card id="article-card" max-height="100%" class="article-card">
       <v-card-text v-html="content"> </v-card-text>
     </v-card>
   </v-col>
@@ -10,8 +11,12 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex';
+  import PostLoadIndicator from './PostLoadIndicator';
 
   export default {
+    components: {
+      PostLoadIndicator,
+    },
     computed: {
       ...mapState('tutorials', ['article']),
       ...mapGetters('tutorials', ['articleEmpty']),
@@ -27,25 +32,3 @@
     },
   };
 </script>
-
-<!-- style does not work -->
-<style scoped>
-  .article-col {
-    display: flex;
-  }
-
-  .article-card {
-    max-height: 100%;
-    max-width: 100%;
-  }
-
-  .article-card > .article {
-    flex: 1 1 auto;
-  }
-
-  .article-card > .v-card__text {
-    backface-visibility: hidden;
-    overflow-y: auto;
-    flex: 1 1 auto;
-  }
-</style>

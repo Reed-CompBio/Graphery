@@ -25,3 +25,12 @@ export interface TutorialState {
     | null;
   codes: { [id: string]: { graphId: string; codes: string } } | null;
 }
+
+export interface SettingState {
+  dark: boolean;
+  graphDark: boolean;
+  hideEdgeWhenRendering: boolean;
+  renderViewportOnly: boolean;
+  motionBlurEnabled: boolean;
+  motionSensitivityLevel: number;
+}

@@ -9,9 +9,9 @@
 
 <script>
   import cytoscape from 'cytoscape';
-  import { mapGetters } from 'vuex';
+  import { mapState, mapGetters } from 'vuex';
 
-  const pseudoContent = {
+  const exampleContent = {
     style: [
       {
         selector: 'node',
@@ -88,6 +88,7 @@
     layout: {
       name: 'grid',
       padding: 5,
+      fit: true,
     },
   };
 
@@ -101,6 +102,12 @@
       };
     },
     computed: {
+      ...mapState('settings', [
+        'hideEdgeWhenRendering',
+        'renderViewportOnly',
+        'motionBlurEnabled',
+        'motionSensitivityLevel',
+      ]),
       ...mapGetters('tutorials', [
         'getGraphById',
         'getGraphByIndex',
@@ -119,20 +126,31 @@
       },
     },
     mounted() {
-      // cannot use get element by id
       const element = document.createElement('div');
       element.setAttribute('id', 'cytoscape');
       element.setAttribute('class', 'cytoscape');
       element.setAttribute('class', 'fill-height');
       this.$refs.cy.appendChild(element);
-
+      // When passing objects to Cytoscape.js for creating elements, animations, layouts, etc.,
+      // the objects are considered owned by Cytoscape. __** this may cause conflicts when workint with vuex **__
+      // When desired, the programmer can copy objects manually before passing them to Cytoscape. However,
+      // copying is not necessary for most programmers most of the time.
+      //
+      // cannot use get element by id
       // NOTE: Vue will try to create observers for each property in this nested cytoscape object
       //       and it crashed my browser several times. By freezing it, we tell Vue to not bother
       //       about it. This isn't a reactive property anyway, just a variable in the component.
       this.cyInstance = Object.freeze(
         cytoscape({
           container: element,
-          ...pseudoContent,
+          // animation settings
+          textureOnViewport: this.renderViewportOnly,
+          hideEdgesOnViewport: this.hideEdgeWhenRendering,
+          motionBlur: this.motionBlurEnabled,
+
+          zoom: 1,
+          styleEnabled: true,
+          ...exampleContent,
         })
       );
 
@@ -155,14 +173,14 @@
         this.cyInstance.resize();
       },
     },
+    destroyed() {
+      // TODO restore states in vuex
+    },
   };
 </script>
 
 <style>
-  # cy {
-    height: 100%;
-  }
-  .cytoscape {
-    height: 100%;
+  #cy {
+    background-color: #fff;
   }
 </style>

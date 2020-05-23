@@ -4,7 +4,7 @@
     <v-content>
       <router-view></router-view>
     </v-content>
-    <Footer></Footer>
+    <Footer v-if="this.$route.name != 'Tutorial'"></Footer>
     <navigation-drawer></navigation-drawer>
     <Notification></Notification>
   </v-app>
@@ -26,9 +26,5 @@
       NavigationDrawer,
       Notification,
     },
-
-    data: () => ({
-      //
-    }),
   });
 </script>
