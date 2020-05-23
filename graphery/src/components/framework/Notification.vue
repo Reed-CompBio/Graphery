@@ -9,7 +9,8 @@
   >
     <v-card>
       <div class="mx-5 mt-5">
-        <v-alert dense outlined :type="status">
+        <!-- TODO Invalid prop: custom validator check failed for prop "type". -->
+        <v-alert dense outlined :type="'' + status">
           {{ message }}
         </v-alert>
       </div>

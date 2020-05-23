@@ -64,17 +64,11 @@ const state: TutorialState = {
 const mutations: MutationTree<TutorialState> = {
   LOAD_ARTICLE_ID(state, value: TutorialRequestState) {
     // the start entry of a tutorial storage
-    if (!value) {
-      // TODO refine errors
-      throw Error;
-    }
-
-    if (value.time == '') {
-      // TODO refine errors
-      throw Error;
-    }
 
     if (value.time in state.tutorials || !value.articleId) {
+      // the value passed must have time (the id)
+      // and the corresponding article ID to initialize
+      // a record
       // TODO it is a void function right?
       return;
     }
@@ -90,16 +84,63 @@ const mutations: MutationTree<TutorialState> = {
     console.log(`Created New Tutorial Page At Time ${value.time} With Article Id 
                  ${value.articleId}`);
   },
+  /**
+   * Load a new article.
+   * Make sure the
+   * @param state: the state of the current store
+   * @param value: the pushed value for updating the article
+   * @throws RecordNotInitialized
+   * @todo refine errors
+   */
   LOAD_ARTICLES(state, value: TutorialRequestState) {
     if (!(value.time in state.tutorials)) {
-      // TODO refine errors
+      // the requested id must be in the record
+      // or the id is not initialized
       throw Error;
     }
 
-    // state.article = value;
+    if (!value.article) {
+      // the article must not be null or ''
+      throw Error;
+    }
+
+    if (state.tutorials[value.time].article != null) {
+      // the initial state must be null each time
+      throw Error;
+    }
+
+    state.tutorials[value.time].article = value.article;
+
+    console.log(`Loaded Article For Record At ${value.time}`);
   },
+  /**
+   *
+   * @param {state} state of current store
+   * @param {value} pushed info of
+   * @throws RecordNotInitialized
+   * @throws
+   */
   LOAD_GRAPH_IDS(state, value) {
-    // state.graphIDs = value;
+    if (!(value.time in state.tutorials)) {
+      // the requested id must be in the record
+      // or the id is not initialized
+      throw Error;
+    }
+
+    if (!value.graphIDs) {
+      // graph ids cannot be empty
+      // TODO what about tutorials without graphs?
+      // return;
+      throw Error;
+    }
+
+    if (state.tutorials[value.time].graphIDs != null) {
+      throw Error;
+    }
+
+    state.tutorials[value.time].graphIDs = value.graphIDs;
+
+    console.log(`Loaded Graph Ids For Record At ${value.time}`);
   },
   LOAD_GRAPHS(state, value) {
     // state.graphs = value;

@@ -9,8 +9,16 @@ export interface MetaState {
   footerHTML: string;
 }
 
+export const enum NotificationStatus {
+  success = 'success',
+  info = 'info',
+  warning = 'warning',
+  error = 'error',
+  empty = '',
+}
+
 export interface NotificationState {
-  status: string;
+  status: NotificationStatus;
   message: string;
   details: string;
 }

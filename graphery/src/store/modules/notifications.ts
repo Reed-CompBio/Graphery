@@ -1,8 +1,8 @@
-import { ActionTree, MutationTree, GetterTree } from 'vuex';
-import { RootState, NotificationState } from '@/store/states/state';
+import { ActionTree, GetterTree, MutationTree } from 'vuex';
+import { NotificationState, NotificationStatus, RootState } from '@/store/states/state';
 
 const state: NotificationState = {
-  status: '',
+  status: NotificationStatus.empty,
   message: '',
   details: '',
 };
@@ -10,7 +10,7 @@ const state: NotificationState = {
 const mutations: MutationTree<NotificationState> = {
   PUT_NOTIFICATION: (
     state,
-    value: { status: string; message: string; details: string }
+    value: { status: NotificationStatus; message: string; details: string }
   ) => {
     ({
       status: state.status,
@@ -18,8 +18,8 @@ const mutations: MutationTree<NotificationState> = {
       details: state.details,
     } = value);
   },
-  CLEAR_NORIFICATION: (state) => {
-    state.status = '';
+  CLEAR_NOTIFICATION: (state) => {
+    state.status = NotificationStatus.empty;
     state.message = '';
     state.details = '';
   },
@@ -34,7 +34,7 @@ const actions: ActionTree<NotificationState, RootState> = {
     commit('PUT_NOTIFICATION', value);
   },
   clearNotification({ commit }) {
-    commit('CLEAR_NORIFICATION');
+    commit('CLEAR_NOTIFICATION');
   },
 };
 
