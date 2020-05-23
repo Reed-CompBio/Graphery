@@ -1,6 +1,20 @@
 <template>
-  <v-navigation-drawer app right temporary v-model="drawer">
+  <v-navigation-drawer
+    app
+    right
+    temporary
+    v-model="drawer"
+    style="z-index: 9000"
+  >
     <v-list rounded>
+      <v-card class="mb-4" to="/">
+        <v-card-title class="justify-center" style="text-transform: uppercase">
+          <v-avatar class="mr-2">
+            <img :src="logo" alt="John" />
+          </v-avatar>
+          Graphery</v-card-title
+        >
+      </v-card>
       <v-list-item-group>
         <v-list-item
           v-for="button in buttons"
@@ -25,6 +39,7 @@
   export default {
     computed: {
       ...mapState({
+        logo: (state) => state.meta.siteLogo,
         buttons: (state) => state.meta.navigationButtons,
         drawerState: (state) => state.drawer,
       }),

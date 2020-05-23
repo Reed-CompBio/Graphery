@@ -5,7 +5,7 @@
       <router-view></router-view>
     </v-content>
     <Footer v-if="this.$route.name != 'Tutorial'"></Footer>
-    <navigation-drawer></navigation-drawer>
+    <NavigationDrawer></NavigationDrawer>
     <Notification></Notification>
   </v-app>
 </template>

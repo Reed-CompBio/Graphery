@@ -5,7 +5,7 @@
     scrollable
     max-width="500"
     v-model="show"
-    style="z-index: 9000;"
+    style="z-index: 10000;"
   >
     <v-card>
       <div class="mx-5 mt-5">
