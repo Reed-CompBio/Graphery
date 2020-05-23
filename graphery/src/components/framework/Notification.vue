@@ -1,5 +1,12 @@
 <template>
-  <v-dialog persistent retain-focus scrollable max-width="500" v-model="show">
+  <v-dialog
+    persistent
+    retain-focus
+    scrollable
+    max-width="500"
+    v-model="show"
+    style="z-index: 9000;"
+  >
     <v-card>
       <div class="mx-5 mt-5">
         <v-alert dense outlined :type="status">

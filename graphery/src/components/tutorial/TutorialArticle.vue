@@ -1,16 +1,15 @@
 <template>
-  <v-col class="fill-height " cols="6">
-    <!-- do not make v-rol the root element-->
-    <!-- make a new loading indicator -->
-    <PostLoadIndicator number="7"></PostLoadIndicator>
-    <v-card id="article-card" max-height="100%" class="article-card">
-      <v-card-text v-html="content"> </v-card-text>
-    </v-card>
-  </v-col>
+  <!-- make a new loading indicator -->
+  <div>
+    <PostLoadIndicator number="3" v-if="articleEmpty"></PostLoadIndicator>
+    <v-content v-show="!articleEmpty" id="article-card" style="overflow: auto;">
+      <v-card-text :v-html="content"> </v-card-text>
+    </v-content>
+  </div>
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex';
+  import { mapState, mapGetters, mapActions } from 'vuex';
   import PostLoadIndicator from './PostLoadIndicator';
 
   export default {
@@ -19,16 +18,15 @@
     },
     computed: {
       ...mapState('tutorials', ['article']),
-      ...mapGetters('tutorials', ['articleEmpty']),
-      title() {
-        return this.article ? this.article.title : null;
-      },
-      content() {
-        return this.article ? this.article.content : null;
-      },
-      value() {
-        return false;
-      },
+      ...mapGetters('tutorials', ['articleEmpty', 'title', 'content']),
+    },
+    methods: {
+      ...mapActions('tutorials', ['loadTutorial']),
+    },
+    mounted() {
+      // this.loadTutorial();
+      // when should I load the text hmmmmm
+      // this.loadTutorial();
     },
   };
 </script>

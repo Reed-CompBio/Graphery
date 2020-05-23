@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app>
+  <v-app-bar app style="z-index: 100000">
     <!-- logo width is 40 pe -->
     <router-link to="/">
       <v-img

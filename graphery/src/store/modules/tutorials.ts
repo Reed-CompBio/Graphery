@@ -1,5 +1,8 @@
 import { TutorialState, RootState } from '@/store/states/state';
-import { MutationTree, ActionTree, Action, GetterTree } from 'vuex';
+import { MutationTree, ActionTree, GetterTree } from 'vuex';
+
+// Do not use Vuex since you can't maintain multiple pages with one state
+
 const pseudoContent = {
   title: 'Lorem Ipsum',
   content:
@@ -77,8 +80,10 @@ const mutations: MutationTree<TutorialState> = {
 
 const actions: ActionTree<TutorialState, RootState> = {
   loadTutorial({ commit }, tutorialId) {
-    let article;
-    let graphIds;
+    let article = null;
+    let graphIds = null;
+    article = pseudoContent;
+    graphIds = null;
     // TODO promises
     commit('LOAD_ARTICLES', article);
     commit('LOAD_GRAPH_IDS', graphIds);
@@ -105,6 +110,12 @@ const actions: ActionTree<TutorialState, RootState> = {
 };
 
 const getters: GetterTree<TutorialState, RootState> = {
+  title(state) {
+    return state.article ? state.article.title : null;
+  },
+  content(state) {
+    return state.article ? state.article.content : null;
+  },
   articleEmpty(state) {
     return state.article === null;
   },

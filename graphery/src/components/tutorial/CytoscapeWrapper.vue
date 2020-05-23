@@ -1,10 +1,17 @@
 <template>
-  <v-col cols="6">
-    <!-- do not make v-rol the root element -->
-    <v-skeleton-loader v-if="loading" type="image" class="fill-height">
-    </v-skeleton-loader>
-    <div id="cy" class="fill-height" ref="cy"></div>
-  </v-col>
+  <div class="fill-height" id="cy-wrapper">
+    <div v-resize="resizeGraph" id="cy" class="fill-height" ref="cy"></div>
+    <v-overlay absolute opacity="0.5" :value="false" z-index="5000">
+      <v-progress-circular
+        :size="128"
+        :width="12"
+        indeterminate
+        color="#A70E16"
+      >
+        Loading...
+      </v-progress-circular>
+    </v-overlay>
+  </div>
 </template>
 
 <script>
@@ -96,8 +103,6 @@
     data() {
       return {
         cyInstance: null,
-        // first loading wrapper, indicating the components like cytoscape are being loaded
-        loading: true,
         selector: 0, // used in drop menu to select graphs
       };
     },
@@ -127,10 +132,12 @@
     },
     mounted() {
       const element = document.createElement('div');
-      element.setAttribute('id', 'cytoscape');
+      element.setAttribute('id', 'cy-mounting-point');
       element.setAttribute('class', 'cytoscape');
       element.setAttribute('class', 'fill-height');
+
       this.$refs.cy.appendChild(element);
+
       // When passing objects to Cytoscape.js for creating elements, animations, layouts, etc.,
       // the objects are considered owned by Cytoscape. __** this may cause conflicts when workint with vuex **__
       // When desired, the programmer can copy objects manually before passing them to Cytoscape. However,
@@ -140,6 +147,7 @@
       // NOTE: Vue will try to create observers for each property in this nested cytoscape object
       //       and it crashed my browser several times. By freezing it, we tell Vue to not bother
       //       about it. This isn't a reactive property anyway, just a variable in the component.
+
       this.cyInstance = Object.freeze(
         cytoscape({
           container: element,
@@ -147,13 +155,11 @@
           textureOnViewport: this.renderViewportOnly,
           hideEdgesOnViewport: this.hideEdgeWhenRendering,
           motionBlur: this.motionBlurEnabled,
-
           zoom: 1,
           styleEnabled: true,
           ...exampleContent,
         })
       );
-
       console.log('cy obj is mounted', this.cyInstance);
 
       // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph
@@ -161,6 +167,7 @@
         this.resizeGraph();
       });
 
+      // remove loader
       this.loading = false;
     },
     methods: {
@@ -170,7 +177,9 @@
        * @see https://github.com/cytoscape/cytoscape.js/issues/1748
        */
       resizeGraph() {
-        this.cyInstance.resize();
+        if (this.cyInstance) {
+          this.cyInstance.resize();
+        }
       },
     },
     destroyed() {

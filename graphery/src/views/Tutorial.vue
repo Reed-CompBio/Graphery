@@ -1,10 +1,16 @@
 <template>
-  <v-container fluid class="pb-3 fill-height tutorial-container">
-    <v-row class="fill-height tutorial-row">
+  <!-- make fill height class changable, then when graph  -->
+  <v-container fluid class="pb-5 fill-height" id="tutorial-container">
+    <v-row class="fill-height">
       <!-- this is for displaying graph -->
-      <!-- cytoscape moubting point -->
-      <CytoscapeWrapper class="tutorial-content"></CytoscapeWrapper>
-      <TutorialArticle class="tutorial-content"></TutorialArticle>
+      <v-col class="fill-height" cols="6">
+        <!-- cytoscape moubting point -->
+        <CytoscapeWrapper class="tutorial-content"></CytoscapeWrapper>
+      </v-col>
+
+      <v-col cols="6" style="max-height: 100%">
+        <TutorialArticle class="tutorial-content"></TutorialArticle>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -20,7 +26,9 @@
       TutorialArticle,
     },
     data() {
-      return {};
+      return {
+        containerHeight: null,
+      };
     },
     methods: {
       updateTutorialContent() {
@@ -32,6 +40,14 @@
         // 4. Extract graphs details , turn off loading for the graph section and load graphs
         // 5. (think about mini editor, how to manage the data in the backend)
       },
+      setupContainerHeight(height) {
+        this.containerHeight = height;
+      },
+      onWindowResize() {
+        // get height
+        let height;
+        this.setupContainerHeight(height);
+      },
     },
     watch: {
       name: function(newVal, oldVal) {
@@ -41,6 +57,14 @@
       },
     },
     mounted() {
+      // When the container is mounted, get the height of the container, then set the height so that it won't change
+      console.log(
+        "v-container's height:",
+        document.getElementById('tutorial-container').clientHeight
+      );
+
+      // after retrieving the height of the component, pull tutorials
+      // so that I can get
       this.updateTutorialContent();
     },
   };
