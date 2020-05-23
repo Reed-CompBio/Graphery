@@ -1,9 +1,14 @@
 <template>
   <!-- make a new loading indicator -->
   <div>
-    <PostLoadIndicator number="3" v-if="articleEmpty"></PostLoadIndicator>
-    <v-content v-show="!articleEmpty" id="article-card" style="overflow: auto;">
-      <v-card-text :v-html="content"> </v-card-text>
+    <!-- add a overlay -->
+    <v-content
+      v-show="!articleEmpty"
+      id="article-card"
+      style="max-height: 100%"
+    >
+      <v-card-text v-html="content" style="max-height: 90%; overflow: auto;">
+      </v-card-text>
     </v-content>
   </div>
 </template>
@@ -13,9 +18,7 @@
   import PostLoadIndicator from './PostLoadIndicator';
 
   export default {
-    components: {
-      PostLoadIndicator,
-    },
+    components: {},
     computed: {
       ...mapState('tutorials', ['article']),
       ...mapGetters('tutorials', ['articleEmpty', 'title', 'content']),
@@ -26,7 +29,7 @@
     mounted() {
       // this.loadTutorial();
       // when should I load the text hmmmmm
-      // this.loadTutorial();
+      this.loadTutorial();
     },
   };
 </script>
