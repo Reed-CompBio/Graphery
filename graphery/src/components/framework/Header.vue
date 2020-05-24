@@ -16,7 +16,7 @@
 
       <!--    Make it on click -->
       <q-toolbar-title style="text-transform: uppercase;" to="/">
-        Graphery
+        {{ siteName }}
       </q-toolbar-title>
 
       <div class="gt-sm">
@@ -46,6 +46,7 @@
     name: 'Header',
     computed: {
       ...mapState({
+        siteName: (state) => state.meta.siteName,
         siteLogo: (state) => state.meta.siteLogo,
         buttons: (state) => state.meta.navigationButtons,
       }),

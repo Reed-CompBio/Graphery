@@ -18,7 +18,7 @@
             </q-item-section>
             <q-item-section>
               <div class="text-h4" style="text-transform: uppercase">
-                Graphery
+                {{ siteName }}
               </div>
             </q-item-section>
           </q-item>
@@ -50,6 +50,7 @@
   export default {
     computed: {
       ...mapState({
+        siteName: (state) => state.meta.siteName,
         logo: (state) => state.meta.siteLogo,
         buttons: (state) => state.meta.navigationButtons,
         drawerState: (state) => state.drawer,
@@ -57,7 +58,9 @@
       // temporary workaround
       drawer: {
         set(d) {
-          this.$store.dispatch('changeDrawerState', d);
+          if (!d) {
+            this.$store.dispatch('changeDrawerState', d);
+          }
         },
         get() {
           return this.drawerState;

@@ -30,8 +30,8 @@
         </q-card-section>
       </q-card>
       <q-card-actions align="right">
-        <q-btn icon="mdi-menu-down" @click="toggleMore"></q-btn>
-        <q-btn label="OK" @click="close"> </q-btn>
+        <q-btn flat icon="mdi-menu-down" @click="toggleMore"></q-btn>
+        <q-btn flat label="OK" @click="close"> </q-btn>
       </q-card-actions>
       <q-slide-transition style="max-width: 100%;">
         <div v-show="more" style="width: inherit">
