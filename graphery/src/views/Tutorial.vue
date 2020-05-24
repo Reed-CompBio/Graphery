@@ -1,34 +1,35 @@
 <template>
   <!-- make fill height class changable, then when graph  -->
-  <v-container fluid class="pb-5 fill-height" id="tutorial-container">
-    <v-row class="fill-height">
-      <!-- this is for displaying graph -->
-      <v-col class="fill-height" cols="6">
-        <!-- cytoscape moubting point -->
-        <CytoscapeWrapper class="tutorial-content"></CytoscapeWrapper>
-      </v-col>
-
-      <v-col cols="6" style="max-height: 100%">
-        <TutorialArticle class="tutorial-content"></TutorialArticle>
-      </v-col>
-    </v-row>
-  </v-container>
+  <q-page-container class="fill-height">
+    <q-splitter class="fill-height" :value="graphSplitPos">
+      <template v-slot:before class="fill-height">
+        <CytoscapeWrapper></CytoscapeWrapper>
+      </template>
+      <template v-slot:after>
+        <!--        <TutorialArticle style="max-height: 100%"></TutorialArticle>-->
+      </template>
+    </q-splitter>
+  </q-page-container>
 </template>
 
 <script>
   import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper.vue';
   import TutorialArticle from '../components/tutorial/TutorialArticle';
+  import { mapState } from 'vuex';
 
   export default {
     props: ['name'],
     components: {
       CytoscapeWrapper,
-      TutorialArticle,
+      // TutorialArticle,
     },
     data() {
       return {
         containerHeight: null,
       };
+    },
+    computed: {
+      ...mapState('settings', ['graphSplitPos']),
     },
     methods: {
       updateTutorialContent() {
@@ -59,8 +60,8 @@
     mounted() {
       // When the container is mounted, get the height of the container, then set the height so that it won't change
       console.log(
-        "v-container's height:",
-        document.getElementById('tutorial-container').clientHeight
+        "v-container's height:"
+        // document.getElementById('tutorial-container').clientHeight
       );
 
       // after retrieving the height of the component, pull tutorials

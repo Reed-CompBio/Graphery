@@ -1,16 +1,6 @@
 <template>
   <div class="fill-height" id="cy-wrapper">
-    <div v-resize="resizeGraph" id="cy" class="fill-height" ref="cy"></div>
-    <v-overlay absolute opacity="0.5" :value="false" z-index="5000">
-      <v-progress-circular
-        :size="128"
-        :width="12"
-        indeterminate
-        color="#A70E16"
-      >
-        Loading...
-      </v-progress-circular>
-    </v-overlay>
+    <div id="cy" class="fill-height" ref="cy"></div>
   </div>
 </template>
 

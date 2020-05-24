@@ -1,14 +1,11 @@
 <template>
   <!-- make a new loading indicator -->
-  <div>
+  <div style="max-height: 100%">
     <!-- add a overlay -->
-    <q-page-container
-      v-show="!articleEmpty"
-      id="article-container"
-      style="max-height: 100%"
-    >
-      <div class="text-h1">{{ title }}</div>
-      <div>
+
+    <q-scroll-area ref="tc" v-show="!articleEmpty">
+      <div id="tutorial-title" class="text-h2">{{ title }}</div>
+      <div id="tutorial-info">
         <q-breadcrumbs>
           <q-breadcrumbs-el> By {{ author }} </q-breadcrumbs-el>
           <q-breadcrumbs-el>
@@ -22,10 +19,10 @@
           </q-breadcrumbs-el>
         </q-breadcrumbs>
       </div>
-      <q-scroll-area v-html="content" style="max-height: 90%;"> </q-scroll-area>
-    </q-page-container>
+      <div id="tutorial-content" v-html="content"></div>
+    </q-scroll-area>
     <q-page-sticky position="bottom-right" :offset="[10, 10]">
-      <q-btn round color="primary" icon="arrow_forward" class="rotate-45" />
+      <q-btn round color="primary" icon="mdi-menu-up" @click="scrollToTop" />
     </q-page-sticky>
   </div>
 </template>
@@ -51,6 +48,9 @@
       ...mapActions('tutorials', ['loadTutorial']),
       share() {
         // TODO copy to clipboard
+      },
+      scrollToTop() {
+        this.$ref.tc.setScrollPosition(0, 300);
       },
     },
     mounted() {

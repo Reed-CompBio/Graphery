@@ -135,7 +135,7 @@ const mutations: MutationTree<TutorialState> = {
 
     state.graphIDs = value.graphIDs;
 
-    console.log(`Loaded Graph Ids For Record At ${value.time}`);
+    console.log(`Loaded Graph Ids`);
   },
   LOAD_GRAPHS(state, value) {
     // state.graphs = value;

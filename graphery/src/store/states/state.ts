@@ -59,6 +59,7 @@ export interface TutorialRequestState {
 
 export interface SettingState {
   dark: boolean;
+  graphSplitPos: number;
   graphDark: boolean;
   hideEdgeWhenRendering: boolean;
   renderViewportOnly: boolean;
