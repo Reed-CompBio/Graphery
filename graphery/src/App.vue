@@ -6,7 +6,7 @@
     </q-page-container>
     <!--    <Footer v-if="this.$route.name != 'Tutorial'"></Footer>-->
     <NavigationDrawer></NavigationDrawer>
-    <!--    <Notification></Notification>-->
+    <Notification></Notification>
   </q-layout>
 </template>
 
@@ -15,7 +15,7 @@
   import Header from '@/components/framework/Header.vue';
   // import Footer from '@/components/framework/Footer.vue';
   import NavigationDrawer from '@/components/framework/NavigationDrawer.vue';
-  // import Notification from '@/components/framework/Notification.vue';
+  import Notification from '@/components/framework/Notification.vue';
 
   export default Vue.extend({
     name: 'App',
@@ -24,7 +24,7 @@
       Header,
       // Footer,
       NavigationDrawer,
-      // Notification,
+      Notification,
     },
   });
 </script>

@@ -7,8 +7,8 @@
     v-model="drawer"
     style="z-index: 9000"
   >
-    <q-list rounded class="">
-      <q-card class="mb-4" to="/">
+    <q-list>
+      <q-card class="q-py-lg" to="/">
         <q-card-section>
           <q-item>
             <q-item-section avatar>
@@ -24,21 +24,23 @@
           </q-item>
         </q-card-section>
       </q-card>
-
-      <q-item
-        v-for="button in buttons"
-        :key="button.name"
-        :to="{ name: button.name }"
-        exact
-        style="text-transform: uppercase"
-      >
-        <q-item-section avatar>
-          <q-icon :name="button.icon"></q-icon>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>{{ button.name }}</q-item-label>
-        </q-item-section>
-      </q-item>
+      <div class="q-pt-md q-pl-xl">
+        <q-item
+          v-for="button in buttons"
+          :key="button.name"
+          :to="{ name: button.name }"
+          exact
+        >
+          <q-item-section avatar>
+            <q-icon :name="button.icon"></q-icon>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label header style="text-transform: uppercase">{{
+              button.name
+            }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </div>
     </q-list>
   </q-drawer>
 </template>

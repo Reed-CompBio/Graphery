@@ -1,5 +1,5 @@
 module.exports = {
-  transpileDependencies: ['vuetify', 'quasar'],
+  transpileDependencies: ['quasar'],
 
   devServer: {
     disableHostCheck: true,

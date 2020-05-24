@@ -1,11 +1,11 @@
 <template>
-  <v-footer>
+  <q-footer>
     <v-card-text
       v-html="footerHtml"
       class="text-center"
       id="footer"
     ></v-card-text>
-  </v-footer>
+  </q-footer>
 </template>
 
 <script>

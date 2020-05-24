@@ -43,7 +43,6 @@
     "sass-loader": "^8.0.0",
     "typescript": "~3.8.3",
     "vue-cli-plugin-quasar": "~2.0.2",
-    "vue-cli-plugin-vuetify": "~2.0.5",
     "vue-template-compiler": "^2.6.11"
   }
 }
