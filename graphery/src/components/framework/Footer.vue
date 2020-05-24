@@ -1,10 +1,6 @@
 <template>
-  <q-footer>
-    <v-card-text
-      v-html="footerHtml"
-      class="text-center"
-      id="footer"
-    ></v-card-text>
+  <q-footer class="q-pa-md">
+    <div v-html="footerHtml" class="text-center" id="footer"></div>
   </q-footer>
 </template>
 

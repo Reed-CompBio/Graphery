@@ -41,7 +41,6 @@
               <a
                 href="https://github.com/FlickerSoul/Graphery/issues"
                 target="_blank"
-                alt="github"
               >
                 GitHub </a
               >. Thank you!

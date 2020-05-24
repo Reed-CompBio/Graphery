@@ -4,7 +4,7 @@
     <q-page-container>
       <router-view></router-view>
     </q-page-container>
-    <!--    <Footer v-if="this.$route.name != 'Tutorial'"></Footer>-->
+    <Footer v-if="this.$route.name != 'Tutorial'"></Footer>
     <NavigationDrawer></NavigationDrawer>
     <Notification></Notification>
   </q-layout>
@@ -13,7 +13,7 @@
 <script lang="ts">
   import Vue from 'vue';
   import Header from '@/components/framework/Header.vue';
-  // import Footer from '@/components/framework/Footer.vue';
+  import Footer from '@/components/framework/Footer.vue';
   import NavigationDrawer from '@/components/framework/NavigationDrawer.vue';
   import Notification from '@/components/framework/Notification.vue';
 
@@ -22,7 +22,7 @@
 
     components: {
       Header,
-      // Footer,
+      Footer,
       NavigationDrawer,
       Notification,
     },

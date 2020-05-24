@@ -1,5 +1,5 @@
 <template>
-  <q-header height-hint="60px">
+  <q-header height-hint="60px" class="q-py-sm q-px-xs">
     <q-toolbar style="z-index: 8000">
       <router-link to="/">
         <q-img
