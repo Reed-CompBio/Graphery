@@ -1,5 +1,6 @@
 <template>
   <q-footer class="q-pa-md">
+    <!--    TODO change the color in the dark mode    -->
     <div v-html="footerHtml" class="text-center" id="footer"></div>
   </q-footer>
 </template>

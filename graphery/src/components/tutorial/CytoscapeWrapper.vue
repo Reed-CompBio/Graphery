@@ -124,10 +124,10 @@
         return this.getGraphByIndex(this.selector);
       },
       currentGraphId() {
-        return this.currentGraph ? this.currentGraph.id : null; // can't remember the syntax here
+        return this.currentGraph && this.currentGraph.id;
       },
       currentGraphJson() {
-        return this.currentGraph ? this.currentGraph.cyjs : null;
+        return this.currentGraph && this.currentGraph.cyjs;
       },
     },
     mounted() {
