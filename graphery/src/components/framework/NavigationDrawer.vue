@@ -32,7 +32,7 @@
           exact
         >
           <q-item-section avatar>
-            <q-icon :name="button.icon"></q-icon>
+            <q-icon :name="button.icon" size="md"></q-icon>
           </q-item-section>
           <q-item-section>
             <q-item-label header style="text-transform: uppercase">{{
