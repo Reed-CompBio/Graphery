@@ -6,10 +6,18 @@
       :style="tutorialStyle"
       :horizontal="$q.screen.lt.md"
       separator-class="bg-light-blue"
-      separator-style="width: 6px"
+      separator-style="width: 4px"
     >
       <template v-slot:before>
         <CytoscapeWrapper></CytoscapeWrapper>
+      </template>
+      <template v-slot:separator>
+        <q-avatar
+          color="primary"
+          text-color="white"
+          size="40px"
+          icon="mdi-drag"
+        />
       </template>
       <template v-slot:after>
         <TutorialArticle></TutorialArticle>
