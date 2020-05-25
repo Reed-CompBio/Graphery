@@ -1,22 +1,33 @@
 <template>
-  <div class="fill-height" id="cy-wrapper">
-    <div v-resize="resizeGraph" id="cy" class="fill-height" ref="cy"></div>
-    <v-overlay absolute opacity="0.5" :value="false" z-index="5000">
-      <v-progress-circular
-        :size="128"
-        :width="12"
-        indeterminate
-        color="#A70E16"
+  <div class="full-height ">
+    <div id="cy-wrapper" class="full-height">
+      <q-resize-observer @resize="resizeGraph" />
+      <div id="cy" class="full-height" :style="graphStyle" ref="cy"></div>
+    </div>
+    <div>
+      <q-inner-loading
+        :showing="graphsEmpty || libLoading"
+        transition-show="fade"
+        transition-hide="fade"
       >
-        Loading...
-      </v-progress-circular>
-    </v-overlay>
+        <q-spinner-radio size="64px" color="primary" />
+      </q-inner-loading>
+    </div>
   </div>
 </template>
 
 <script>
-  import cytoscape from 'cytoscape';
-  import { mapState, mapGetters } from 'vuex';
+  // import cytoscape from 'cytoscape';
+
+  let cytoscape;
+  let panzoom;
+  let dagre;
+  import { mapState, mapGetters, mapActions } from 'vuex';
+  import {
+    panzoomDefaults,
+    dagreOptions,
+    hierarchicalOptions,
+  } from './config.js';
 
   const exampleContent = {
     style: [
@@ -104,6 +115,7 @@
       return {
         cyInstance: null,
         selector: 0, // used in drop menu to select graphs
+        moduleLoadedNum: 0,
       };
     },
     computed: {
@@ -120,62 +132,180 @@
         'graphsEmpty',
         'codesEmpty',
       ]),
+      ...mapGetters('settings', ['graphBackgroundColor']),
+      libLoading() {
+        return this.moduleLoadedNum < 3;
+      },
       currentGraph() {
         return this.getGraphByIndex(this.selector);
       },
       currentGraphId() {
-        return this.currentGraph ? this.currentGraph.id : null; // can't remember the syntax here
+        return this.currentGraph && this.currentGraph.id;
       },
       currentGraphJson() {
-        return this.currentGraph ? this.currentGraph.cyjs : null;
+        return this.currentGraph && this.currentGraph.cyjs;
+      },
+      currentGraphLayoutEngine() {
+        return this.currentGraph && this.currentGraph.layoutEngine;
+      },
+      graphStyle() {
+        return {
+          'background-color': this.graphBackgroundColor,
+        };
       },
     },
     mounted() {
-      const element = document.createElement('div');
-      element.setAttribute('id', 'cy-mounting-point');
-      element.setAttribute('class', 'cytoscape');
-      element.setAttribute('class', 'fill-height');
+      import('cytoscape')
+        .then((cy) => {
+          // async load cytoscape
+          cytoscape = cy.default;
 
-      this.$refs.cy.appendChild(element);
+          console.debug('cytoscape module: ', cy);
 
-      // When passing objects to Cytoscape.js for creating elements, animations, layouts, etc.,
-      // the objects are considered owned by Cytoscape. __** this may cause conflicts when workint with vuex **__
-      // When desired, the programmer can copy objects manually before passing them to Cytoscape. However,
-      // copying is not necessary for most programmers most of the time.
-      //
-      // cannot use get element by id
-      // NOTE: Vue will try to create observers for each property in this nested cytoscape object
-      //       and it crashed my browser several times. By freezing it, we tell Vue to not bother
-      //       about it. This isn't a reactive property anyway, just a variable in the component.
+          // start init
+          {
+            const element = document.createElement('div');
+            element.setAttribute('id', 'cy-mounting-point');
+            element.setAttribute('class', 'cytoscape');
+            element.setAttribute('class', 'full-height');
 
-      this.cyInstance = Object.freeze(
-        cytoscape({
-          container: element,
-          // animation settings
-          textureOnViewport: this.renderViewportOnly,
-          hideEdgesOnViewport: this.hideEdgeWhenRendering,
-          motionBlur: this.motionBlurEnabled,
-          zoom: 1,
-          styleEnabled: true,
-          ...exampleContent,
+            this.$refs.cy.appendChild(element);
+
+            // When passing objects to Cytoscape.js for creating elements, animations, layouts, etc.,
+            // the objects are considered owned by Cytoscape. __** this may cause conflicts when workint with vuex **__
+            // When desired, the programmer can copy objects manually before passing them to Cytoscape. However,
+            // copying is not necessary for most programmers most of the time.
+            //
+            // cannot use get element by id
+            // NOTE: Vue will try to create observers for each property in this nested cytoscape object
+            //       and it crashed my browser several times. By freezing it, we tell Vue to not bother
+            //       about it. This isn't a reactive property anyway, just a variable in the component.
+
+            this.cyInstance = Object.freeze(
+              cytoscape({
+                container: element,
+                // animation settings
+                textureOnViewport: this.renderViewportOnly,
+                hideEdgesOnViewport: this.hideEdgeWhenRendering,
+                motionBlur: this.motionBlurEnabled,
+                zoom: 1,
+                styleEnabled: true,
+                ...exampleContent,
+              })
+            );
+            console.debug('cy obj is mounted', this.cyInstance);
+
+            // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph
+            this.$nextTick(() => {
+              this.resizeGraph();
+            });
+
+            this.moduleLoad();
+          }
+
+          this.registerExtensions();
         })
-      );
-      console.log('cy obj is mounted', this.cyInstance);
-
-      // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph
-      this.$nextTick(() => {
-        this.resizeGraph();
-      });
-
-      // remove loader
-      this.loading = false;
+        .catch((error) => {
+          console.debug('error occur', error);
+        });
     },
     methods: {
+      moduleLoad() {
+        this.moduleLoadedNum += 1;
+      },
+      ...mapActions('tutorials', ['clearAll']),
       /**
        * Triggers a graph resize, forcing it to repaint itself. Useful when the graph nodes and edges have been
        * modified, or when an older browser doesn't render the graph until it is resized.
        * @see https://github.com/cytoscape/cytoscape.js/issues/1748
        */
+      registerExtensions() {
+        import('cytoscape-panzoom').then((pz) => {
+          console.debug('cytoscape panzoom module: ', pz);
+          panzoom = pz.default;
+
+          if (typeof cytoscape('core', 'panzoom') !== 'function') {
+            panzoom(cytoscape);
+          }
+
+          this.cyInstance.panzoom(panzoomDefaults);
+
+          this.$nextTick(() => {
+            this.resizeGraph();
+          });
+
+          this.moduleLoad();
+        });
+
+        import('cytoscape-dagre').then((cd) => {
+          console.debug('cytoscape dagre module: ', cd);
+          dagre = cd.default;
+
+          cytoscape.use(dagre);
+
+          this.updateLayout();
+          this.moduleLoad();
+        });
+      },
+      /**
+       * copied from
+       * @see {@link https://github.com/cylc/cylc-ui/blob/master/src/components/cylc/graph/Graph.vue}
+       */
+      updateLayout() {
+        switch (this.currentGraphLayoutEngine) {
+          case 'dagre':
+            this.layoutOptions = dagreOptions;
+            this.runLayout(this.cyInstance, dagreOptions);
+            break;
+          case 'hac':
+            this.cyInstance.elements().hca({
+              mode: 'threshold',
+              threshold: 25,
+              distance: 'euclidean', // euclidean, squaredEuclidean, manhattan, max
+              preference: 'mean', // median, mean, min, max,
+              damping: 0.8, // [0.5 - 1]
+              minIterations: 100, // [optional] The minimum number of iterations the algorithm will run before stopping (default 100).
+              maxIterations: 1000, // [optional] The maximum number of iterations the algorithm will run before stopping (default 1000).
+              attributes: [
+                (node) => {
+                  return node.data('weight');
+                },
+              ],
+            });
+            this.layoutOptions = hierarchicalOptions;
+            this.runLayout(this.cyInstance, hierarchicalOptions);
+            break;
+          default:
+            // Should never happen!
+            this.layoutOptions = dagreOptions;
+            this.runLayout(this.cyInstance, dagreOptions);
+            break;
+        }
+      },
+      /**
+       * Runs the current layout.
+       * @param {cytoscape} instance - the cytoscape instance
+       * @param {*} [layoutOptions=null] - the layout options
+       * @return {boolean} true if the layout ran successfully, false otherwise (e.g. manually stopped, temperature drop, etc)
+       * @see {@link https://js.cytoscape.org/#cy.layout}
+       * @see {@link https://github.com/cylc/cylc-ui/blob/master/src/components/cylc/graph/Graph.vue}
+       */
+      runLayout(instance, layoutOptions = null) {
+        try {
+          return instance
+            .elements()
+            .layout(layoutOptions || this.layoutOptions)
+            .run();
+        } catch (_) {
+          // This is ignored, but can still be captured in the browser console, by checking the option to break on
+          // exceptions, even if captured.
+          //
+          // The reason we need this, is that if the user has multiple components being displayed, and then closes one
+          // of them while this code is running, it may cause an error saying that the layout is empty.
+          // There is no action that we, or the user, can perform upon such error. Hence this being ignored.
+        }
+        return false;
+      },
       resizeGraph() {
         if (this.cyInstance) {
           this.cyInstance.resize();
@@ -183,13 +313,12 @@
       },
     },
     destroyed() {
+      this.clearAll();
       // TODO restore states in vuex
     },
   };
 </script>
 
 <style>
-  #cy {
-    background-color: #fff;
-  }
+  @import '~@/styles/panzoom.css';
 </style>

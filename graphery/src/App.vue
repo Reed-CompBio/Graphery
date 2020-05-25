@@ -1,30 +1,27 @@
 <template>
-  <v-app>
+  <q-layout view="hHh lpR fFf">
     <Header></Header>
-    <v-content>
+    <q-page-container>
       <router-view></router-view>
-    </v-content>
-    <Footer v-if="this.$route.name != 'Tutorial'"></Footer>
+    </q-page-container>
+    <Footer v-if="this.$route.name !== 'Tutorial'"></Footer>
     <NavigationDrawer></NavigationDrawer>
     <Notification></Notification>
-  </v-app>
+  </q-layout>
 </template>
 
 <script lang="ts">
   import Vue from 'vue';
-  import Header from '@/components/framework/Header.vue';
-  import Footer from '@/components/framework/Footer.vue';
-  import NavigationDrawer from '@/components/framework/NavigationDrawer.vue';
-  import Notification from '@/components/framework/Notification.vue';
 
   export default Vue.extend({
     name: 'App',
 
     components: {
-      Header,
-      Footer,
-      NavigationDrawer,
-      Notification,
+      Header: () => import('@/components/framework/Header.vue'),
+      Footer: () => import('@/components/framework/Footer.vue'),
+      NavigationDrawer: () =>
+        import('@/components/framework/NavigationDrawer.vue'),
+      Notification: () => import('@/components/framework/Notification.vue'),
     },
   });
 </script>

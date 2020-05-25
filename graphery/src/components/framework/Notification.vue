@@ -1,54 +1,114 @@
 <template>
-  <v-dialog
+  <q-dialog
     persistent
-    retain-focus
+    transition-show="slide-down"
+    transition-hide="slide-down"
     scrollable
-    max-width="500"
     v-model="show"
-    style="z-index: 10000;"
+    class="notification"
   >
-    <v-card>
-      <div class="mx-5 mt-5">
+    <q-card>
+      <div class="q-ma-sm">
         <!-- TODO Invalid prop: custom validator check failed for prop "type". -->
-        <v-alert dense outlined :type="'' + status">
-          {{ message }}
-        </v-alert>
+        <!--        <v-alert dense outlined :type="'' + status">-->
+        <!--          {{ message }}-->
+        <!--        </v-alert>-->
+        <q-item>
+          <q-item-section avatar>
+            <q-icon :name="icon" :color="color" size="md"></q-icon>
+          </q-item-section>
+          <q-item-section>
+            <div class="popup-message">
+              {{ message }}
+            </div>
+          </q-item-section>
+        </q-item>
       </div>
-      <v-card-text>
-        {{ details }}
-      </v-card-text>
-      <v-card-text v-if="status === 'warning' || status === 'error'">
-        I you think there is a problem, please file a issue on
-        <a
-          href="https://github.com/FlickerSoul/Graphery/issues"
-          target="_blank"
-          alt="github"
-        >
-          GitHub </a
-        >. Thank you!
-      </v-card-text>
-      <v-divider></v-divider>
-      <v-card-actions class="justify-center">
-        <v-btn text rounded @click="close">
-          OK
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+      <q-card>
+        <q-card-section>
+          {{ details }}
+        </q-card-section>
+      </q-card>
+      <q-card-actions align="right">
+        <q-btn flat icon="mdi-menu-down" @click="toggleMore"></q-btn>
+        <q-btn flat label="OK" @click="close"> </q-btn>
+      </q-card-actions>
+      <q-slide-transition style="max-width: 100%;">
+        <div v-show="more" style="width: inherit">
+          <q-card>
+            <q-card-section>
+              I you think there is a problem, <br />please file a issue on
+              <a
+                href="https://github.com/FlickerSoul/Graphery/issues"
+                target="_blank"
+              >
+                GitHub </a
+              >. Thank you!
+            </q-card-section>
+          </q-card>
+        </div>
+      </q-slide-transition>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script>
   import { mapState, mapGetters } from 'vuex';
+  import { NotificationStatus } from '../../store/states/state';
+
   export default {
+    data() {
+      return {
+        more: false,
+      };
+    },
     computed: {
       ...mapState('notifications', ['status', 'message', 'details']),
       ...mapGetters('notifications', ['show']),
+      icon() {
+        switch (this.status) {
+          case NotificationStatus.success:
+            return 'mdi-checkbox-marked-circle';
+          case NotificationStatus.info:
+            return 'mdi-information';
+          case NotificationStatus.warning:
+            return 'mdi-emoticon-neutral';
+          case NotificationStatus.error:
+            return 'mdi-cancel';
+          default:
+            return '';
+        }
+      },
+      color() {
+        switch (this.status) {
+          case NotificationStatus.success:
+            return 'positive';
+          case NotificationStatus.info:
+            return 'info';
+          case NotificationStatus.warning:
+            return 'warning';
+          case NotificationStatus.error:
+            return 'negative';
+          default:
+            return '';
+        }
+      },
     },
     methods: {
       close() {
-        console.log('click');
         this.$store.dispatch('notifications/clearNotification');
+      },
+      toggleMore() {
+        this.more = !this.more;
       },
     },
   };
 </script>
+
+<style scoped>
+  .notification {
+    z-index: 10000;
+    max-width: 500px;
+    min-width: 230px;
+  }
+</style>

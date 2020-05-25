@@ -6,6 +6,7 @@ export interface MetaState {
   siteName: string;
   navigationButtons: { name: string; icon: string }[];
   siteLogo: string;
+  headerSize: 66;
   footerHTML: string;
 }
 
@@ -23,35 +24,60 @@ export interface NotificationState {
   details: string;
 }
 
-export interface TutorialInfoState {
-  articleId: string;
-  article: { title: string; content: string } | null;
+export interface TutorialState {
+  articleId: string | null;
+  article: {
+    title: string;
+    content: string;
+    authors: string[];
+    categories: string[];
+    time: string;
+  } | null;
   graphIDs: string[] | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
   graphs:
-    | { id: string; name: string; cyjs: object | string; info: string }[]
+    | {
+        id: string;
+        name: string;
+        cyjs: object | string;
+        layoutEngine: GraphLayoutEngines;
+        info: string;
+      }[]
     | null;
   codes: { [id: string]: { graphId: string; codes: string } } | null;
 }
 
+export const enum GraphLayoutEngines {
+  dagre = 'dagre',
+  hierarchical = 'hac',
+}
+
 export interface TutorialRequestState {
-  time: string;
   articleId?: string;
-  article?: { title: string; content: string } | null;
+  article?: {
+    title: string;
+    content: string;
+    authors: string[];
+    categories: string[];
+    time: string;
+  } | null;
   graphIDs?: string[] | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
   graphs?:
-    | { id: string; name: string; cyjs: object | string; info: string }[]
+    | {
+        id: string;
+        name: string;
+        cyjs: object | string;
+        layoutEngine: GraphLayoutEngines;
+        info: string;
+      }[]
     | null;
   codes?: { [id: string]: { graphId: string; codes: string } } | null;
 }
 
-export interface TutorialState {
-  tutorials: { [time: string]: TutorialInfoState };
-}
-
 export interface SettingState {
   dark: boolean;
+  graphSplitPos: number;
   graphDark: boolean;
   hideEdgeWhenRendering: boolean;
   renderViewportOnly: boolean;

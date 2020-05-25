@@ -1,5 +1,9 @@
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
-import { NotificationState, NotificationStatus, RootState } from '@/store/states/state';
+import {
+  NotificationState,
+  NotificationStatus,
+  RootState,
+} from '@/store/states/state';
 
 const state: NotificationState = {
   status: NotificationStatus.empty,

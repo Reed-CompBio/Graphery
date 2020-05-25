@@ -1,34 +1,63 @@
 <template>
   <!-- make fill height class changable, then when graph  -->
-  <v-container fluid class="pb-5 fill-height" id="tutorial-container">
-    <v-row class="fill-height">
-      <!-- this is for displaying graph -->
-      <v-col class="fill-height" cols="6">
-        <!-- cytoscape moubting point -->
-        <CytoscapeWrapper class="tutorial-content"></CytoscapeWrapper>
-      </v-col>
-
-      <v-col cols="6" style="max-height: 100%">
-        <TutorialArticle class="tutorial-content"></TutorialArticle>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div>
+    <q-splitter
+      :value="splitPos"
+      :style="tutorialStyle"
+      :horizontal="$q.screen.lt.md"
+    >
+      <template v-slot:before>
+        <CytoscapeWrapper></CytoscapeWrapper>
+      </template>
+      <template v-slot:after>
+        <TutorialArticle></TutorialArticle>
+      </template>
+    </q-splitter>
+    <EditorWrapper :show="editorShow"></EditorWrapper>
+    <q-page-sticky position="bottom-left" :offset="[30, 30]">
+      <q-btn
+        round
+        color="primary"
+        icon="mdi-code-braces"
+        @click="toggleEditor"
+      />
+    </q-page-sticky>
+  </div>
 </template>
 
 <script>
-  import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper.vue';
-  import TutorialArticle from '../components/tutorial/TutorialArticle';
+  import { mapState } from 'vuex';
 
   export default {
     props: ['name'],
     components: {
-      CytoscapeWrapper,
-      TutorialArticle,
+      CytoscapeWrapper: () =>
+        import('@/components/tutorial/CytoscapeWrapper.vue'),
+      TutorialArticle: () =>
+        import('@/components/tutorial/TutorialArticle.vue'),
+      EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
     },
     data() {
       return {
-        containerHeight: null,
+        editorShow: false,
       };
+    },
+    computed: {
+      ...mapState('meta', ['headerSize']),
+      ...mapState('settings', ['graphSplitPos']),
+      splitPos: {
+        set(d) {
+          this.$store.dispatch('changeSepPos', d);
+        },
+        get() {
+          return this.graphSplitPos;
+        },
+      },
+      tutorialStyle() {
+        return {
+          height: `calc(100vh - ${this.headerSize}px)`,
+        };
+      },
     },
     methods: {
       updateTutorialContent() {
@@ -40,13 +69,8 @@
         // 4. Extract graphs details , turn off loading for the graph section and load graphs
         // 5. (think about mini editor, how to manage the data in the backend)
       },
-      setupContainerHeight(height) {
-        this.containerHeight = height;
-      },
-      onWindowResize() {
-        // get height
-        let height;
-        this.setupContainerHeight(height);
+      toggleEditor() {
+        this.editorShow = !this.editorShow;
       },
     },
     watch: {
@@ -57,17 +81,8 @@
       },
     },
     mounted() {
-      // When the container is mounted, get the height of the container, then set the height so that it won't change
-      console.log(
-        "v-container's height:",
-        document.getElementById('tutorial-container').clientHeight
-      );
-
-      // after retrieving the height of the component, pull tutorials
-      // so that I can get
+      // pull tutorials
       this.updateTutorialContent();
     },
   };
 </script>
-
-<style scoped></style>

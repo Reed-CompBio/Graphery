@@ -1,5 +1,4 @@
 import {
-  TutorialInfoState,
   TutorialState,
   TutorialRequestState,
   RootState,
@@ -54,93 +53,92 @@ const pseudoContent = {
     '</p><p>' +
     'Amet mauris commodo quis imperdiet massa tincidunt nunc. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Consequat id porta nibh venenatis cras sed felis eget velit. Elit ullamcorper dignissim cras tincidunt lobortis feugiat vivamus. Eget mi proin sed libero enim sed faucibus turpis. A arcu cursus vitae congue. Odio ut sem nulla pharetra diam sit amet nisl. Elit at imperdiet dui accumsan sit amet. Maecenas volutpat blandit aliquam etiam erat velit scelerisque in. Ut lectus arcu bibendum at varius vel pharetra. Elementum integer enim neque volutpat ac tincidunt. Blandit turpis cursus in hac habitasse platea dictumst. Amet cursus sit amet dictum. Feugiat nisl pretium fusce id velit ut tortor pretium viverra.\n' +
     '</p></articl>',
+  authors: ['Me'],
+  categories: ['hhh'],
+  time: Date(),
 };
 
 const state: TutorialState = {
   // TODO do I need the ids?
-  tutorials: {},
+  articleId: null,
+  article: pseudoContent,
+  graphIDs: null,
+  graphs: null,
+  codes: null,
+  // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 
 const mutations: MutationTree<TutorialState> = {
+  /**
+   *
+   * @param {state} state
+   * @param {TutorialRequestState} value
+   * @throws hasBeenInitialized
+   * @todo refine errors
+   */
   LOAD_ARTICLE_ID(state, value: TutorialRequestState) {
     // the start entry of a tutorial storage
 
-    if (value.time in state.tutorials || !value.articleId) {
-      // the value passed must have time (the id)
-      // and the corresponding article ID to initialize
-      // a record
-      // TODO it is a void function right?
-      return;
+    if (!state.articleId) {
+      // the article id must be null to be intialized
+      // TODO hasBeenInitialized
+      throw Error;
     }
 
-    state.tutorials[value.time] = {
-      articleId: value.articleId,
-      article: null,
-      graphIDs: null,
-      graphs: null,
-      codes: null,
-    };
+    if (!(value.articleId && value.articleId.trim())) {
+      // TODO wrong argument
+      throw Error;
+    }
 
-    console.log(`Created New Tutorial Page At Time ${value.time} With Article Id 
+    state.articleId = value.articleId;
+
+    console.log(`Loaded With New Article Id ${state.articleId} With Article Id 
                  ${value.articleId}`);
   },
   /**
    * Load a new article.
-   * Make sure the
-   * @param state: the state of the current store
-   * @param value: the pushed value for updating the article
+   * Make sure the article is trimmed
+   * @param {state} state: the state of the current store
+   * @param {TutorialRequestState} value: the pushed value for updating the article
    * @throws RecordNotInitialized
    * @todo refine errors
    */
   LOAD_ARTICLES(state, value: TutorialRequestState) {
-    if (!(value.time in state.tutorials)) {
-      // the requested id must be in the record
-      // or the id is not initialized
+    if (!state.article) {
+      // the article must not be null
+      // TODO hasBeenInitialized
       throw Error;
     }
 
-    if (!value.article) {
-      // the article must not be null or ''
+    if (!(value.article && value.article)) {
+      // TODO wrong argument
       throw Error;
     }
 
-    if (state.tutorials[value.time].article != null) {
-      // the initial state must be null each time
-      throw Error;
-    }
+    state.article = value.article;
 
-    state.tutorials[value.time].article = value.article;
-
-    console.log(`Loaded Article For Record At ${value.time}`);
+    console.log(`Loaded Article`);
   },
   /**
    *
    * @param {state} state of current store
-   * @param {value} pushed info of
-   * @throws RecordNotInitialized
-   * @throws
+   * @param {TutorialRequestState} value of the request
+   * @todo refined errors
    */
-  LOAD_GRAPH_IDS(state, value) {
-    if (!(value.time in state.tutorials)) {
-      // the requested id must be in the record
-      // or the id is not initialized
+  LOAD_GRAPH_IDS(state, value: TutorialRequestState) {
+    if (!state.graphIDs) {
+      // TODO hasBeenInitialized
       throw Error;
     }
 
     if (!value.graphIDs) {
-      // graph ids cannot be empty
-      // TODO what about tutorials without graphs?
-      // return;
+      // TODO argument
       throw Error;
     }
 
-    if (state.tutorials[value.time].graphIDs != null) {
-      throw Error;
-    }
+    state.graphIDs = value.graphIDs;
 
-    state.tutorials[value.time].graphIDs = value.graphIDs;
-
-    console.log(`Loaded Graph Ids For Record At ${value.time}`);
+    console.log(`Loaded Graph Ids`);
   },
   LOAD_GRAPHS(state, value) {
     // state.graphs = value;
@@ -185,31 +183,44 @@ const actions: ActionTree<TutorialState, RootState> = {
 
 const getters: GetterTree<TutorialState, RootState> = {
   title(state) {
+    return state.article && state.article.title;
     // return state.article ? state.article.title : null;
   },
   content(state) {
+    return state.article && state.article.content;
     // return state.article ? state.article.content : null;
   },
+  authors(state) {
+    return state.article && state.article.authors;
+  },
+  categories(state) {
+    return state.article && state.article.categories;
+  },
+  articleTime(state) {
+    return state.article && state.article.time;
+  },
   articleEmpty(state) {
-    // return state.article === null;
+    return state.article === null;
   },
   graphsEmpty(state) {
     // return state.graphs === null;
+    // TODO return true for test purpose, remove it afterwards
+    return false;
   },
   codesEmpty(state) {
-    // return state.codes === null;
+    return state.codes === null;
   },
   getGraphById: (state) => (id: string) => {
-    // return state.graphs ? state.graphs.find((graph) => graph.id == id) : null;
+    return state.graphs && state.graphs.find((g) => g.id === id);
   },
   getGraphByIndex: (state) => (index: number) => {
-    // return state.graphs ? state.graphs[index] : null;
+    return state.graphs && state.graphs[index];
   },
   getCodeById: (state) => (id: string) => {
-    // return state.codes ? state.codes[id] : null;
+    return state.codes && state.codes[id];
   },
   getCodeByIndex: (state) => (index: number) => {
-    // return state.codes ? state.codes[index] : null;
+    return state.codes && state.codes[Object.keys(state.codes)[index]];
   },
 };
 

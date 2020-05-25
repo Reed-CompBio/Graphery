@@ -1,37 +1,48 @@
 <template>
-  <v-navigation-drawer
-    app
-    right
-    temporary
+  <q-drawer
+    overlay
+    behavior="mobile"
+    side="right"
+    :persistent="false"
     v-model="drawer"
     style="z-index: 9000"
   >
-    <v-list rounded>
-      <v-card class="mb-4" to="/">
-        <v-card-title class="justify-center" style="text-transform: uppercase">
-          <v-avatar class="mr-2">
-            <img :src="logo" alt="John" />
-          </v-avatar>
-          Graphery</v-card-title
-        >
-      </v-card>
-      <v-list-item-group>
-        <v-list-item
+    <q-list>
+      <q-card class="q-py-lg" to="/">
+        <q-card-section>
+          <q-item>
+            <q-item-section avatar>
+              <q-avatar class="mr-2">
+                <img :src="logo" alt="Reed CompBio Logo" />
+              </q-avatar>
+            </q-item-section>
+            <q-item-section>
+              <div class="text-h4" style="text-transform: uppercase">
+                {{ siteName }}
+              </div>
+            </q-item-section>
+          </q-item>
+        </q-card-section>
+      </q-card>
+      <div class="q-pt-md q-pl-xl">
+        <q-item
           v-for="button in buttons"
           :key="button.name"
           :to="{ name: button.name }"
           exact
         >
-          <v-list-item-icon>
-            <v-icon>{{ button.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>{{ button.name }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-item-group>
-    </v-list>
-  </v-navigation-drawer>
+          <q-item-section avatar>
+            <q-icon :name="button.icon" size="md"></q-icon>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label header style="text-transform: uppercase">{{
+              button.name
+            }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </div>
+    </q-list>
+  </q-drawer>
 </template>
 
 <script>
@@ -39,6 +50,7 @@
   export default {
     computed: {
       ...mapState({
+        siteName: (state) => state.meta.siteName,
         logo: (state) => state.meta.siteLogo,
         buttons: (state) => state.meta.navigationButtons,
         drawerState: (state) => state.drawer,
@@ -46,7 +58,9 @@
       // temporary workaround
       drawer: {
         set(d) {
-          this.$store.dispatch('changeDrawerState', d);
+          if (!d) {
+            this.$store.dispatch('changeDrawerState', d);
+          }
         },
         get() {
           return this.drawerState;
