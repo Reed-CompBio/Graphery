@@ -228,7 +228,7 @@
             panzoom(cytoscape);
           }
 
-          this.cyInstance.panzoom();
+          this.cyInstance.panzoom(panzoomDefaults);
 
           this.$nextTick(() => {
             this.resizeGraph();

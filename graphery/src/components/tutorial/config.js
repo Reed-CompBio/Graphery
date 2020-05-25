@@ -37,7 +37,7 @@ export const dagreOptions = {
     return 1;
   }, // higher weight edges are generally made shorter and straighter than lower weight edges
   // general layout options
-  fit: false, // whether to fit to viewport
+  fit: true, // whether to fit to viewport
   padding: 150, // fit padding
   spacingFactor: 1.2, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
   animate: false, // whether to transition the node positions

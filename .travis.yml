@@ -7,8 +7,12 @@ cache: npm
 before_script:
   - cd graphery
   - npm install -g npm@latest
+  - npm install codecov -g
   - npm install
 
 script:
   - npm run build
   - npm run test:unit
+
+after_success:
+  - codecov
