@@ -48,7 +48,6 @@
 
 <script>
   import { mapState, mapGetters, mapActions } from 'vuex';
-  import PostLoadIndicator from './PostLoadIndicator';
 
   export default {
     computed: {

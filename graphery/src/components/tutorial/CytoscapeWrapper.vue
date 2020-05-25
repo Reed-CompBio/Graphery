@@ -17,7 +17,8 @@
 </template>
 
 <script>
-  import cytoscape from 'cytoscape';
+  // import cytoscape from 'cytoscape';
+  let cytoscape;
   import { mapState, mapGetters, mapActions } from 'vuex';
 
   const exampleContent = {
@@ -141,44 +142,56 @@
       },
     },
     mounted() {
-      const element = document.createElement('div');
-      element.setAttribute('id', 'cy-mounting-point');
-      element.setAttribute('class', 'cytoscape');
-      element.setAttribute('class', 'full-height');
+      import('cytoscape')
+        .then((cy) => {
+          // async load cytoscape
+          cytoscape = cy.default;
 
-      this.$refs.cy.appendChild(element);
+          // start init
+          {
+            const element = document.createElement('div');
+            element.setAttribute('id', 'cy-mounting-point');
+            element.setAttribute('class', 'cytoscape');
+            element.setAttribute('class', 'full-height');
 
-      // When passing objects to Cytoscape.js for creating elements, animations, layouts, etc.,
-      // the objects are considered owned by Cytoscape. __** this may cause conflicts when workint with vuex **__
-      // When desired, the programmer can copy objects manually before passing them to Cytoscape. However,
-      // copying is not necessary for most programmers most of the time.
-      //
-      // cannot use get element by id
-      // NOTE: Vue will try to create observers for each property in this nested cytoscape object
-      //       and it crashed my browser several times. By freezing it, we tell Vue to not bother
-      //       about it. This isn't a reactive property anyway, just a variable in the component.
+            this.$refs.cy.appendChild(element);
 
-      this.cyInstance = Object.freeze(
-        cytoscape({
-          container: element,
-          // animation settings
-          textureOnViewport: this.renderViewportOnly,
-          hideEdgesOnViewport: this.hideEdgeWhenRendering,
-          motionBlur: this.motionBlurEnabled,
-          zoom: 1,
-          styleEnabled: true,
-          ...exampleContent,
+            // When passing objects to Cytoscape.js for creating elements, animations, layouts, etc.,
+            // the objects are considered owned by Cytoscape. __** this may cause conflicts when workint with vuex **__
+            // When desired, the programmer can copy objects manually before passing them to Cytoscape. However,
+            // copying is not necessary for most programmers most of the time.
+            //
+            // cannot use get element by id
+            // NOTE: Vue will try to create observers for each property in this nested cytoscape object
+            //       and it crashed my browser several times. By freezing it, we tell Vue to not bother
+            //       about it. This isn't a reactive property anyway, just a variable in the component.
+
+            this.cyInstance = Object.freeze(
+              cytoscape({
+                container: element,
+                // animation settings
+                textureOnViewport: this.renderViewportOnly,
+                hideEdgesOnViewport: this.hideEdgeWhenRendering,
+                motionBlur: this.motionBlurEnabled,
+                zoom: 1,
+                styleEnabled: true,
+                ...exampleContent,
+              })
+            );
+            console.log('cy obj is mounted', this.cyInstance);
+
+            // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph
+            this.$nextTick(() => {
+              this.resizeGraph();
+            });
+
+            // remove loader
+            this.libLoading = false;
+          }
         })
-      );
-      console.log('cy obj is mounted', this.cyInstance);
-
-      // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph
-      this.$nextTick(() => {
-        this.resizeGraph();
-      });
-
-      // remove loader
-      this.libLoading = false;
+        .catch((error) => {
+          console.log('error occur', error);
+        });
     },
     methods: {
       ...mapActions('tutorials', ['clearAll']),
