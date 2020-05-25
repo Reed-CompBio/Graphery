@@ -50,14 +50,7 @@ const routes: Array<RouteConfig> = [
     name: 'Settings',
     component: () => import('@/views/Settings.vue'),
   },
-  {
-    path: '/*',
-    name: '404 Not Found',
-    // $route will make the matched path a variable named `pathMatch`
-    component: () => {
-      import('@/views/404.vue');
-    },
-  },
+  { path: '/*', name: '404', component: () => import('@/views/404.vue') },
 ];
 
 const router = new VueRouter({

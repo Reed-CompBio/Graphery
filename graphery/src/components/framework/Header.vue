@@ -1,5 +1,5 @@
 <template>
-  <q-header class="q-py-sm q-px-xs">
+  <q-header class="q-py-sm q-px-xs" elevated>
     <!--    TODO change the color in dark mode    -->
     <q-toolbar>
       <router-link to="/" class="q-ml-sm">
