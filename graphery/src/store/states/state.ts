@@ -24,6 +24,14 @@ export interface NotificationState {
   details: string;
 }
 
+export interface Graph {
+  id: string;
+  name: string;
+  cyjs: object | string;
+  layoutEngine: GraphLayoutEngines;
+  info: string;
+}
+
 export interface TutorialState {
   articleId: string | null;
   article: {
@@ -35,15 +43,7 @@ export interface TutorialState {
   } | null;
   graphIDs: string[] | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
-  graphs:
-    | {
-        id: string;
-        name: string;
-        cyjs: object | string;
-        layoutEngine: GraphLayoutEngines;
-        info: string;
-      }[]
-    | null;
+  graphs: Graph[] | null;
   codes: { [id: string]: { graphId: string; codes: string } } | null;
 }
 
@@ -63,15 +63,7 @@ export interface TutorialRequestState {
   } | null;
   graphIDs?: string[] | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
-  graphs?:
-    | {
-        id: string;
-        name: string;
-        cyjs: object | string;
-        layoutEngine: GraphLayoutEngines;
-        info: string;
-      }[]
-    | null;
+  graphs?: Graph[] | null;
   codes?: { [id: string]: { graphId: string; codes: string } } | null;
 }
 

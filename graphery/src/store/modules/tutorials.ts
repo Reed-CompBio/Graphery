@@ -4,6 +4,7 @@ import {
   RootState,
 } from '@/store/states/state';
 import { MutationTree, ActionTree, GetterTree } from 'vuex';
+import { mdiVlc } from '@quasar/extras/mdi-v5';
 
 /** Do not use Vuex since you can't maintain multiple pages with one state
  * Or I can add a object mapping the time of opening the page to the
@@ -209,6 +210,21 @@ const getters: GetterTree<TutorialState, RootState> = {
   },
   codesEmpty(state) {
     return state.codes === null;
+  },
+  getGraphList(state) {
+    const arr: { name: string; value: string }[] = [];
+    if (!state.graphs) {
+      return arr;
+    }
+
+    state.graphs.forEach((value) => {
+      arr.push({
+        name: value.name,
+        value: value.id,
+      });
+    });
+
+    return arr;
   },
   getGraphById: (state) => (id: string) => {
     return state.graphs && state.graphs.find((g) => g.id === id);

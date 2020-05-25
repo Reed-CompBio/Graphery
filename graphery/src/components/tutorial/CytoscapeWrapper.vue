@@ -1,5 +1,12 @@
 <template>
   <div class="full-height ">
+    <!--    <q-toolbar>-->
+    <!--      <q-select :options="getGraphList" :value="graphChoice" :multiple="false">-->
+    <!--        <template v-slot:prepend>-->
+    <!--          <q-icon name="mdi-graphql"></q-icon>-->
+    <!--        </template>-->
+    <!--      </q-select>-->
+    <!--    </q-toolbar>-->
     <div id="cy-wrapper" class="full-height">
       <q-resize-observer @resize="resizeGraph" />
       <div id="cy" class="full-height" :style="graphStyle" ref="cy"></div>
@@ -113,8 +120,9 @@
     data() {
       return {
         cyInstance: null,
-        selector: 0, // used in drop menu to select graphs
+        graphChoice: [], // used in drop menu to select graphs
         moduleLoadedNum: 0,
+        moduleTargetNum: 3,
       };
     },
     computed: {
@@ -125,6 +133,7 @@
         'motionSensitivityLevel',
       ]),
       ...mapGetters('tutorials', [
+        'getGraphList',
         'getGraphById',
         'getGraphByIndex',
         'articleEmpty',
@@ -133,7 +142,7 @@
       ]),
       ...mapGetters('settings', ['graphBackgroundColor']),
       libLoading() {
-        return this.moduleLoadedNum < 3;
+        return this.moduleLoadedNum < this.moduleTargetNum;
       },
       currentGraph() {
         return this.getGraphByIndex(this.selector);
