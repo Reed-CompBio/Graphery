@@ -18,7 +18,7 @@
 
 <script>
   import cytoscape from 'cytoscape';
-  import { mapState, mapGetters } from 'vuex';
+  import { mapState, mapGetters, mapActions } from 'vuex';
 
   const exampleContent = {
     style: [
@@ -181,6 +181,7 @@
       this.libLoading = false;
     },
     methods: {
+      ...mapActions('tutorials', ['clearAll']),
       /**
        * Triggers a graph resize, forcing it to repaint itself. Useful when the graph nodes and edges have been
        * modified, or when an older browser doesn't render the graph until it is resized.
@@ -193,6 +194,7 @@
       },
     },
     destroyed() {
+      this.clearAll();
       // TODO restore states in vuex
     },
   };
