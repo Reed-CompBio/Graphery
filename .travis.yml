@@ -6,7 +6,8 @@ nodoe_js:
 cache: npm
 
 env:
-  - CODECOV_TOKEN=ee55ea4c-647a-4291-9580-ec40ee1c76b9
+  global:
+    - CODECOV_TOKEN=ee55ea4c-647a-4291-9580-ec40ee1c76b9
 
 before_script:
   - cd graphery

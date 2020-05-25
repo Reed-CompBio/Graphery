@@ -319,6 +319,6 @@
   };
 </script>
 
-<style lang="sass">
-  @import '~@/styles/panzoom.css'
+<style>
+  @import '~@/styles/panzoom.css';
 </style>
