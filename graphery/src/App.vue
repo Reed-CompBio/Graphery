@@ -12,17 +12,15 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import Header from '@/components/framework/Header.vue';
-  import Footer from '@/components/framework/Footer.vue';
-  import NavigationDrawer from '@/components/framework/NavigationDrawer.vue';
 
   export default Vue.extend({
     name: 'App',
 
     components: {
-      Header,
-      Footer,
-      NavigationDrawer,
+      Header: () => import('@/components/framework/Header.vue'),
+      Footer: () => import('@/components/framework/Footer.vue'),
+      NavigationDrawer: () =>
+        import('@/components/framework/NavigationDrawer.vue'),
       Notification: () => import('@/components/framework/Notification.vue'),
     },
   });

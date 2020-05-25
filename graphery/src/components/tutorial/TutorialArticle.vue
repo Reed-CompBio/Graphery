@@ -3,7 +3,12 @@
   <div class="full-height">
     <!-- add a overlay -->
 
-    <q-scroll-area ref="tc" v-show="!articleEmpty" class="full-height q-px-lg">
+    <q-scroll-area
+      ref="tc"
+      v-show="!articleEmpty"
+      class="full-height q-px-lg"
+      @scroll="updatePosPercentage"
+    >
       <div class="q-mt-xl">
         <div id="tutorial-title" class="text-h2">{{ title }}</div>
         <div id="tutorial-info" class="q-mb-lg">
@@ -34,7 +39,25 @@
       <div id="tutorial-content" v-html="content"></div>
     </q-scroll-area>
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
-      <q-btn round color="primary" icon="mdi-menu-up" @click="scrollToTop" />
+      <q-circular-progress
+        size="42px"
+        :value="articleViewPercentage"
+        :max="1"
+        color="primary"
+        :thickness="0.2"
+        center-color="primary"
+        track-color="white"
+        show-value
+        @click="scrollToTop"
+      >
+        <!--        <q-btn round color="primary" icon="mdi-menu-up" @click="scrollToTop" />-->
+        <q-icon
+          id="scroll-up-icon"
+          name="mdi-menu-up"
+          color="white"
+          size="26px"
+        />
+      </q-circular-progress>
     </q-page-sticky>
     <q-inner-loading
       :showing="articleEmpty"
@@ -50,6 +73,11 @@
   import { mapState, mapGetters, mapActions } from 'vuex';
 
   export default {
+    data() {
+      return {
+        articleViewPercentage: 0,
+      };
+    },
     computed: {
       ...mapState('tutorials', ['article']),
       ...mapGetters('tutorials', [
@@ -66,6 +94,9 @@
       share() {
         // TODO copy to clipboard
       },
+      updatePosPercentage({ verticalPercentage }) {
+        this.articleViewPercentage = parseFloat(verticalPercentage);
+      },
       scrollToTop() {
         this.$refs.tc.setScrollPosition(0, 500);
       },
@@ -76,3 +107,9 @@
     },
   };
 </script>
+
+<style>
+  #scroll-up-icon:hover {
+    cursor: pointer;
+  }
+</style>

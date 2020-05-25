@@ -47,9 +47,9 @@ export interface TutorialState {
   codes: { [id: string]: { graphId: string; codes: string } } | null;
 }
 
-export interface GraphLayoutEngines {
-  dagre: 'dagre';
-  hierarchical: 'hac';
+export const enum GraphLayoutEngines {
+  dagre = 'dagre',
+  hierarchical = 'hac',
 }
 
 export interface TutorialRequestState {
