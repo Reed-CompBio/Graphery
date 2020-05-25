@@ -26,6 +26,7 @@
 </template>
 
 <script>
+  import { headerSize } from '../store/states/meta';
   import { mapState } from 'vuex';
 
   export default {
@@ -39,11 +40,11 @@
     },
     data() {
       return {
+        headerSize,
         editorShow: false,
       };
     },
     computed: {
-      ...mapState('meta', ['headerSize']),
       ...mapState('settings', ['graphSplitPos']),
       splitPos: {
         set(d) {

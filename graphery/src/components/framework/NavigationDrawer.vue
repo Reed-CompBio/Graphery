@@ -46,13 +46,19 @@
 </template>
 
 <script>
+  import { siteName, navigationButtons } from '../../store/states/meta';
   import { mapState } from 'vuex';
+
   export default {
+    data() {
+      return {
+        siteName,
+        logo: require('@/assets/images/reed-compbio-logo.png'),
+        buttons: navigationButtons,
+      };
+    },
     computed: {
       ...mapState({
-        siteName: (state) => state.meta.siteName,
-        logo: (state) => state.meta.siteLogo,
-        buttons: (state) => state.meta.navigationButtons,
         drawerState: (state) => state.drawer,
       }),
       // temporary workaround

@@ -6,12 +6,12 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
+  import { footerHTML } from '@/store/states/meta';
   export default {
-    computed: {
-      ...mapState({
-        footerHtml: (state) => state.meta.footerHTML,
-      }),
+    data() {
+      return {
+        footerHtml: footerHTML,
+      };
     },
   };
 </script>

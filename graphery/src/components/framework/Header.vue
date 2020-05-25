@@ -43,16 +43,16 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
+  import { siteName, navigationButtons } from '../../store/states/meta';
 
   export default {
     name: 'Header',
-    computed: {
-      ...mapState({
-        siteName: (state) => state.meta.siteName,
-        siteLogo: (state) => state.meta.siteLogo,
-        buttons: (state) => state.meta.navigationButtons,
-      }),
+    data() {
+      return {
+        siteName,
+        siteLogo: require('@/assets/images/reed-compbio-logo.png'),
+        buttons: navigationButtons,
+      };
     },
     methods: {
       showDrawer() {
