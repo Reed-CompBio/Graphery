@@ -88,7 +88,6 @@
         { data: { source: 'n1', target: 'n3' } },
         { data: { source: 'n2', target: 'n7' } },
         { data: { source: 'n2', target: 'n11' } },
-        { data: { source: 'n2', target: 'n16' } },
         { data: { source: 'n3', target: 'n4' } },
         { data: { source: 'n3', target: 'n16' } },
         { data: { source: 'n4', target: 'n5' } },
