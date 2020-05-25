@@ -5,6 +5,8 @@
       :value="splitPos"
       :style="tutorialStyle"
       :horizontal="$q.screen.lt.md"
+      separator-class="bg-light-blue"
+      separator-style="width: 6px"
     >
       <template v-slot:before>
         <CytoscapeWrapper></CytoscapeWrapper>
