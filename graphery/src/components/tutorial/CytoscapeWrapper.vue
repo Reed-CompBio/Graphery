@@ -150,7 +150,7 @@
       },
       graphStyle() {
         return {
-          // 'background-color': this.graphBackgroundColor,
+          'background-color': this.graphBackgroundColor,
         };
       },
     },

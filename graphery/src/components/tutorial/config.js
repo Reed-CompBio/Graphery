@@ -26,7 +26,7 @@ export const panzoomDefaults = {
 export const dagreOptions = {
   name: 'dagre',
   // dagre algorithm options, uses default value on undefined
-  nodeSep: 140, // the separation between adjacent nodes in the same rank
+  nodeSep: 100, // the separation between adjacent nodes in the same rank
   edgeSep: 30, // the separation between adjacent edges in the same rank
   rankSep: 140, // the separation between adjacent nodes in the same rank
   rankDir: 'TB', // 'TB' for top to bottom flow, 'LR' for left to right
@@ -40,7 +40,7 @@ export const dagreOptions = {
   fit: true, // whether to fit to viewport
   padding: 150, // fit padding
   spacingFactor: 1.2, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
-  animate: false, // whether to transition the node positions
+  animate: true, // whether to transition the node positions
   animationDuration: 500, // duration of animation in ms if enabled
   animationEasing: undefined, // easing of animation if enabled
   boundingBox: undefined, // constrain layout bounds { x1, y1, x2, y2 } or { x1, y1, w, h }

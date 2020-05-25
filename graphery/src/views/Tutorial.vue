@@ -1,13 +1,28 @@
 <template>
   <!-- make fill height class changable, then when graph  -->
-  <q-splitter :value="graphSplitPos" :style="tutorialStyle">
-    <template v-slot:before>
-      <CytoscapeWrapper></CytoscapeWrapper>
-    </template>
-    <template v-slot:after>
-      <TutorialArticle></TutorialArticle>
-    </template>
-  </q-splitter>
+  <div>
+    <q-splitter
+      :value="splitPos"
+      :style="tutorialStyle"
+      :horizontal="$q.screen.lt.md"
+    >
+      <template v-slot:before>
+        <CytoscapeWrapper></CytoscapeWrapper>
+      </template>
+      <template v-slot:after>
+        <TutorialArticle></TutorialArticle>
+      </template>
+    </q-splitter>
+    <EditorWrapper :show="editorShow"></EditorWrapper>
+    <q-page-sticky position="bottom-left" :offset="[30, 30]">
+      <q-btn
+        round
+        color="primary"
+        icon="mdi-code-braces"
+        @click="toggleEditor"
+      />
+    </q-page-sticky>
+  </div>
 </template>
 
 <script>
@@ -20,10 +35,24 @@
         import('@/components/tutorial/CytoscapeWrapper.vue'),
       TutorialArticle: () =>
         import('@/components/tutorial/TutorialArticle.vue'),
+      EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
+    },
+    data() {
+      return {
+        editorShow: false,
+      };
     },
     computed: {
       ...mapState('meta', ['headerSize']),
       ...mapState('settings', ['graphSplitPos']),
+      splitPos: {
+        set(d) {
+          this.$store.dispatch('changeSepPos', d);
+        },
+        get() {
+          return this.graphSplitPos;
+        },
+      },
       tutorialStyle() {
         return {
           height: `calc(100vh - ${this.headerSize}px)`,
@@ -39,6 +68,9 @@
         // 3. API calls using graph info to get graphs
         // 4. Extract graphs details , turn off loading for the graph section and load graphs
         // 5. (think about mini editor, how to manage the data in the backend)
+      },
+      toggleEditor() {
+        this.editorShow = !this.editorShow;
       },
     },
     watch: {
