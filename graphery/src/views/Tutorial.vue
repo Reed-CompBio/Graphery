@@ -11,20 +11,15 @@
 </template>
 
 <script>
-  import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper.vue';
-  import TutorialArticle from '../components/tutorial/TutorialArticle';
   import { mapState } from 'vuex';
 
   export default {
     props: ['name'],
     components: {
-      CytoscapeWrapper,
-      TutorialArticle,
-    },
-    data() {
-      return {
-        containerHeight: null,
-      };
+      CytoscapeWrapper: () =>
+        import('@/components/tutorial/CytoscapeWrapper.vue'),
+      TutorialArticle: () =>
+        import('@/components/tutorial/TutorialArticle.vue'),
     },
     computed: {
       ...mapState('meta', ['headerSize']),
@@ -45,14 +40,6 @@
         // 4. Extract graphs details , turn off loading for the graph section and load graphs
         // 5. (think about mini editor, how to manage the data in the backend)
       },
-      setupContainerHeight(height) {
-        this.containerHeight = height;
-      },
-      onWindowResize() {
-        // get height
-        let height;
-        this.setupContainerHeight(height);
-      },
     },
     watch: {
       name: function(newVal, oldVal) {
@@ -62,14 +49,7 @@
       },
     },
     mounted() {
-      // When the container is mounted, get the height of the container, then set the height so that it won't change
-      console.log(
-        "v-container's height:"
-        // document.getElementById('tutorial-container').clientHeight
-      );
-
-      // after retrieving the height of the component, pull tutorials
-      // so that I can get
+      // pull tutorials
       this.updateTutorialContent();
     },
   };

@@ -36,9 +36,20 @@ export interface TutorialState {
   graphIDs: string[] | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
   graphs:
-    | { id: string; name: string; cyjs: object | string; info: string }[]
+    | {
+        id: string;
+        name: string;
+        cyjs: object | string;
+        layoutEngine: GraphLayoutEngines;
+        info: string;
+      }[]
     | null;
   codes: { [id: string]: { graphId: string; codes: string } } | null;
+}
+
+export interface GraphLayoutEngines {
+  dagre: 'dagre';
+  hierarchical: 'hac';
 }
 
 export interface TutorialRequestState {
@@ -53,7 +64,13 @@ export interface TutorialRequestState {
   graphIDs?: string[] | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
   graphs?:
-    | { id: string; name: string; cyjs: object | string; info: string }[]
+    | {
+        id: string;
+        name: string;
+        cyjs: object | string;
+        layoutEngine: GraphLayoutEngines;
+        info: string;
+      }[]
     | null;
   codes?: { [id: string]: { graphId: string; codes: string } } | null;
 }

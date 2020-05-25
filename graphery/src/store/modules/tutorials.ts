@@ -203,7 +203,9 @@ const getters: GetterTree<TutorialState, RootState> = {
     return state.article === null;
   },
   graphsEmpty(state) {
-    return state.graphs === null;
+    // return state.graphs === null;
+    // TODO return true for test purpose, remove it afterwards
+    return true;
   },
   codesEmpty(state) {
     return state.codes === null;

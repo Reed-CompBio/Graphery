@@ -12,6 +12,7 @@
     "@quasar/extras": "^1.0.0",
     "core-js": "^3.6.4",
     "cytoscape": "^3.15.0",
+    "cytoscape-dagre": "^2.2.2",
     "cytoscape-panzoom": "^2.5.3",
     "quasar": "^1.0.0",
     "vue": "^2.6.11",
