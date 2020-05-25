@@ -53,12 +53,15 @@ const pseudoContent = {
     '</p><p>' +
     'Amet mauris commodo quis imperdiet massa tincidunt nunc. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Consequat id porta nibh venenatis cras sed felis eget velit. Elit ullamcorper dignissim cras tincidunt lobortis feugiat vivamus. Eget mi proin sed libero enim sed faucibus turpis. A arcu cursus vitae congue. Odio ut sem nulla pharetra diam sit amet nisl. Elit at imperdiet dui accumsan sit amet. Maecenas volutpat blandit aliquam etiam erat velit scelerisque in. Ut lectus arcu bibendum at varius vel pharetra. Elementum integer enim neque volutpat ac tincidunt. Blandit turpis cursus in hac habitasse platea dictumst. Amet cursus sit amet dictum. Feugiat nisl pretium fusce id velit ut tortor pretium viverra.\n' +
     '</p></articl>',
+  authors: ['Me'],
+  categories: ['hhh'],
+  time: Date(),
 };
 
 const state: TutorialState = {
   // TODO do I need the ids?
   articleId: null,
-  article: null,
+  article: pseudoContent,
   graphIDs: null,
   graphs: null,
   codes: null,
@@ -187,11 +190,11 @@ const getters: GetterTree<TutorialState, RootState> = {
     return state.article && state.article.content;
     // return state.article ? state.article.content : null;
   },
-  author(state) {
-    return state.article && state.article.author;
+  authors(state) {
+    return state.article && state.article.authors;
   },
-  category(state) {
-    return state.article && state.article.category;
+  categories(state) {
+    return state.article && state.article.categories;
   },
   articleTime(state) {
     return state.article && state.article.time;

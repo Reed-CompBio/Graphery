@@ -6,6 +6,7 @@ export interface MetaState {
   siteName: string;
   navigationButtons: { name: string; icon: string }[];
   siteLogo: string;
+  headerSize: 66;
   footerHTML: string;
 }
 
@@ -28,9 +29,9 @@ export interface TutorialState {
   article: {
     title: string;
     content: string;
-    author: string[];
-    category: string[];
-    time: Date;
+    authors: string[];
+    categories: string[];
+    time: string;
   } | null;
   graphIDs: string[] | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
@@ -45,9 +46,9 @@ export interface TutorialRequestState {
   article?: {
     title: string;
     content: string;
-    author: string[];
-    category: string[];
-    time: Date;
+    authors: string[];
+    categories: string[];
+    time: string;
   } | null;
   graphIDs?: string[] | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)

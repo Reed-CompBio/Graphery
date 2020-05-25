@@ -1,15 +1,13 @@
 <template>
   <!-- make fill height class changable, then when graph  -->
-  <q-page-container class="fill-height">
-    <q-splitter class="fill-height" :value="graphSplitPos">
-      <template v-slot:before class="fill-height">
-        <CytoscapeWrapper></CytoscapeWrapper>
-      </template>
-      <template v-slot:after>
-        <!--        <TutorialArticle style="max-height: 100%"></TutorialArticle>-->
-      </template>
-    </q-splitter>
-  </q-page-container>
+  <q-splitter :value="graphSplitPos" :style="tutorialStyle">
+    <template v-slot:before>
+      <CytoscapeWrapper></CytoscapeWrapper>
+    </template>
+    <template v-slot:after>
+      <TutorialArticle></TutorialArticle>
+    </template>
+  </q-splitter>
 </template>
 
 <script>
@@ -21,7 +19,7 @@
     props: ['name'],
     components: {
       CytoscapeWrapper,
-      // TutorialArticle,
+      TutorialArticle,
     },
     data() {
       return {
@@ -29,7 +27,13 @@
       };
     },
     computed: {
+      ...mapState('meta', ['headerSize']),
       ...mapState('settings', ['graphSplitPos']),
+      tutorialStyle() {
+        return {
+          height: `calc(100vh - ${this.headerSize}px)`,
+        };
+      },
     },
     methods: {
       updateTutorialContent() {
@@ -70,5 +74,3 @@
     },
   };
 </script>
-
-<style scoped></style>

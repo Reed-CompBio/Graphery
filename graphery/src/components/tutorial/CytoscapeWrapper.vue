@@ -1,6 +1,18 @@
 <template>
-  <div class="fill-height" id="cy-wrapper">
-    <div id="cy" class="fill-height" ref="cy"></div>
+  <div class="full-height ">
+    <div id="cy-wrapper" class="full-height">
+      <q-resize-observer @resize="resizeGraph" />
+      <div id="cy" class="full-height" :style="graphStyle" ref="cy"></div>
+    </div>
+    <div>
+      <q-inner-loading
+        :showing="contentLoading"
+        transition-show="fade"
+        transition-hide="fade"
+      >
+        <q-spinner-radio size="64px" color="primary" />
+      </q-inner-loading>
+    </div>
   </div>
 </template>
 
@@ -94,6 +106,8 @@
       return {
         cyInstance: null,
         selector: 0, // used in drop menu to select graphs
+        libLoading: true,
+        contentLoading: true,
       };
     },
     computed: {
@@ -110,6 +124,7 @@
         'graphsEmpty',
         'codesEmpty',
       ]),
+      ...mapGetters('settings', ['graphBackgroundColor']),
       currentGraph() {
         return this.getGraphByIndex(this.selector);
       },
@@ -119,12 +134,17 @@
       currentGraphJson() {
         return this.currentGraph && this.currentGraph.cyjs;
       },
+      graphStyle() {
+        return {
+          'background-color': this.graphBackgroundColor,
+        };
+      },
     },
     mounted() {
       const element = document.createElement('div');
       element.setAttribute('id', 'cy-mounting-point');
       element.setAttribute('class', 'cytoscape');
-      element.setAttribute('class', 'fill-height');
+      element.setAttribute('class', 'full-height');
 
       this.$refs.cy.appendChild(element);
 
@@ -158,7 +178,7 @@
       });
 
       // remove loader
-      this.loading = false;
+      this.libLoading = false;
     },
     methods: {
       /**
@@ -177,9 +197,3 @@
     },
   };
 </script>
-
-<style>
-  #cy {
-    background-color: #fff;
-  }
-</style>
