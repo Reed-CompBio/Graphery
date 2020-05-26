@@ -1,21 +1,36 @@
 <template>
-  <q-page-container class="q-my-lgi page-container">
-    <div class="row q-mx-auto">
-      <div class="col">
-        <div class="content-container">
-          <slot></slot>
-        </div>
+  <q-page class="page">
+    <div class="container q-mx-auto q-mb-lg shadow-4">
+      <div class="content-container-wrapper flex-center">
+        <slot></slot>
       </div>
     </div>
-  </q-page-container>
+    <!-- TODO add protocol section -->
+  </q-page>
 </template>
 
-<style>
-  .page-container {
-    display: flex;
-    min-height: 100%;
-  }
-  .content-container {
-    max-width: 1200px;
-  }
+<style scoped lang="sass">
+  .page
+    clear: both
+
+  .page
+    /* TODO use quasar sass variables */
+    @media (max-width: 599px)
+      padding-left: 0px
+      padding-right: 0px
+    @media (min-width: 600px) and (max-width: 1439px)
+      padding-left: 32px
+      padding-right: 32px
+    @media (min-width: 1440px)
+      padding-left: 64px
+      padding-right: 64px
+  .container
+    min-height: inherit
+    max-width: 1200px
+    background-color: #ffffff
+
+  .content-container-wrapper
+    display: flex
+    flex-direction: column
+    min-height: 100%
 </style>

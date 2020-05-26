@@ -1,15 +1,12 @@
 <template>
   <MaterialPage>
     <!--    ugliest 404 page ever    -->
-    <div class="flex flex-center err-wrapper" style="">
-      <div title="404" id="err">
-        404
-      </div>
-      <span class="text-h5">
-        The page <a class="err-url" :href="pageUrl">{{ pageUrl }}</a> is not
-        found
-      </span>
+    <div title="404" id="err">
+      404
     </div>
+    <span class="text-h5">
+      The page <a class="err-url" :href="pageUrl">{{ pageUrl }}</a> is not found
+    </span>
   </MaterialPage>
 </template>
 
@@ -27,11 +24,6 @@
 </script>
 
 <style>
-  .err-wrapper {
-    display: flex;
-    flex-direction: column;
-  }
-
   .err-url,
   .err-url:visited {
     color: red;

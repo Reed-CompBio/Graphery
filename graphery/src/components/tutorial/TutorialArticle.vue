@@ -38,6 +38,7 @@
       </div>
       <div id="tutorial-content" v-html="content"></div>
     </q-scroll-area>
+    <!-- add a protocol info section -->
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <q-circular-progress
         size="42px"
