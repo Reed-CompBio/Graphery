@@ -1,7 +1,7 @@
 <template>
   <q-page class="page">
     <div class="container q-mx-auto q-mb-lg shadow-4">
-      <div class="content-container-wrapper flex-center">
+      <div class="content-container-wrapper ">
         <slot></slot>
       </div>
     </div>
@@ -9,19 +9,21 @@
   </q-page>
 </template>
 
-<style scoped lang="sass">
+<style lang="sass">
+  @import "src/styles/quasar.variables"
+
   .page
     clear: both
 
   .page
     /* TODO use quasar sass variables */
-    @media (max-width: 599px)
+    @media (max-width: $breakpoint-xs-max)
       padding-left: 0px
       padding-right: 0px
-    @media (min-width: 600px) and (max-width: 1439px)
+    @media (min-width: $breakpoint-sm-min) and (max-width: $breakpoint-md-max)
       padding-left: 32px
       padding-right: 32px
-    @media (min-width: 1440px)
+    @media (min-width: $breakpoint-lg-min)
       padding-left: 64px
       padding-right: 64px
 
@@ -40,15 +42,15 @@
     min-height: 100%
 
   .container
-    @media (max-width: 599px)
+    @media (max-width: $breakpoint-xs-max)
       padding: 16px 10%
-    @media (min-width: 600px) and (max-width: 1439px)
+    @media (min-width: $breakpoint-sm-min) and (max-width: $breakpoint-md-max)
       padding: 16px 14%
-    @media (min-width: 1440px)
+    @media (min-width: $breakpoint-lg-min)
       padding: 0
 
   .content-container-wrapper
-    @media (min-width: 1440px)
+    @media (min-width: $breakpoint-lg-min)
       margin: 0 auto
       width: 720px
 </style>
