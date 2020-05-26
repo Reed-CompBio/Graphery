@@ -44,7 +44,7 @@
         :value="articleViewPercentage"
         :max="1"
         color="primary"
-        :thickness="0.2"
+        :thickness="0.1"
         center-color="primary"
         track-color="white"
         show-value

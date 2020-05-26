@@ -4,7 +4,6 @@ import {
   RootState,
 } from '@/store/states/state';
 import { MutationTree, ActionTree, GetterTree } from 'vuex';
-import { mdiVlc } from '@quasar/extras/mdi-v5';
 
 /** Do not use Vuex since you can't maintain multiple pages with one state
  * Or I can add a object mapping the time of opening the page to the

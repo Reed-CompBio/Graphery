@@ -1,12 +1,13 @@
 import Vue from 'vue';
 
 import './styles/quasar.sass';
+import '@quasar/extras/mdi-v5/mdi-v5.css';
 import { Quasar } from 'quasar';
 
 Vue.use(Quasar, {
   config: {
-    iconSet: 'mdi-v4',
-    dark: true,
+    iconSet: 'mdi-v5',
+    dark: false,
   },
   components: {
     /* not needed if importStrategy is not 'manual' */

@@ -15,7 +15,7 @@
         <q-avatar
           color="primary"
           text-color="white"
-          size="40px"
+          size="32px"
           icon="mdi-drag"
         />
       </template>
