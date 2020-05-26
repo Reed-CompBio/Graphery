@@ -25,3 +25,8 @@
     },
   });
 </script>
+
+<style lang="sass">
+  .body--light
+    background-color: #f8f8f8
+</style>

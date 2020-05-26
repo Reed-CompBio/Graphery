@@ -1,5 +1,13 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <MaterialPage>
+    This is a about page
+  </MaterialPage>
 </template>
+
+<script>
+  export default {
+    components: {
+      MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
+    },
+  };
+</script>
