@@ -1,15 +1,47 @@
 <template>
   <div class="full-height ">
-    <!--    <q-toolbar>-->
-    <!--      <q-select :options="getGraphList" :value="graphChoice" :multiple="false">-->
-    <!--        <template v-slot:prepend>-->
-    <!--          <q-icon name="mdi-graphql"></q-icon>-->
-    <!--        </template>-->
-    <!--      </q-select>-->
-    <!--    </q-toolbar>-->
-    <div id="cy-wrapper" class="full-height">
+    <div class="graph-menu-bar">
+      <div class="graph-menu-wrapper">
+        <q-select
+          class="graph-selector"
+          :options="getGraphList"
+          :value="graphChoice"
+          label="Loading Graphs..."
+          :multiple="false"
+        >
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey">
+                No results
+              </q-item-section>
+            </q-item>
+          </template>
+          <template v-slot:prepend>
+            <q-icon name="mdi-graphql"></q-icon>
+          </template>
+        </q-select>
+      </div>
+      <div class="menu-button-group-wrapper">
+        <q-btn-group rounded class="menu-button-group">
+          <q-btn>
+            <q-icon name="mdi-file-table-box"></q-icon>
+          </q-btn>
+          <q-btn-dropdown>
+            <template v-slot:label>
+              <q-icon name="mdi-share-variant"></q-icon>
+            </template>
+          </q-btn-dropdown>
+        </q-btn-group>
+      </div>
+    </div>
+    <div id="cy-wrapper" :style="heightStyle">
       <q-resize-observer @resize="resizeGraph" />
-      <div id="cy" class="full-height" :style="graphStyle" ref="cy"></div>
+      <div
+        id="cy"
+        class="full-height"
+        :style="{ graphStyle, heightStyle }"
+        ref="cy"
+      ></div>
     </div>
     <div>
       <q-inner-loading
@@ -24,11 +56,11 @@
 </template>
 
 <script>
-  // import cytoscape from 'cytoscape';
-
   let cytoscape;
   let panzoom;
   let dagre;
+
+  import { headerSize, graphMenuHeaderSize } from '../../store/states/meta';
   import { mapState, mapGetters, mapActions } from 'vuex';
   import {
     panzoomDefaults,
@@ -159,6 +191,11 @@
       graphStyle() {
         return {
           'background-color': this.graphBackgroundColor,
+        };
+      },
+      heightStyle() {
+        return {
+          height: `calc(100vh - ${headerSize + graphMenuHeaderSize}px)`,
         };
       },
     },
@@ -327,6 +364,19 @@
   };
 </script>
 
-<style>
-  @import '~@/styles/panzoom.css';
+<style lang="sass">
+  @import '~@/styles/panzoom.css'
+
+  .graph-menu-bar
+    max-height: 56px
+    display: flex
+    flex-direction: row
+    .graph-menu-wrapper
+      padding: 0px 5px
+      margin: 0px 15px
+      min-width: 50%
+      max-height: inherit
+
+    .menu-button-group-wrapper
+      margin: auto 5px
 </style>

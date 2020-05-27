@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import { footerHTML } from '@/store/states/meta';
+  import { footerHTML } from '@/store/states/meta.ts';
   export default {
     data() {
       return {

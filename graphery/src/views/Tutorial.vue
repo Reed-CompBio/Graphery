@@ -50,7 +50,6 @@
     },
     data() {
       return {
-        headerSize,
         editorShow: false,
       };
     },
@@ -66,7 +65,7 @@
       },
       tutorialStyle() {
         return {
-          height: `calc(100vh - ${this.headerSize}px)`,
+          height: `calc(100vh - ${headerSize}px)`,
         };
       },
     },

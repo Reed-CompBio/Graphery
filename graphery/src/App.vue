@@ -29,4 +29,7 @@
 <style lang="sass">
   .body--light
     background-color: #f8f8f8
+  footer
+    a, a:visited
+      color: #fff
 </style>
