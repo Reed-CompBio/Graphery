@@ -23,7 +23,10 @@
         <TutorialArticle></TutorialArticle>
       </template>
     </q-splitter>
-    <EditorWrapper :show="editorShow"></EditorWrapper>
+    <EditorWrapper
+      v-show="editorShow"
+      @close-editor="closeEditor"
+    ></EditorWrapper>
     <q-page-sticky position="bottom-left" :offset="[30, 30]">
       <q-btn round color="primary" icon="mdi-code-json" @click="toggleEditor" />
     </q-page-sticky>
@@ -76,6 +79,9 @@
       },
       toggleEditor() {
         this.editorShow = !this.editorShow;
+      },
+      closeEditor() {
+        this.editorShow = false;
       },
     },
     watch: {
