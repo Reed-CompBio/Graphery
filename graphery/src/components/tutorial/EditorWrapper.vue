@@ -8,14 +8,29 @@
         <q-icon name="mdi-function" />
         <div style="text-transform: uppercase;">{{ tab }}</div>
         <q-space />
-        <q-btn-group flat class="q-mr-md">
+        <q-btn-group flat class="q-mr-md" v-touch-pan.prevent.mouse="null">
           <q-btn dense>
-            <q-icon name="mdi-play"></q-icon>
+            <q-icon name="mdi-cloud-upload" />
+            <q-tooltip :hide-delay="300" class="text-body1">
+              Run code on the cloud
+            </q-tooltip>
+          </q-btn>
+          <q-btn dense>
+            <q-icon name="mdi-play" />
+            <q-tooltip :hide-delay="300" class="text-body1">
+              Run code locally
+            </q-tooltip>
           </q-btn>
         </q-btn-group>
-        <q-btn dense flat icon="close" @click="closeWindow" />
+        <q-btn
+          dense
+          flat
+          icon="close"
+          @click="closeWindow"
+          v-touch-pan.prevent.mouse="null"
+        />
       </q-bar>
-      <q-tabs inline-label class="tutorial-tabs" v-model="tab">
+      <q-tabs dense inline-label class="tutorial-tabs" v-model="tab">
         <q-tab name="code" icon="mdi-code-braces" label="code" />
         <q-tab name="info" icon="mdi-information-variant" label="info" />
         <q-tab
@@ -83,7 +98,7 @@
         require('brace/mode/python'); //language
         require('brace/theme/chrome');
 
-        console.debug('acquired modules ');
+        console.debug('acquired modules for ace editor');
       },
       closeWindow() {
         console.debug('close editor window');
@@ -173,8 +188,7 @@
     position: absolute
     /*top: 27.5vh*/
     /*left: 25vw*/
-    z-index: 10000
-
+    z-index: 2
   .popup-wrapper
     min-width: 50vw
     min-height: 45vh

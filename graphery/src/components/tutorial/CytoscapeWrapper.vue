@@ -25,12 +25,12 @@
         <q-btn-group rounded class="menu-button-group q-mx-auto">
           <q-btn>
             <q-icon name="mdi-file-table-box" />
-            <span v-if="$q.screen.gt.xs">info</span>
+            <q-tooltip>Graph Info</q-tooltip>
           </q-btn>
           <q-btn-dropdown>
             <template v-slot:label>
               <q-icon name="mdi-share-variant" />
-              <span v-if="$q.screen.gt.xs">share</span>
+              <q-tooltip>Share</q-tooltip>
             </template>
           </q-btn-dropdown>
         </q-btn-group>
