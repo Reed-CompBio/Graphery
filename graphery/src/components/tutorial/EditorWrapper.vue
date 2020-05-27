@@ -38,6 +38,12 @@
           icon="mdi-card-bulleted-settings"
           label="settings"
         />
+        <q-tab
+          name="shortcuts"
+          icon="mdi-format-list-bulleted"
+          label="shortcuts"
+        >
+        </q-tab>
       </q-tabs>
       <q-separator />
       <q-tab-panels
@@ -49,17 +55,6 @@
         <q-tab-panel name="code">
           <div id="editor-panel" :style="editorWrapperStyle">
             <div id="editor" :style="editorWrapperStyle"></div>
-            <!--            <editor-->
-            <!--              v-model="content"-->
-            <!--              @init="editorInit"-->
-            <!--              lang="html"-->
-            <!--              theme="chrome"-->
-            <!--              width="500"-->
-            <!--              height="100"-->
-            <!--              ref="editor"-->
-            <!--              :style="editorWrapperStyle"-->
-            <!--            ></editor>-->
-            <!--            <editor :style="editorWrapperStyle"></editor>-->
           </div>
         </q-tab-panel>
         <q-tab-panel name="info">
@@ -68,6 +63,9 @@
         <q-tab-panel name="settings">
           <!-- maybe I don't need this -->
           <div id="settings-panel">settings</div>
+        </q-tab-panel>
+        <q-tab-panel name="shortcuts">
+          <div id="shortcuts-panel">shortcuts</div>
         </q-tab-panel>
       </q-tab-panels>
     </q-card>
@@ -186,8 +184,6 @@
 <style lang="sass">
   #editor-container
     position: absolute
-    /*top: 27.5vh*/
-    /*left: 25vw*/
     z-index: 2
   .popup-wrapper
     min-width: 50vw
