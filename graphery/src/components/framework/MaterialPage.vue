@@ -43,11 +43,11 @@
 
   .container
     @media (max-width: $breakpoint-xs-max)
-      padding: 16px 10%
+      padding: 16px 10% 20px
     @media (min-width: $breakpoint-sm-min) and (max-width: $breakpoint-md-max)
-      padding: 16px 10%
+      padding: 16px 10% 20px
     @media (min-width: $breakpoint-lg-min)
-      padding: 0
+      padding: 16px 16px 20px
 
   .content-container-wrapper
     margin: 0 auto

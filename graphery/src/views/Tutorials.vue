@@ -1,8 +1,8 @@
 <template>
   <MaterialPage>
-    <div class="q-mt-md">
+    <div>
       <div>
-        <h3>
+        <h3 style="margin-bottom: 20px">
           Tutorials
         </h3>
       </div>
@@ -31,7 +31,7 @@
       </div>
       <div id="content-section">
         <div class="row">
-          <div id="filter-section" class="col-3">
+          <div id="filter-section" class="col-4">
             <div>
               <h5>
                 Filter
@@ -57,13 +57,18 @@
               </q-select>
             </div>
           </div>
-          <div class="col-1"><q-separator vertical /></div>
+
           <div id="tutorial-list" class="col-8">
-            <div>
-              <h5>
-                Tutorials
-              </h5>
-              <ArticleCard></ArticleCard>
+            <div class="q-px-md">
+              <ArticleCard
+                v-for="info in tutorialInfos"
+                :key="info.id"
+                :title="info.title"
+                :authors="info.authors"
+                :categories="info.categories"
+                :time="info.time"
+                :abstract="info.abstract"
+              ></ArticleCard>
             </div>
           </div>
         </div>
@@ -76,6 +81,7 @@
   export default {
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
+      ArticleCard: () => import('@/components/framework/ArticleCard.vue'),
     },
     data() {
       return {
@@ -83,6 +89,53 @@
         searchLoading: false,
         filterSelections: [],
         filterOptions: [],
+        tutorialInfos: [
+          {
+            title: 'Example',
+            authors: ['me', 'her'],
+            categories: ['1', '2'],
+            time: new Date().toLocaleString(),
+            abstract:
+              'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
+            id: '1',
+          },
+          {
+            title: 'Example',
+            authors: ['me', 'her'],
+            categories: ['1', '2'],
+            time: new Date().toLocaleString(),
+            abstract:
+              'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
+            id: '2',
+          },
+          {
+            title: 'Example',
+            authors: ['me', 'her'],
+            categories: ['1', '2'],
+            time: new Date().toLocaleString(),
+            abstract:
+              'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
+            id: '3',
+          },
+          {
+            title: 'Example',
+            authors: ['me', 'her'],
+            categories: ['1', '2'],
+            time: new Date().toLocaleString(),
+            abstract:
+              'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
+            id: '4',
+          },
+          {
+            title: 'Example',
+            authors: ['me', 'her'],
+            categories: ['1', '2'],
+            time: new Date().toLocaleString(),
+            abstract:
+              'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
+            id: '5',
+          },
+        ],
       };
     },
     methods: {
