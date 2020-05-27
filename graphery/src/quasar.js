@@ -8,7 +8,7 @@ import { Quasar } from 'quasar';
 Vue.use(Quasar, {
   config: {
     iconSet: 'mdi-v5',
-    dark: true,
+    dark: false,
     animations: ['zoomIn', 'zoomOut'],
   },
   components: {

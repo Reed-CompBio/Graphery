@@ -6,9 +6,15 @@
     </div>
     <q-separator></q-separator>
     <div class="row q-my-md">
-      <q-btn size="lg" class="q-ml-auto">Tutorials</q-btn>
-      <q-btn size="lg" class="q-mx-lg">Graphs</q-btn>
-      <q-btn size="lg" class="q-mr-auto">Account</q-btn>
+      <q-btn size="lg" class="q-ml-auto" :to="{ name: 'Tutorials' }" exact>
+        Tutorials
+      </q-btn>
+      <q-btn size="lg" class="q-mx-lg" :to="{ name: 'Graphs' }" exact>
+        Graphs
+      </q-btn>
+      <q-btn size="lg" class="q-mr-auto" :to="{ name: 'Account' }" exact>
+        Account
+      </q-btn>
     </div>
     <div class="flex-center text-center text-body1">
       <p>

@@ -8,8 +8,8 @@
         <q-icon name="mdi-function" />
         <div style="text-transform: uppercase;">{{ tab }}</div>
         <q-space />
-        <q-btn-group>
-          <q-btn>
+        <q-btn-group flat class="q-mr-md">
+          <q-btn dense>
             <q-icon name="mdi-play"></q-icon>
           </q-btn>
         </q-btn-group>
