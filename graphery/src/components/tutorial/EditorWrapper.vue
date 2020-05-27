@@ -97,13 +97,28 @@
     mounted() {
       import('ace-builds')
         .then((ac) => {
+          // Object.freeze(document.getElementById('editor'));
+
           console.debug('ace code editor module: ', ac);
+          ac.config.set('basePath', '/ace-builds/src-noconflict');
+          ac.config.set('modePath', '/ace-builds/src-noconflict');
+          ac.config.set('themePath', '/ace-builds/src-noconflict');
           aceEdit = ac.edit;
           console.debug('ace edit func: ', aceEdit);
 
           this.aceInstance = aceEdit('editor');
+          this.aceInstance.setOptions({
+            enableBasicAutocompletion: true, // the editor completes the statement when you hit Ctrl + Space
+            enableLiveAutocompletion: true, // the editor completes the statement while you are typing
+            showPrintMargin: false, // hides the vertical limiting strip
+            maxLines: 500,
+            fontSize: '100%', // ensures that the editor fits in the environment
+          });
+
+          // this.aceInstance.getSession().setUseWorker(false);
+
           // this.aceInstance.setTheme('ace/theme/monokai');
-          // this.aceInstance.session.setMode('ace/mode/python');
+          // this.aceInstance.getSession().setMode('ace/mode/python');
 
           console.debug('ace editor instance: ', this.aceInstance);
         })
