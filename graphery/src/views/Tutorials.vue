@@ -1,14 +1,71 @@
 <template>
   <MaterialPage>
-    <div id="search-section">Search Bar is here</div>
-    <div id="content-section">
-      <div class="row">
-        <div id="filter-section" class="col-3">
-          Filter section
-        </div>
-        <div class="col-1"><q-separator vertical /></div>
-        <div id="tutorial-list" class="col-8">
-          Tutorial list section
+    <div class="q-mt-md">
+      <div>
+        <h3>
+          Tutorials
+        </h3>
+      </div>
+      <div id="search-section">
+        <q-input
+          outlined
+          clearable
+          :debounce="500"
+          hint="press enter to search"
+          v-model="searchText"
+          name="search-input"
+          :rules="[]"
+          :loading="searchLoading"
+          :hide-hint="searchText || searchLoading"
+        >
+          <template v-slot:append>
+            <q-icon
+              v-if="!searchText && !searchLoading"
+              name="mdi-magnify"
+              @click="search"
+              @keydown.enter="search"
+              style="cursor: pointer;"
+            />
+          </template>
+        </q-input>
+      </div>
+      <div id="content-section">
+        <div class="row">
+          <div id="filter-section" class="col-3">
+            <div>
+              <h5>
+                Filter
+              </h5>
+            </div>
+            <div>
+              <q-select
+                filled
+                v-model="filterSelections"
+                multiple
+                :options="filterOptions"
+                use-chips
+                stack-label
+                label="Multiple selection"
+              >
+                <template v-slot:no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No Items
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
+            </div>
+          </div>
+          <div class="col-1"><q-separator vertical /></div>
+          <div id="tutorial-list" class="col-8">
+            <div>
+              <h5>
+                Tutorials
+              </h5>
+              <ArticleCard></ArticleCard>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -19,6 +76,30 @@
   export default {
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
+    },
+    data() {
+      return {
+        searchText: '',
+        searchLoading: false,
+        filterSelections: [],
+        filterOptions: [],
+      };
+    },
+    methods: {
+      toggleLoading() {
+        this.searchLoading = true;
+      },
+      finishLoading() {
+        this.searchLoading = false;
+      },
+      search() {
+        if (this.searchLoading) {
+          console.log('Is searching, cancel current searching');
+          // TODO notify
+        }
+        console.log('search');
+        // this.toggleLoading();
+      },
     },
   };
 </script>
