@@ -1,5 +1,6 @@
 <template>
   <div id="editor-container" :style="editorPos">
+    <q-resize-observer @resize="resizePos"></q-resize-observer>
     <!--    <q-dialog :value="show" persistent seamless position="bottom">-->
 
     <q-card class="popup-wrapper">
@@ -7,6 +8,11 @@
         <q-icon name="mdi-function" />
         <div style="text-transform: uppercase;">{{ tab }}</div>
         <q-space />
+        <q-btn-group>
+          <q-btn>
+            <q-icon name="mdi-play"></q-icon>
+          </q-btn>
+        </q-btn-group>
         <q-btn dense flat icon="close" @click="closeWindow" />
       </q-bar>
       <q-tabs inline-label class="tutorial-tabs" v-model="tab">
@@ -34,6 +40,7 @@
           <div id="info-panel">info</div>
         </q-tab-panel>
         <q-tab-panel name="settings">
+          <!-- maybe I don't need this -->
           <div id="settings-panel">settings</div>
         </q-tab-panel>
       </q-tab-panels>
@@ -66,6 +73,12 @@
       handlePanning({ delta }) {
         this.pos.x += delta.x;
         this.pos.y += delta.y;
+      },
+      resizePos() {
+        this.pos = {
+          x: window.innerWidth / 4,
+          y: window.innerHeight * 0.275,
+        };
       },
     },
     computed: {

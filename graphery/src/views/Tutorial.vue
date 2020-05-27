@@ -24,10 +24,14 @@
       </template>
     </q-splitter>
     <EditorWrapper
-      v-show="editorShow"
+      v-show="editorShow && $q.screen.gt.xs"
       @close-editor="closeEditor"
     ></EditorWrapper>
-    <q-page-sticky position="bottom-left" :offset="[30, 30]">
+    <q-page-sticky
+      v-if="$q.screen.gt.xs"
+      position="bottom-left"
+      :offset="[30, 30]"
+    >
       <q-btn round color="primary" icon="mdi-code-json" @click="toggleEditor" />
     </q-page-sticky>
   </div>

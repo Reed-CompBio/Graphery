@@ -1,6 +1,6 @@
 <template>
   <div class="full-height ">
-    <div class="graph-menu-bar">
+    <q-bar class="graph-menu-bar">
       <div class="graph-menu-wrapper">
         <q-select
           class="graph-selector"
@@ -22,18 +22,20 @@
         </q-select>
       </div>
       <div class="menu-button-group-wrapper">
-        <q-btn-group rounded class="menu-button-group">
+        <q-btn-group rounded class="menu-button-group q-mx-auto">
           <q-btn>
-            <q-icon name="mdi-file-table-box"></q-icon>
+            <q-icon name="mdi-file-table-box" />
+            <span v-if="$q.screen.gt.xs">info</span>
           </q-btn>
           <q-btn-dropdown>
             <template v-slot:label>
-              <q-icon name="mdi-share-variant"></q-icon>
+              <q-icon name="mdi-share-variant" />
+              <span v-if="$q.screen.gt.xs">share</span>
             </template>
           </q-btn-dropdown>
         </q-btn-group>
       </div>
-    </div>
+    </q-bar>
     <div id="cy-wrapper" :style="heightStyle">
       <q-resize-observer @resize="resizeGraph" />
       <div
@@ -368,6 +370,7 @@
   @import '~@/styles/panzoom.css'
 
   .graph-menu-bar
+    min-height: 56px
     max-height: 56px
     display: flex
     flex-direction: row
