@@ -22,6 +22,7 @@
             </q-tooltip>
           </q-btn>
         </q-btn-group>
+        <q-btn-group flat class="q-mr-md"></q-btn-group>
         <q-btn
           dense
           flat
@@ -75,6 +76,7 @@
 
 <script>
   import { editorTabHeight } from '@/store/states/meta.ts';
+  import { mapState } from 'vuex';
   let aceEdit;
 
   export default {
@@ -114,6 +116,7 @@
       },
     },
     computed: {
+      ...mapState('settings', ['tabNum', 'softTab', 'fontSize', 'wrap']),
       editorWrapperStyle() {
         return {
           height: `calc(40vh - ${editorTabHeight}px)`,
@@ -127,56 +130,30 @@
       },
     },
     mounted() {
-      import('brace').then((br) => {
-        console.debug('brace (ace) editor module: ', br);
+      import('brace')
+        .then((br) => {
+          console.debug('brace (ace) editor module: ', br);
 
-        aceEdit = br.edit;
-        console.debug('ace edit func: ', aceEdit);
+          aceEdit = br.edit;
+          console.debug('ace edit func: ', aceEdit);
 
-        this.editorInit();
+          this.editorInit();
 
-        this.aceInstance = aceEdit('editor');
-        this.aceInstance.setOption({
-          enableBasicAutocompletion: true, // the editor completes the statement when you hit Ctrl + Space
-          enableLiveAutocompletion: true, // the editor completes the statement while you are typing
-          showPrintMargin: false, // hides the vertical limiting strip
-          maxLines: 500,
-          fontSize: '100%', // ensures that the editor fits in the environment
+          this.aceInstance = aceEdit('editor');
+          this.aceInstance.setOption({
+            enableBasicAutocompletion: true, // the editor completes the statement when you hit Ctrl + Space
+            enableLiveAutocompletion: true, // the editor completes the statement while you are typing
+            showPrintMargin: false, // hides the vertical limiting strip
+            maxLines: 500,
+            fontSize: '100%', // ensures that the editor fits in the environment
+          });
+
+          this.aceInstance.getSession().setMode('ace/mode/python');
+          this.aceInstance.setTheme('ace/theme/chrome');
+        })
+        .catch((err) => {
+          console.error('An error occurs when initializing the code editor');
         });
-
-        this.aceInstance.getSession().setMode('ace/mode/python');
-        this.aceInstance.setTheme('ace/theme/chrome');
-      });
-      // import('ace-builds')
-      //   .then((ac) => {
-      //     // Object.freeze(document.getElementById('editor'));
-      //
-      //     console.debug('ace code editor module: ', ac);
-      //     ac.config.set('basePath', '/ace-builds/src-noconflict');
-      //     ac.config.set('modePath', '/ace-builds/src-noconflict');
-      //     ac.config.set('themePath', '/ace-builds/src-noconflict');
-      //     aceEdit = ac.edit;
-      //     console.debug('ace edit func: ', aceEdit);
-      //
-      //     this.aceInstance = aceEdit('editor');
-      //     this.aceInstance.setOptions({
-      //       enableBasicAutocompletion: true, // the editor completes the statement when you hit Ctrl + Space
-      //       enableLiveAutocompletion: true, // the editor completes the statement while you are typing
-      //       showPrintMargin: false, // hides the vertical limiting strip
-      //       maxLines: 500,
-      //       fontSize: '100%', // ensures that the editor fits in the environment
-      //     });
-      //
-      //     // this.aceInstance.getSession().setUseWorker(false);
-      //
-      //     // this.aceInstance.setTheme('ace/theme/monokai');
-      //     // this.aceInstance.getSession().setMode('ace/mode/python');
-      //
-      //     console.debug('ace editor instance: ', this.aceInstance);
-      //   })
-      //   .catch((err) => {
-      //     console.error(err);
-      //   });
     },
   };
 </script>

@@ -3,12 +3,20 @@ import { ActionTree, GetterTree, MutationTree } from 'vuex';
 
 const state: SettingState = {
   dark: true,
+  // graph page
   graphSplitPos: 50,
   graphDark: false,
+  // graph render
   hideEdgeWhenRendering: false,
   renderViewportOnly: false,
   motionBlurEnabled: true,
   motionSensitivityLevel: 1,
+
+  // editor settings
+  tabNum: 4,
+  softTab: false,
+  fontSize: 14,
+  wrap: false,
 };
 
 const mutations: MutationTree<SettingState> = {
