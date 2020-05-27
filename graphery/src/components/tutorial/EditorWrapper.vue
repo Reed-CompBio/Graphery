@@ -33,7 +33,18 @@
       >
         <q-tab-panel name="code">
           <div id="editor-panel" :style="editorWrapperStyle">
-            <div id="editor" :style="editorWrapperStyle"></div>
+            <!--            <div id="editor" :style="editorWrapperStyle"></div>-->
+            <editor
+              v-model="content"
+              @init="editorInit"
+              lang="html"
+              theme="chrome"
+              width="500"
+              height="100"
+              ref="editor"
+              :style="editorWrapperStyle"
+            ></editor>
+            <!--            <editor :style="editorWrapperStyle"></editor>-->
           </div>
         </q-tab-panel>
         <q-tab-panel name="info">
@@ -54,10 +65,14 @@
   let aceEdit;
 
   export default {
+    components: {
+      editor: () => import('vue2-ace-editor'),
+    },
     data() {
       return {
         tab: 'code',
         aceInstance: null,
+        content: '',
         isPanning: false,
         pos: {
           x: window.innerWidth / 4,
@@ -66,6 +81,14 @@
       };
     },
     methods: {
+      editorInit: function() {
+        require('brace/ext/language_tools'); //language extension prerequsite...
+        require('brace/mode/html');
+        require('brace/mode/python'); //language
+        require('brace/mode/less');
+        require('brace/theme/chrome');
+        require('brace/snippets/javascript'); //snippet
+      },
       closeWindow() {
         console.debug('close editor window');
         this.$emit('close-editor');
@@ -95,36 +118,36 @@
       },
     },
     mounted() {
-      import('ace-builds')
-        .then((ac) => {
-          // Object.freeze(document.getElementById('editor'));
-
-          console.debug('ace code editor module: ', ac);
-          ac.config.set('basePath', '/ace-builds/src-noconflict');
-          ac.config.set('modePath', '/ace-builds/src-noconflict');
-          ac.config.set('themePath', '/ace-builds/src-noconflict');
-          aceEdit = ac.edit;
-          console.debug('ace edit func: ', aceEdit);
-
-          this.aceInstance = aceEdit('editor');
-          this.aceInstance.setOptions({
-            enableBasicAutocompletion: true, // the editor completes the statement when you hit Ctrl + Space
-            enableLiveAutocompletion: true, // the editor completes the statement while you are typing
-            showPrintMargin: false, // hides the vertical limiting strip
-            maxLines: 500,
-            fontSize: '100%', // ensures that the editor fits in the environment
-          });
-
-          // this.aceInstance.getSession().setUseWorker(false);
-
-          // this.aceInstance.setTheme('ace/theme/monokai');
-          // this.aceInstance.getSession().setMode('ace/mode/python');
-
-          console.debug('ace editor instance: ', this.aceInstance);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      // import('ace-builds')
+      //   .then((ac) => {
+      //     // Object.freeze(document.getElementById('editor'));
+      //
+      //     console.debug('ace code editor module: ', ac);
+      //     ac.config.set('basePath', '/ace-builds/src-noconflict');
+      //     ac.config.set('modePath', '/ace-builds/src-noconflict');
+      //     ac.config.set('themePath', '/ace-builds/src-noconflict');
+      //     aceEdit = ac.edit;
+      //     console.debug('ace edit func: ', aceEdit);
+      //
+      //     this.aceInstance = aceEdit('editor');
+      //     this.aceInstance.setOptions({
+      //       enableBasicAutocompletion: true, // the editor completes the statement when you hit Ctrl + Space
+      //       enableLiveAutocompletion: true, // the editor completes the statement while you are typing
+      //       showPrintMargin: false, // hides the vertical limiting strip
+      //       maxLines: 500,
+      //       fontSize: '100%', // ensures that the editor fits in the environment
+      //     });
+      //
+      //     // this.aceInstance.getSession().setUseWorker(false);
+      //
+      //     // this.aceInstance.setTheme('ace/theme/monokai');
+      //     // this.aceInstance.getSession().setMode('ace/mode/python');
+      //
+      //     console.debug('ace editor instance: ', this.aceInstance);
+      //   })
+      //   .catch((err) => {
+      //     console.error(err);
+      //   });
     },
   };
 </script>
