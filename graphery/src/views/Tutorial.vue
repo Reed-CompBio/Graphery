@@ -25,12 +25,7 @@
     </q-splitter>
     <EditorWrapper :show="editorShow"></EditorWrapper>
     <q-page-sticky position="bottom-left" :offset="[30, 30]">
-      <q-btn
-        round
-        color="primary"
-        icon="mdi-code-braces"
-        @click="toggleEditor"
-      />
+      <q-btn round color="primary" icon="mdi-code-json" @click="toggleEditor" />
     </q-page-sticky>
   </div>
 </template>
@@ -50,7 +45,7 @@
     },
     data() {
       return {
-        editorShow: false,
+        editorShow: true,
       };
     },
     computed: {
