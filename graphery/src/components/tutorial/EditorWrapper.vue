@@ -26,3 +26,5 @@
     props: ['show'],
   };
 </script>
+
+<style lang="sass"></style>

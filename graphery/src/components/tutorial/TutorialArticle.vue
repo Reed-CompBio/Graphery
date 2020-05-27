@@ -39,26 +39,35 @@
       <div id="tutorial-content" v-html="content"></div>
     </q-scroll-area>
     <!-- add a protocol info section -->
+
+    <!-- fix animation -->
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
-      <q-circular-progress
-        size="42px"
-        :value="articleViewPercentage"
-        :max="1"
-        color="primary"
-        :thickness="0.1"
-        center-color="primary"
-        track-color="white"
-        show-value
-        @click="scrollToTop"
+      <transition
+        appear
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
       >
-        <!--        <q-btn round color="primary" icon="mdi-menu-up" @click="scrollToTop" />-->
-        <q-icon
-          id="scroll-up-icon"
-          name="mdi-menu-up"
-          color="white"
-          size="26px"
-        />
-      </q-circular-progress>
+        <q-circular-progress
+          v-show="articleViewPercentage !== 0"
+          size="42px"
+          :value="articleViewPercentage"
+          :max="1"
+          color="primary"
+          :thickness="0.1"
+          center-color="primary"
+          track-color="white"
+          show-value
+          @click="scrollToTop"
+        >
+          <!--        <q-btn round color="primary" icon="mdi-menu-up" @click="scrollToTop" />-->
+          <q-icon
+            id="scroll-up-icon"
+            name="mdi-menu-up"
+            color="white"
+            size="26px"
+          />
+        </q-circular-progress>
+      </transition>
     </q-page-sticky>
     <q-inner-loading
       :showing="articleEmpty"
