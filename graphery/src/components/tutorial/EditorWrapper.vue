@@ -28,7 +28,7 @@
           </q-btn>
           <q-btn dense icon="mdi-content-paste">
             <q-tooltip :hide-delay="300" class="text-body1">
-              Paste Codes
+              Paste codes
             </q-tooltip>
           </q-btn>
         </q-btn-group>
@@ -89,6 +89,7 @@
   import { editorTabHeight } from '@/store/states/meta.ts';
   import { mapState, mapGetters } from 'vuex';
   let aceEdit;
+  let Range;
 
   export default {
     data() {
@@ -108,7 +109,6 @@
         require('brace/ext/language_tools'); //language extension prerequsite...
         require('brace/mode/python'); //language
         require('brace/theme/chrome');
-
         console.debug('acquired modules for ace editor');
       },
       closeWindow() {
@@ -151,6 +151,8 @@
 
           this.editorInit();
 
+          Range = br.acequire('ace/range').Range;
+
           this.aceInstance = aceEdit('editor');
           this.aceInstance.setOption({
             enableBasicAutocompletion: true, // the editor completes the statement when you hit Ctrl + Space
@@ -162,6 +164,14 @@
 
           this.aceInstance.getSession().setMode('ace/mode/python');
           this.aceInstance.setTheme('ace/theme/chrome');
+
+          this.aceInstance.setValue(
+            `def test():
+   print('this is as test function')
+  `
+          );
+
+          // this.aceInstance.addMarker(new Range(1, 0, 2, 0));
         })
         .catch((err) => {
           console.error('An error occurs when initializing the code editor');
