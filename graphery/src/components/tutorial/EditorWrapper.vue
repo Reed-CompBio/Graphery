@@ -5,6 +5,7 @@
         <q-icon name="mdi-function" />
         <div style="text-transform: uppercase;">{{ tab }}</div>
         <q-space />
+        <!-- TODO  get the button actions done -->
         <q-btn-group flat class="q-mr-md" v-touch-pan.prevent.mouse="null">
           <q-btn dense>
             <q-icon name="mdi-cloud-upload" />
@@ -19,7 +20,18 @@
             </q-tooltip>
           </q-btn>
         </q-btn-group>
-        <q-btn-group flat class="q-mr-md"></q-btn-group>
+        <q-btn-group flat class="q-mr-md">
+          <q-btn dense icon="mdi-content-copy">
+            <q-tooltip :hide-delay="300" class="text-body1">
+              Copy codes
+            </q-tooltip>
+          </q-btn>
+          <q-btn dense icon="mdi-content-paste">
+            <q-tooltip :hide-delay="300" class="text-body1">
+              Paste Codes
+            </q-tooltip>
+          </q-btn>
+        </q-btn-group>
         <q-btn
           dense
           flat
