@@ -1,45 +1,51 @@
 <template>
   <div class="q-mx-sm q-my-lg">
-    <q-card class="article-card-wrapper">
-      <section>
-        <h6>
-          {{ title }}
-        </h6>
-      </section>
-      <section>
-        <q-breadcrumbs>
-          <q-breadcrumbs-el v-if="authors">
-            <q-chip
-              v-for="author in authors"
-              :key="author"
-              icon="mdi-card-account-details"
-            >
-              {{ author }}
-            </q-chip>
-          </q-breadcrumbs-el>
-          <q-breadcrumbs-el v-if="categories">
-            <q-chip
-              v-for="category in categories"
-              :key="category"
-              icon="mdi-sitemap"
-            >
-              {{ category }}
-            </q-chip>
-          </q-breadcrumbs-el>
-          <q-breadcrumbs-el v-if="time">
-            <q-chip icon="mdi-calendar-month"> {{ time }}</q-chip>
-          </q-breadcrumbs-el>
-        </q-breadcrumbs>
-      </section>
-      <section class="article-abstract-section">
-        <p>
-          {{ abstract }}
-        </p>
-      </section>
-      <q-card-actions>
-        <q-btn :to="`/tutorial/${id}`"> Read More </q-btn>
-      </q-card-actions>
-    </q-card>
+    <q-intersection once transition="scale" class="expandable-helper">
+      <q-card class="article-card-wrapper">
+        <section>
+          <h6>
+            {{ title }}
+          </h6>
+        </section>
+        <section>
+          <q-breadcrumbs>
+            <q-breadcrumbs-el v-if="authors">
+              <q-chip
+                clickable
+                v-for="author in authors"
+                :key="author"
+                icon="mdi-card-account-details"
+                @click="$emit('author-filter', author)"
+              >
+                {{ author }}
+              </q-chip>
+            </q-breadcrumbs-el>
+            <q-breadcrumbs-el v-if="categories">
+              <q-chip
+                clickable
+                v-for="category in categories"
+                :key="category"
+                icon="mdi-sitemap"
+                @click="$emit('category-filter', category)"
+              >
+                {{ category }}
+              </q-chip>
+            </q-breadcrumbs-el>
+            <q-breadcrumbs-el v-if="time">
+              <q-chip icon="mdi-calendar-month"> {{ time }}</q-chip>
+            </q-breadcrumbs-el>
+          </q-breadcrumbs>
+        </section>
+        <section class="article-abstract-section">
+          <p>
+            {{ abstract }}
+          </p>
+        </section>
+        <q-card-actions>
+          <q-btn :to="`/tutorial/${id}`"> Read More </q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-intersection>
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <MaterialPage>
     <div>
-      <div>
+      <div id="title-section">
         <h3 style="margin-bottom: 20px">
           Tutorials
         </h3>
@@ -68,8 +68,14 @@
                 :categories="info.categories"
                 :time="info.time"
                 :abstract="info.abstract"
+                :id="info.id"
+                @category-filter="addToCategoryFilter"
+                @author-filter="addToAuthorFilter"
               ></ArticleCard>
             </div>
+            <q-inner-loading :showing="!tutorialInfos">
+              <q-spinner-pie size="64"></q-spinner-pie>
+            </q-inner-loading>
           </div>
         </div>
       </div>
@@ -89,6 +95,7 @@
         searchLoading: false,
         filterSelections: [],
         filterOptions: [],
+        // TODO page separation
         tutorialInfos: [
           {
             title: 'Example',
@@ -152,6 +159,13 @@
         }
         console.log('search');
         // this.toggleLoading();
+      },
+      addToAuthorFilter(author) {
+        // TODO apply author filter
+        console.debug(`add ${author} to author filter`);
+      },
+      addToCategoryFilter(category) {
+        console.debug(`add ${category} to category filter`);
       },
     },
   };

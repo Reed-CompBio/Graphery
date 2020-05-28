@@ -14,6 +14,7 @@
         <div id="tutorial-info" class="q-mb-lg">
           <q-breadcrumbs>
             <q-breadcrumbs-el v-if="authors">
+              // TODO change spans to chips
               <span>Author: </span>
               <span v-for="author in authors" :key="author">
                 {{ author }}
