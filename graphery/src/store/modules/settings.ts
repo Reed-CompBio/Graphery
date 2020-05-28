@@ -1,16 +1,18 @@
 import { RootState, SettingState } from '@/store/states/state';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 
+// TODO remove this and use web storage instead
 const state: SettingState = {
-  dark: true,
-  // graph page
-  graphSplitPos: 50,
+  // color
+  dark: false,
   graphDark: false,
+
   // graph render
   hideEdgeWhenRendering: false,
   renderViewportOnly: false,
   motionBlurEnabled: true,
   motionSensitivityLevel: 1,
+  graphSplitPos: 50,
 
   // editor settings
   tabNum: 4,

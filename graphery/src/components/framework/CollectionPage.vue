@@ -2,7 +2,7 @@
   <MaterialPage>
     <div>
       <div id="title-section">
-        <h3 style="margin-bottom: 20px">
+        <h3 class="shorter-h3">
           {{ title }}
         </h3>
       </div>
@@ -207,3 +207,8 @@
     // TODO maybe add a watch which emits an event once the info list is updated
   };
 </script>
+
+<style lang="sass">
+  .shorter-h3
+    margin-bottom: 20px
+</style>
