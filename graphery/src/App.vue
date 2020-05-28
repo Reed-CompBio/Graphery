@@ -12,6 +12,7 @@
 
 <script lang="ts">
   import Vue from 'vue';
+  import { LocalStorage } from 'quasar';
 
   export default Vue.extend({
     name: 'App',
@@ -22,6 +23,12 @@
       NavigationDrawer: () =>
         import('@/components/framework/NavigationDrawer.vue'),
       Notification: () => import('@/components/framework/Notification.vue'),
+    },
+    mounted() {
+      // this.$q.dark.set(true);
+      console.log('empty local storage? ', LocalStorage.isEmpty());
+      console.log('local storage: ', LocalStorage.getAll());
+      LocalStorage.set('test-key', false);
     },
   });
 </script>

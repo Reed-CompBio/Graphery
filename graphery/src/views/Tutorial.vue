@@ -104,6 +104,11 @@
     },
     mounted() {
       // pull tutorials
+      this.$q.notify({
+        multiLine: true,
+        message: 'open code editor using {...} button',
+        icon: 'mdi-code-json',
+      });
       this.updateTutorialContent();
     },
   };
