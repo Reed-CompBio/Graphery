@@ -161,7 +161,7 @@
 <style lang="sass">
   #editor-container
     position: absolute
-    z-index: 2
+    z-index: 2001
   .popup-wrapper
     min-width: 50vw
     min-height: 45vh
