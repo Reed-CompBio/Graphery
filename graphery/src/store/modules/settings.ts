@@ -19,6 +19,9 @@ const state: SettingState = {
   softTab: false,
   fontSize: 14,
   wrap: false,
+
+  //
+  pageDisplayNum: 5,
 };
 
 const mutations: MutationTree<SettingState> = {

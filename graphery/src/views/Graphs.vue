@@ -7,12 +7,5 @@
     components: {
       CollectionPage: () => import('@/components/framework/CollectionPage.vue'),
     },
-    data() {
-      return {
-        searchText: '',
-        searchLoading: false,
-        filterSelections: [],
-      };
-    },
   };
 </script>

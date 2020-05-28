@@ -84,4 +84,7 @@ export interface SettingState {
   softTab: boolean;
   fontSize: number;
   wrap: boolean;
+
+  //
+  pageDisplayNum: number;
 }

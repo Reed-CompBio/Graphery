@@ -6,7 +6,6 @@
           {{ title }}
         </h3>
       </div>
-      <!-- TODO make the components responsive -->
       <div id="search-section">
         <q-input
           outlined
@@ -19,9 +18,8 @@
           :loading="searchLoading"
           @keydown.enter="search"
         >
-          <template v-slot:append>
+          <template v-slot:prepend>
             <q-icon
-              v-if="!searchText && !searchLoading"
               name="mdi-magnify"
               @click="search"
               style="cursor: pointer;"
@@ -57,7 +55,7 @@
                 :options="filterOptions"
                 use-chips
                 stack-label
-                label="Multiple selection"
+                label="Categories"
               >
                 <template v-slot:no-option>
                   <q-item>
@@ -71,9 +69,22 @@
           </div>
 
           <div id="content-list" class="col-8">
+            <div id="page-manager" class="flex flex-center">
+              <q-pagination
+                :max="paginationMax"
+                v-model="currentPage"
+                :max-pages="6"
+                ellipses
+                direction-links
+                boundary-links
+                boundary-numbers
+                class="q-mx-auto"
+              >
+              </q-pagination>
+            </div>
             <div class="q-px-md">
               <ArticleCard
-                v-for="info in infos"
+                v-for="info in displayedInfos"
                 :key="info.id"
                 :title="info.title"
                 :authors="info.authors"
@@ -114,8 +125,27 @@
         filterOptions: [],
         // TODO page separation
         // TODO link it with api calls
-        infos: [],
+        rawInfos: [],
+        infos: [], // Served as a filtered input
+        // TODO add this to the settings
+        pageDisplayNum: 5,
+        current: 1,
+        currentPage: 1,
       };
+    },
+    computed: {
+      paginationMax() {
+        return Math.ceil(this.infos.length / this.pageDisplayNum);
+      },
+      displayIndexStart() {
+        return (this.currentPage - 1) * this.pageDisplayNum;
+      },
+      displayedInfos() {
+        return this.infos.slice(
+          this.displayIndexStart,
+          this.displayIndexStart + 5
+        );
+      },
     },
     methods: {
       toggleLoading() {
@@ -130,55 +160,17 @@
         console.debug('start getting tutorial infos');
         this.toggleLoading();
         setTimeout(() => {
-          this.infos.push(
-            ...[
-              {
-                title: 'Example',
-                authors: ['me', 'her'],
-                categories: ['1', '2'],
-                time: new Date().toLocaleString(),
-                abstract:
-                  'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-                id: '1',
-              },
-              {
-                title: 'Example',
-                authors: ['me', 'her'],
-                categories: ['1', '2'],
-                time: new Date().toLocaleString(),
-                abstract:
-                  'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-                id: '2',
-              },
-              {
-                title: 'Example',
-                authors: ['me', 'her'],
-                categories: ['1', '2'],
-                time: new Date().toLocaleString(),
-                abstract:
-                  'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-                id: '3',
-              },
-              {
-                title: 'Example',
-                authors: ['me', 'her'],
-                categories: ['1', '2'],
-                time: new Date().toLocaleString(),
-                abstract:
-                  'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-                id: '4',
-              },
-              {
-                title: 'Example',
-                authors: ['me', 'her'],
-                categories: ['1', '2'],
-                time: new Date().toLocaleString(),
-                abstract:
-                  'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-                id: '5',
-              },
-            ]
-          );
+          for (let i = 0; i < 10; i++) {
+            this.infos.push({
+              title: 'Example',
+              authors: ['me', 'her'],
+              categories: ['1', '2'],
+              time: new Date().toLocaleString(),
+              abstract:
+                'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
+              id: i.toString(),
+            });
+          }
           // TODO modify this to accommodate the real apis
           this.finishLoading();
           console.debug('finished loading tutorial infos');
@@ -199,6 +191,9 @@
       addToCategoryFilter(category) {
         // TODO apply category filters
         console.debug(`add ${category} to category filter`);
+      },
+      useTimeFilter(option) {
+        console.debug(`using time filter with option ${option}.`);
       },
     },
     mounted() {
