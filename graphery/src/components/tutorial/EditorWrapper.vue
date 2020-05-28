@@ -1,6 +1,5 @@
 <template>
   <div id="editor-container" :style="editorPos">
-    <q-resize-observer @resize="resizePos"></q-resize-observer>
     <!--    <q-dialog :value="show" persistent seamless position="bottom">-->
 
     <q-card class="popup-wrapper">
@@ -80,6 +79,9 @@
   let aceEdit;
 
   export default {
+    props: {
+      loading: Boolean,
+    },
     data() {
       return {
         tab: 'code',
@@ -108,7 +110,7 @@
         this.pos.x += delta.x;
         this.pos.y += delta.y;
       },
-      resizePos() {
+      resizeEditorPos() {
         this.pos = {
           x: window.innerWidth / 4,
           y: window.innerHeight * 0.275,
@@ -164,5 +166,7 @@
     z-index: 2001
   .popup-wrapper
     min-width: 50vw
+    max-width: 900px
     min-height: 45vh
+    max-height: 600px
 </style>

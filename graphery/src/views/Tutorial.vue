@@ -1,6 +1,7 @@
 <template>
   <!-- make fill height class changable, then when graph  -->
   <div>
+    <q-resize-observer @resize="resizeAction"></q-resize-observer>
     <q-splitter
       :value="splitPos"
       :style="tutorialStyle"
@@ -9,7 +10,7 @@
       separator-style="width: 4px"
     >
       <template v-slot:before>
-        <CytoscapeWrapper></CytoscapeWrapper>
+        <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
       </template>
       <template v-slot:separator>
         <q-avatar
@@ -26,6 +27,7 @@
     <EditorWrapper
       v-show="editorShow && $q.screen.gt.xs"
       @close-editor="closeEditor"
+      ref="editorWrapper"
     ></EditorWrapper>
     <q-page-sticky
       v-if="$q.screen.gt.xs"
@@ -86,6 +88,11 @@
       },
       closeEditor() {
         this.editorShow = false;
+      },
+      resizeAction() {
+        // just ignore the error here
+        this.$refs.editorWrapper.resizeEditorPos();
+        this.$refs.cytoscapeWrapper.resizeGraph();
       },
     },
     watch: {

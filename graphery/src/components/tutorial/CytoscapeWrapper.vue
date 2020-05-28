@@ -1,5 +1,5 @@
 <template>
-  <div class="full-height ">
+  <div class="full-height">
     <q-bar class="graph-menu-bar">
       <div class="graph-menu-wrapper">
         <q-select
@@ -37,7 +37,7 @@
       </div>
     </q-bar>
     <div id="cy-wrapper" :style="heightStyle">
-      <q-resize-observer @resize="resizeGraph" />
+      <!--      <q-resize-observer @resize="" />-->
       <div
         id="cy"
         class="full-height"
@@ -354,6 +354,7 @@
         return false;
       },
       resizeGraph() {
+        console.log('resize!');
         if (this.cyInstance) {
           this.cyInstance.resize();
         }
