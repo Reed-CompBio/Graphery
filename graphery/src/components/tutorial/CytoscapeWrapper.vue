@@ -360,6 +360,7 @@
       },
     },
     destroyed() {
+      // TODO destroy raises errors
       this.clearAll();
       // TODO restore states in vuex
     },

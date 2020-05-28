@@ -16,14 +16,13 @@
           name="search-input"
           :rules="[]"
           :loading="searchLoading"
-          :hide-hint="searchText || searchLoading"
+          @keydown.enter="search"
         >
           <template v-slot:append>
             <q-icon
               v-if="!searchText && !searchLoading"
               name="mdi-magnify"
               @click="search"
-              @keydown.enter="search"
               style="cursor: pointer;"
             />
           </template>
@@ -72,10 +71,10 @@
                 @category-filter="addToCategoryFilter"
                 @author-filter="addToAuthorFilter"
               ></ArticleCard>
+              <q-inner-loading :showing="!tutorialInfos.length">
+                <q-spinner-pie size="64"></q-spinner-pie>
+              </q-inner-loading>
             </div>
-            <q-inner-loading :showing="!tutorialInfos">
-              <q-spinner-pie size="64"></q-spinner-pie>
-            </q-inner-loading>
           </div>
         </div>
       </div>
@@ -96,53 +95,8 @@
         filterSelections: [],
         filterOptions: [],
         // TODO page separation
-        tutorialInfos: [
-          {
-            title: 'Example',
-            authors: ['me', 'her'],
-            categories: ['1', '2'],
-            time: new Date().toLocaleString(),
-            abstract:
-              'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-            id: '1',
-          },
-          {
-            title: 'Example',
-            authors: ['me', 'her'],
-            categories: ['1', '2'],
-            time: new Date().toLocaleString(),
-            abstract:
-              'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-            id: '2',
-          },
-          {
-            title: 'Example',
-            authors: ['me', 'her'],
-            categories: ['1', '2'],
-            time: new Date().toLocaleString(),
-            abstract:
-              'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-            id: '3',
-          },
-          {
-            title: 'Example',
-            authors: ['me', 'her'],
-            categories: ['1', '2'],
-            time: new Date().toLocaleString(),
-            abstract:
-              'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-            id: '4',
-          },
-          {
-            title: 'Example',
-            authors: ['me', 'her'],
-            categories: ['1', '2'],
-            time: new Date().toLocaleString(),
-            abstract:
-              'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-            id: '5',
-          },
-        ],
+        // TODO link it with api calls
+        tutorialInfos: [],
       };
     },
     methods: {
@@ -151,6 +105,64 @@
       },
       finishLoading() {
         this.searchLoading = false;
+      },
+      getTutorialInfoList() {
+        // TODO API calls to get tutorial lists
+        console.debug('start getting tutorial infos');
+        this.toggleLoading();
+        setTimeout(() => {
+          this.tutorialInfos.push(
+            ...[
+              {
+                title: 'Example',
+                authors: ['me', 'her'],
+                categories: ['1', '2'],
+                time: new Date().toLocaleString(),
+                abstract:
+                  'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
+                id: '1',
+              },
+              {
+                title: 'Example',
+                authors: ['me', 'her'],
+                categories: ['1', '2'],
+                time: new Date().toLocaleString(),
+                abstract:
+                  'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
+                id: '2',
+              },
+              {
+                title: 'Example',
+                authors: ['me', 'her'],
+                categories: ['1', '2'],
+                time: new Date().toLocaleString(),
+                abstract:
+                  'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
+                id: '3',
+              },
+              {
+                title: 'Example',
+                authors: ['me', 'her'],
+                categories: ['1', '2'],
+                time: new Date().toLocaleString(),
+                abstract:
+                  'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
+                id: '4',
+              },
+              {
+                title: 'Example',
+                authors: ['me', 'her'],
+                categories: ['1', '2'],
+                time: new Date().toLocaleString(),
+                abstract:
+                  'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
+                id: '5',
+              },
+            ]
+          );
+          this.finishLoading();
+          console.debug('finished loading tutorial infos');
+        }, 1000);
       },
       search() {
         if (this.searchLoading) {
@@ -165,8 +177,12 @@
         console.debug(`add ${author} to author filter`);
       },
       addToCategoryFilter(category) {
+        // TODO apply category filters
         console.debug(`add ${category} to category filter`);
       },
+    },
+    mounted() {
+      this.getTutorialInfoList();
     },
   };
 </script>
