@@ -30,7 +30,7 @@
       <div id="content-section">
         <div
           :class="{
-            row: $q.screen.gt.sm || $q.screen.sm,
+            row: $q.screen.gt.xs,
             column: $q.screen.lt.sm,
           }"
         >
