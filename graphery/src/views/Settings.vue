@@ -2,7 +2,7 @@
   <MaterialPage>
     <div>
       <div>
-        <h3 class="shorter-h3">
+        <h3 class="shorter-h">
           Settings
         </h3>
       </div>

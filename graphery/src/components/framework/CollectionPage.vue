@@ -2,7 +2,7 @@
   <MaterialPage>
     <div>
       <div id="title-section">
-        <h3 class="shorter-h3">
+        <h3 class="shorter-h">
           {{ title }}
         </h3>
       </div>
@@ -83,6 +83,15 @@
               </q-pagination>
             </div>
             <div class="q-px-md">
+              <div
+                class="relative-position"
+                id="inner-loader"
+                v-show="!infos.length"
+              >
+                <q-inner-loading :showing="!infos.length">
+                  <q-spinner-pie size="64"></q-spinner-pie>
+                </q-inner-loading>
+              </div>
               <ArticleCard
                 v-for="info in displayedInfos"
                 :key="info.id"
@@ -96,9 +105,6 @@
                 @author-filter="addToAuthorFilter"
               ></ArticleCard>
               <!-- TODO why do you want to filter authors? -->
-              <q-inner-loading :showing="!infos.length">
-                <q-spinner-pie size="64"></q-spinner-pie>
-              </q-inner-loading>
             </div>
           </div>
         </div>
@@ -204,6 +210,8 @@
 </script>
 
 <style lang="sass">
-  .shorter-h3
+  .shorter-h
     margin-bottom: 20px
+  #inner-loader
+    min-height: 100px
 </style>
