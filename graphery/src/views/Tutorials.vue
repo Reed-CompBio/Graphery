@@ -6,6 +6,7 @@
           Tutorials
         </h3>
       </div>
+      <!-- TODO make the components responsive -->
       <div id="search-section">
         <q-input
           outlined
@@ -71,6 +72,7 @@
                 @category-filter="addToCategoryFilter"
                 @author-filter="addToAuthorFilter"
               ></ArticleCard>
+              <!-- TODO why do you want to filter authors? -->
               <q-inner-loading :showing="!tutorialInfos.length">
                 <q-spinner-pie size="64"></q-spinner-pie>
               </q-inner-loading>
@@ -160,6 +162,7 @@
               },
             ]
           );
+          // TODO modify this to accommodate the real apis
           this.finishLoading();
           console.debug('finished loading tutorial infos');
         }, 1000);
