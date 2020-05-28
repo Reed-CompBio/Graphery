@@ -30,14 +30,26 @@
         </q-input>
       </div>
       <div id="content-section">
-        <div class="row">
-          <div id="filter-section" class="col-4">
-            <div>
+        <div
+          :class="{
+            row: $q.screen.gt.sm || $q.screen.sm,
+            column: $q.screen.lt.sm,
+          }"
+        >
+          <div
+            id="filter-section"
+            :class="{
+              'col-4': true,
+              'flex-center': $q.screen.lt.sm,
+              row: $q.screen.lt.sm,
+            }"
+          >
+            <div class="q-mr-lg">
               <h5>
                 Filter
               </h5>
             </div>
-            <div>
+            <div style="flex: 1 1 auto">
               <q-select
                 filled
                 v-model="filterSelections"
