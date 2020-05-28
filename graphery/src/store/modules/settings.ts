@@ -1,6 +1,5 @@
 import { RootState, SettingInfos, SettingState } from '@/store/states/state';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
-import { LocalStorage } from 'quasar';
 
 // TODO remove this and use web storage instead
 const state: SettingState = {
@@ -60,6 +59,9 @@ const mutations: MutationTree<SettingState> = {
   CHANGE_CODE_WRAP(state, value: boolean) {
     state.codeWrap = value;
   },
+  CHANGE_PAGE_DISPLAY_NUM(state, value: number) {
+    state.pageDisplayNum = value;
+  },
 };
 
 const actions: ActionTree<SettingState, RootState> = {
@@ -87,7 +89,7 @@ const actions: ActionTree<SettingState, RootState> = {
   changeTabNum({ commit }, value: number) {
     commit('CHANGE_TAB_NUM', value);
   },
-  changeSoftTabNum({ commit }, value: boolean) {
+  changeSoftTab({ commit }, value: boolean) {
     commit('CHANGE_SOFT_TAB', value);
   },
   changeFontSize({ commit }, value: number) {
@@ -122,7 +124,7 @@ const actions: ActionTree<SettingState, RootState> = {
   ) {
     dispatch('changeDark', dark);
     dispatch('changeGraphDark', graphDark);
-    dispatch('changeHideEdgeWhenRendering,', hideEdgeWhenRendering);
+    dispatch('changeHideEdgeWhenRendering', hideEdgeWhenRendering);
     dispatch('changeRenderViewportOnly', renderViewportOnly);
     dispatch('changeMotionBlurEnabled', motionBlurEnabled);
     dispatch('changeMotionSensitivityLevel', motionSensitivityLevel);

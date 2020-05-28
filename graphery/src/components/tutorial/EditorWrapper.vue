@@ -174,7 +174,10 @@
           // this.aceInstance.addMarker(new Range(1, 0, 2, 0));
         })
         .catch((err) => {
-          console.error('An error occurs when initializing the code editor');
+          console.error(
+            'An error occurs when initializing the code editor: ',
+            err
+          );
         });
     },
   };
