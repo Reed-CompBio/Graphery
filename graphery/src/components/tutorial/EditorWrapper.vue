@@ -1,7 +1,5 @@
 <template>
   <div id="editor-container" :style="editorPos">
-    <!--    <q-dialog :value="show" persistent seamless position="bottom">-->
-
     <q-card class="popup-wrapper">
       <q-bar v-touch-pan.prevent.mouse="handlePanning">
         <q-icon name="mdi-function" />
@@ -55,6 +53,9 @@
         <q-tab-panel name="code">
           <div id="editor-panel" :style="editorWrapperStyle">
             <div id="editor" :style="editorWrapperStyle"></div>
+            <q-inner-loading :showing="codesEmpty">
+              <q-spinner-pie size="64px" color="primary" />
+            </q-inner-loading>
           </div>
         </q-tab-panel>
         <q-tab-panel name="info">
@@ -69,19 +70,15 @@
         </q-tab-panel>
       </q-tab-panels>
     </q-card>
-    <!--    </q-dialog>-->
   </div>
 </template>
 
 <script>
   import { editorTabHeight } from '@/store/states/meta.ts';
-  import { mapState } from 'vuex';
+  import { mapState, mapGetters } from 'vuex';
   let aceEdit;
 
   export default {
-    props: {
-      loading: Boolean,
-    },
     data() {
       return {
         tab: 'code',
@@ -119,6 +116,7 @@
     },
     computed: {
       ...mapState('settings', ['tabNum', 'softTab', 'fontSize', 'wrap']),
+      ...mapGetters('tutorials', ['codesEmpty']),
       editorWrapperStyle() {
         return {
           height: `calc(40vh - ${editorTabHeight}px)`,

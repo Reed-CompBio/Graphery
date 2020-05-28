@@ -51,7 +51,7 @@
         transition-show="fade"
         transition-hide="fade"
       >
-        <q-spinner-radio size="64px" color="primary" />
+        <q-spinner-pie size="64px" color="primary" />
       </q-inner-loading>
     </div>
   </div>
@@ -354,7 +354,6 @@
         return false;
       },
       resizeGraph() {
-        console.log('resize!');
         if (this.cyInstance) {
           this.cyInstance.resize();
         }

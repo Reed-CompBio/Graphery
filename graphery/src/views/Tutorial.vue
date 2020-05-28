@@ -54,7 +54,7 @@
     },
     data() {
       return {
-        editorShow: true,
+        editorShow: false,
       };
     },
     computed: {
