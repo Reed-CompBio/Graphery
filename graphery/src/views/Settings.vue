@@ -202,7 +202,7 @@
         'tabNum',
         'softTab',
         'fontSize',
-        'wrap',
+        'codeWrap',
       ]),
       darkMode: {
         set(d) {

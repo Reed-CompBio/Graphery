@@ -67,10 +67,9 @@ export interface TutorialRequestState {
   codes?: { [id: string]: { graphId: string; codes: string } } | null;
 }
 
-export interface SettingState {
+export interface SettingInfos {
+  // color
   dark: boolean;
-  // graph page
-  graphSplitPos: number;
   graphDark: boolean;
 
   // graph render
@@ -78,13 +77,18 @@ export interface SettingState {
   renderViewportOnly: boolean;
   motionBlurEnabled: boolean;
   motionSensitivityLevel: number;
+  graphSplitPos: number;
 
   // editor settings
   tabNum: number;
   softTab: boolean;
   fontSize: number;
-  wrap: boolean;
+  codeWrap: boolean;
 
   //
   pageDisplayNum: number;
+}
+
+export interface SettingState extends SettingInfos {
+  settingVer: '1.0.0';
 }

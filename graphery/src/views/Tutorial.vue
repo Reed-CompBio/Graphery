@@ -61,7 +61,7 @@
       ...mapState('settings', ['graphSplitPos']),
       splitPos: {
         set(d) {
-          this.$store.dispatch('changeSepPos', d);
+          this.$store.dispatch('changeGraphSplitPos', d);
         },
         get() {
           return this.graphSplitPos;
