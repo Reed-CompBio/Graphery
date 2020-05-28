@@ -17,6 +17,7 @@ before_script:
 
 script:
   - npm run build
+  - rm -rf coverage
   - npm run test:unit
 
 after_success:
