@@ -1,7 +1,7 @@
 <template>
   <q-page class="page">
     <div class="container q-mx-auto q-mb-lg shadow-4">
-      <div class="content-container-wrapper ">
+      <div class="content-container-wrapper">
         <slot></slot>
       </div>
     </div>
@@ -43,14 +43,14 @@
 
   .container
     @media (max-width: $breakpoint-xs-max)
-      padding: 16px 10%
+      padding: 16px 10% 20px
     @media (min-width: $breakpoint-sm-min) and (max-width: $breakpoint-md-max)
-      padding: 16px 14%
+      padding: 16px 6% 20px
     @media (min-width: $breakpoint-lg-min)
-      padding: 0
+      padding: 16px 0 20px
 
   .content-container-wrapper
+    margin: 0 auto
     @media (min-width: $breakpoint-lg-min)
-      margin: 0 auto
-      width: 720px
+      width: 900px
 </style>

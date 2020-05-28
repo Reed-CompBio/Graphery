@@ -13,19 +13,20 @@
         <div id="tutorial-title" class="text-h2">{{ title }}</div>
         <div id="tutorial-info" class="q-mb-lg">
           <q-breadcrumbs>
-            <q-breadcrumbs-el>
+            <q-breadcrumbs-el v-if="authors">
+              // TODO change spans to chips
               <span>Author: </span>
               <span v-for="author in authors" :key="author">
                 {{ author }}
               </span>
             </q-breadcrumbs-el>
-            <q-breadcrumbs-el>
+            <q-breadcrumbs-el v-if="categories">
               <span> Category: </span>
               <span v-for="category in categories" :key="category">
                 {{ category }}
               </span>
             </q-breadcrumbs-el>
-            <q-breadcrumbs-el>
+            <q-breadcrumbs-el v-if="articleTime">
               {{ articleTime }}
             </q-breadcrumbs-el>
             <q-breadcrumbs-el>

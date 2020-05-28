@@ -1,6 +1,6 @@
 <template>
-  <div class="full-height ">
-    <div class="graph-menu-bar">
+  <div class="full-height">
+    <q-bar class="graph-menu-bar">
       <div class="graph-menu-wrapper">
         <q-select
           class="graph-selector"
@@ -22,20 +22,22 @@
         </q-select>
       </div>
       <div class="menu-button-group-wrapper">
-        <q-btn-group rounded class="menu-button-group">
+        <q-btn-group rounded class="menu-button-group q-mx-auto">
           <q-btn>
-            <q-icon name="mdi-file-table-box"></q-icon>
+            <q-icon name="mdi-file-table-box" />
+            <q-tooltip>Graph Info</q-tooltip>
           </q-btn>
           <q-btn-dropdown>
             <template v-slot:label>
-              <q-icon name="mdi-share-variant"></q-icon>
+              <q-icon name="mdi-share-variant" />
+              <q-tooltip>Share</q-tooltip>
             </template>
           </q-btn-dropdown>
         </q-btn-group>
       </div>
-    </div>
+    </q-bar>
     <div id="cy-wrapper" :style="heightStyle">
-      <q-resize-observer @resize="resizeGraph" />
+      <!--      <q-resize-observer @resize="" />-->
       <div
         id="cy"
         class="full-height"
@@ -49,7 +51,7 @@
         transition-show="fade"
         transition-hide="fade"
       >
-        <q-spinner-radio size="64px" color="primary" />
+        <q-spinner-pie size="64px" color="primary" />
       </q-inner-loading>
     </div>
   </div>
@@ -358,6 +360,7 @@
       },
     },
     destroyed() {
+      // TODO destroy raises errors
       this.clearAll();
       // TODO restore states in vuex
     },
@@ -368,6 +371,7 @@
   @import '~@/styles/panzoom.css'
 
   .graph-menu-bar
+    min-height: 56px
     max-height: 56px
     display: flex
     flex-direction: row

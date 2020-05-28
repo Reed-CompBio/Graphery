@@ -69,10 +69,22 @@ export interface TutorialRequestState {
 
 export interface SettingState {
   dark: boolean;
+  // graph page
   graphSplitPos: number;
   graphDark: boolean;
+
+  // graph render
   hideEdgeWhenRendering: boolean;
   renderViewportOnly: boolean;
   motionBlurEnabled: boolean;
   motionSensitivityLevel: number;
+
+  // editor settings
+  tabNum: number;
+  softTab: boolean;
+  fontSize: number;
+  wrap: boolean;
+
+  //
+  pageDisplayNum: number;
 }

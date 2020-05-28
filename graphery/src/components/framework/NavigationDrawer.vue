@@ -24,12 +24,13 @@
           </q-item>
         </q-card-section>
       </q-card>
-      <div class="q-pt-md q-pl-xl">
+      <div class="q-pt-md">
         <q-item
           v-for="button in buttons"
           :key="button.name"
           :to="{ name: button.name }"
           exact
+          class="q-pl-xl"
         >
           <q-item-section avatar>
             <q-icon :name="button.icon" size="md"></q-icon>

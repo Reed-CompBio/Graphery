@@ -1,6 +1,7 @@
 <template>
   <!-- make fill height class changable, then when graph  -->
   <div>
+    <q-resize-observer @resize="resizeAction"></q-resize-observer>
     <q-splitter
       :value="splitPos"
       :style="tutorialStyle"
@@ -9,7 +10,7 @@
       separator-style="width: 4px"
     >
       <template v-slot:before>
-        <CytoscapeWrapper></CytoscapeWrapper>
+        <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
       </template>
       <template v-slot:separator>
         <q-avatar
@@ -23,14 +24,17 @@
         <TutorialArticle></TutorialArticle>
       </template>
     </q-splitter>
-    <EditorWrapper :show="editorShow"></EditorWrapper>
-    <q-page-sticky position="bottom-left" :offset="[30, 30]">
-      <q-btn
-        round
-        color="primary"
-        icon="mdi-code-braces"
-        @click="toggleEditor"
-      />
+    <EditorWrapper
+      v-show="editorShow && $q.screen.gt.xs"
+      @close-editor="closeEditor"
+      ref="editorWrapper"
+    ></EditorWrapper>
+    <q-page-sticky
+      v-if="$q.screen.gt.xs"
+      position="bottom-left"
+      :offset="[30, 30]"
+    >
+      <q-btn round color="primary" icon="mdi-code-json" @click="toggleEditor" />
     </q-page-sticky>
   </div>
 </template>
@@ -81,6 +85,14 @@
       },
       toggleEditor() {
         this.editorShow = !this.editorShow;
+      },
+      closeEditor() {
+        this.editorShow = false;
+      },
+      resizeAction() {
+        // just ignore the error here
+        this.$refs.editorWrapper.resizeEditorPos();
+        this.$refs.cytoscapeWrapper.resizeGraph();
       },
     },
     watch: {

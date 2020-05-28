@@ -204,11 +204,13 @@ const getters: GetterTree<TutorialState, RootState> = {
   },
   graphsEmpty(state) {
     // return state.graphs === null;
-    // TODO return true for test purpose, remove it afterwards
+    // TODO return false for test purpose, remove it afterwards
     return false;
   },
   codesEmpty(state) {
-    return state.codes === null;
+    // return state.codes === null;
+    // TODO return false for test purpose, remove it afterwards
+    return false;
   },
   getGraphList(state) {
     const arr: { name: string; value: string }[] = [];
