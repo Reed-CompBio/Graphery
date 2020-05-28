@@ -5,6 +5,7 @@
         <h3 class="shorter-h">
           Settings
         </h3>
+        <p>The changes only work before you close</p>
       </div>
       <section>
         <q-card class="q-pa-md q-my-lg">
@@ -20,7 +21,7 @@
                 left-label
                 size="xl"
                 label="Dark Mode"
-                v-model="darkMode"
+                v-model="setDarkMode"
                 color="black"
                 checked-icon="mdi-moon-waxing-crescent"
                 unchecked-icon="mdi-white-balance-sunny"
@@ -30,7 +31,7 @@
                 left-label
                 size="xl"
                 label="Graph Background Dark"
-                v-model="graphBackgroundDark"
+                v-model="setGraphBackgroundDark"
                 color="grey"
                 checked-icon="mdi-decagram"
                 unchecked-icon="mdi-decagram-outline"
@@ -52,7 +53,7 @@
                 left-label
                 size="xl"
                 label="Hide Edges When Rendering"
-                v-model="renderingHideEdge"
+                v-model="setHideEdgeWhenRendering"
                 color="green"
                 checked-icon="mdi-eye-off"
                 unchecked-icon="mdi-eye"
@@ -62,7 +63,7 @@
                 left-label
                 size="xl"
                 label="Render Viewport Only"
-                v-model="onlyRenderViewport"
+                v-model="setRenderviewportOnly"
                 color="orange"
                 checked-icon="mdi-fullscreen-exit"
                 unchecked-icon="mdi-fullscreen"
@@ -72,7 +73,7 @@
                 left-label
                 size="xl"
                 label="Motion Blur Enabled"
-                v-model="enableMotionBlur"
+                v-model="setMotionBlurEnabled"
                 color="blue"
                 checked-icon="mdi-run-fast"
                 unchecked-icon="mdi-run"
@@ -87,7 +88,7 @@
                   label
                   label-always
                   snap
-                  v-model="graphMotionSensitivity"
+                  v-model="setMotionSensitivityLevel"
                   color="teal"
                   :min="0.5"
                   :step="0.1"
@@ -104,7 +105,7 @@
                   label
                   label-always
                   snap
-                  v-model="tutorialSplitPos"
+                  v-model="setGraphSplitPos"
                   color="deep-orange"
                   :min="10"
                   :step="1"
@@ -127,7 +128,7 @@
                 left-label
                 size="xl"
                 label="Soft Tab"
-                v-model="usingSoftTab"
+                v-model="setSoftTab"
                 color="green-4"
                 checked-icon="mdi-keyboard-space"
                 unchecked-icon="mdi-keyboard-tab"
@@ -137,7 +138,7 @@
                 left-label
                 size="xl"
                 label="Line Wrap"
-                v-model="usingLineWrap"
+                v-model="setCodeWrap"
                 color="orange-4"
                 checked-icon="mdi-wrap"
                 unchecked-icon="mdi-wrap-disabled"
@@ -152,7 +153,7 @@
                   label
                   label-always
                   snap
-                  v-model="softTabNum"
+                  v-model="setTabNum"
                   color="light-blue"
                   :min="2"
                   :step="1"
@@ -203,88 +204,121 @@
         'softTab',
         'fontSize',
         'codeWrap',
+        'pageDisplayNum',
       ]),
-      darkMode: {
+      setDarkMode: {
         set(d) {
-          console.log(d);
+          this.changeDark(d);
         },
         get() {
           return this.dark;
         },
       },
-      graphBackgroundDark: {
+      setGraphBackgroundDark: {
         set(d) {
-          console.log(d);
+          this.changeGraphDark(d);
         },
         get() {
           return this.graphDark;
         },
       },
-      renderingHideEdge: {
+      setHideEdgeWhenRendering: {
         set(d) {
-          console.log(d);
+          this.changeHideEdgeWhenRendering(d);
         },
         get() {
           return this.hideEdgeWhenRendering;
         },
       },
-      onlyRenderViewport: {
+      setRenderviewportOnly: {
         set(d) {
-          console.log(d);
+          this.changeRenderViewportOnly(d);
         },
         get() {
           return this.renderViewportOnly;
         },
       },
-      enableMotionBlur: {
+      setMotionBlurEnabled: {
         set(d) {
-          console.log(d);
+          this.changeMotionBlurEnabled(d);
         },
         get() {
           return this.motionBlurEnabled;
         },
       },
-      tutorialSplitPos: {
+      setMotionSensitivityLevel: {
         set(d) {
-          console.log(d);
-        },
-        get() {
-          return this.graphSplitPos;
-        },
-      },
-      graphMotionSensitivity: {
-        set(d) {
-          console.log(d);
+          this.changeMotionSensitivityLevel(d);
         },
         get() {
           return this.motionSensitivityLevel;
         },
       },
-      usingSoftTab: {
+      setGraphSplitPos: {
         set(d) {
-          console.log(d);
+          this.changeGraphSplitPos(d);
         },
         get() {
-          return this.softTab;
+          return this.graphSplitPos;
         },
       },
-      usingLineWrap: {
+      setTabNum: {
         set(d) {
-          console.log(d);
-        },
-        get() {
-          return this.wrap;
-        },
-      },
-      softTabNum: {
-        set(d) {
-          console.log(d);
+          this.changeTabNum(d);
         },
         get() {
           return this.tabNum;
         },
       },
+      setSoftTab: {
+        set(d) {
+          this.changeSoftTabNum(d);
+        },
+        get() {
+          return this.softTab;
+        },
+      },
+      setFontSize: {
+        set(d) {
+          this.changeFontSize(d);
+        },
+        get() {
+          return this.fontSize;
+        },
+      },
+      setCodeWrap: {
+        set(d) {
+          this.changeCodeWrap(d);
+        },
+        get() {
+          return this.codeWrap;
+        },
+      },
+      setDisplayNum: {
+        set(d) {
+          this.changePageDisplayNum(d);
+        },
+        get() {
+          return this.pageDisplayNum;
+        },
+      },
       // TODO font size is not settled
+    },
+    methods: {
+      ...mapActions('settings', [
+        'changeDark',
+        'changeGraphDark',
+        'changeHideEdgeWhenRendering',
+        'changeRenderViewportOnly',
+        'changeMotionBlurEnabled',
+        'changeMotionSensitivityLevel',
+        'changeGraphSplitPos',
+        'changeTabNum',
+        'changeSoftTabNum',
+        'changeFontSize',
+        'changeCodeWrap',
+        'changePageDisplayNum',
+      ]),
     },
   };
 </script>
