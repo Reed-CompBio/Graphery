@@ -6,28 +6,29 @@
     </div>
     <q-separator></q-separator>
     <div class="q-mx-auto">
-      <div class="row q-my-md">
-        <q-btn
-          dense
-          size="lg"
-          class="q-ml-auto"
-          :to="{ name: 'Tutorials' }"
-          exact
-        >
-          Tutorials
-        </q-btn>
-        <q-btn dense size="lg" class="q-mx-lg" :to="{ name: 'Graphs' }" exact>
-          Graphs
-        </q-btn>
-        <q-btn
-          dense
-          size="lg"
-          class="q-mr-auto"
-          :to="{ name: 'Account' }"
-          exact
-        >
-          Account
-        </q-btn>
+      <div
+        :class="{
+          'flex-center': true,
+          'q-my-md': true,
+          row: $q.screen.gt.xs,
+          column: $q.screen.lt.sm,
+        }"
+      >
+        <div class="button-wrapper">
+          <q-btn dense size="lg" :to="{ name: 'Tutorials' }" exact>
+            Tutorials
+          </q-btn>
+        </div>
+        <div class="button-wrapper">
+          <q-btn dense size="lg" :to="{ name: 'Graphs' }" exact>
+            Graphs
+          </q-btn>
+        </div>
+        <div class="button-wrapper">
+          <q-btn dense size="lg" :to="{ name: 'Account' }" exact>
+            Account
+          </q-btn>
+        </div>
       </div>
     </div>
     <div class="flex-center text-center text-body1">
@@ -51,3 +52,8 @@
     },
   };
 </script>
+
+<style lang="sass">
+  .button-wrapper
+    margin: 5px 2px
+</style>
