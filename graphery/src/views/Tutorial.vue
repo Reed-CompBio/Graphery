@@ -1,5 +1,4 @@
 <template>
-  <!-- make fill height class changable, then when graph  -->
   <div>
     <q-resize-observer @resize="resizeAction"></q-resize-observer>
     <q-splitter
