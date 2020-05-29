@@ -3,7 +3,7 @@
     <article>
       <header class="">
         <h3 class="shorter-h">
-          About
+          {{ $t('nav.About') }}
         </h3>
       </header>
       <section class="about-section">

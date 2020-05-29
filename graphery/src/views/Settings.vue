@@ -4,7 +4,7 @@
     <div>
       <div id="header-section">
         <h3 class="shorter-h">
-          Settings
+          {{ $t('nav.Settings') }}
         </h3>
         <p>The changes only work before you close</p>
       </div>

@@ -1,5 +1,8 @@
 <template>
-  <CollectionPage title="Graphs" api="graphs-api-path"></CollectionPage>
+  <CollectionPage
+    :title="`$t(nav.Graphs)`"
+    api="graphs-api-path"
+  ></CollectionPage>
 </template>
 
 <script>

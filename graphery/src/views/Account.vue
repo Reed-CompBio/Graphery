@@ -2,7 +2,7 @@
   <MaterialPage>
     <div>
       <h3 class="shorter-h">
-        Account
+        {{ $t('nav.Account') }}
       </h3>
     </div>
     <div>

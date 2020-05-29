@@ -1,5 +1,8 @@
 <template>
-  <CollectionPage title="Tutorials" api="tutorials-api-path"></CollectionPage>
+  <CollectionPage
+    :title="`$t(nav.Tutorials)`"
+    api="tutorials-api-path"
+  ></CollectionPage>
 </template>
 
 <script>
