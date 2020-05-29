@@ -8,9 +8,13 @@ module.exports = {
   pluginOptions: {
     quasar: {
       importStrategy: 'kebab',
-      // TODO
-      //     importStrategy: 'manual',
       rtlSupport: false,
+    },
+    i18n: {
+      locale: 'en',
+      fallbackLocale: 'en',
+      localeDir: 'locales',
+      enableInSFC: false,
     },
   },
 };
