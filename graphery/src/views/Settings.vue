@@ -9,45 +9,39 @@
       </div>
       <div id="content-section">
         <section class="q-my-lg">
-          <q-card class="q-pa-md ">
-            <q-card-section>
-              <h4 class="q-my-sm">
-                {{ $t('settings.Display') }}
-              </h4>
-            </q-card-section>
-            <q-separator />
-            <q-card-section>
-              <div class="q-pl-md">
-                <q-toggle
-                  left-label
-                  size="xl"
-                  :label="$t('settings.darkMode')"
-                  v-model="setDarkMode"
-                  color="black"
-                  checked-icon="mdi-moon-waxing-crescent"
-                  unchecked-icon="mdi-white-balance-sunny"
-                />
-                <br />
-                <q-toggle
-                  left-label
-                  size="xl"
-                  :label="$t('settings.graphBackgroundDark')"
-                  v-model="setGraphBackgroundDark"
-                  color="grey"
-                  checked-icon="mdi-decagram"
-                  unchecked-icon="mdi-decagram-outline"
-                />
-                <br />
-                <q-toggle
-                  left-label
-                  size="xl"
-                  :label="$t('settings.showTooltips')"
-                  v-model="setTooltips"
-                  color="green-4"
-                  checked-icon="mdi-keyboard-space"
-                  unchecked-icon="mdi-keyboard-tab"
-                />
-              </div>
+          <SettingDisplayCard :title="$t('settings.Display')">
+            <template v-slot:toggles>
+              <q-toggle
+                left-label
+                size="xl"
+                :label="$t('settings.darkMode')"
+                v-model="setDarkMode"
+                color="black"
+                checked-icon="mdi-moon-waxing-crescent"
+                unchecked-icon="mdi-white-balance-sunny"
+              />
+              <br />
+              <q-toggle
+                left-label
+                size="xl"
+                :label="$t('settings.graphBackgroundDark')"
+                v-model="setGraphBackgroundDark"
+                color="grey"
+                checked-icon="mdi-decagram"
+                unchecked-icon="mdi-decagram-outline"
+              />
+              <br />
+              <q-toggle
+                left-label
+                size="xl"
+                :label="$t('settings.showTooltips')"
+                v-model="setTooltips"
+                color="green-4"
+                checked-icon="mdi-keyboard-space"
+                unchecked-icon="mdi-keyboard-tab"
+              />
+            </template>
+            <template v-slot:sliders>
               <q-item>
                 <q-item-section>
                   <span>{{ $t('settings.cardsDisplayedNum') }}</span>
@@ -66,50 +60,44 @@
                   />
                 </q-item-section>
               </q-item>
-            </q-card-section>
-          </q-card>
+            </template>
+          </SettingDisplayCard>
         </section>
         <section class="q-my-lg">
-          <q-card class="q-pa-md">
-            <q-card-section>
-              <h4 class="q-my-sm">
-                {{ $t('settings.graphRender') }}
-              </h4>
-              <span>({{ $t('settings.performanceTip') }})</span>
-            </q-card-section>
-            <q-separator />
-            <q-card-section>
-              <div class="q-pl-md">
-                <q-toggle
-                  left-label
-                  size="xl"
-                  :label="$t('settings.hideEdgesWhenRendering')"
-                  v-model="setHideEdgeWhenRendering"
-                  color="green"
-                  checked-icon="mdi-eye-off"
-                  unchecked-icon="mdi-eye"
-                />
-                <br />
-                <q-toggle
-                  left-label
-                  size="xl"
-                  :label="$t('settings.renderViewportOnly')"
-                  v-model="setRenderViewportOnly"
-                  color="orange"
-                  checked-icon="mdi-fullscreen-exit"
-                  unchecked-icon="mdi-fullscreen"
-                />
-                <br />
-                <q-toggle
-                  left-label
-                  size="xl"
-                  :label="$t('settings.motionBlurEnabled')"
-                  v-model="setMotionBlurEnabled"
-                  color="blue"
-                  checked-icon="mdi-run-fast"
-                  unchecked-icon="mdi-run"
-                />
-              </div>
+          <SettingDisplayCard :title="$t('settings.graphRender')">
+            <template v-slot:toggles>
+              <p>({{ $t('settings.performanceTip') }})</p>
+              <q-toggle
+                left-label
+                size="xl"
+                :label="$t('settings.hideEdgesWhenRendering')"
+                v-model="setHideEdgeWhenRendering"
+                color="green"
+                checked-icon="mdi-eye-off"
+                unchecked-icon="mdi-eye"
+              />
+              <br />
+              <q-toggle
+                left-label
+                size="xl"
+                :label="$t('settings.renderViewportOnly')"
+                v-model="setRenderViewportOnly"
+                color="orange"
+                checked-icon="mdi-fullscreen-exit"
+                unchecked-icon="mdi-fullscreen"
+              />
+              <br />
+              <q-toggle
+                left-label
+                size="xl"
+                :label="$t('settings.motionBlurEnabled')"
+                v-model="setMotionBlurEnabled"
+                color="blue"
+                checked-icon="mdi-run-fast"
+                unchecked-icon="mdi-run"
+              />
+            </template>
+            <template v-slot:sliders>
               <q-item>
                 <q-item-section>
                   <span>{{ $t('settings.motionSensitivityLevel') }}</span>
@@ -144,39 +132,33 @@
                   />
                 </q-item-section>
               </q-item>
-            </q-card-section>
-          </q-card>
+            </template>
+          </SettingDisplayCard>
         </section>
         <section class=" q-my-lg">
-          <q-card class="q-pa-md">
-            <q-card-section>
-              <h4 class="q-my-sm">
-                {{ $t('settings.editorSettings') }}
-              </h4>
-            </q-card-section>
-            <q-separator />
-            <q-card-section>
-              <div class="q-pl-md">
-                <q-toggle
-                  left-label
-                  size="xl"
-                  :label="$t('settings.softTab')"
-                  v-model="setSoftTab"
-                  color="green-4"
-                  checked-icon="mdi-keyboard-space"
-                  unchecked-icon="mdi-keyboard-tab"
-                />
-                <br />
-                <q-toggle
-                  left-label
-                  size="xl"
-                  :label="$t('settings.lineWrap')"
-                  v-model="setCodeWrap"
-                  color="orange-4"
-                  checked-icon="mdi-wrap"
-                  unchecked-icon="mdi-wrap-disabled"
-                />
-              </div>
+          <SettingDisplayCard :title="$t('settings.editorSettings')">
+            <template v-slot:toggles>
+              <q-toggle
+                left-label
+                size="xl"
+                :label="$t('settings.softTab')"
+                v-model="setSoftTab"
+                color="green-4"
+                checked-icon="mdi-keyboard-space"
+                unchecked-icon="mdi-keyboard-tab"
+              />
+              <br />
+              <q-toggle
+                left-label
+                size="xl"
+                :label="$t('settings.lineWrap')"
+                v-model="setCodeWrap"
+                color="orange-4"
+                checked-icon="mdi-wrap"
+                unchecked-icon="mdi-wrap-disabled"
+              />
+            </template>
+            <template v-slot:sliders>
               <q-item>
                 <q-item-section>
                   <span>{{ $t('settings.tabNum') }}</span>
@@ -213,8 +195,8 @@
                   />
                 </q-item-section>
               </q-item>
-            </q-card-section>
-          </q-card>
+            </template>
+          </SettingDisplayCard>
         </section>
       </div>
     </div>
@@ -226,6 +208,8 @@
   export default {
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
+      SettingDisplayCard: () =>
+        import('@/components/settings/SettingDisplayCard.vue'),
     },
     computed: {
       ...mapState('settings', [
