@@ -38,12 +38,7 @@
     </q-bar>
     <div id="cy-wrapper" :style="heightStyle">
       <!--      <q-resize-observer @resize="" />-->
-      <div
-        id="cy"
-        class="full-height"
-        :style="{ graphStyle, heightStyle }"
-        ref="cy"
-      ></div>
+      <div id="cy" class="full-height" :style="graphStyle" ref="cy"></div>
     </div>
     <div>
       <q-inner-loading

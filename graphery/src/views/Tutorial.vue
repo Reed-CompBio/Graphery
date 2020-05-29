@@ -108,6 +108,7 @@
         multiLine: true,
         message: 'open code editor using {...} button',
         icon: 'mdi-code-json',
+        timeout: 1500,
       });
       this.updateTutorialContent();
     },
