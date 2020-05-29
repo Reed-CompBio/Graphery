@@ -1,6 +1,16 @@
 module.exports = {
-  transpileDependencies: ['vuetify'],
+  transpileDependencies: ['quasar'],
+
   devServer: {
     disableHostCheck: true,
+  },
+
+  pluginOptions: {
+    quasar: {
+      importStrategy: 'kebab',
+      // TODO
+      //     importStrategy: 'manual',
+      rtlSupport: false,
+    },
   },
 };

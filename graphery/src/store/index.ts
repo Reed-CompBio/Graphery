@@ -3,14 +3,19 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-import meta from '@/store/modules/meta';
 import notifications from '@/store/modules/notifications';
+import tutorials from '@/store/modules/tutorials';
+import settings from '@/store/modules/settings';
+import createPersistedState from 'vuex-persistedstate';
 
 export default new Vuex.Store({
+  // TODO Make it lazy load
   modules: {
-    meta,
     notifications,
+    tutorials,
+    settings,
   },
+  plugins: [createPersistedState({ paths: ['settings'] })],
   state: {
     drawer: false,
   },

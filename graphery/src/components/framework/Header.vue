@@ -1,66 +1,75 @@
 <template>
-  <v-app-bar app>
-    <!-- logo width is 40 pe -->
-    <router-link to="/">
-      <v-img
-        alt="Reed Logo"
-        class="shrink mr-2"
-        contain
-        transition="scale-transition"
-        width="40"
-        :src="siteLogo"
-      >
-        <!-- Logo section on the top left corner -->
-      </v-img>
-    </router-link>
+  <q-header class="q-py-sm q-px-xs" elevated>
+    <!--    TODO change the color in dark mode    -->
+    <q-toolbar>
+      <router-link to="/" class="q-ml-sm">
+        <q-img
+          alt="Reed Logo"
+          class="shrink mr-2"
+          contain
+          transition="scale-transition"
+          width="40px"
+          :src="siteLogo"
+        >
+          <!-- Logo section on the top left corner -->
+        </q-img>
+      </router-link>
 
-    <div
-      class="display-1 font-weight-black"
-      style="font-family: 'Libre Baskerville', serif!important ; "
-    >
-      <router-link to="/">Graphery</router-link>
-    </div>
+      <!-- TODO Make it on click -->
+      <q-toolbar-title style="text-transform: uppercase; font-size: 27px">
+        {{ siteName }}
+      </q-toolbar-title>
 
-    <!-- adding spacing to the elements -->
-    <v-spacer></v-spacer>
-    <!-- navigation buttons when the screen is bigger than  md-->
-    <div class="hidden-sm-and-down">
-      <!-- TODO bug:the home button is always active -->
-      <!-- page buttons -->
-      <v-btn
-        class="ma-1"
-        rounded
-        text
-        v-for="button in buttons"
-        :key="button.name"
-        :to="{ name: button.name }"
-        exact
-      >
-        {{ button.name }}
-      </v-btn>
-    </div>
-
-    <!-- show burger button when the screen is too samll -->
-    <v-app-bar-nav-icon class="hidden-md-and-up" @click="showDrawer">
-    </v-app-bar-nav-icon>
-  </v-app-bar>
+      <div class="gt-sm">
+        <!-- page buttons -->
+        <q-btn
+          flat
+          rounded
+          v-for="button in buttons"
+          :key="button.name"
+          :to="{ name: button.name }"
+          class="q-ml-sm"
+          size="18px"
+          exact
+        >
+          {{ button.name }}
+        </q-btn>
+      </div>
+      <q-btn flat round dense class="lt-md" size="20px">
+        <q-icon name="mdi-menu" @click="showDrawer" />
+      </q-btn>
+    </q-toolbar>
+  </q-header>
 </template>
 
 <script>
+  import { siteName, navigationButtons } from '../../store/states/meta';
   import { mapState } from 'vuex';
 
   export default {
     name: 'Header',
+    data() {
+      return {
+        siteName,
+        siteLogo: require('@/assets/images/reed-compbio-logo.png'),
+        buttons: navigationButtons,
+      };
+    },
     computed: {
-      ...mapState({
-        siteLogo: (state) => state.meta.siteLogo,
-        buttons: (state) => state.meta.navigationButtons,
-      }),
+      ...mapState('settings', ['dark']),
     },
     methods: {
       showDrawer() {
         this.$store.dispatch('changeDrawerState', true);
       },
+    },
+    watch: {
+      dark: function() {
+        this.$q.dark.set(this.dark);
+      },
+    },
+    mounted() {
+      this.$q.dark.set(this.dark);
     },
   };
 </script>

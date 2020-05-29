@@ -1,5 +1,11 @@
 <template>
-  <div>
-    This is a page for graphs
-  </div>
+  <CollectionPage title="Graphs" api="graphs-api-path"></CollectionPage>
 </template>
+
+<script>
+  export default {
+    components: {
+      CollectionPage: () => import('@/components/framework/CollectionPage.vue'),
+    },
+  };
+</script>

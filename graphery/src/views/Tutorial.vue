@@ -1,30 +1,76 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <!-- this is for displaying graph -->
-        <div>
-          <!-- cytoscape mouting point -->
-          <CytoscapeWrapper></CytoscapeWrapper>
-        </div>
-      </v-col>
-      <v-col>
-        <div id="article"></div>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div>
+    <q-resize-observer @resize="resizeAction"></q-resize-observer>
+    <q-splitter
+      v-model="splitPos"
+      :style="tutorialStyle"
+      :horizontal="$q.screen.lt.md"
+      separator-class="bg-light-blue"
+      separator-style="width: 4px"
+    >
+      <template v-slot:before>
+        <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
+      </template>
+      <template v-slot:separator>
+        <q-avatar
+          color="primary"
+          text-color="white"
+          size="32px"
+          icon="mdi-drag"
+        />
+      </template>
+      <template v-slot:after>
+        <TutorialArticle></TutorialArticle>
+      </template>
+    </q-splitter>
+    <EditorWrapper
+      v-show="editorShow && $q.screen.gt.xs"
+      @close-editor="closeEditor"
+      ref="editorWrapper"
+    ></EditorWrapper>
+    <q-page-sticky
+      v-if="$q.screen.gt.xs"
+      position="bottom-left"
+      :offset="[30, 30]"
+    >
+      <q-btn round color="primary" icon="mdi-code-json" @click="toggleEditor" />
+    </q-page-sticky>
+  </div>
 </template>
 
 <script>
-  import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper.vue';
+  import { headerSize } from '../store/states/meta';
+  import { mapState } from 'vuex';
 
   export default {
     props: ['name'],
     components: {
-      CytoscapeWrapper,
+      CytoscapeWrapper: () =>
+        import('@/components/tutorial/CytoscapeWrapper.vue'),
+      TutorialArticle: () =>
+        import('@/components/tutorial/TutorialArticle.vue'),
+      EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
     },
     data() {
-      return {};
+      return {
+        editorShow: false,
+      };
+    },
+    computed: {
+      ...mapState('settings', ['graphSplitPos']),
+      splitPos: {
+        set(d) {
+          this.$store.dispatch('settings/changeGraphSplitPos', d.toFixed(1));
+        },
+        get() {
+          return this.graphSplitPos;
+        },
+      },
+      tutorialStyle() {
+        return {
+          height: `calc(100vh - ${headerSize}px)`,
+        };
+      },
     },
     methods: {
       updateTutorialContent() {
@@ -36,6 +82,17 @@
         // 4. Extract graphs details , turn off loading for the graph section and load graphs
         // 5. (think about mini editor, how to manage the data in the backend)
       },
+      toggleEditor() {
+        this.editorShow = !this.editorShow;
+      },
+      closeEditor() {
+        this.editorShow = false;
+      },
+      resizeAction() {
+        // just ignore the error here
+        this.$refs.editorWrapper.resizeEditorPos();
+        this.$refs.cytoscapeWrapper.resizeGraph();
+      },
     },
     watch: {
       name: function(newVal, oldVal) {
@@ -45,6 +102,13 @@
       },
     },
     mounted() {
+      // pull tutorials
+      this.$q.notify({
+        multiLine: true,
+        message: 'open code editor using {...} button',
+        icon: 'mdi-code-json',
+        timeout: 1500,
+      });
       this.updateTutorialContent();
     },
   };
