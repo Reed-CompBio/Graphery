@@ -56,6 +56,7 @@
                 use-chips
                 stack-label
                 label="Categories"
+                dropdown-icon="mdi-menu-down"
               >
                 <template v-slot:no-option>
                   <q-item>
@@ -79,6 +80,10 @@
                 boundary-links
                 boundary-numbers
                 class="q-mx-auto"
+                icon-first="mdi-chevron-double-left"
+                icon-last="mdi-chevron-double-right"
+                icon-prev="mdi-chevron-left"
+                icon-next="mdi-chevron-right"
               >
               </q-pagination>
             </div>

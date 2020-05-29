@@ -8,6 +8,7 @@
           :value="graphChoice"
           label="Loading Graphs..."
           :multiple="false"
+          dropdown-icon="mdi-menu-down"
         >
           <template v-slot:no-option>
             <q-item>
