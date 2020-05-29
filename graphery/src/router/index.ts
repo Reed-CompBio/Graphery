@@ -7,29 +7,33 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/Home.vue'),
+    component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
   },
   {
     path: '/tutorials',
     name: 'Tutorials',
-    component: () => import('@/views/Tutorials.vue'),
+    component: () =>
+      import(/* webpackChunkName: "tutorials" */ '@/views/Tutorials.vue'),
   },
   {
     path: '/tutorial/:name',
     name: 'Tutorial',
     props: true,
-    component: () => import('@/views/Tutorial.vue'),
+    component: () =>
+      import(/* webpackChunkName: "tutorial */ '@/views/Tutorial.vue'),
   },
   {
     path: '/graphs',
     name: 'Graphs',
-    component: () => import('@/views/Graphs.vue'),
+    component: () =>
+      import(/* webpackChunkName: "graphs" */ '@/views/Graphs.vue'),
   },
   {
     path: '/graph/:name',
     name: 'Graph',
     props: true,
-    component: () => import('@/views/Graph.vue'),
+    component: () =>
+      import(/* webpackChunkName: "graph" */ '@/views/Graph.vue'),
   },
   {
     path: '/about',
@@ -43,14 +47,20 @@ const routes: Array<RouteConfig> = [
   {
     path: '/account',
     name: 'Account',
-    component: () => import('@/views/Account.vue'),
+    component: () =>
+      import(/* webpackChunkName: "account" */ '@/views/Account.vue'),
   },
   {
     path: '/settings',
     name: 'Settings',
     component: () => import('@/views/Settings.vue'),
   },
-  { path: '/*', name: '404', component: () => import('@/views/404.vue') },
+  {
+    path: '/*',
+    name: '404',
+    component: () =>
+      import(/* webpackChunkName: "settings" */ '@/views/404.vue'),
+  },
 ];
 
 const router = new VueRouter({

@@ -23,6 +23,21 @@
         import('@/components/framework/NavigationDrawer.vue'),
       Notification: () => import('@/components/framework/Notification.vue'),
     },
+    mounted() {
+      console.log(
+        '%c' +
+          ' o-o               o                 \n' +
+          'o                  |                 \n' +
+          '|  -o o-o  oo o-o  O--o o-o o-o o  o \n' +
+          "o   | |   | | |  | |  | |-' |   |  | \n" +
+          ' o-o  o   o-o-O-o  o  o o-o o   o--O \n' +
+          '              |                    | \n' +
+          '              o                 o--o ',
+        'color: #A70E16'
+      );
+      console.log('Welcome to Graphery, a graph tutorial website');
+      console.log('GitHub: https://github.com/FlickerSoul/Graphery');
+    },
     // TODO add a version check to local settings
   });
 </script>

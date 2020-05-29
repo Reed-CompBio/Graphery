@@ -9,6 +9,7 @@ import Notify from 'quasar/src/plugins/Notify';
 
 Vue.use(Quasar, {
   config: {
+    iconSet: 'mdi-v5',
     dark: false,
     animations: ['zoomIn', 'zoomOut'],
   },

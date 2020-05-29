@@ -25,7 +25,7 @@
                 clickable
                 v-for="category in categories"
                 :key="category"
-                icon="mdi-sitemap"
+                icon="category"
                 @click="$emit('category-filter', category)"
               >
                 {{ category }}

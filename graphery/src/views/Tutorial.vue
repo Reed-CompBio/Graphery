@@ -60,7 +60,10 @@
       ...mapState('settings', ['graphSplitPos']),
       splitPos: {
         set(d) {
-          this.$store.dispatch('settings/changeGraphSplitPos', d.toFixed(1));
+          this.$store.dispatch(
+            'settings/changeGraphSplitPos',
+            Math.round(d * 10) / 10
+          );
         },
         get() {
           return this.graphSplitPos;
@@ -89,9 +92,11 @@
         this.editorShow = false;
       },
       resizeAction() {
-        // just ignore the error here
-        this.$refs.editorWrapper.resizeEditorPos();
-        this.$refs.cytoscapeWrapper.resizeGraph();
+        // suppress an error with if here
+        if (this.$refs.editorWrapper) {
+          this.$refs.editorWrapper.resizeEditorPos();
+          this.$refs.cytoscapeWrapper.resizeGraph();
+        }
       },
     },
     watch: {
