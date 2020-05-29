@@ -9,26 +9,26 @@
         <q-btn-group flat class="q-mr-md" v-touch-pan.prevent.mouse="null">
           <q-btn dense>
             <q-icon name="mdi-cloud-upload" />
-            <q-tooltip :hide-delay="300" class="text-body1">
-              Run code on the cloud
+            <q-tooltip class="text-body1">
+              {{ $t('tooltips.runCodeOnTheCloud') }}
             </q-tooltip>
           </q-btn>
           <q-btn dense>
             <q-icon name="mdi-play" />
-            <q-tooltip :hide-delay="300" class="text-body1">
-              Run code locally
+            <q-tooltip class="text-body1">
+              {{ $t('tooltips.runCodeLocally') }}
             </q-tooltip>
           </q-btn>
         </q-btn-group>
         <q-btn-group flat class="q-mr-md">
           <q-btn dense icon="mdi-content-copy">
-            <q-tooltip :hide-delay="300" class="text-body1">
-              Copy codes
+            <q-tooltip class="text-body1">
+              {{ $t('tooltips.copyCodes') }}
             </q-tooltip>
           </q-btn>
           <q-btn dense icon="mdi-content-paste">
-            <q-tooltip :hide-delay="300" class="text-body1">
-              Paste codes
+            <q-tooltip class="text-body1">
+              {{ $t('tooltips.pasteCodes') }}
             </q-tooltip>
           </q-btn>
         </q-btn-group>

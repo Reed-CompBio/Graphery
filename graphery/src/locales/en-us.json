@@ -1,4 +1,13 @@
 {
+  "tooltips": {
+    "graphInfo": "Graph Info",
+    "Share": "Share",
+    "runCodeOnTheCloud": "Run code on the cloud",
+    "runCodeLocally": "Run code locally",
+    "copyCodes": "Copy codes",
+    "pasteCodes": "Paste codes",
+    "showEditorAndMore": "Show editor"
+  },
   "nav": {
     "Home": "Home",
     "Tutorials": "Tutorials",
@@ -6,5 +15,10 @@
     "About": "About",
     "Account": "Account",
     "Settings": "Settings"
+  },
+  "collectionPage": {
+    "Filter": "Filter",
+    "searchHint": "press enter to search",
+    "Categories": "Categories"
   }
 }

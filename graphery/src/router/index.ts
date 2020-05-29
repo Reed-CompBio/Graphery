@@ -20,7 +20,7 @@ const routes: Array<RouteConfig> = [
     name: 'Tutorial',
     props: true,
     component: () =>
-      import(/* webpackChunkName: "tutorial */ '@/views/Tutorial.vue'),
+      import(/* webpackChunkName: "tutorial" */ '@/views/Tutorial.vue'),
   },
   {
     path: '/graphs',

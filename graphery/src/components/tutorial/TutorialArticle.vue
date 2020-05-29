@@ -38,6 +38,9 @@
             </q-breadcrumbs-el>
             <q-breadcrumbs-el>
               <q-btn flat rounded dense @click="share">
+                <q-tooltip class="text-body1">
+                  {{ $t('tooltips.Share') }}
+                </q-tooltip>
                 <q-icon name="mdi-share-variant"></q-icon>
               </q-btn>
             </q-breadcrumbs-el>

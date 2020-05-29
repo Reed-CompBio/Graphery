@@ -33,6 +33,9 @@
       position="bottom-left"
       :offset="[30, 30]"
     >
+      <q-tooltip class="text-body1">
+        {{ $t('tooltips.showEditorAndMore') }}</q-tooltip
+      >
       <q-btn round color="primary" icon="mdi-code-json" @click="toggleEditor" />
     </q-page-sticky>
   </div>

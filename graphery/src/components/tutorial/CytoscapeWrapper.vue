@@ -26,12 +26,12 @@
         <q-btn-group rounded class="menu-button-group q-mx-auto">
           <q-btn>
             <q-icon name="mdi-file-table-box" />
-            <q-tooltip>Graph Info</q-tooltip>
+            <q-tooltip>{{ $t('tooltips.graphInfo') }}</q-tooltip>
           </q-btn>
           <q-btn-dropdown>
             <template v-slot:label>
               <q-icon name="mdi-share-variant" />
-              <q-tooltip>Share</q-tooltip>
+              <q-tooltip>{{ $t('tooltips.Share') }}</q-tooltip>
             </template>
           </q-btn-dropdown>
         </q-btn-group>

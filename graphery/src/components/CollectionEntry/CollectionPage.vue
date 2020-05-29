@@ -11,7 +11,7 @@
           outlined
           clearable
           :debounce="500"
-          hint="press enter to search"
+          :hint="$t('collectionPage.searchHint')"
           v-model="searchText"
           name="search-input"
           :rules="[]"
@@ -44,7 +44,7 @@
           >
             <div class="q-mr-lg">
               <h5>
-                Filter
+                {{ $t('collectionPage.Filter') }}
               </h5>
             </div>
             <div style="flex: 1 1 auto">
@@ -55,7 +55,7 @@
                 :options="filterOptions"
                 use-chips
                 stack-label
-                label="Categories"
+                :label="$t('collectionPage.Categories')"
                 dropdown-icon="mdi-menu-down"
               >
                 <template v-slot:no-option>
@@ -123,7 +123,7 @@
   export default {
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
-      ArticleCard: () => import('@/components/framework/ArticleCard.vue'),
+      ArticleCard: () => import('@/components/CollectionEntry/ArticleCard.vue'),
     },
     props: {
       api: String,
