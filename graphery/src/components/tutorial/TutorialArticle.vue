@@ -38,9 +38,7 @@
             </q-breadcrumbs-el>
             <q-breadcrumbs-el>
               <q-btn flat rounded dense @click="share">
-                <q-tooltip class="text-body1">
-                  {{ $t('tooltips.Share') }}
-                </q-tooltip>
+                <SwitchTooltip :text="$t('tooltips.Share')"></SwitchTooltip>
                 <q-icon name="mdi-share-variant"></q-icon>
               </q-btn>
             </q-breadcrumbs-el>
@@ -93,6 +91,9 @@
   import { mapState, mapGetters, mapActions } from 'vuex';
 
   export default {
+    components: {
+      SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
+    },
     data() {
       return {
         articleViewPercentage: 0,

@@ -9,27 +9,23 @@
         <q-btn-group flat class="q-mr-md" v-touch-pan.prevent.mouse="null">
           <q-btn dense>
             <q-icon name="mdi-cloud-upload" />
-            <q-tooltip class="text-body1">
-              {{ $t('tooltips.runCodeOnTheCloud') }}
-            </q-tooltip>
+            <SwitchTooltip
+              :text="$t('tooltips.runCodeOnTheCloud')"
+            ></SwitchTooltip>
           </q-btn>
           <q-btn dense>
             <q-icon name="mdi-play" />
-            <q-tooltip class="text-body1">
-              {{ $t('tooltips.runCodeLocally') }}
-            </q-tooltip>
+            <SwitchTooltip
+              :text="$t('tooltips.runCodeLocally')"
+            ></SwitchTooltip>
           </q-btn>
         </q-btn-group>
         <q-btn-group flat class="q-mr-md">
           <q-btn dense icon="mdi-content-copy">
-            <q-tooltip class="text-body1">
-              {{ $t('tooltips.copyCodes') }}
-            </q-tooltip>
+            <SwitchTooltip :text="$t('tooltips.copyCodes')"></SwitchTooltip>
           </q-btn>
           <q-btn dense icon="mdi-content-paste">
-            <q-tooltip class="text-body1">
-              {{ $t('tooltips.pasteCodes') }}
-            </q-tooltip>
+            <SwitchTooltip :text="$t('tooltips.pasteCodes')"></SwitchTooltip>
           </q-btn>
         </q-btn-group>
         <q-btn
@@ -92,6 +88,9 @@
   let Range;
 
   export default {
+    components: {
+      SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
+    },
     data() {
       return {
         tab: 'code',

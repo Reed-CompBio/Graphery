@@ -43,7 +43,6 @@
       // Load language
       this.$i18n.locale = this.$store.state.settings.language;
     },
-    // TODO add a version check to local settings
   });
 </script>
 

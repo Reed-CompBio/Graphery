@@ -26,12 +26,12 @@
         <q-btn-group rounded class="menu-button-group q-mx-auto">
           <q-btn>
             <q-icon name="mdi-file-table-box" />
-            <q-tooltip>{{ $t('tooltips.graphInfo') }}</q-tooltip>
+            <SwitchTooltip :text="$t('tooltips.graphInfo')"></SwitchTooltip>
           </q-btn>
           <q-btn-dropdown>
             <template v-slot:label>
               <q-icon name="mdi-share-variant" />
-              <q-tooltip>{{ $t('tooltips.Share') }}</q-tooltip>
+              <SwitchTooltip :text="$t('tooltips.Share')"></SwitchTooltip>
             </template>
           </q-btn-dropdown>
         </q-btn-group>
@@ -69,6 +69,9 @@
   import example from './example';
 
   export default {
+    components: {
+      SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
+    },
     data() {
       return {
         cyInstance: null,

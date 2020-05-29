@@ -48,11 +48,8 @@
             >
               <q-item-section avatar>
                 <q-icon
-                  :name="
-                    $i18n.locale === lang
-                      ? 'keyboard_arrow_right'
-                      : 'fiber_manual_record'
-                  "
+                  v-if="$i18n.locale === lang"
+                  name="keyboard_arrow_right"
                 />
               </q-item-section>
               <q-item-section>

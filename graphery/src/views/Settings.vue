@@ -37,8 +37,8 @@
                 :label="$t('settings.showTooltips')"
                 v-model="setTooltips"
                 color="green-4"
-                checked-icon="mdi-keyboard-space"
-                unchecked-icon="mdi-keyboard-tab"
+                checked-icon="mdi-comment-check"
+                unchecked-icon="mdi-comment-remove"
               />
             </template>
             <template v-slot:sliders>
