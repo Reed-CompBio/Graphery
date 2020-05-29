@@ -24,6 +24,7 @@
       Notification: () => import('@/components/framework/Notification.vue'),
     },
     mounted() {
+      // draw ascii art
       console.log(
         '%c' +
           ' o-o               o                 \n' +
@@ -37,6 +38,10 @@
       );
       console.log('Welcome to Graphery, a graph tutorial website');
       console.log('GitHub: https://github.com/FlickerSoul/Graphery');
+
+      // load $q.dark.set is in Header.vue
+      // Load language
+      this.$i18n.locale = this.$store.state.settings.language;
     },
     // TODO add a version check to local settings
   });

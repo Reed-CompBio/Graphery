@@ -86,8 +86,9 @@ export interface SettingInfos {
   fontSize: number;
   codeWrap: boolean;
 
-  //
+  // display
   pageDisplayNum: number;
+  language: string;
 }
 
 export interface SettingState extends SettingInfos {

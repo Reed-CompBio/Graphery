@@ -36,7 +36,7 @@
           </q-item-section>
           <q-item-section>
             <q-item-label header style="text-transform: uppercase">{{
-              button.name
+              $t(`nav.${button.name}`)
             }}</q-item-label>
           </q-item-section>
         </q-item>

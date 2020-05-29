@@ -21,8 +21,9 @@ const state: SettingState = {
   fontSize: 14,
   codeWrap: false,
 
-  //
+  // display
   pageDisplayNum: 5,
+  language: 'en-us',
 };
 
 const mutations: MutationTree<SettingState> = {
@@ -61,6 +62,9 @@ const mutations: MutationTree<SettingState> = {
   },
   CHANGE_PAGE_DISPLAY_NUM(state, value: number) {
     state.pageDisplayNum = value;
+  },
+  CHANGE_LANGUAGE(state, value: string) {
+    state.language = value;
   },
 };
 
@@ -101,6 +105,9 @@ const actions: ActionTree<SettingState, RootState> = {
   changePageDisplayNum({ commit }, value: number) {
     commit('CHANGE_PAGE_DISPLAY_NUM', value);
   },
+  changeLanguage({ commit }, value: string) {
+    commit('CHANGE_LANGUAGE', value);
+  },
   storeSettings(
     { dispatch },
     {
@@ -118,8 +125,9 @@ const actions: ActionTree<SettingState, RootState> = {
       softTab,
       fontSize,
       codeWrap,
-      //
+      // display
       pageDisplayNum,
+      language,
     }: SettingInfos
   ) {
     dispatch('changeDark', dark);
@@ -134,6 +142,7 @@ const actions: ActionTree<SettingState, RootState> = {
     dispatch('changeFontSize', fontSize);
     dispatch('changeCodeWrap', codeWrap);
     dispatch('changePageDisplayNum', pageDisplayNum);
+    dispatch('changeLanguage', language);
   },
 };
 
