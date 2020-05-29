@@ -1,6 +1,3 @@
-export const footerHTML =
-  '<div> 2020 © Graphery </div> <div class="ft"> Built With <i class="mdi mdi-heart" style="color: rgb(212, 63, 87);"></i> and <a href="https://vuejs.org" target="_blank">Vue</a></div>';
-
 export const siteName = 'Graphery';
 
 export const navigationButtons = [

@@ -14,20 +14,30 @@
         <div id="tutorial-info" class="q-mb-lg">
           <q-breadcrumbs>
             <q-breadcrumbs-el v-if="authors">
-              // TODO change spans to chips
-              <span>Author: </span>
-              <span v-for="author in authors" :key="author">
+              <q-chip
+                clickable
+                v-for="author in authors"
+                :key="author"
+                icon="mdi-card-account-details"
+                @click="$emit('author-filter', author)"
+              >
+                <!-- may be I don't need the author filter -->
                 {{ author }}
-              </span>
+              </q-chip>
             </q-breadcrumbs-el>
             <q-breadcrumbs-el v-if="categories">
-              <span> Category: </span>
-              <span v-for="category in categories" :key="category">
+              <q-chip
+                clickable
+                v-for="category in categories"
+                :key="category"
+                icon="mdi-sitemap"
+                @click="$emit('category-filter', category)"
+              >
                 {{ category }}
-              </span>
+              </q-chip>
             </q-breadcrumbs-el>
             <q-breadcrumbs-el v-if="articleTime">
-              {{ articleTime }}
+              <q-chip icon="mdi-calendar-month"> {{ articleTime }}</q-chip>
             </q-breadcrumbs-el>
             <q-breadcrumbs-el>
               <q-btn flat rounded dense @click="share">
@@ -114,7 +124,7 @@
     },
     mounted() {
       // this.loadTutorial();
-      // when should I load the text hmmmmm
+      // TODO when should I load the text hmmmmm
     },
   };
 </script>

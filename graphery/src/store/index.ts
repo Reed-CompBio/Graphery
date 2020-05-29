@@ -6,6 +6,7 @@ Vue.use(Vuex);
 import notifications from '@/store/modules/notifications';
 import tutorials from '@/store/modules/tutorials';
 import settings from '@/store/modules/settings';
+import createPersistedState from 'vuex-persistedstate';
 
 export default new Vuex.Store({
   modules: {
@@ -13,6 +14,7 @@ export default new Vuex.Store({
     tutorials,
     settings,
   },
+  plugins: [createPersistedState({ paths: ['settings'] })],
   state: {
     drawer: false,
   },

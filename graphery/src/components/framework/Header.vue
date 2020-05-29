@@ -44,6 +44,7 @@
 
 <script>
   import { siteName, navigationButtons } from '../../store/states/meta';
+  import { mapState } from 'vuex';
 
   export default {
     name: 'Header',
@@ -54,10 +55,21 @@
         buttons: navigationButtons,
       };
     },
+    computed: {
+      ...mapState('settings', ['dark']),
+    },
     methods: {
       showDrawer() {
         this.$store.dispatch('changeDrawerState', true);
       },
+    },
+    watch: {
+      dark: function() {
+        this.$q.dark.set(this.dark);
+      },
+    },
+    mounted() {
+      this.$q.dark.set(this.dark);
     },
   };
 </script>

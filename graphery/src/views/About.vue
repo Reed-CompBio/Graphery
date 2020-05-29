@@ -2,7 +2,7 @@
   <MaterialPage>
     <article>
       <header class="">
-        <h3>
+        <h3 class="shorter-h">
           About
         </h3>
       </header>

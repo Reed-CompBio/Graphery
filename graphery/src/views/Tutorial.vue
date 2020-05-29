@@ -1,9 +1,8 @@
 <template>
-  <!-- make fill height class changable, then when graph  -->
   <div>
     <q-resize-observer @resize="resizeAction"></q-resize-observer>
     <q-splitter
-      :value="splitPos"
+      v-model="splitPos"
       :style="tutorialStyle"
       :horizontal="$q.screen.lt.md"
       separator-class="bg-light-blue"
@@ -61,7 +60,7 @@
       ...mapState('settings', ['graphSplitPos']),
       splitPos: {
         set(d) {
-          this.$store.dispatch('changeSepPos', d);
+          this.$store.dispatch('settings/changeGraphSplitPos', d.toFixed(1));
         },
         get() {
           return this.graphSplitPos;
@@ -104,6 +103,12 @@
     },
     mounted() {
       // pull tutorials
+      this.$q.notify({
+        multiLine: true,
+        message: 'open code editor using {...} button',
+        icon: 'mdi-code-json',
+        timeout: 1500,
+      });
       this.updateTutorialContent();
     },
   };

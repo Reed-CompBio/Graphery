@@ -114,6 +114,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex';
   export default {
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
@@ -133,13 +134,13 @@
         // TODO link it with api calls
         rawInfos: [],
         infos: [], // Served as a filtered input
-        // TODO add this to the settings
-        pageDisplayNum: 5,
+        // pageDisplayNum: 5,
         current: 1,
         currentPage: 1,
       };
     },
     computed: {
+      ...mapState('settings', ['pageDisplayNum']),
       paginationMax() {
         return Math.ceil(this.infos.length / this.pageDisplayNum);
       },
@@ -149,7 +150,7 @@
       displayedInfos() {
         return this.infos.slice(
           this.displayIndexStart,
-          this.displayIndexStart + 5
+          this.displayIndexStart + this.pageDisplayNum
         );
       },
     },
