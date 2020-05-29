@@ -78,6 +78,7 @@ export interface SettingInfos {
   motionBlurEnabled: boolean;
   motionSensitivityLevel: number;
   graphSplitPos: number;
+  // TODO maybe add a motion sensitivity?
 
   // editor settings
   tabNum: number;
