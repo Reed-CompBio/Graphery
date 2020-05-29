@@ -105,6 +105,7 @@
                   <span>Tutorial Page Default Split Pos (%)</span>
                 </q-item-section>
                 <q-item-section>
+                  <!-- console raises error which makes no sense -->
                   <q-slider
                     label
                     label-always
