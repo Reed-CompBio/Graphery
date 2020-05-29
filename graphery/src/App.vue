@@ -14,7 +14,7 @@
   import Vue from 'vue';
   // import { LocalStorage } from 'quasar';
   // import { SettingInfos } from '@/store/states/state';
-  import { mapGetters, mapActions } from 'vuex';
+  // import { mapGetters, mapActions } from 'vuex';
 
   export default Vue.extend({
     name: 'App',
@@ -27,10 +27,10 @@
       Notification: () => import('@/components/framework/Notification.vue'),
     },
     computed: {
-      ...mapGetters('settings', ['getSettings']),
+      // ...mapGetters('settings', ['getSettings']),
     },
     methods: {
-      ...mapActions('settings', ['storeSettings']),
+      // ...mapActions('settings', ['storeSettings']),
       // TODO add a version check
       // initSettings() {
       //   const settings: { settingVer: SettingInfos } = this.getSettings;
@@ -49,7 +49,6 @@
       // },
     },
     // mounted() {
-    // this.$q.dark.set(true);
     // this.settingLoader();
     // console.debug('local storage: ', LocalStorage.getAll());
     // },

@@ -3,7 +3,7 @@
   <div>
     <q-resize-observer @resize="resizeAction"></q-resize-observer>
     <q-splitter
-      :value="splitPos"
+      v-model="splitPos"
       :style="tutorialStyle"
       :horizontal="$q.screen.lt.md"
       separator-class="bg-light-blue"
@@ -61,7 +61,7 @@
       ...mapState('settings', ['graphSplitPos']),
       splitPos: {
         set(d) {
-          this.$store.dispatch('changeGraphSplitPos', d);
+          this.$store.dispatch('settings/changeGraphSplitPos', d.toFixed(1));
         },
         get() {
           return this.graphSplitPos;

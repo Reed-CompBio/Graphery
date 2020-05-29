@@ -63,7 +63,7 @@
                 left-label
                 size="xl"
                 label="Render Viewport Only"
-                v-model="setRenderviewportOnly"
+                v-model="setRenderViewportOnly"
                 color="orange"
                 checked-icon="mdi-fullscreen-exit"
                 unchecked-icon="mdi-fullscreen"
@@ -108,7 +108,7 @@
                   v-model="setGraphSplitPos"
                   color="deep-orange"
                   :min="10"
-                  :step="1"
+                  :step="0.1"
                   :max="90"
                 />
               </q-item-section>
@@ -152,6 +152,7 @@
                 <q-slider
                   label
                   label-always
+                  markers
                   snap
                   v-model="setTabNum"
                   color="light-blue"
@@ -163,18 +164,37 @@
             </q-item>
             <q-item>
               <q-item-section>
-                <span>Tab Space Number</span>
+                <span>Font Size (px) </span>
               </q-item-section>
               <q-item-section>
                 <q-slider
                   label
                   label-always
+                  markers
                   snap
-                  v-model="fontSize"
+                  v-model="setFontSize"
                   color="amber"
                   :min="8"
                   :step="1"
                   :max="20"
+                />
+              </q-item-section>
+            </q-item>
+            <q-item>
+              <q-item-section>
+                <span>Number of cards in Tutorial/Graphs Page</span>
+              </q-item-section>
+              <q-item-section>
+                <q-slider
+                  label
+                  label-always
+                  markers
+                  snap
+                  v-model="setPageDisplayNum"
+                  color="amber"
+                  :min="1"
+                  :step="1"
+                  :max="10"
                 />
               </q-item-section>
             </q-item>
@@ -230,7 +250,7 @@
           return this.hideEdgeWhenRendering;
         },
       },
-      setRenderviewportOnly: {
+      setRenderViewportOnly: {
         set(d) {
           this.changeRenderViewportOnly(d);
         },
@@ -294,7 +314,7 @@
           return this.codeWrap;
         },
       },
-      setDisplayNum: {
+      setPageDisplayNum: {
         set(d) {
           this.changePageDisplayNum(d);
         },
