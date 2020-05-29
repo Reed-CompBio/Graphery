@@ -35,6 +35,33 @@
           {{ button.name }}
         </q-btn>
       </div>
+      <div id="language-switcher">
+        <q-btn-dropdown flat dense icon="mdi-translate">
+          <q-list>
+            <!-- TODO you may need to use a custom list of lang here -->
+            <q-item
+              v-for="lang in $i18n.availableLocales"
+              :key="lang"
+              clickable
+              v-close-popup
+              @click="changeLocal(lang)"
+            >
+              <q-item-section avatar>
+                <q-icon
+                  :name="
+                    $i18n.locale === lang
+                      ? 'keyboard_arrow_right'
+                      : 'fiber_manual_record'
+                  "
+                />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label class="lang-label">{{ lang }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+      </div>
       <q-btn flat round dense class="lt-md" size="20px">
         <q-icon name="mdi-menu" @click="showDrawer" />
       </q-btn>
@@ -62,6 +89,9 @@
       showDrawer() {
         this.$store.dispatch('changeDrawerState', true);
       },
+      changeLocal(lang) {
+        this.$i18n.locale = lang;
+      },
     },
     watch: {
       dark: function() {
@@ -73,3 +103,10 @@
     },
   };
 </script>
+
+<style lang="sass">
+  .lang-label
+    text-align: center
+    text-transform: uppercase
+    font-weight: bold
+</style>
