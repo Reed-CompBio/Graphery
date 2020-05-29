@@ -6,7 +6,6 @@ import '@quasar/extras/mdi-v5/mdi-v5.css';
 import '@quasar/extras/material-icons/material-icons.css';
 import { Quasar } from 'quasar';
 import Notify from 'quasar/src/plugins/Notify';
-import LocalStorage from 'quasar/src/plugins/LocalStorage';
 
 Vue.use(Quasar, {
   config: {
@@ -24,6 +23,5 @@ Vue.use(Quasar, {
   },
   plugins: {
     Notify,
-    LocalStorage,
   },
 });
