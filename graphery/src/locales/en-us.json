@@ -20,5 +20,24 @@
     "Filter": "Filter",
     "searchHint": "press enter to search",
     "Categories": "Categories"
+  },
+  "settings": {
+    "Display": "Display",
+    "graphRender": "Graph Render",
+    "editorSettings": "Editor Settings",
+    "performanceTip": "Turn on to gain performance",
+    "darkMode": "Dark Mode",
+    "graphBackgroundDark": "Graph Background Dark",
+    "hideEdgesWhenRendering": "Hide Edges When Rendering (Moving Graphs) ",
+    "renderViewportOnly": "Render Viewport Only",
+    "motionBlurEnabled": "Motion Blur Enabled",
+    "motionSensitivityLevel": "Motion Sensitivity Level",
+    "splitPos": "Tutorial Page Default Split Pos",
+    "softTab": "Soft Tab",
+    "lineWrap": "Line Wrap",
+    "tabNum": "Tab Space Number",
+    "fontSize": "Font Size",
+    "showTooltips": "Show Tooltips",
+    "cardsDisplayedNum": "Number of Search Results in Each Page"
   }
 }

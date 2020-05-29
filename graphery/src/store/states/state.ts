@@ -89,6 +89,7 @@ export interface SettingInfos {
   // display
   pageDisplayNum: number;
   language: string;
+  tooltips: boolean;
 }
 
 export interface SettingState extends SettingInfos {

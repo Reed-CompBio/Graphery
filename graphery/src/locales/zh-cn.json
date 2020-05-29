@@ -21,5 +21,24 @@
     "Filter": "筛选",
     "searchHint": "使用 Enter 进行搜索",
     "Categories": "分类"
+  },
+  "settings": {
+    "Display": "显示设置",
+    "graphRender": "图渲染设置",
+    "editorSettings": "编辑器设置",
+    "performanceTip": "打开下列开关以保证流畅",
+    "darkMode": "黑暗模式",
+    "graphBackgroundDark": "图背景黑暗",
+    "hideEdgesWhenRendering": "渲染（移动）时隐藏边（edges）",
+    "renderViewportOnly": "只渲染视野范围",
+    "motionBlurEnabled": "开启动作模糊",
+    "motionSensitivityLevel": "动作敏感度",
+    "splitPos": "分界位置（教程页面）",
+    "softTab": "使用空格取代 Tab",
+    "lineWrap": "自动换行",
+    "tabNum": "Tab 大小",
+    "fontSize": "字体大小",
+    "showTooltips": "显示提示",
+    "cardsDisplayedNum": "每页展示的搜索结果"
   }
 }

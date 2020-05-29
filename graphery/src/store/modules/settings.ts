@@ -24,6 +24,7 @@ const state: SettingState = {
   // display
   pageDisplayNum: 5,
   language: 'en-us',
+  tooltips: true,
 };
 
 const mutations: MutationTree<SettingState> = {
@@ -65,6 +66,9 @@ const mutations: MutationTree<SettingState> = {
   },
   CHANGE_LANGUAGE(state, value: string) {
     state.language = value;
+  },
+  CHANGE_TOOLTIPS(state, value: boolean) {
+    state.tooltips = value;
   },
 };
 
@@ -108,6 +112,9 @@ const actions: ActionTree<SettingState, RootState> = {
   changeLanguage({ commit }, value: string) {
     commit('CHANGE_LANGUAGE', value);
   },
+  changeTooltips({ commit }, value: boolean) {
+    commit('CHANGE_TOOLTIPS', value);
+  },
   storeSettings(
     { dispatch },
     {
@@ -128,6 +135,7 @@ const actions: ActionTree<SettingState, RootState> = {
       // display
       pageDisplayNum,
       language,
+      tooltips,
     }: SettingInfos
   ) {
     dispatch('changeDark', dark);
@@ -143,6 +151,7 @@ const actions: ActionTree<SettingState, RootState> = {
     dispatch('changeCodeWrap', codeWrap);
     dispatch('changePageDisplayNum', pageDisplayNum);
     dispatch('changeLanguage', language);
+    dispatch('changeTooltips', tooltips);
   },
 };
 
@@ -170,8 +179,10 @@ const getters: GetterTree<SettingState, RootState> = {
         softTab: state.softTab,
         fontSize: state.fontSize,
         codeWrap: state.codeWrap,
-        //
+        // display
         pageDisplayNum: state.pageDisplayNum,
+        language: state.language,
+        tooltips: state.tooltips,
       },
     };
   },

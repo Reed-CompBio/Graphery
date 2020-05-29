@@ -6,14 +6,13 @@
         <h3 class="shorter-h">
           {{ $t('nav.Settings') }}
         </h3>
-        <p>The changes only work before you close</p>
       </div>
       <div id="content-section">
         <section class="q-my-lg">
           <q-card class="q-pa-md ">
             <q-card-section>
               <h4 class="q-my-sm">
-                Colors
+                {{ $t('settings.Display') }}
               </h4>
             </q-card-section>
             <q-separator />
@@ -22,7 +21,7 @@
                 <q-toggle
                   left-label
                   size="xl"
-                  label="Dark Mode"
+                  :label="$t('settings.darkMode')"
                   v-model="setDarkMode"
                   color="black"
                   checked-icon="mdi-moon-waxing-crescent"
@@ -32,13 +31,41 @@
                 <q-toggle
                   left-label
                   size="xl"
-                  label="Graph Background Dark"
+                  :label="$t('settings.graphBackgroundDark')"
                   v-model="setGraphBackgroundDark"
                   color="grey"
                   checked-icon="mdi-decagram"
                   unchecked-icon="mdi-decagram-outline"
                 />
+                <br />
+                <q-toggle
+                  left-label
+                  size="xl"
+                  :label="$t('settings.showTooltips')"
+                  v-model="setTooltips"
+                  color="green-4"
+                  checked-icon="mdi-keyboard-space"
+                  unchecked-icon="mdi-keyboard-tab"
+                />
               </div>
+              <q-item>
+                <q-item-section>
+                  <span>{{ $t('settings.cardsDisplayedNum') }}</span>
+                </q-item-section>
+                <q-item-section>
+                  <q-slider
+                    label
+                    label-always
+                    markers
+                    snap
+                    v-model="setPageDisplayNum"
+                    color="amber"
+                    :min="1"
+                    :step="1"
+                    :max="10"
+                  />
+                </q-item-section>
+              </q-item>
             </q-card-section>
           </q-card>
         </section>
@@ -46,9 +73,9 @@
           <q-card class="q-pa-md">
             <q-card-section>
               <h4 class="q-my-sm">
-                Graph Render
+                {{ $t('settings.graphRender') }}
               </h4>
-              <span>(Turn on to gain performance)</span>
+              <span>({{ $t('settings.performanceTip') }})</span>
             </q-card-section>
             <q-separator />
             <q-card-section>
@@ -56,7 +83,7 @@
                 <q-toggle
                   left-label
                   size="xl"
-                  label="Hide Edges When Rendering"
+                  :label="$t('settings.hideEdgesWhenRendering')"
                   v-model="setHideEdgeWhenRendering"
                   color="green"
                   checked-icon="mdi-eye-off"
@@ -66,7 +93,7 @@
                 <q-toggle
                   left-label
                   size="xl"
-                  label="Render Viewport Only"
+                  :label="$t('settings.renderViewportOnly')"
                   v-model="setRenderViewportOnly"
                   color="orange"
                   checked-icon="mdi-fullscreen-exit"
@@ -76,7 +103,7 @@
                 <q-toggle
                   left-label
                   size="xl"
-                  label="Motion Blur Enabled"
+                  :label="$t('settings.motionBlurEnabled')"
                   v-model="setMotionBlurEnabled"
                   color="blue"
                   checked-icon="mdi-run-fast"
@@ -85,7 +112,7 @@
               </div>
               <q-item>
                 <q-item-section>
-                  <span>Motion Sensitivity Level</span>
+                  <span>{{ $t('settings.motionSensitivityLevel') }}</span>
                 </q-item-section>
                 <q-item-section>
                   <q-slider
@@ -102,7 +129,7 @@
               </q-item>
               <q-item>
                 <q-item-section>
-                  <span>Tutorial Page Default Split Pos (%)</span>
+                  <span>{{ $t('settings.splitPos') }} (%)</span>
                 </q-item-section>
                 <q-item-section>
                   <q-slider
@@ -124,7 +151,7 @@
           <q-card class="q-pa-md">
             <q-card-section>
               <h4 class="q-my-sm">
-                Editor Settings
+                {{ $t('settings.editorSettings') }}
               </h4>
             </q-card-section>
             <q-separator />
@@ -133,7 +160,7 @@
                 <q-toggle
                   left-label
                   size="xl"
-                  label="Soft Tab"
+                  :label="$t('settings.softTab')"
                   v-model="setSoftTab"
                   color="green-4"
                   checked-icon="mdi-keyboard-space"
@@ -143,7 +170,7 @@
                 <q-toggle
                   left-label
                   size="xl"
-                  label="Line Wrap"
+                  :label="$t('settings.lineWrap')"
                   v-model="setCodeWrap"
                   color="orange-4"
                   checked-icon="mdi-wrap"
@@ -152,7 +179,7 @@
               </div>
               <q-item>
                 <q-item-section>
-                  <span>Tab Space Number</span>
+                  <span>{{ $t('settings.tabNum') }}</span>
                 </q-item-section>
                 <q-item-section>
                   <q-slider
@@ -170,7 +197,7 @@
               </q-item>
               <q-item>
                 <q-item-section>
-                  <span>Font Size (px) </span>
+                  <span>{{ $t('settings.fontSize') }} (px) </span>
                 </q-item-section>
                 <q-item-section>
                   <q-slider
@@ -183,24 +210,6 @@
                     :min="8"
                     :step="1"
                     :max="20"
-                  />
-                </q-item-section>
-              </q-item>
-              <q-item>
-                <q-item-section>
-                  <span>Number of cards in Tutorial/Graphs Page</span>
-                </q-item-section>
-                <q-item-section>
-                  <q-slider
-                    label
-                    label-always
-                    markers
-                    snap
-                    v-model="setPageDisplayNum"
-                    color="amber"
-                    :min="1"
-                    :step="1"
-                    :max="10"
                   />
                 </q-item-section>
               </q-item>
@@ -232,6 +241,7 @@
         'fontSize',
         'codeWrap',
         'pageDisplayNum',
+        'tooltips',
       ]),
       setDarkMode: {
         set(d) {
@@ -329,7 +339,14 @@
           return this.pageDisplayNum;
         },
       },
-      // TODO font size is not settled
+      setTooltips: {
+        set(d) {
+          this.changeTooltips(d);
+        },
+        get() {
+          return this.tooltips;
+        },
+      },
     },
     methods: {
       ...mapActions('settings', [
@@ -345,6 +362,7 @@
         'changeFontSize',
         'changeCodeWrap',
         'changePageDisplayNum',
+        'changeTooltips',
       ]),
     },
   };
