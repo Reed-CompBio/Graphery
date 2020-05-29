@@ -15,18 +15,18 @@
         }"
       >
         <div class="button-wrapper">
-          <q-btn dense size="lg" :to="{ name: 'Tutorials' }" exact>
-            Tutorials
+          <q-btn size="lg" :to="{ name: 'Tutorials' }" exact>
+            {{ $t('nav.Tutorials') }}
           </q-btn>
         </div>
         <div class="button-wrapper">
-          <q-btn dense size="lg" :to="{ name: 'Graphs' }" exact>
-            Graphs
+          <q-btn size="lg" :to="{ name: 'Graphs' }" exact>
+            {{ $t('nav.Graphs') }}
           </q-btn>
         </div>
         <div class="button-wrapper">
-          <q-btn dense size="lg" :to="{ name: 'Account' }" exact>
-            Account
+          <q-btn size="lg" :to="{ name: 'Account' }" exact>
+            {{ $t('nav.Account') }}
           </q-btn>
         </div>
       </div>
