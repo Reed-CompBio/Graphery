@@ -9,6 +9,7 @@ import settings from '@/store/modules/settings';
 import createPersistedState from 'vuex-persistedstate';
 
 export default new Vuex.Store({
+  // TODO Make it lazy load
   modules: {
     notifications,
     tutorials,

@@ -5,7 +5,6 @@
     side="right"
     :persistent="false"
     v-model="drawer"
-    style="z-index: 9000"
   >
     <q-list>
       <q-card class="q-py-lg" to="/">

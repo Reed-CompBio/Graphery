@@ -12,8 +12,6 @@ Vue.use(Quasar, {
     iconSet: 'mdi-v5',
     dark: false,
     animations: ['zoomIn', 'zoomOut'],
-    importStrategy: 'manual',
-    // not working???
   },
   components: {
     /* not needed if importStrategy is not 'manual' */

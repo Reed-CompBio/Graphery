@@ -2,6 +2,7 @@
   <q-page class="page">
     <div class="container q-mx-auto shadow-4">
       <div class="content-container-wrapper">
+        <!-- TODO add a title section -->
         <slot></slot>
       </div>
     </div>

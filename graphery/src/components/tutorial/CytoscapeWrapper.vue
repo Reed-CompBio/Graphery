@@ -71,7 +71,7 @@
     data() {
       return {
         cyInstance: null,
-        graphChoice: [], // used in drop menu to select graphs
+        graphChoice: '', // used in drop menu to select graphs
         moduleLoadedNum: 0,
         moduleTargetNum: 3,
       };
@@ -83,7 +83,7 @@
         'motionBlurEnabled',
         'motionSensitivityLevel',
       ]),
-      // TODO at watch to every cy options
+      // TODO watch to every cy options
       ...mapGetters('tutorials', [
         'getGraphList',
         'getGraphById',

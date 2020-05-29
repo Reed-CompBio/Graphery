@@ -1,8 +1,5 @@
 <template>
-  <!-- make a new loading indicator -->
   <div class="full-height">
-    <!-- add a overlay -->
-
     <q-scroll-area
       ref="tc"
       v-show="!articleEmpty"
@@ -70,7 +67,6 @@
           show-value
           @click="scrollToTop"
         >
-          <!--        <q-btn round color="primary" icon="mdi-menu-up" @click="scrollToTop" />-->
           <q-icon
             id="scroll-up-icon"
             name="mdi-menu-up"

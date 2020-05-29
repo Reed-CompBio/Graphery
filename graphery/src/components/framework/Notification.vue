@@ -9,10 +9,6 @@
   >
     <q-card>
       <div class="q-ma-sm">
-        <!-- TODO Invalid prop: custom validator check failed for prop "type". -->
-        <!--        <v-alert dense outlined :type="'' + status">-->
-        <!--          {{ message }}-->
-        <!--        </v-alert>-->
         <q-item>
           <q-item-section avatar>
             <q-icon :name="icon" :color="color" size="md"></q-icon>

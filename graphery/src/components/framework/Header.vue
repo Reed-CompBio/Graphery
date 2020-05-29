@@ -15,7 +15,7 @@
         </q-img>
       </router-link>
 
-      <!--    Make it on click -->
+      <!-- TODO Make it on click -->
       <q-toolbar-title style="text-transform: uppercase; font-size: 27px">
         {{ siteName }}
       </q-toolbar-title>

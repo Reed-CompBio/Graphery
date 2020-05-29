@@ -8,6 +8,8 @@ module.exports = {
   pluginOptions: {
     quasar: {
       importStrategy: 'kebab',
+      // TODO
+      //     importStrategy: 'manual',
       rtlSupport: false,
     },
   },

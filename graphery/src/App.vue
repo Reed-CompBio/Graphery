@@ -12,9 +12,6 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  // import { LocalStorage } from 'quasar';
-  // import { SettingInfos } from '@/store/states/state';
-  // import { mapGetters, mapActions } from 'vuex';
 
   export default Vue.extend({
     name: 'App',
@@ -26,32 +23,7 @@
         import('@/components/framework/NavigationDrawer.vue'),
       Notification: () => import('@/components/framework/Notification.vue'),
     },
-    computed: {
-      // ...mapGetters('settings', ['getSettings']),
-    },
-    methods: {
-      // ...mapActions('settings', ['storeSettings']),
-      // TODO add a version check
-      // initSettings() {
-      //   const settings: { settingVer: SettingInfos } = this.getSettings;
-      //   LocalStorage.set('setting_ver', Object.keys(settings)[0]);
-      //   LocalStorage.set('website_settings', Object.values(settings)[0]);
-      // },
-      // loadSettings() {
-      //   this.storeSettings(LocalStorage.getItem('website_settings'));
-      // },
-      // settingLoader() {
-      //   if (LocalStorage.has('setting_ver')) {
-      //     this.loadSettings();
-      //   } else {
-      //     this.initSettings();
-      //   }
-      // },
-    },
-    // mounted() {
-    // this.settingLoader();
-    // console.debug('local storage: ', LocalStorage.getAll());
-    // },
+    // TODO add a version check to local settings
   });
 </script>
 
