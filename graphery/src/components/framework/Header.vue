@@ -32,7 +32,7 @@
           size="18px"
           exact
         >
-          {{ button.name }}
+          {{ $t(`nav.${button.name}`) }}
         </q-btn>
       </div>
       <div id="language-switcher">

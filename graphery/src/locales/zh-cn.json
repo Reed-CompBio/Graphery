@@ -1,0 +1,10 @@
+{
+  "nav": {
+    "Home": "首页",
+    "Tutorials": "教程",
+    "Graphs": "图",
+    "About": "关于",
+    "Account": "账户",
+    "Settings": "设置"
+  }
+}
