@@ -150,7 +150,7 @@
       displayedInfos() {
         return this.infos.slice(
           this.displayIndexStart,
-          this.displayIndexStart + 5
+          this.displayIndexStart + this.pageDisplayNum
         );
       },
     },

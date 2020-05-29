@@ -21,6 +21,7 @@
                 icon="mdi-card-account-details"
                 @click="$emit('author-filter', author)"
               >
+                <!-- may be I don't need the author filter -->
                 {{ author }}
               </q-chip>
             </q-breadcrumbs-el>
@@ -123,7 +124,7 @@
     },
     mounted() {
       // this.loadTutorial();
-      // when should I load the text hmmmmm
+      // TODO when should I load the text hmmmmm
     },
   };
 </script>

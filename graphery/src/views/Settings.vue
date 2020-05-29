@@ -292,7 +292,7 @@
       },
       setSoftTab: {
         set(d) {
-          this.changeSoftTabNum(d);
+          this.changeSoftTab(d);
         },
         get() {
           return this.softTab;
@@ -334,7 +334,7 @@
         'changeMotionSensitivityLevel',
         'changeGraphSplitPos',
         'changeTabNum',
-        'changeSoftTabNum',
+        'changeSoftTab',
         'changeFontSize',
         'changeCodeWrap',
         'changePageDisplayNum',

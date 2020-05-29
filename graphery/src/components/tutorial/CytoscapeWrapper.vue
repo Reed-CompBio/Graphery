@@ -83,6 +83,7 @@
         'motionBlurEnabled',
         'motionSensitivityLevel',
       ]),
+      // TODO at watch to every cy options
       ...mapGetters('tutorials', [
         'getGraphList',
         'getGraphById',

@@ -55,5 +55,5 @@
 
 <style lang="sass">
   .button-wrapper
-    margin: 5px 2px
+    margin: 5px 10px
 </style>
