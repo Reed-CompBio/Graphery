@@ -58,7 +58,7 @@
   let panzoom;
   let dagre;
 
-  import { headerSize, graphMenuHeaderSize } from '../../store/states/meta';
+  import { graphMenuHeaderSize } from '../../store/states/meta';
   import { mapState, mapGetters, mapActions } from 'vuex';
   import {
     panzoomDefaults,
@@ -119,7 +119,7 @@
       },
       heightStyle() {
         return {
-          height: `calc(100vh - ${headerSize + graphMenuHeaderSize}px)`,
+          height: `calc(100% - ${graphMenuHeaderSize}px)`,
         };
       },
     },
