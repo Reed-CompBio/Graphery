@@ -46,7 +46,7 @@
               v-close-popup
               @click="changeLocal(lang)"
             >
-              <q-item-section avatar>
+              <q-item-section thumbnail>
                 <q-icon
                   v-if="$i18n.locale === lang"
                   name="keyboard_arrow_right"
