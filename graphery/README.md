@@ -1,5 +1,7 @@
 # graphery
 
+[![Build Status](https://travis-ci.com/FlickerSoul/Graphery.svg?token=iGoqjTdG7SFLHQyLfgoz&branch=frontend)](https://travis-ci.com/FlickerSoul/Graphery)
+
 ## Project setup
 ```
 npm install
