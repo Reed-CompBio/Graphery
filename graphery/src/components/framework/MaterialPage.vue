@@ -54,6 +54,5 @@
 
   .content-container-wrapper
     margin: 0 auto
-    @media (min-width: $breakpoint-lg-min)
-      width: 900px
+    max-width: 900px
 </style>
