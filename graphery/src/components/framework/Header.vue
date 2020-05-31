@@ -16,7 +16,7 @@
       </router-link>
 
       <!-- TODO Make it on click -->
-      <q-toolbar-title style="text-transform: uppercase; font-size: 27px">
+      <q-toolbar-title style="text-transform: uppercase; font-size: 20px">
         {{ siteName }}
       </q-toolbar-title>
 

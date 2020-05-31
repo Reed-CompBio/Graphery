@@ -24,7 +24,7 @@
       </template>
     </q-splitter>
     <EditorWrapper
-      v-show="editorShow && $q.screen.gt.xs"
+      v-show="editorShow"
       @close-editor="closeEditor"
       ref="editorWrapper"
     ></EditorWrapper>
@@ -116,6 +116,26 @@
         icon: 'mdi-code-json',
         timeout: 1500,
       });
+
+      if (this.$q.platform.is.mobile) {
+        this.$q.notify({
+          multiLine: true,
+          message:
+            'This page is NOT designed for mobile view. To get all the functionalities, please use a desktop browser!',
+          icon: 'warning',
+        });
+
+        if (this.$q.platform.is.chrome) {
+          // TODO temporary workaround, find a way to solve mobile viewport
+          this.$q.notify({
+            multiLine: true,
+            message:
+              'Mobile Chrome is not well supported in this site. We are sorry for the inconvenience! Please use other browsers!',
+            icon: 'warning',
+          });
+        }
+      }
+
       this.updateTutorialContent();
     },
   };

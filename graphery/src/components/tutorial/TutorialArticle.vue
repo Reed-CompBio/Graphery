@@ -45,6 +45,7 @@
           </q-breadcrumbs>
         </div>
       </div>
+      <!-- what about xss attacks? -->
       <div id="tutorial-content" v-html="content"></div>
     </q-scroll-area>
     <!-- add a protocol info section -->
