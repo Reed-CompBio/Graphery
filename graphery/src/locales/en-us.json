@@ -39,5 +39,10 @@
     "fontSize": "Font Size",
     "showTooltips": "Show Tooltips",
     "cardsDisplayedNum": "Number of Search Results in Each Page"
+  },
+  "notify": {
+    "editorEntry": "Open code editor using {...} button",
+    "mobileWarning": "This page is NOT designed for mobile view. To get all the functionalities, please use a desktop browser!",
+    "mobileChromeWarning": "Mobile Chrome is not well supported in this site. We are sorry for the inconvenience! Please use other browsers!"
   }
 }

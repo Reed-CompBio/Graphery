@@ -1,5 +1,5 @@
 <template>
-  <div class="full-height">
+  <div>
     <q-scroll-area
       ref="tc"
       v-show="!articleEmpty"
@@ -50,12 +50,11 @@
     </q-scroll-area>
     <!-- add a protocol info section -->
 
-    <!-- fix animation -->
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <transition
         appear
-        enter-active-class="animated fadeIn"
-        leave-active-class="animated fadeOut"
+        enter-active-class="animated zoomIn"
+        leave-active-class="animated zoomOut"
       >
         <q-circular-progress
           v-show="articleViewPercentage !== 0"
@@ -130,8 +129,10 @@
   };
 </script>
 
-<style>
-  #scroll-up-icon:hover {
-    cursor: pointer;
-  }
+<style lang="sass">
+  @import '~@quasar/extras/animate/zoomIn.css'
+  @import '~@quasar/extras/animate/zoomOut.css'
+
+  #scroll-up-icon:hover
+    cursor: pointer
 </style>

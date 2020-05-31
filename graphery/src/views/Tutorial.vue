@@ -2,6 +2,7 @@
   <div>
     <q-resize-observer @resize="resizeAction"></q-resize-observer>
     <q-splitter
+      v-if="$q.screen.gt.xs"
       v-model="splitPos"
       :style="tutorialStyle"
       :horizontal="$q.screen.lt.md"
@@ -20,9 +21,10 @@
         />
       </template>
       <template v-slot:after>
-        <TutorialArticle></TutorialArticle>
+        <TutorialArticle class="full-height"></TutorialArticle>
       </template>
     </q-splitter>
+    <TutorialArticle v-else :style="tutorialStyle"></TutorialArticle>
     <EditorWrapper
       v-show="editorShow"
       @close-editor="closeEditor"
@@ -97,7 +99,6 @@
         // suppress an error with if here
         if (this.$refs.editorWrapper) {
           this.$refs.editorWrapper.resizeEditorPos();
-          this.$refs.cytoscapeWrapper.resizeGraph();
         }
       },
     },
@@ -112,28 +113,26 @@
       // pull tutorials
       this.$q.notify({
         multiLine: true,
-        message: 'open code editor using {...} button',
+        message: this.$t('notify.editorEntry'),
         icon: 'mdi-code-json',
         timeout: 1500,
       });
 
-      if (this.$q.platform.is.mobile) {
+      if (this.$q.screen.lt.sm) {
         this.$q.notify({
           multiLine: true,
-          message:
-            'This page is NOT designed for mobile view. To get all the functionalities, please use a desktop browser!',
+          message: this.$t('notify.mobileWarning'),
           icon: 'warning',
         });
-
-        if (this.$q.platform.is.chrome) {
-          // TODO temporary workaround, find a way to solve mobile viewport
-          this.$q.notify({
-            multiLine: true,
-            message:
-              'Mobile Chrome is not well supported in this site. We are sorry for the inconvenience! Please use other browsers!',
-            icon: 'warning',
-          });
-        }
+      }
+      // TODO add a setting to hide notification
+      if (this.$q.platform.is.mobile && this.$q.platform.is.chrome) {
+        // TODO temporary workaround, find a way to solve mobile viewport
+        this.$q.notify({
+          multiLine: true,
+          message: this.$t('notify.mobileChromeWarning'),
+          icon: 'warning',
+        });
       }
 
       this.updateTutorialContent();
