@@ -110,19 +110,19 @@
       },
     },
     mounted() {
-      // pull tutorials
-      this.$q.notify({
-        multiLine: true,
-        message: this.$t('notify.editorEntry'),
-        icon: 'mdi-code-json',
-        timeout: 1500,
-      });
-
       if (this.$q.screen.lt.sm) {
         this.$q.notify({
           multiLine: true,
           message: this.$t('notify.mobileWarning'),
           icon: 'warning',
+          actions: [{}],
+        });
+      } else {
+        this.$q.notify({
+          multiLine: true,
+          message: this.$t('notify.editorEntry'),
+          icon: 'mdi-code-json',
+          timeout: 1500,
         });
       }
       // TODO add a setting to hide notification
@@ -135,6 +135,7 @@
         });
       }
 
+      // pull tutorials
       this.updateTutorialContent();
     },
   };

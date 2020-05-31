@@ -42,7 +42,7 @@
   },
   "notify": {
     "editorEntry": "按下 {...} 按钮打开编辑器",
-    "mobileWarning": "这个页面不是对移动端适配不足！若想获得完整体验，请使用桌面版浏览器！",
+    "mobileWarning": "这个页面对移动端适配不足！若想获得完整体验，请使用桌面版浏览器！",
     "mobileChromeWarning": "暂不支持移动端Chrome的适配！请使用其他浏览器！"
   }
 }
