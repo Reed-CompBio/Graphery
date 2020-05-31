@@ -38,7 +38,7 @@
             id="filter-section"
             :class="{
               'col-4': true,
-              'flex-center': $q.screen.lt.sm,
+              'flex-center': true,
               row: $q.screen.lt.sm,
             }"
           >
@@ -87,7 +87,7 @@
               >
               </q-pagination>
             </div>
-            <div class="q-px-md">
+            <div class="q-px-sm">
               <div
                 class="relative-position"
                 id="inner-loader"
