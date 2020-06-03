@@ -44,5 +44,9 @@
     "editorEntry": "按下 {...} 按钮打开编辑器",
     "mobileWarning": "这个页面对移动端适配不足！若想获得完整体验，请使用桌面版浏览器！",
     "mobileChromeWarning": "暂不支持移动端Chrome的适配！请使用其他浏览器！"
+  },
+  "license": {
+    "licenseInfo1": "所有文章在没有特殊说明的情况下都遵循",
+    "licenseInfo2": "署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)"
   }
 }

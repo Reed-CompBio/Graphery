@@ -44,5 +44,9 @@
     "editorEntry": "Open code editor using {...} button",
     "mobileWarning": "This page is NOT designed for mobile view. To get all the functionalities, please use a desktop browser!",
     "mobileChromeWarning": "Mobile Chrome is not well supported in this site. We are sorry for the inconvenience! Please use other browsers!"
+  },
+  "license": {
+    "licenseInfo1": "All the articles without special specification are licensed under a",
+    "licenseInfo2": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License"
   }
 }

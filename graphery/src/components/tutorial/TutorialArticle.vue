@@ -47,6 +47,10 @@
       </div>
       <!-- what about xss attacks? -->
       <div id="tutorial-content" v-html="content"></div>
+
+      <LicenseCard></LicenseCard>
+
+      <div class="q-mb-xl"></div>
     </q-scroll-area>
     <!-- add a protocol info section -->
 
@@ -93,6 +97,7 @@
   export default {
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
+      LicenseCard: () => import('@/components/framework/LicenseCard.vue'),
     },
     data() {
       return {

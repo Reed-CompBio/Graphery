@@ -1,7 +1,7 @@
 <template>
   <q-footer elevated reveal class="q-pa-md">
     <!--    TODO change the color in the dark mode    -->
-    <div class="text-center" id="footer">
+    <div class="text-center white-a" id="footer">
       <div>
         2020 © Graphery |
         <a
@@ -23,9 +23,9 @@
   </q-footer>
 </template>
 
-<style scoped>
-  #footer a,
-  #footer a:visited {
+<style>
+  .white-a a,
+  .white-a a:visited {
     color: #fff !important;
   }
   #footer a:hover {
