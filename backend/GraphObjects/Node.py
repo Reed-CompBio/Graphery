@@ -1,13 +1,22 @@
-from .Base import Highlightable, Hashable
+from .Base import Highlightable, Comparable, HasProperty, Stylable, ElementSet
+from typing import Iterable
 
 
-class Node(Highlightable, Hashable):
-    def __init__(self, identity, name, style):
-        Hashable.__init__(identity, name)
-        self.style = style
+class Node(Highlightable, Comparable, HasProperty, Stylable):
+    def __init__(self, identity, name=None, styles=None, classes=None):
+        Comparable.__init__(self, identity, name)
+        HasProperty.__init__(self)
+        Stylable.__init__(self, styles, classes)
 
-    def highlight(self, color):
-        pass
+    def highlight(self, cls):
+        # TODO
+        raise NotImplementedError
 
-    def unhighlight(self, color):
-        pass
+    def unhighlight(self, cls):
+        # TODO
+        raise NotImplementedError
+
+
+class NodeSet(ElementSet):
+    def __init__(self, nodes: Iterable[Node]):
+        super(NodeSet, self).__init__(nodes, Node)
