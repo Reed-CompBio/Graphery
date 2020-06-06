@@ -40,6 +40,7 @@ class Comparable(metaclass=ABCMeta):
         @param identity: unique id for this object
         @param name: displayed name for this object
         """
+        assert identity is not None
         self.identity = identity
         self.name = name if not name else Comparable.PREFIX + str(identity)
 

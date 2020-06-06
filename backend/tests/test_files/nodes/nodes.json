@@ -1,0 +1,86 @@
+{
+    "single_node": [
+      {
+        "data": {
+          "id": "n1",
+          "label": "N1"
+        }
+      }
+    ],
+    "multiple_nodes": [
+      {
+        "data": {
+          "id": "n1",
+          "label": "N1"
+        }
+      },
+      {
+        "data": {
+          "id": "n2",
+          "label": "N2"
+        }
+      },
+      {
+        "data": {
+          "id": "n3",
+          "label": "N3"
+        }
+      }
+    ],
+    "complex_node": [
+        {
+        "data": {
+          "id": "n0",
+          "label": "N0",
+          "degree": "10",
+          "displayed": {
+            "degree": 0,
+            "clustering_coefficient": 0
+          }
+        },
+        "scratch": {
+          "_degree": "20"
+        },
+        "style": {
+          "label": "data(id)",
+          "overlay-color": "lightblue"
+        }
+      }
+    ],
+    "complex_nodes": [
+      {
+        "data": {
+          "id": "n0",
+          "label": "N0",
+          "degree": "10"
+        },
+        "scratch": {
+          "_degree": "20"
+        },
+        "style": {
+          "label": "data(id)",
+          "overlay-color": "lightblue"
+        }
+      },
+      {
+        "data": {
+          "id": "n1",
+          "label": "N1"
+        },
+        "style": {
+          "background-color": "green"
+        }
+      },
+      {
+        "data": {
+          "id": "n2",
+          "label": "N2"
+        },
+        "style": {
+          "shape": "oval",
+          "height": 12,
+          "width": 20
+        }
+      }
+    ]
+}

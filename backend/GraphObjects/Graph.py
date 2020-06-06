@@ -88,6 +88,7 @@ class Graph:
         """
         try:
             graph_dict = json.loads(graph_json)
+            # TODO do not support json5
         except json.JSONDecodeError as e:
             logging.exception(e)
             raise e

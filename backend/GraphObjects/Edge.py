@@ -12,9 +12,9 @@ class Edge(Highlightable, Comparable, HasProperty, Stylable):
         HasProperty.__init__(self)
         Stylable.__init__(self, styles, classes)
         if isinstance(node_pair, Tuple) and all(isinstance(node, Node) for node in node_pair):
-            self.edge: Tuple[Node, Node] = tuple(node_pair)
+            self.edge: Tuple[Node, Node] = node_pair
         else:
-            raise KeyError('%s is not a tuple or contains non-node element' % node_pair)
+            raise KeyError('%s is not a tuple or contains non-node element' % str(node_pair))
         self.directed: bool = directed
 
     def get_nodes(self) -> Tuple[Node, Node]:
@@ -50,12 +50,13 @@ class EdgeSet(ElementSet[Edge]):
     def generate_edge_set(edges: Iterable[Mapping], nodes: NodeSet) -> 'EdgeSet':
         stored_edges = []
         for edge in edges:
-            if isinstance(edge, Mapping) and 'data' in edge:
+            if isinstance(edge, Mapping) and 'data' in edge and 'id' in edge['data']:
                 data_field = edge['data']
                 stored_edge = Edge(data_field['id'], (nodes[data_field['source']], nodes[data_field['target']]))
                 if 'displayed' in data_field:
                     stored_edge.update_properties(data_field['displayed'])
+                stored_edges.append(stored_edge)
             else:
-                logging.warning('Omitted one node info since does not contain valid data')
+                raise ValueError('invalid format for Edge')
 
         return EdgeSet(stored_edges)

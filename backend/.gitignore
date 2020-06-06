@@ -1,11 +1,9 @@
 # venv
-bin
-include
-lib
-pyvenv.cfg
+venv
 
 # pycharm
 .idea
 
 # python cache
 __pycache__
+.pytest_cache
