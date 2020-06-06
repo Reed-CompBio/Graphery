@@ -76,6 +76,9 @@ class HasProperty(metaclass=ABCMeta):
     def __init__(self):
         self.properties = {}
 
+    def update_properties(self, properties: Mapping):
+        self.properties.update(properties)
+
     def __getitem__(self, item):
         """
         get property
@@ -117,6 +120,7 @@ class HasProperty(metaclass=ABCMeta):
 
 class Stylable(metaclass=ABCMeta):
     def __init__(self, style: Union[str, Mapping] = None, classes: Iterable[str] = None):
+        # TODO I don't think I need styles
         self.styles = {}
         self.classes = []
 
@@ -139,21 +143,25 @@ class Stylable(metaclass=ABCMeta):
 T = TypeVar('T')
 
 
-class ElementSet(metaclass=ABCMeta, Generic[T]):
+class ElementSet(Generic[T], metaclass=ABCMeta):
     def __init__(self, elements: Iterable[T], element_type: Type[Comparable]):
         self.elements = []
         self.element_type = element_type
         if isinstance(elements, Iterable) and all(isinstance(element, self.element_type) for element in elements):
-            self.elements.extend(*elements)
+            self.elements.extend(elements)
         else:
             raise KeyError('nodes are not all %s type' % self.element_type)
 
-    def __getitem__(self, item):
+    def __getitem__(self, identity):
         for element in self.elements:
-            if element.identity == item:
+            if element.identity == identity:
                 return element
 
         return None
+
+    def __iter__(self):
+        for element in self.elements:
+            yield element
 
     def __contains__(self, item):
         if isinstance(item, self.element_type):
@@ -162,3 +170,9 @@ class ElementSet(metaclass=ABCMeta, Generic[T]):
             return any(element.identity == item for element in self.elements)
             # TODO what about searching for names?
         return False
+
+    def __str__(self):
+        return str(self.elements)
+
+    def __repr__(self):
+        return self.__str__()

@@ -6,3 +6,6 @@ pyvenv.cfg
 
 # pycharm
 .idea
+
+# python cache
+__pycache__

@@ -3,7 +3,7 @@ import logging
 from .Node import Node, NodeSet
 from .Edge import Edge, EdgeSet
 import json
-from typing import Iterable, Union, Optional
+from typing import Iterable, Union, Optional, Mapping
 
 
 class Graph:
@@ -11,8 +11,16 @@ class Graph:
     The graph object
     """
     def __init__(self, nodes: Iterable[Node], edges: Iterable[Edge]):
-        self.node_set = NodeSet(nodes)
-        self.edge_set = EdgeSet(edges)
+        if isinstance(nodes, NodeSet):
+            self.node_set = nodes
+        else:
+            self.node_set = NodeSet(nodes)
+
+        if isinstance(edges, EdgeSet):
+            self.edge_set = edges
+        else:
+            self.edge_set = EdgeSet(edges)
+
         self.high_light_classes = []
 
     def get_node(self, node_id: str) -> Optional[Node]:
@@ -53,20 +61,24 @@ class Graph:
         generate a graph instance from json
         template:
         {
-            nodes: [
-                {
-                    data: { id: 'a', ... },
+            elements: {
+                nodes: [
+                    {
+                        data: { id: 'a', ..., displayed: { /* the properties that should tracked and displayed */}},
+                        ...
+                    },
                     ...
-                },
-                ...
-            ],
-            edges: [
-                {
-                    data: { id: 'ab', source: 'a', target: 'b', ... },
+                ],
+                edges: [
+                    {
+                        data: { id: 'ab', source: 'a', target: 'b', ...,
+                                displayed: { /* the properties that should tracked and displayed */}
+                              },
+                        ...
+                    },
                     ...
-                },
-                ...
-            ]
+                ]
+            },
             layout: { // omitted },
             style: [ { selector: '***', style: {'label': 'data(id)', ...}, ... ]
         }
@@ -80,5 +92,17 @@ class Graph:
             logging.exception(e)
             raise e
 
-        raise NotImplementedError
+        if 'elements' in graph_dict:
+            element_dict = graph_dict['elements']
+            if isinstance(element_dict, Mapping):
+                parsed_node_set = []
+                parsed_edge_set = []
+                if 'nodes' in element_dict:
+                    parsed_node_set = NodeSet.generate_node_set(element_dict['nodes'])
+                if 'edges' in element_dict:
+                    parsed_edge_set = EdgeSet.generate_edge_set(element_dict['edges'], parsed_node_set)
+
+                return Graph(parsed_node_set, parsed_edge_set)
+            else:
+                raise NotImplementedError('The other json format is not supported for now')
 
