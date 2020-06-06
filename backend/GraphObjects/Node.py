@@ -1,7 +1,7 @@
 import logging
 
 from .Base import Highlightable, Comparable, HasProperty, Stylable, ElementSet
-from typing import Iterable, Mapping, List
+from typing import Iterable, Mapping
 
 
 class Node(Highlightable, Comparable, HasProperty, Stylable):
