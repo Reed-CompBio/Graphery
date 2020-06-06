@@ -1,5 +1,3 @@
-import logging
-
 from .Base import Highlightable, Comparable, HasProperty, Stylable, ElementSet
 from .Node import Node, NodeSet
 from typing import Iterable, Tuple, Mapping
