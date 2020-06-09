@@ -1,3 +1,5 @@
+import logging
+
 from .Node import Node, NodeSet
 from .Edge import Edge, EdgeSet
 import json
