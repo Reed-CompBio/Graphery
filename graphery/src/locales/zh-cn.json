@@ -1,0 +1,52 @@
+{
+  "tooltips": {
+    "graphInfo": "图的信息",
+    "Share": "分享",
+    "runCodeOnTheCloud": "云端编译",
+    "runCodeLocally": "本地编译",
+    "copyCodes": "复制代码",
+    "pasteCodes": "粘贴代码",
+    "showEditorAndMore": "显示编辑器"
+  },
+  "nav": {
+    "Home": "首页",
+    "Tutorials": "教程",
+    "Graphs": "图库",
+    "About": "关于",
+    "Account": "账户",
+    "Settings": "设置"
+  },
+  "collectionPage": {
+    "Filter": "筛选",
+    "searchHint": "使用 Enter 进行搜索",
+    "Categories": "分类"
+  },
+  "settings": {
+    "Display": "显示设置",
+    "graphRender": "图渲染设置",
+    "editorSettings": "编辑器设置",
+    "performanceTip": "打开下列开关以保证流畅",
+    "darkMode": "黑暗模式",
+    "graphBackgroundDark": "图背景黑暗",
+    "hideEdgesWhenRendering": "渲染（移动）时隐藏边（edges）",
+    "renderViewportOnly": "只渲染视野范围",
+    "motionBlurEnabled": "开启动作模糊",
+    "motionSensitivityLevel": "动作敏感度",
+    "splitPos": "分界位置（教程页面）",
+    "softTab": "使用空格取代 Tab",
+    "lineWrap": "自动换行",
+    "tabNum": "Tab 大小",
+    "fontSize": "字体大小",
+    "showTooltips": "显示提示",
+    "cardsDisplayedNum": "每页展示的搜索结果"
+  },
+  "notify": {
+    "editorEntry": "按下 {...} 按钮打开编辑器",
+    "mobileWarning": "这个页面对移动端适配不足！若想获得完整体验，请使用桌面版浏览器！",
+    "mobileChromeWarning": "暂不支持移动端Chrome的适配！请使用其他浏览器！"
+  },
+  "license": {
+    "licenseInfo1": "所有文章在没有特殊说明的情况下都遵循",
+    "licenseInfo2": "署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "tooltips": {
+    "graphInfo": "Graph Info",
+    "Share": "Share",
+    "runCodeOnTheCloud": "Run code on the cloud",
+    "runCodeLocally": "Run code locally",
+    "copyCodes": "Copy codes",
+    "pasteCodes": "Paste codes",
+    "showEditorAndMore": "Show editor"
+  },
+  "nav": {
+    "Home": "Home",
+    "Tutorials": "Tutorials",
+    "Graphs": "Graphs",
+    "About": "About",
+    "Account": "Account",
+    "Settings": "Settings"
+  },
+  "collectionPage": {
+    "Filter": "Filter",
+    "searchHint": "press enter to search",
+    "Categories": "Categories"
+  },
+  "settings": {
+    "Display": "Display",
+    "graphRender": "Graph Render",
+    "editorSettings": "Editor Settings",
+    "performanceTip": "Turn on to gain performance",
+    "darkMode": "Dark Mode",
+    "graphBackgroundDark": "Graph Background Dark",
+    "hideEdgesWhenRendering": "Hide Edges When Rendering (Moving Graphs) ",
+    "renderViewportOnly": "Render Viewport Only",
+    "motionBlurEnabled": "Motion Blur Enabled",
+    "motionSensitivityLevel": "Motion Sensitivity Level",
+    "splitPos": "Tutorial Page Default Split Pos",
+    "softTab": "Soft Tab",
+    "lineWrap": "Line Wrap",
+    "tabNum": "Tab Space Number",
+    "fontSize": "Font Size",
+    "showTooltips": "Show Tooltips",
+    "cardsDisplayedNum": "Number of Search Results in Each Page"
+  },
+  "notify": {
+    "editorEntry": "Open code editor using {...} button",
+    "mobileWarning": "This page is NOT designed for mobile view. To get all the functionalities, please use a desktop browser!",
+    "mobileChromeWarning": "Mobile Chrome is not well supported in this site. We are sorry for the inconvenience! Please use other browsers!"
+  },
+  "license": {
+    "licenseInfo1": "All the articles without special specification are licensed under a",
+    "licenseInfo2": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License"
+  }
+}

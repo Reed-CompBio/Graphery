@@ -1,5 +1,5 @@
-import { shallowMount } from '@vue/test-utils';
-
 describe('HelloWorld.vue', () => {
-  it('trivial test', () => {});
+  it('trivial test', () => {
+    console.log('trivial test');
+  });
 });
