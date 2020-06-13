@@ -3,12 +3,13 @@ language: node_js
 nodoe_js:
   - node
 
-python:
-  - "3.8.2"
+jobs:
+  include:
+    - name: "3.8 test"
+      python: "3.8"
 
 install:
-  - pip3 install pipenv
-  - pipenv install
+  - pip install pipenv
 
 cache: npm
 
@@ -21,4 +22,4 @@ script:
   - npm run build
   - rm -rf dist
   - npm run test:unit
-  - cd ../backend && pipenv install && pipenv run pytest
+  - cd ../backend && pipenv install && pipenv install && pipenv run pytest

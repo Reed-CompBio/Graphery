@@ -19,21 +19,17 @@ class Controller:
     def get_recorded_content(self):
         return self.tracer_cls.get_recorder_change_list()
 
-    def add_cache_folder(self, dir_name: Union[str, pathlib.Path],
-                         mode: int = 0o777,
-                         auto_delete: bool = True) -> 'CacheFolder':
-        return self.main_cache_folder.add_cache_folder(dir_name, mode, auto_delete)
-
-    def __enter__(self):
+    def __call__(self, dir_name: Union[str, pathlib.Path],
+                       mode: int = 0o777,
+                       auto_delete: bool = True,
+                       *args, **kwargs) -> 'CacheFolder':
         self.tracer_cls.new_recorder()
         self.tracer_cls.set_log_file_name(str(time()))
         # TODO give a prompt that the current session is under this time stamp
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
+        return self.main_cache_folder.add_cache_folder(dir_name, mode, auto_delete)
 
     def __del__(self):
-        self.__exit__(None, None, None)
+        self.main_cache_folder.__exit__(None, None, None)
 
 
 controller = Controller()
