@@ -3,7 +3,9 @@ language: python
 nodoe_js:
   - node
 
-cache: npm
+cache:
+  - npm
+  - pip
 
 python:
   - "3.8"
@@ -15,6 +17,5 @@ install:
   - npm install
 
 script:
-  - npm run build && npm run test:unit
-  - cd ../backend
-  - pipenv install && pipenv install && sudo pipenv run pytest
+  - npm run build
+  - cd ../backend && pipenv install && sudo pipenv run pytest
