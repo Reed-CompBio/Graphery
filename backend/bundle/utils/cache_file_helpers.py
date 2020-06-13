@@ -98,7 +98,7 @@ class CacheFolder(contextlib.AbstractContextManager):
 
     def __enter__(self) -> 'CacheFolder':
         try:
-            pathlib.Path.mkdir(self.cache_folder_path, mode=self.folder_mode, parents=False, exist_ok=True)
+            pathlib.Path.mkdir(self.cache_folder_path, mode=self.folder_mode, parents=True, exist_ok=True)
         except FileExistsError:
             # this should not be called
             # but hmmm if the last path component is not an existing non-directory file,

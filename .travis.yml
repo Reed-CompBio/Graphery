@@ -18,4 +18,4 @@ install:
 
 script:
   - npm run build
-  - cd ../backend && sudo pipenv install && sudo pipenv run pytest
+  - cd ../backend && sudo pipenv install && sudo pipenv run pytest -vv -ra
