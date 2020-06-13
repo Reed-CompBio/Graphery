@@ -11,7 +11,7 @@ from hashlib import md5
 from typing import Union
 from zipfile import ZipFile
 
-USER_DOCS_PATH: pathlib.Path = pathlib.Path.home() / 'Documents' / '.graphery_cache'
+USER_DOCS_PATH: pathlib.Path = pathlib.Path.home() / '.graphery_cache'
 
 
 class TempSysPathAdder:
