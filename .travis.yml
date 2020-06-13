@@ -1,25 +1,25 @@
-language: node_js
+language: python
 
 nodoe_js:
   - node
 
-jobs:
-  include:
-    - name: "3.8 test"
-      python: "3.8"
+cache: npm
+
+python:
+  - "3.8"
+
+before_install:
+  - python --version
+  - python3 --version
 
 install:
   - pip install pipenv
 
-cache: npm
-
 before_script:
   - cd graphery
   - npm install -g npm@latest
-  - npm install codecov -g
 
 script:
-  - npm run build
-  - rm -rf dist
-  - npm run test:unit
-  - cd ../backend && pipenv install && pipenv install && pipenv run pytest
+  - npm run build && npm run test:unit
+  - cd ../backend
+  - pipenv install && pipenv install && pipenv run pytest
