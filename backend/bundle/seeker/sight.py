@@ -10,7 +10,7 @@ import datetime as datetime_module
 import itertools
 import threading
 import traceback
-from types import FrameType
+from types import FrameType, FunctionType
 from typing import Iterable, Tuple, Any, Mapping, Optional, List, Callable, Union
 
 from .recorder import Recorder
@@ -169,8 +169,9 @@ class Tracer:
 
     def __init__(self, *watch_list, default_output: bool = True,
                  output: Union[str, Callable, utils.WritableStream, StringIO] = None,
-                 watch=(), watch_explode=(), depth=1, prefix='', overwrite=False, thread_info=False,
-                 custom_repr=(), max_variable_length=100, relative_time=False, only_watch=True):
+                 watch=(), watch_explode=(), depth: int = 1, prefix: str = '', overwrite: bool = False,
+                 thread_info: bool = False, custom_repr=(), max_variable_length: int = 100,
+                 relative_time: bool = False, only_watch: bool = True):
 
         if output:
             self.log_path = output
@@ -200,8 +201,8 @@ class Tracer:
         self.target_codes = set()
         self.target_frames = set()
         self.thread_local = threading.local()
-        if len(custom_repr) == 2 and not all(isinstance(x,
-                                                        pycompat.collections_abc.Iterable) for x in custom_repr):
+        if len(custom_repr) == 2 and \
+                not all(isinstance(x, pycompat.collections_abc.Iterable) for x in custom_repr):
             custom_repr = (custom_repr,)
         self.custom_repr = custom_repr
         self.last_source_path = None
@@ -240,6 +241,20 @@ class Tracer:
             return self._wrap_class(function_or_class)
         else:
             return self._wrap_function(function_or_class)
+
+    @classmethod
+    def look_at(cls, func: FunctionType):
+        """
+        look at function's output and record it in the change list
+        @param func: wrapped function
+        @return: wrapper function
+        """
+        def wrapper(*args, **kwargs):
+            result = func(*args, **kwargs)
+            # cls._recorder.add_ac_to_last_record('get value %s' % result)
+            cls._recorder.add_ac_to_last_record(result)
+            return result
+        return wrapper
 
     def _wrap_class(self, cls):
         for attr_name, attr in cls.__dict__.items():
@@ -427,11 +442,15 @@ class Tracer:
         for name, (value, value_repr) in local_reprs.items():
 
             if name not in old_local_reprs:
-                self.recorder.add_vc_to_last_record((name, value))
+                if event == 'call':
+                    # TODO it seems to work but I am not sure about this
+                    self.recorder.add_vc_to_last_record((name, value))
+                else:
+                    self.recorder.add_vc_to_previous_record((name, value))
                 self.write('{indent}{newish_string}{name} = {value_repr}'.format(
                     **locals()))
             elif old_local_reprs[name][1] != value_repr:
-                self.recorder.add_vc_to_last_record((name, value))
+                self.recorder.add_vc_to_previous_record((name, value))
                 self.write('{indent}Modified var:.. {name} = {value_repr}'.format(
                     **locals()))
 

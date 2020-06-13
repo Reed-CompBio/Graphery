@@ -1,4 +1,5 @@
 import os
+import sys
 import pathlib
 from importlib import import_module
 
@@ -28,3 +29,6 @@ def test_dump_result(zip_file_dir, unzip_dir):
                               ]
         for func in graphery_functions:
             result = func()
+
+        del sys.modules['entry']
+        del imported_module

@@ -4,6 +4,8 @@ from typing import Iterable, Tuple, Mapping
 
 
 class Edge(Highlightable, Comparable, HasProperty, Stylable):
+    _PREFIX = 'e'
+
     def __init__(self, identity, node_pair: Tuple[Node, Node], name=None, styles=None, classes=None, directed=False):
         Highlightable.__init__(self)
         Comparable.__init__(self, identity, name)

@@ -31,7 +31,7 @@ class Comparable(metaclass=ABCMeta):
     """
     Comparable interface allows you compare objects with their identity.
     """
-    PREFIX = ''
+    _PREFIX = ''
 
     def __init__(self, identity: Union[int, str], name=None):
         """
@@ -42,18 +42,18 @@ class Comparable(metaclass=ABCMeta):
         """
         assert identity is not None
         self.identity = identity
-        self.name = name if not name else Comparable.PREFIX + str(identity)
+        self.name = name if not name else self._PREFIX + str(identity)
 
     def __eq__(self, other: 'Comparable'):
         if isinstance(other, Comparable):
-            return self.identity == other.identity
+            return self.identity == other.identity and self.name == other.name
         return False
 
     def __ne__(self, other: 'Comparable'):
         return not self.__eq__(other)
 
     def __hash__(self):
-        return hash(self.identity)
+        return hash((self.identity, self.identity))
 
     def __gt__(self, other: 'Comparable'):
         if not isinstance(other, Comparable):

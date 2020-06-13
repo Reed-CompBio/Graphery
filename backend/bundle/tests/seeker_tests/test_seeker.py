@@ -158,7 +158,7 @@ def test_string_io_multiple_entries():
             LineEntry('return y + x'),
             ReturnEntry('return y + x'),
             ReturnValueEntry('15'),
-            ElapsedTimeEntry(),
+            # ElapsedTimeEntry(),
         )
     )
 

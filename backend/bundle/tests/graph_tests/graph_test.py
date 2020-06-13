@@ -14,7 +14,7 @@ def simple_graph_js():
 def test_simple_graph_parsing(simple_graph_js):
     simple_graph = Graph.graph_generator(simple_graph_js)
 
-    assert len(simple_graph.edge_set) == 16
+    assert len(simple_graph.edges) == 16
     
     assert Edge(0, (Node('n0'), Node('n1'))) in simple_graph
     assert Edge(1, (Node('n1'), Node('n2'))) in simple_graph
@@ -33,7 +33,7 @@ def test_simple_graph_parsing(simple_graph_js):
     assert Edge(14, (Node('n13'), Node('n14'))) in simple_graph
     assert Edge(15, (Node('n13'), Node('n15'))) in simple_graph
 
-    assert len(simple_graph.node_set) == 17
+    assert len(simple_graph.nodes) == 17
 
     for i in range(17):
         assert Node('n%d' % i) in simple_graph

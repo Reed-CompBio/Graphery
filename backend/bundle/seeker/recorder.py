@@ -44,6 +44,9 @@ class Recorder:
         """
         return self.changes[-1]
 
+    def get_previous_record(self) -> dict:
+        return self.changes[-2]
+
     def get_last_vc(self) -> dict:
         """
         get the last variable change dict
@@ -53,6 +56,12 @@ class Recorder:
             self.get_last_record()['variables'] = {}
 
         return self.get_last_record()['variables']
+
+    def get_previous_vc(self) -> dict:
+        if not self.get_previous_record()['variables']:
+            self.get_previous_record()['variables'] = {}
+
+        return self.get_previous_record()['variables']
 
     def get_last_ac(self) -> List:
         """
@@ -70,7 +79,11 @@ class Recorder:
         @return: None
         """
         if isinstance(variable_change, Tuple):
-            self.get_last_vc()[variable_change[0]] = variable_change[1] 
+            self.get_last_vc()[variable_change[0]] = variable_change[1]
+
+    def add_vc_to_previous_record(self, variable_change: Tuple[str, Any]) -> None:
+        if isinstance(variable_change, Tuple) and len(self.changes) > 1:
+            self.get_previous_vc()[variable_change[0]] = variable_change[1]
 
     def add_ac_to_last_record(self, access_changes: Any) -> None:
         """

@@ -14,14 +14,17 @@ class Graph:
                        edges: Iterable[Edge],
                        prefix: bool = False):
         if isinstance(nodes, NodeSet):
-            self.node_set = nodes
+            self.nodes = nodes
         else:
-            self.node_set = NodeSet(nodes)
+            self.nodes = NodeSet(nodes)
 
         if isinstance(edges, EdgeSet):
-            self.edge_set = edges
+            self.edges = edges
         else:
-            self.edge_set = EdgeSet(edges)
+            self.edges = EdgeSet(edges)
+
+        self.V = self.nodes
+        self.E = self.edges
 
         self.high_light_classes = []
 
@@ -31,7 +34,7 @@ class Graph:
         @param node_id:
         @return: the node instance or None
         """
-        return self.node_set[node_id]
+        return self.nodes[node_id]
 
     def get_edge(self, edge_id: str) -> Optional[Edge]:
         """
@@ -39,7 +42,7 @@ class Graph:
         @param edge_id:
         @return: the edge instance or None
         """
-        return self.edge_set[edge_id]
+        return self.edges[edge_id]
 
     def has_node(self, node: Union[str, Node]) -> bool:
         """
@@ -47,7 +50,7 @@ class Graph:
         @param node: a Node instance or the id of a node
         @return: boolean indicating the result
         """
-        return node in self.node_set
+        return node in self.nodes
 
     def has_edge(self, edge: Union[str, Edge]) -> bool:
         """
@@ -55,10 +58,10 @@ class Graph:
         @param edge: an Edge instance or the id of an edge
         @return: boolean indicating the result
         """
-        return edge in self.edge_set
+        return edge in self.edges
 
     def empty(self) -> bool:
-        return len(self.node_set) == 0
+        return len(self.nodes) == 0
 
     def __contains__(self, item):
         if isinstance(item, (Node, Edge)):
