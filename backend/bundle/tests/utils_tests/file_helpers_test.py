@@ -7,6 +7,8 @@ import textwrap
 import pytest
 import bundle.utils.cache_file_helpers as file_helper
 
+DEFAULT_CACHE_FOLDER = file_helper.USER_DOCS_PATH
+
 
 @pytest.fixture
 def lv1_cache_folder():
@@ -22,29 +24,25 @@ def get_fixture(request):
     return _get_fixture
 
 
-@pytest.mark.parametrize('folder_dir, expected',
-                         [pytest.param('graphery_folder_test',
-                                       '/Users/flicker_soul/Documents/.graphery_cache/graphery_folder_test'),
-
-                          ])
+@pytest.mark.parametrize('folder_dir, expected', [
+    pytest.param('graphery_folder_test', str(DEFAULT_CACHE_FOLDER / 'graphery_folder_test')),
+])
 def test_cache_folder_naming(lv1_cache_folder, folder_dir, expected):
     with lv1_cache_folder.add_cache_folder(folder_dir) as cache_folder:
         assert str(cache_folder.cache_folder_path) == expected
 
 
-@pytest.mark.parametrize('base_folder, dir_name, expected_full_dir',
-                         [pytest.param('lv1_cache_folder',
-                                       'c_folder',
-                                       os.path.join('/Users/flicker_soul/Documents/.graphery_cache', 'c_folder')
-                                       ),
-                          pytest.param('lv1_cache_folder',
-                                       'c_folder/lv2cache_folder',
-                                       os.path.join('/Users/flicker_soul/Documents/.graphery_cache',
-                                                    'c_folder/lv2cache_folder'
-                                                    ),
-                                       marks=pytest.mark.xfail
-                                       ),
-                          ])
+@pytest.mark.parametrize('base_folder, dir_name, expected_full_dir', [
+    pytest.param('lv1_cache_folder',
+                 'c_folder',
+                 str(DEFAULT_CACHE_FOLDER / 'c_folder')
+                 ),
+    pytest.param('lv1_cache_folder',
+                 'c_folder/lv2cache_folder',
+                 str(DEFAULT_CACHE_FOLDER / 'c_folder/lv2cache_folder'),
+                 marks=pytest.mark.xfail
+                 ),
+])
 def test_cache_folder_generating(get_fixture, base_folder, dir_name, expected_full_dir):
     with get_fixture(base_folder).add_cache_folder(dir_name) as next_lv_dir:
         assert str(next_lv_dir.cache_folder_path) == expected_full_dir
@@ -61,24 +59,24 @@ def test_cache_folder_auto_delete(auto_remove):
     pytest.param(
         ['c_folder'],
         [True],
-        os.path.join('/Users/flicker_soul/Documents/.graphery_cache')
+        str(DEFAULT_CACHE_FOLDER)
     ),
     pytest.param(
         ['c_folder', 'this_is_md5_hash', 'result'],
         [True, False, True],
-        os.path.join('/Users/flicker_soul/Documents/.graphery_cache'),
+        str(DEFAULT_CACHE_FOLDER),
         marks=pytest.mark.xfail(reason='The second folder does not have a parent folder')
     ),
     pytest.param(
         ['c_folder', 'this_is_md5_hash', 'result'],
         [False, True, True],
-        os.path.join('/Users/flicker_soul/Documents/.graphery_cache', 'c_folder', 'this_is_md5_hash'),
+        str(DEFAULT_CACHE_FOLDER / 'c_folder' / 'this_is_md5_hash'),
         marks=pytest.mark.xfail(reason='The folder is auto deleted')
     ),
     pytest.param(
         ['c_folder', 'this_is_md5_hash', 'result'],
         [False, False, True],
-        os.path.join('/Users/flicker_soul/Documents/.graphery_cache', 'c_folder', 'this_is_md5_hash')
+        str(DEFAULT_CACHE_FOLDER / 'c_folder' / 'this_is_md5_hash')
     )
 ])
 def test_multiple_level_folder_auto_delete(lv1_cache_folder, lv2dirs, auto_rms, expected_dir):
