@@ -1,0 +1,97 @@
+{
+  "multiple_edges": {
+    "nodes": [
+      {
+        "data": {
+          "id": "n0",
+          "label": "N0",
+          "degree": "10"
+        },
+        "scratch": {
+          "_degree": "20"
+        },
+        "style": {
+          "label": "data(id)",
+          "overlay-color": "lightblue"
+        }
+      },
+      {
+        "data": {
+          "id": "n1",
+          "label": "N1"
+        }
+      },
+      {
+        "data": {
+          "id": "n2",
+          "label": "N2"
+        }
+      },
+      {
+        "data": {
+          "id": "n3",
+          "label": "N3"
+        }
+      },
+      {
+        "data": {
+          "id": "n4"
+        }
+      },
+      {
+        "data": {
+          "id": "n5"
+        }
+      },
+      {
+        "data": {
+          "id": "n6"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": 1,
+          "source": "n0",
+          "target": "n1"
+        }
+      },
+      {
+        "data": {
+          "id": 2,
+          "source": "n1",
+          "target": "n2"
+        }
+      },
+      {
+        "data": {
+          "id": 3,
+          "source": "n1",
+          "target": "n3"
+        }
+      },
+      {
+        "data": {
+          "id": 4,
+          "source": "n3",
+          "target": "n4"
+        }
+      },
+      {
+        "data": {
+          "id": 5,
+          "source": "n4",
+          "target": "n5"
+        }
+      },
+      {
+        "data": {
+          "id": 6,
+          "source": "n4",
+          "target": "n6"
+        }
+      }
+    ]
+  }
+}
