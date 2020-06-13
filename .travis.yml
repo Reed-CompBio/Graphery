@@ -3,22 +3,24 @@ language: node_js
 nodoe_js:
   - node
 
-cache: npm
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
 
-env:
-  global:
-    - CODECOV_TOKEN=ee55ea4c-647a-4291-9580-ec40ee1c76b9
+install:
+  - pip install pipenv
+  - pipenv install
+
+cache: npm
 
 before_script:
   - cd graphery
   - npm install -g npm@latest
   - npm install codecov -g
-  - npm install
 
 script:
   - npm run build
   - rm -rf dist
   - npm run test:unit
-
-after_success:
-  - codecov
+  - cd ../backend && pipenv install && pipenv run pytest

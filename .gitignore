@@ -9,3 +9,5 @@ node_modules/
 
 # distribution 
 dist/
+
+.coverage
