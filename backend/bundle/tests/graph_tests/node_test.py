@@ -1,5 +1,5 @@
 import pytest
-from GraphObjects.Node import Node, NodeSet
+from bundle.GraphObjects.Node import Node, NodeSet
 import json
 from .utils import TEST_PATH, path_join
 

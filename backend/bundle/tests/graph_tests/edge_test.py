@@ -1,5 +1,5 @@
-from GraphObjects.Node import NodeSet
-from GraphObjects.Edge import Edge, EdgeSet
+from bundle.GraphObjects.Node import NodeSet
+from bundle.GraphObjects.Edge import Edge, EdgeSet
 from .utils import TEST_PATH, path_join
 import pytest
 import json

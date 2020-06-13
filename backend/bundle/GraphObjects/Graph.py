@@ -10,7 +10,9 @@ class Graph:
     """
     The graph object
     """
-    def __init__(self, nodes: Iterable[Node], edges: Iterable[Edge]):
+    def __init__(self, nodes: Iterable[Node],
+                       edges: Iterable[Edge],
+                       prefix: bool = False):
         if isinstance(nodes, NodeSet):
             self.node_set = nodes
         else:
@@ -45,7 +47,7 @@ class Graph:
         @param node: a Node instance or the id of a node
         @return: boolean indicating the result
         """
-        return self.node_set[node]
+        return node in self.node_set
 
     def has_edge(self, edge: Union[str, Edge]) -> bool:
         """
@@ -53,7 +55,15 @@ class Graph:
         @param edge: an Edge instance or the id of an edge
         @return: boolean indicating the result
         """
-        return self.edge_set[edge]
+        return edge in self.edge_set
+
+    def empty(self) -> bool:
+        return len(self.node_set) == 0
+
+    def __contains__(self, item):
+        if isinstance(item, (Node, Edge)):
+            return self.has_node(item) or self.has_edge(item)
+        return False
 
     @staticmethod
     def graph_generator(graph_json: str = ''):
@@ -91,7 +101,7 @@ class Graph:
             # TODO do not support json5
         except json.JSONDecodeError as e:
             logging.exception(e)
-            raise e
+            raise NotImplementedError('The other json format is not supported for now')
 
         if 'elements' in graph_dict:
             element_dict = graph_dict['elements']
@@ -104,6 +114,5 @@ class Graph:
                     parsed_edge_set = EdgeSet.generate_edge_set(element_dict['edges'], parsed_node_set)
 
                 return Graph(parsed_node_set, parsed_edge_set)
-            else:
-                raise NotImplementedError('The other json format is not supported for now')
-
+        else:
+            raise ValueError('malformed json file')

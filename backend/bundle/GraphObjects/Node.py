@@ -36,12 +36,10 @@ class NodeSet(ElementSet[Node]):
             if isinstance(node, Mapping) and 'data' in node and 'id' in node['data']:
                 data_field = node['data']
                 stored_node = Node(data_field['id'])
-                print(stored_node)
                 if 'displayed' in data_field:
                     stored_node.update_properties(data_field['displayed'])
                 stored_nodes.append(stored_node)
             else:
                 raise ValueError('invalid format for Node')
 
-        print(stored_nodes)
         return NodeSet(stored_nodes)

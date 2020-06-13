@@ -45,9 +45,9 @@ class Comparable(metaclass=ABCMeta):
         self.name = name if not name else Comparable.PREFIX + str(identity)
 
     def __eq__(self, other: 'Comparable'):
-        if not isinstance(other, Comparable):
-            return False
-        return self.identity == other.identity
+        if isinstance(other, Comparable):
+            return self.identity == other.identity
+        return False
 
     def __ne__(self, other: 'Comparable'):
         return not self.__eq__(other)
@@ -153,6 +153,13 @@ class ElementSet(Generic[T], metaclass=ABCMeta):
         else:
             raise KeyError('nodes are not all %s type' % self.element_type)
 
+    def _rm_element(self, element):
+        if isinstance(element, self.element_type) and element in self.elements:
+            self.elements.remove(element)
+
+    def __len__(self):
+        return len(self.elements)
+
     def __getitem__(self, identity):
         for element in self.elements:
             if element.identity == identity:
@@ -167,8 +174,11 @@ class ElementSet(Generic[T], metaclass=ABCMeta):
     def __contains__(self, item):
         if isinstance(item, self.element_type):
             return item in self.elements
-        if isinstance(item, str):
-            return any(element.identity == item for element in self.elements)
+        # if isinstance(item, str):
+        #     return any(element.identity == item for element in self.elements)
+            # TODO this requires unique names in nodes and edges,
+            #  not supported for the node_set and edge_set containing
+            #  elements without prefix
             # TODO what about searching for names?
         return False
 
