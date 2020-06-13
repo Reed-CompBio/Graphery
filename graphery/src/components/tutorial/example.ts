@@ -1,17 +1,25 @@
 export default {
+  /* TODO cy.style()
+   *   .resetToDefault() // start a fresh default stylesheet
+   *   .selector('node')
+   *   .style('background-color', 'magenta')
+   *   .update()
+   * TODO add a strict version lol with <200b> unicode in it.
+   */
   style: [
     {
       selector: 'node',
       css: {
-        content: 'data(id)',
+        label: 'data(label)',
         'text-valign': 'bottom',
         'text-halign': 'center',
         height: '60px',
         width: '60px',
         'border-color': 'black',
         'border-opacity': '1',
-        'background-image':
-          'https://farm8.staticflickr.com/7272/7633179468_3e19e45a0c_b.jpg',
+        // 'background-image':
+        //   'https://farm8.staticflickr.com/7272/7633179468_3e19e45a0c_b.jpg',
+        'overlay-color': 'red',
       },
     },
     {
@@ -23,20 +31,45 @@ export default {
     {
       selector: ':selected',
       css: {
-        'background-color': 'black',
+        'background-color': 'SteelBlue',
         'line-color': 'black',
         'target-arrow-color': 'black',
         'source-arrow-color': 'black',
+      },
+    },
+    {
+      selector: 'node.highlighted',
+      style: {
+        'border-width': '6px',
+        'border-color': '#AAD8FF',
+        'border-opacity': '0.5',
+        'background-color': '#394855',
+        'text-outline-color': '#394855',
       },
     },
   ],
 
   elements: {
     nodes: [
-      { data: { id: 'n0' } },
-      { data: { id: 'n1' } },
-      { data: { id: 'n2' } },
-      { data: { id: 'n3' } },
+      {
+        data: {
+          id: 'n0',
+          label: 'N0',
+          degree: '10',
+        },
+        scratch: {
+          _degree: '20',
+        },
+        // node style
+        style: {
+          label: 'data(id)',
+          // 'background-color': 'green',
+          'overlay-color': 'lightblue',
+        },
+      },
+      { data: { id: 'n1', label: 'N1' } },
+      { data: { id: 'n2', label: 'N2' } },
+      { data: { id: 'n3', label: 'N3' } },
       { data: { id: 'n4' } },
       { data: { id: 'n5' } },
       { data: { id: 'n6' } },
