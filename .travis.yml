@@ -1,24 +1,21 @@
-language: node_js
+language: python
 
 nodoe_js:
   - node
 
+cache:
+  - npm
+  - pip
+
 python:
-  - "3.8.2"
+  - "3.8"
 
 install:
-  - pip3 install pipenv
-  - pipenv install
-
-cache: npm
-
-before_script:
+  - sudo pip install pipenv
   - cd graphery
   - npm install -g npm@latest
-  - npm install codecov -g
+  - npm install
 
 script:
   - npm run build
-  - rm -rf dist
-  - npm run test:unit
-  - cd ../backend && pipenv install && pipenv run pytest
+  - cd ../backend && sudo pipenv install && sudo pipenv run pytest -vv -ra
