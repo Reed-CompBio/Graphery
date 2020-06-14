@@ -9,3 +9,7 @@ node_modules/
 
 # distribution 
 dist/
+
+# gh-page site
+site/
+
