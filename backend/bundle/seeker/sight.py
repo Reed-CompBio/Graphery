@@ -209,7 +209,7 @@ class Tracer:
         self.max_variable_length = max_variable_length
         self.relative_time = relative_time
         self.only_watch = only_watch
-        self.recorder = type(self)._recorder
+        self.recorder = type(self).get_recorder()
 
     @classmethod
     def get_recorder(cls) -> Recorder:

@@ -42,18 +42,18 @@ class Comparable(metaclass=ABCMeta):
         """
         assert identity is not None
         self.identity = identity
-        self.name = name if not name else self._PREFIX + str(identity)
+        self.name = name if name else self._PREFIX + str(identity)
 
-    def __eq__(self, other: 'Comparable'):
-        if isinstance(other, Comparable):
-            return self.identity == other.identity and self.name == other.name
+    def __eq__(self, other):
+        if isinstance(other, type(self)):
+            return self.identity == other.identity
         return False
 
-    def __ne__(self, other: 'Comparable'):
+    def __ne__(self, other):
         return not self.__eq__(other)
 
     def __hash__(self):
-        return hash((self.identity, self.identity))
+        return hash((type(self), self.identity))
 
     def __gt__(self, other: 'Comparable'):
         if not isinstance(other, Comparable):
@@ -149,7 +149,7 @@ class ElementSet(Generic[T], metaclass=ABCMeta):
         self.elements = []
         self.element_type = element_type
         if isinstance(elements, Iterable) and all(isinstance(element, self.element_type) for element in elements):
-            self.elements.extend(elements)
+            self.elements.extend(set(elements))
         else:
             raise KeyError('nodes are not all %s type' % self.element_type)
 
@@ -175,7 +175,8 @@ class ElementSet(Generic[T], metaclass=ABCMeta):
         if isinstance(item, self.element_type):
             return item in self.elements
         if isinstance(item, str):
-            return any(element.identity == item or element.name == item for element in self.elements)
+            # TODO what about searches for names?
+            return any(element.identity == item for element in self.elements)
         return False
 
     def __str__(self):

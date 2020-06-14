@@ -53,7 +53,10 @@ def test_single_node_set(single_node):
 
 def test_multiple_node_set(multiple_nodes):
     node_set = NodeSet.generate_node_set(multiple_nodes)
-    assert str(node_set) == '[Node(id: n1), Node(id: n2), Node(id: n3)]'
+    assert len(node_set) == 3
+    assert Node('n1') in node_set
+    assert Node('n2') in node_set
+    assert Node('n3') in node_set
 
 
 def test_complex_node_set(complex_node):

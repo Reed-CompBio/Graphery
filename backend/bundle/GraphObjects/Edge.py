@@ -40,6 +40,9 @@ class Edge(Highlightable, Comparable, HasProperty, Stylable):
             return self.identity == other.identity and self.node_pair == other.node_pair
         return False
 
+    def __hash__(self):
+        return hash((Edge, self.identity, self.node_pair))
+
     def __contains__(self, item):
         if isinstance(item, Node):
             return item in self.node_pair

@@ -5,7 +5,7 @@ from typing import Iterable, Mapping
 
 
 class Node(Highlightable, Comparable, HasProperty, Stylable):
-    _PREFIX = 'n'
+    _PREFIX = 'v'
 
     def __init__(self, identity, name=None, styles=None, classes=None):
         Comparable.__init__(self, identity, name)
