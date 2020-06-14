@@ -64,8 +64,10 @@ class Graph:
         return len(self.nodes) == 0
 
     def __contains__(self, item):
-        if isinstance(item, (Node, Edge)):
-            return self.has_node(item) or self.has_edge(item)
+        if isinstance(item, Node):
+            return self.has_node(item)
+        elif isinstance(item, Edge):
+            return self.has_edge(item)
         return False
 
     @staticmethod
