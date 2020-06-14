@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Comming Soon
+Comming Soon~
 
 ## Usage
 
