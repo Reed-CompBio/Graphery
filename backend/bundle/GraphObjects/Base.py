@@ -184,3 +184,6 @@ class ElementSet(Generic[T], metaclass=ABCMeta):
 
     def __repr__(self):
         return self.__str__()
+
+
+del T  # Avoid polluting the namespace
