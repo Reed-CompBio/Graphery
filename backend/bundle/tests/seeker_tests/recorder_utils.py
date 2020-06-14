@@ -29,6 +29,7 @@ class ChangeList:
         variable_dict = copy(variable_dict)
         for key, value in variable_dict.items():
             if value == INDEX_PLACE_HOLDER:
+                # use eval?
                 variable_dict[key] = index
         return variable_dict
 

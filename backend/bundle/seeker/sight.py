@@ -213,6 +213,8 @@ class Tracer:
 
     @classmethod
     def get_recorder(cls) -> Recorder:
+        if not cls._recorder:
+            cls.new_recorder()
         return cls._recorder
 
     @classmethod

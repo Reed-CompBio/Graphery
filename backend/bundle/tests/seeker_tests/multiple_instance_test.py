@@ -36,8 +36,15 @@ class TempClass:
         self.value = value
 
 
-@tracer('s', 'a')
+def depth_func(a):
+    a *= a
+    for i in range(a):
+        pass
+
+
+@tracer('s', 'a', 'adsfa', depth=2)
 def fun(a, b):
+    depth_func(a)
     temp = TempClass()
     s = temp.get_value()
     for i in range(a * b):

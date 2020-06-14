@@ -174,12 +174,8 @@ class ElementSet(Generic[T], metaclass=ABCMeta):
     def __contains__(self, item):
         if isinstance(item, self.element_type):
             return item in self.elements
-        # if isinstance(item, str):
-        #     return any(element.identity == item for element in self.elements)
-            # TODO this requires unique names in nodes and edges,
-            #  not supported for the node_set and edge_set containing
-            #  elements without prefix
-            # TODO what about searching for names?
+        if isinstance(item, str):
+            return any(element.identity == item or element.name == item for element in self.elements)
         return False
 
     def __str__(self):
