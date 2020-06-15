@@ -187,6 +187,7 @@
             console.debug('monaco editor module: ', md);
             monacoEditor = md;
 
+            // TODO store user edited code
             this.editor = monacoEditor.editor.create(
               document.getElementById('editor'),
               {
@@ -194,8 +195,14 @@
                 foldingStrategy: 'indentation', // 代码可分小段折叠
                 automaticLayout: true, // 自适应布局
                 overviewRulerBorder: false, // 不要滚动条的边框
-                language: 'python',
+                scrollBeyondLastLine: false, // 取消代码后面一大段空白
+                readOnly: false,
                 theme: this.dark ? 'hc-black' : 'vs',
+                language: 'python',
+                minimap: {
+                  enabled: false,
+                  // TODO add an option here?
+                },
               }
             );
             console.debug('mounted monaco editor');
@@ -230,13 +237,17 @@
       },
     },
     mounted() {
-      // console.log(monaco);
       this.initMonacoEditor();
+    },
+    destroyed() {
+      this.editor.dispose();
     },
   };
 </script>
 
 <style scoped lang="sass">
+  .q-tab-panel
+    padding: 8px
   #editor-container
     position: absolute
     z-index: 2001
