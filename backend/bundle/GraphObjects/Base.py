@@ -75,6 +75,9 @@ class HasProperty(metaclass=ABCMeta):
     Property interface allows you to manage defined property and access them through subscript;
     """
     def __init__(self):
+        """
+        create a property interface
+        """
         self.properties = {}
 
     def update_properties(self, properties: Mapping):
@@ -121,6 +124,11 @@ class HasProperty(metaclass=ABCMeta):
 
 class Stylable(metaclass=ABCMeta):
     def __init__(self, style: Union[str, Mapping] = None, classes: Iterable[str] = None):
+        """
+        interface that helps managing the state of an element
+        @param style:
+        @param classes:
+        """
         # TODO I don't think I need styles
         self.styles = {}
         self.classes = []
@@ -141,37 +149,66 @@ class Stylable(metaclass=ABCMeta):
             self.classes.extend(classes)
 
 
-T = TypeVar('T')
-
-
-class ElementSet(Generic[T], metaclass=ABCMeta):
-    def __init__(self, elements: Iterable[T], element_type: Type[Comparable]):
+class ElementSet:
+    def __init__(self, elements: Iterable[Comparable], element_type: Type[Comparable]):
+        """
+        Element set base class
+        @param elements:
+        @param element_type:
+        """
         self.elements = []
         self.element_type = element_type
         if isinstance(elements, Iterable) and all(isinstance(element, self.element_type) for element in elements):
             self.elements.extend(set(elements))
         else:
-            raise KeyError('nodes are not all %s type' % self.element_type)
+            raise KeyError('elements are not all %s type' % self.element_type)
 
     def _rm_element(self, element):
         if isinstance(element, self.element_type) and element in self.elements:
             self.elements.remove(element)
 
     def __len__(self):
+        """
+        return the number of elements in this set
+        @return:
+        """
         return len(self.elements)
 
     def __getitem__(self, identity):
+        """
+        use subscript [] to get item
+        @param identity:
+        @return:
+        """
         for element in self.elements:
             if element.identity == identity:
                 return element
 
         return None
 
+    def __setitem__(self, key, value):
+        """
+        prevent changes through subscripts
+        @param key:
+        @param value:
+        @return:
+        """
+        raise NotImplementedError('You cannot set elements in a immutable object')
+
     def __iter__(self):
+        """
+        iterator that goes through the elements in the set
+        @return:
+        """
         for element in self.elements:
             yield element
 
     def __contains__(self, item):
+        """
+        whether this set contains a given item
+        @param item:
+        @return:
+        """
         if isinstance(item, self.element_type):
             return item in self.elements
         if isinstance(item, str):
@@ -184,6 +221,3 @@ class ElementSet(Generic[T], metaclass=ABCMeta):
 
     def __repr__(self):
         return self.__str__()
-
-
-del T  # Avoid polluting the namespace

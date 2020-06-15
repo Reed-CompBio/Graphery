@@ -13,15 +13,24 @@ class Graph:
     def __init__(self, nodes: Iterable[Node],
                        edges: Iterable[Edge],
                        prefix: bool = False):
-        if isinstance(nodes, NodeSet):
-            self.nodes = nodes
+        """
+        graph constructor.
+        @param nodes:
+        @param edges:
+        @param prefix:
+        @raise ValueError: if nodes and edges are not iterable
+        """
+        if isinstance(nodes, Iterable) and isinstance(edges, Iterable):
+            if isinstance(nodes, NodeSet):
+                self.nodes = nodes
+            else:
+                self.nodes = NodeSet(nodes)
+            if isinstance(edges, EdgeSet):
+                self.edges = edges
+            else:
+                self.edges = EdgeSet(edges)
         else:
-            self.nodes = NodeSet(nodes)
-
-        if isinstance(edges, EdgeSet):
-            self.edges = edges
-        else:
-            self.edges = EdgeSet(edges)
+            raise ValueError
 
         self.V = self.nodes
         self.E = self.edges
@@ -64,6 +73,11 @@ class Graph:
         return len(self.nodes) == 0
 
     def __contains__(self, item):
+        """
+        return true if the item is a node or an edge, and the item is in the graph
+        @param item:
+        @return:
+        """
         if isinstance(item, Node):
             return self.has_node(item)
         elif isinstance(item, Edge):

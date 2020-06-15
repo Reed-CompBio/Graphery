@@ -7,6 +7,16 @@ class Edge(Highlightable, Comparable, HasProperty, Stylable):
     _PREFIX = 'e'
 
     def __init__(self, identity, node_pair: Tuple[Node, Node], name=None, styles=None, classes=None, directed=False):
+        """
+        create an edge with an identity and a pair of nodes
+        @param identity:
+        @param node_pair:
+        @param name:
+        @param styles: the styles used on this edge
+        @param classes: the class used on this edge
+        @param directed: whether this edge is directed
+        @raise KeyError: if there is some problem with the node pair
+        """
         Highlightable.__init__(self)
         Comparable.__init__(self, identity, name)
         HasProperty.__init__(self)
@@ -18,16 +28,40 @@ class Edge(Highlightable, Comparable, HasProperty, Stylable):
         self.directed: bool = directed
 
     def get_nodes(self) -> Tuple[Node, Node]:
+        """
+        get the node pairs in this edge
+        @return:
+        """
         return self.node_pair
 
     def get_incident_node(self) -> Node:
+        """
+        get the incident node in this pair, which is always the first element in the tuple
+        @return:
+        """
         return self.node_pair[0]
 
     def get_final_node(self) -> Node:
+        """
+        get the final node in this pair, which is always the second element in the tuple
+        @return:
+        """
         return self.node_pair[1]
 
     def is_directed(self) -> bool:
+        """
+        show whether the edge is directed or not
+        @return:
+        """
         return self.directed
+
+    def reverse_direction(self) -> None:
+        """
+        change the direction if the edge is directed
+        @return:
+        """
+        if self.is_directed():
+            self.node_pair = self.node_pair[::-1]
 
     def highlight(self, cls: str):
         raise NotImplementedError
@@ -35,16 +69,29 @@ class Edge(Highlightable, Comparable, HasProperty, Stylable):
     def unhighlight(self, cls: str):
         raise NotImplementedError
 
-    def __contains__(self, item):
-        if isinstance(item, Node):
-            return item in self.node_pair
+    def __contains__(self, node):
+        """
+        returns true if a node is part of this edge
+        @param node:
+        @return:
+        """
+        if isinstance(node, Node):
+            return node in self.node_pair
         return False
 
     def __iter__(self):
+        """
+        iterator that goes through the nodes in this edge
+        @return:
+        """
         for node in self.node_pair:
             yield node
 
     def __len__(self):
+        """
+        something that does not make sense
+        @return:
+        """
         return 2
 
     def __str__(self):
@@ -54,12 +101,23 @@ class Edge(Highlightable, Comparable, HasProperty, Stylable):
         return self.__str__()
 
 
-class EdgeSet(ElementSet[Edge]):
+class EdgeSet(ElementSet):
     def __init__(self, edges: Iterable[Edge]):
+        """
+        Create an edge set with a pile of elements.
+        @param edges:
+        """
         super(EdgeSet, self).__init__(edges, Edge)
 
     @staticmethod
     def generate_edge_set(edges: Iterable[Mapping], nodes: NodeSet) -> 'EdgeSet':
+        """
+        generate an edge set by a given mapping (from cyjs) and the corresponding nodes
+        @param edges:
+        @param nodes:
+        @return: created edge set
+        @raise ValueError: if the data is invalid
+        """
         stored_edges = []
         for edge in edges:
             if isinstance(edge, Mapping) and 'data' in edge and 'id' in edge['data']:

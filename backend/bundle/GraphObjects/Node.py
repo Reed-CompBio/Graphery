@@ -8,6 +8,13 @@ class Node(Highlightable, Comparable, HasProperty, Stylable):
     _PREFIX = 'v'
 
     def __init__(self, identity, name=None, styles=None, classes=None):
+        """
+        create an node with an identity
+        @param identity:
+        @param name:
+        @param styles: the styles applied to this node
+        @param classes: the classes applied to this node
+        """
         Comparable.__init__(self, identity, name)
         HasProperty.__init__(self)
         Stylable.__init__(self, styles, classes)
@@ -27,8 +34,12 @@ class Node(Highlightable, Comparable, HasProperty, Stylable):
         return self.__str__()
 
 
-class NodeSet(ElementSet[Node]):
+class NodeSet(ElementSet):
     def __init__(self, nodes: Iterable[Node]):
+        """
+        Create an edge set with a pile of elements.
+        @param nodes:
+        """
         super(NodeSet, self).__init__(nodes, Node)
 
     @staticmethod
