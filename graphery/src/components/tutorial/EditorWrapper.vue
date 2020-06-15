@@ -70,7 +70,7 @@
           <div id="info-panel">info</div>
         </q-tab-panel>
         <q-tab-panel name="settings">
-          <!-- maybe I don't need this -->
+          <!-- TODO maybe I don't need this -->
           <div id="settings-panel">settings</div>
         </q-tab-panel>
         <q-tab-panel name="shortcuts">
@@ -84,17 +84,19 @@
 <script>
   import { editorTabHeight } from '@/store/states/meta.ts';
   import { mapState, mapGetters } from 'vuex';
-  let aceEdit;
+  let aceEditor;
   let Range;
+  let monacoEditor;
 
   export default {
+    name: 'Editor Wrapper',
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
     },
     data() {
       return {
         tab: 'code',
-        aceInstance: null,
+        editor: null,
         content: '',
         isPanning: false,
         pos: {
@@ -124,6 +126,70 @@
           y: window.innerHeight * 0.275,
         };
       },
+      initAceEditor() {
+        import('brace')
+          .then((br) => {
+            console.debug('brace (ace) editor module: ', br);
+
+            aceEditor = br.edit;
+            console.debug('ace edit func: ', aceEditor);
+
+            this.editorInit();
+
+            Range = br.acequire('ace/range').Range;
+
+            this.editor = aceEditor('editor');
+            this.editor.setOption({
+              enableBasicAutocompletion: true, // the editor completes the statement when you hit Ctrl + Space
+              enableLiveAutocompletion: true, // the editor completes the statement while you are typing
+              showPrintMargin: false, // hides the vertical limiting strip
+              maxLines: 500,
+              fontSize: '100%', // ensures that the editor fits in the environment
+            });
+
+            this.editor.getSession().setMode('ace/mode/python');
+            this.editor.setTheme('ace/theme/chrome');
+
+            this.editor.setValue(
+              `def test():
+   print('this is as test function')
+  `
+            );
+
+            // this.aceInstance.addMarker(new Range(1, 0, 2, 0));
+          })
+          .catch((err) => {
+            console.error(
+              'An error occurs when initializing the ace code editor: ',
+              err
+            );
+          });
+      },
+      initMonacoEditor() {
+        import('monaco-editor')
+          .then((md) => {
+            console.debug('monaco editor module: ', md);
+            monacoEditor = md;
+
+            this.editor = monacoEditor.editor.create(
+              document.getElementById('editor'),
+              {
+                fontSize: this.fontSize,
+                foldingStrategy: 'indentation', // 代码可分小段折叠
+                automaticLayout: true, // 自适应布局
+                overviewRulerBorder: false, // 不要滚动条的边框
+                language: 'python',
+              }
+            );
+            console.debug('mounted monaco editor');
+          })
+          .catch((err) => {
+            console.error(
+              'An error occurs when initializing the monaco code editor',
+              err
+            );
+          });
+      },
     },
     computed: {
       ...mapState('settings', ['tabNum', 'softTab', 'fontSize', 'wrap']),
@@ -141,43 +207,8 @@
       },
     },
     mounted() {
-      import('brace')
-        .then((br) => {
-          console.debug('brace (ace) editor module: ', br);
-
-          aceEdit = br.edit;
-          console.debug('ace edit func: ', aceEdit);
-
-          this.editorInit();
-
-          Range = br.acequire('ace/range').Range;
-
-          this.aceInstance = aceEdit('editor');
-          this.aceInstance.setOption({
-            enableBasicAutocompletion: true, // the editor completes the statement when you hit Ctrl + Space
-            enableLiveAutocompletion: true, // the editor completes the statement while you are typing
-            showPrintMargin: false, // hides the vertical limiting strip
-            maxLines: 500,
-            fontSize: '100%', // ensures that the editor fits in the environment
-          });
-
-          this.aceInstance.getSession().setMode('ace/mode/python');
-          this.aceInstance.setTheme('ace/theme/chrome');
-
-          this.aceInstance.setValue(
-            `def test():
-   print('this is as test function')
-  `
-          );
-
-          // this.aceInstance.addMarker(new Range(1, 0, 2, 0));
-        })
-        .catch((err) => {
-          console.error(
-            'An error occurs when initializing the code editor: ',
-            err
-          );
-        });
+      // console.log(monaco);
+      this.initMonacoEditor();
     },
   };
 </script>
