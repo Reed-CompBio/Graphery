@@ -17,6 +17,7 @@
     "cytoscape-dagre": "^2.2.2",
     "cytoscape-panzoom": "^2.5.3",
     "monaco-editor": "^0.20.0",
+    "monaco-editor-webpack-plugin": "^1.9.0",
     "quasar": "^1.12.4",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
