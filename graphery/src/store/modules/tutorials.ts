@@ -92,8 +92,11 @@ const mutations: MutationTree<TutorialState> = {
 
     state.articleId = value.articleId;
 
-    console.log(`Loaded With New Article Id ${state.articleId} With Article Id 
+    console.debug(`Loaded With New Article Id ${state.articleId} With Article Id 
                  ${value.articleId}`);
+  },
+  CLEAR_ARTICLE_ID(state) {
+    state.articleId = null;
   },
   /**
    * Load a new article.
@@ -103,7 +106,7 @@ const mutations: MutationTree<TutorialState> = {
    * @throws RecordNotInitialized
    * @todo refine errors
    */
-  LOAD_ARTICLES(state, value: TutorialRequestState) {
+  LOAD_ARTICLE(state, value: TutorialRequestState) {
     if (!state.article) {
       // the article must not be null
       // TODO hasBeenInitialized
@@ -117,7 +120,10 @@ const mutations: MutationTree<TutorialState> = {
 
     state.article = value.article;
 
-    console.log(`Loaded Article`);
+    console.debug(`Loaded Article`);
+  },
+  CLEAR_ARTICLE(state) {
+    state.article = null;
   },
   /**
    *
@@ -138,13 +144,22 @@ const mutations: MutationTree<TutorialState> = {
 
     state.graphIDs = value.graphIDs;
 
-    console.log(`Loaded Graph Ids`);
+    console.debug(`Loaded Graph Ids`);
+  },
+  CLEAR_GRAPH_IDS(state) {
+    state.graphIDs = null;
   },
   LOAD_GRAPHS(state, value) {
     // state.graphs = value;
   },
+  CLEAR_GRAPHS(state) {
+    state.graphs = null;
+  },
   LOAD_CODES(state, value) {
     // state.codes = value;
+  },
+  CLEAR_CODES(state, value) {
+    state.codes = null;
   },
   // don't know how to write this
   // MODIFY_GRAPH_BY_ID(state, info) {},
@@ -157,7 +172,7 @@ const actions: ActionTree<TutorialState, RootState> = {
     article = pseudoContent;
     graphIds = null;
     // TODO promises
-    commit('LOAD_ARTICLES', article);
+    commit('LOAD_ARTICLE', article);
     commit('LOAD_GRAPH_IDS', graphIds);
   },
   loadGraphsByIds({ commit }, graphIds) {
@@ -171,11 +186,11 @@ const actions: ActionTree<TutorialState, RootState> = {
     commit('LOAD_CODES', codes);
   },
   clearAll({ commit }) {
-    commit('LOAD_ARTICLE_ID', null);
-    commit('LOAD_ARTICLES', null);
-    commit('LOAD_GRAPH_IDS', null);
-    commit('LOAD_GRAPHS', null);
-    commit('LOAD_CODES', null);
+    commit('CLEAR_ARTICLE_ID');
+    commit('CLEAR_ARTICLE');
+    commit('CLEAR_GRAPH_IDS');
+    commit('CLEAR_GRAPHS');
+    commit('CLEAR_CODES');
   },
   // don't know how to write this
   // modifyGraphById({ commit, getters }, { graphId, delta }) {},

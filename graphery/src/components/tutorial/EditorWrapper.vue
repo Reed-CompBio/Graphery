@@ -1,6 +1,6 @@
 <template>
   <div id="editor-container" :style="editorPos">
-    <q-card class="popup-wrapper">
+    <q-card class="popup-wrapper" v-show="editorShow">
       <q-bar v-touch-pan.prevent.mouse="handlePanning">
         <q-icon name="mdi-function" />
         <div style="text-transform: uppercase;">{{ tab }}</div>
@@ -32,7 +32,7 @@
           dense
           flat
           icon="close"
-          @click="closeWindow"
+          @click="closeEditor"
           v-touch-pan.prevent.mouse="null"
         />
       </q-bar>
@@ -59,14 +59,19 @@
         v-model="tab"
       >
         <q-tab-panel name="code">
-          <div id="editor-panel" :style="editorWrapperStyle">
+          <div
+            id="editor-panel"
+            class="editor-light"
+            :style="editorWrapperStyle"
+          >
             <div id="editor" :style="editorWrapperStyle"></div>
-            <q-inner-loading :showing="codesEmpty">
+            <q-inner-loading :showing="editor === null">
               <q-spinner-pie size="64px" color="primary" />
             </q-inner-loading>
           </div>
         </q-tab-panel>
         <q-tab-panel name="info">
+          <!-- TODO fill in info section -->
           <div id="info-panel">info</div>
         </q-tab-panel>
         <q-tab-panel name="settings">
@@ -74,10 +79,19 @@
           <div id="settings-panel">settings</div>
         </q-tab-panel>
         <q-tab-panel name="shortcuts">
+          <!-- TODO fill in shortcuts section -->
           <div id="shortcuts-panel">shortcuts</div>
         </q-tab-panel>
       </q-tab-panels>
     </q-card>
+    <q-page-sticky
+      v-if="$q.screen.gt.xs"
+      position="bottom-left"
+      :offset="[30, 30]"
+    >
+      <SwitchTooltip :text="$t('tooltips.showEditorAndMore')"></SwitchTooltip>
+      <q-btn round color="primary" icon="mdi-code-json" @click="toggleEditor" />
+    </q-page-sticky>
   </div>
 </template>
 
@@ -89,12 +103,12 @@
   let monacoEditor;
 
   export default {
-    name: 'Editor Wrapper',
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
     },
     data() {
       return {
+        editorShow: true,
         tab: 'code',
         editor: null,
         content: '',
@@ -106,15 +120,17 @@
       };
     },
     methods: {
+      toggleEditor() {
+        this.editorShow = !this.editorShow;
+      },
+      closeEditor() {
+        this.editorShow = false;
+      },
       editorInit: function() {
         require('brace/ext/language_tools'); //language extension prerequsite...
         require('brace/mode/python'); //language
         require('brace/theme/chrome');
         console.debug('acquired modules for ace editor');
-      },
-      closeWindow() {
-        console.debug('close editor window');
-        this.$emit('close-editor');
       },
       handlePanning({ delta }) {
         this.pos.x += delta.x;
@@ -179,6 +195,7 @@
                 automaticLayout: true, // 自适应布局
                 overviewRulerBorder: false, // 不要滚动条的边框
                 language: 'python',
+                theme: this.dark ? 'hc-black' : 'vs',
               }
             );
             console.debug('mounted monaco editor');
@@ -192,7 +209,13 @@
       },
     },
     computed: {
-      ...mapState('settings', ['tabNum', 'softTab', 'fontSize', 'wrap']),
+      ...mapState('settings', [
+        'dark',
+        'tabNum',
+        'softTab',
+        'fontSize',
+        'wrap',
+      ]),
       ...mapGetters('tutorials', ['codesEmpty']),
       editorWrapperStyle() {
         return {
@@ -213,7 +236,7 @@
   };
 </script>
 
-<style lang="sass">
+<style scoped lang="sass">
   #editor-container
     position: absolute
     z-index: 2001

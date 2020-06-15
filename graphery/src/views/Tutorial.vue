@@ -25,19 +25,7 @@
       </template>
     </q-splitter>
     <TutorialArticle v-else :style="tutorialStyle"></TutorialArticle>
-    <EditorWrapper
-      v-show="editorShow"
-      @close-editor="closeEditor"
-      ref="editorWrapper"
-    ></EditorWrapper>
-    <q-page-sticky
-      v-if="$q.screen.gt.xs"
-      position="bottom-left"
-      :offset="[30, 30]"
-    >
-      <SwitchTooltip :text="$t('tooltips.showEditorAndMore')"></SwitchTooltip>
-      <q-btn round color="primary" icon="mdi-code-json" @click="toggleEditor" />
-    </q-page-sticky>
+    <EditorWrapper ref="editorWrapper"></EditorWrapper>
   </div>
 </template>
 
@@ -48,7 +36,6 @@
   export default {
     props: ['name'],
     components: {
-      SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
       CytoscapeWrapper: () =>
         import('@/components/tutorial/CytoscapeWrapper.vue'),
       TutorialArticle: () =>
@@ -56,9 +43,7 @@
       EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
     },
     data() {
-      return {
-        editorShow: false,
-      };
+      return {};
     },
     computed: {
       ...mapState('settings', ['graphSplitPos']),
@@ -88,12 +73,6 @@
         // 3. API calls using graph info to get graphs
         // 4. Extract graphs details , turn off loading for the graph section and load graphs
         // 5. (think about mini editor, how to manage the data in the backend)
-      },
-      toggleEditor() {
-        this.editorShow = !this.editorShow;
-      },
-      closeEditor() {
-        this.editorShow = false;
       },
       resizeAction() {
         // suppress an error with if here
