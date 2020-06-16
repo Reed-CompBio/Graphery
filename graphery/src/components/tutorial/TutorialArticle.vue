@@ -61,6 +61,7 @@
         enter-active-class="animated zoomIn"
         leave-active-class="animated zoomOut"
       >
+        <!-- TODO fix this? -->
         <q-circular-progress
           v-show="articleViewPercentage !== 0"
           size="42px"
@@ -130,6 +131,8 @@
     },
     mounted() {
       // this.loadTutorial();
+      // TODO when you access the page from tutorials or graphs, the article is not shown.
+      //    SINCE there is not real api call!!!
       // TODO when should I load the text hmmmmm
     },
   };

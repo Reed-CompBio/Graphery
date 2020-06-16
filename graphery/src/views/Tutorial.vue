@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="overflow: hidden;">
     <q-resize-observer @resize="resizeAction"></q-resize-observer>
     <q-splitter
       v-if="$q.screen.gt.xs"
@@ -24,7 +24,7 @@
         <TutorialArticle class="full-height"></TutorialArticle>
       </template>
     </q-splitter>
-    <TutorialArticle v-else :style="tutorialStyle"></TutorialArticle>
+    <TutorialArticle v-else></TutorialArticle>
     <EditorWrapper ref="editorWrapper"></EditorWrapper>
   </div>
 </template>
