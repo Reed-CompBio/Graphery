@@ -1,9 +1,10 @@
 <template>
   <div>
-    <q-scroll-area
+    <div
       ref="tc"
       v-show="!articleEmpty"
       class="full-height q-px-lg"
+      style="overflow-y: auto; overflow-x: hidden;"
       @scroll="updatePosPercentage"
     >
       <div class="q-mt-xl">
@@ -51,7 +52,7 @@
       <LicenseCard></LicenseCard>
 
       <div class="q-mb-xl"></div>
-    </q-scroll-area>
+    </div>
     <!-- add a protocol info section -->
 
     <q-page-sticky position="bottom-right" :offset="[30, 30]">

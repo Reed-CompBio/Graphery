@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Union, Iterable, Mapping, TypeVar, Generic, Type
+from typing import Union, Iterable, Mapping, Type
 import json
 import logging
 
