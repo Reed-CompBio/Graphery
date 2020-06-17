@@ -27,6 +27,7 @@ class UserManager(BaseUserManager):
                           username=username,
                           # keep this True for now, TODO pass email authentication and then make it True
                           is_active=True,
+                          is_verified=True,
                           is_staff=is_staff,
                           is_superuser=is_superuser,
                           role=role,
@@ -91,6 +92,10 @@ class User(AbstractUser):
                               error_messages={
                                   'unique': _("A user with that username already exists."),
                               }, )
+    # TODO add email authentication and then change this to False,
+    is_verified = models.BooleanField(default=True, help_text=_(
+        'Show whether the account is verified'
+    ))
     role = models.CharField(max_length=2, choices=ROLES.choices, default=ROLES.VISITOR)
     token = models.UUIDField(default=uuid4, editable=False)
 
