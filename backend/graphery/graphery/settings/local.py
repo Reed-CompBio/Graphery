@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'graphene_django',
-    'graphery.backend',
+    'backend',
 ]
 
 
@@ -115,7 +115,7 @@ AUTHENTICATION_BACKENDS = [
 
 # GraphQL settings
 GRAPHENE = {
-    'SCHEMA': 'cookbook.schema.schema',
+    'SCHEMA': 'graphery.schema.schema',
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],

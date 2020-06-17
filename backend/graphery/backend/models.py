@@ -104,4 +104,4 @@ class User(AbstractUser):
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'username'
 
-    REQUIRED_FIELDS = ('email', 'username')
+    REQUIRED_FIELDS = ('email', )
