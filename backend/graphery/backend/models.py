@@ -1,10 +1,15 @@
 from uuid import uuid4
 
 from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+
+# User Configurations
+from .mixins import TimeDateMixin
 
 
 class UserNameValidator(RegexValidator):
@@ -106,3 +111,32 @@ class User(AbstractUser):
     # A list of the field names that will be prompted for
     # when creating a user via the createsuperuser management command.
     REQUIRED_FIELDS = ('email', )
+
+
+class Category(models.Model):
+    category = models.CharField(max_length=30)
+
+
+class Tutorial(TimeDateMixin, models.Model):
+    # primary key is generated automatically
+    # meta data
+    url = models.CharField(max_length=50)
+    authors = models.ManyToManyField(User)
+    category = models.ManyToManyField(Category)
+    # content
+    content_md = models.TextField('markdown tutorial')
+    content_html = models.TextField('HTML tutorial')
+
+
+class Graph(models.Model):
+    # automatically generated primary key
+    # meta
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    graph_info = models.TextField()
+    # json
+    initial_cyjs = JSONField()
+    layouts = ArrayField(JSONField())
+    styles = ArrayField(JSONField())
+    # belongs to
+    tutorial = models.ManyToManyField(Tutorial)
