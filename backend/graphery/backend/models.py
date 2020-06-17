@@ -1,3 +1,4 @@
+import uuid
 from uuid import uuid4
 
 from django.contrib.auth.base_user import BaseUserManager
@@ -120,19 +121,25 @@ class Category(models.Model):
 class Tutorial(TimeDateMixin, models.Model):
     # primary key is generated automatically
     # meta data
-    url = models.CharField(max_length=50)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    url = models.CharField(max_length=50, unique=True, blank=False, null=False)
     authors = models.ManyToManyField(User)
     category = models.ManyToManyField(Category)
+    abstract = models.TextField(blank=True)
     # content
     content_md = models.TextField('markdown tutorial')
     content_html = models.TextField('HTML tutorial')
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(name='tutorial id_url constraint', fields=['id', 'url'])
+        ]
 
-class Graph(models.Model):
+
+class Graph(TimeDateMixin, models.Model):
     # automatically generated primary key
-    # meta
-    created_date = models.DateTimeField(auto_now_add=True)
-    modified_date = models.DateTimeField(auto_now=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    url = models.CharField(max_length=50, unique=True, blank=False, null=False)
     graph_info = models.TextField()
     # json
     initial_cyjs = JSONField()
@@ -140,3 +147,30 @@ class Graph(models.Model):
     styles = ArrayField(JSONField())
     # belongs to
     tutorial = models.ManyToManyField(Tutorial)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(name='graph id_url constraint', fields=['id', 'url'])
+        ]
+
+
+class TutorialCode(TimeDateMixin, models.Model):
+    # automatically generated primary key
+    # relations
+    tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE)
+    # content
+    code = models.TextField()
+
+
+class GraphInitialCodeExecResultJson(TimeDateMixin, models.Model):
+    # automatically generated primary key
+    # relations
+    code = models.ForeignKey(TutorialCode, on_delete=models.CASCADE)
+    graph = models.ForeignKey(Graph, on_delete=models.CASCADE)
+    # content
+    json = JSONField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['code', 'graph'], name='code graph constraint')
+        ]
