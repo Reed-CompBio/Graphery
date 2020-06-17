@@ -97,7 +97,6 @@ class User(AbstractUser):
         'Show whether the account is verified'
     ))
     role = models.CharField(max_length=2, choices=ROLES.choices, default=ROLES.VISITOR)
-    token = models.UUIDField(default=uuid4, editable=False)
 
     objects = UserManager()
 
