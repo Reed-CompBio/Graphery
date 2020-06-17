@@ -104,4 +104,6 @@ class User(AbstractUser):
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'username'
 
+    # A list of the field names that will be prompted for
+    # when creating a user via the createsuperuser management command.
     REQUIRED_FIELDS = ('email', )
