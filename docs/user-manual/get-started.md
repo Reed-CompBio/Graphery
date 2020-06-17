@@ -5,7 +5,7 @@
 There are several main building blocks for a graph: `Node`, `NodeSet`, `Edge`, `EdgeSet`, `Graph`. In this section, we will go over these concepts.
 
 ### `Node`
-Every `Node` object has a unique id and a name. When the name of a node is not specified specifically, it is filled with it's id and a prefix. For `Node`, the default prefix is `n`. So the name of a node with id `1` is `n1`. Two `Node` instances are equal if and only if their ids are equal. Every `Node` instance has a `properties` field that collects all the properties this node has. The properties will be displayed once your mouse curser is hovered on the node.
+Every `Node` object has a unique id and a name. When the name of a node is not specified specifically, it is filled with it's id and a prefix. For `Node`, the default prefix is `n`. So the name of a node with id `1` is `n1`. Two `Node` instances are equal if and only if their ids are equal. Every `Node` instance has a `properties` field that collects the properties of the instance. The properties will be displayed in a tooptip once your mouse curser is hovered on the node.
 
 Some magic methods are overriden so that you can use the basic operators llike `==` and `!=`. The equality follows the rules above. 
 
@@ -39,7 +39,7 @@ print(node_set)		# print out [Node(id: 1), Node(id: 3)
 ```
 
 ### `Edge` 
-`Edge` is like `Node` since every instance of `Edge` has a `id` and `name`. The same rules described above are also applied to `Edge`. The `properties` field is also present in `Edge`. It can be accessed using the same method. 
+`Edge` is like `Node` since every instance of `Edge` has a `id` and `name`. The same rules described above are also applied to `Edge`. The `properties` field is also present in `Edge`. It can be accessed using the same method. An additional field in an `Edge` instance is `directed`, which indicates whether the edge is directed. 
 
 Naturally, instances of `Edge` also support native pyton operators. But there are more in `Edge`.
 
@@ -70,5 +70,4 @@ n1 in g1			# evaluated True
 e1 in g1			# evaluated True
 g1.empty()			# evaluated False since the graph is not empty
 ```
-
 
