@@ -104,6 +104,19 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# JWT settings
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# GraphQL settings
+GRAPHENE = {
+    'SCHEMA': 'cookbook.schema.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ],
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
