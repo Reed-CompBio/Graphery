@@ -12,3 +12,6 @@ class TimeDateMixin(models.Model):
 class PublishedMixin(models.Model):
     # TODO make it true for now
     is_published = models.BooleanField(default=True)
+
+    class Meta:
+        abstract = True
