@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 
 class TimeDateMixin(models.Model):
@@ -8,3 +7,8 @@ class TimeDateMixin(models.Model):
 
     class Meta:
         abstract = True
+
+
+class PublishedMixin(models.Model):
+    # TODO make it true for now
+    is_published = models.BooleanField(default=True)
