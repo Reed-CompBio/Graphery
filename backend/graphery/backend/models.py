@@ -109,7 +109,7 @@ class User(AbstractUser):
 
     # A list of the field names that will be prompted for
     # when creating a user via the createsuperuser management command.
-    REQUIRED_FIELDS = ('email', )
+    REQUIRED_FIELDS = ('email',)
 
 
 class Category(models.Model):
@@ -176,3 +176,7 @@ class GraphInitialCodeExecResultJson(TimeDateMixin, models.Model):
         constraints = [
             models.UniqueConstraint(fields=['code', 'graph'], name='code exec result constraint')
         ]
+
+
+# import translations
+from .trans_models import *
