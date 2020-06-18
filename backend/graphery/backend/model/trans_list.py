@@ -1,12 +1,14 @@
 from typing import Optional
 
-translation_tables = ('zhcn', )
+translation_tables = []
 
 translation_table_mapping = {}
 
 
-def add_trans_table(cls):
-    translation_table_mapping[cls.__name__] = cls
+def add_trans_table(cls: type):
+    cls_name: str = cls.__name__.lower()
+    translation_tables.append(cls_name)
+    translation_table_mapping[cls_name] = cls
     return cls
 
 

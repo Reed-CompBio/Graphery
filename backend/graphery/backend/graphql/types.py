@@ -97,6 +97,3 @@ class ZHCNTransType(DjangoObjectType):
                   ) + \
                  time_date_mixin_field + \
                  published_mixin_field
-
-
-
