@@ -1,7 +1,8 @@
 from django.db import models
 
 from .mixins import PublishedMixin, TimeDateMixin
-from .models import User, Tutorial
+from .UserModel import User
+from .TutorialRelatedModel import Tutorial
 
 
 class ZHCN(PublishedMixin, TimeDateMixin, models.Model):
