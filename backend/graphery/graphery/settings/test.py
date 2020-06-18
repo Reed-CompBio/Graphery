@@ -6,19 +6,19 @@ from .base import *
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'this-is-a-secret-key'
+SECRET_KEY = 'this-is-a-test-key'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'graphery',
+        'NAME': 'test',
         'USER': 'graphery',
         'PASSWORD': 'graphery',
         'HOST': '127.0.0.1',
