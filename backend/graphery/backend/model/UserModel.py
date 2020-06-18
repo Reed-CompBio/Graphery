@@ -2,7 +2,11 @@ from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
+from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
+
+
+translation_tables = ('zhcn', )
 
 
 # User Configurations
@@ -105,3 +109,19 @@ class User(AbstractUser):
     # A list of the field names that will be prompted for
     # when creating a user via the createsuperuser management command.
     REQUIRED_FIELDS = ('email',)
+
+    @property
+    def all_article(self) -> QuerySet:
+        return self.original_articles | self.translated_articles
+
+    @property
+    def original_articles(self) -> QuerySet:
+        return self.tutorial_set.all()
+
+    @property
+    def translated_articles(self) -> QuerySet:
+        result = QuerySet()
+        for title in translation_tables:
+            result = result | getattr(self, f'{title}_set').objects.all()
+
+        return result

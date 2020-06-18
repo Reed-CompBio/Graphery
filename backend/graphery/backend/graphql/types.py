@@ -2,6 +2,7 @@ from ..model.mixins import time_date_mixin_field, published_mixin_field
 from ..models import User
 from ..models import Category, Tutorial, Graph, TutorialCode, ExecResultJson
 from graphene_django.types import DjangoObjectType
+from graphene import Boolean
 
 
 class UserType(DjangoObjectType):
@@ -15,7 +16,7 @@ class UserType(DjangoObjectType):
 class CategoryType(DjangoObjectType):
     class Meta:
         model = Category
-        fields = ('category',)
+        fields = ('category', 'tutorial_set')
 
 
 class TutorialType(DjangoObjectType):
@@ -24,6 +25,7 @@ class TutorialType(DjangoObjectType):
         fields = ('id', 'url', 'authors',
                   'categories', 'abstract',
                   'content_md', 'content_html',
+                  'graph_set', 'tutorialcode_set',
                   ) + \
                  time_date_mixin_field + \
                  published_mixin_field
@@ -41,6 +43,8 @@ class GraphType(DjangoObjectType):
 
 
 class TutorialCodeType(DjangoObjectType):
+    is_published = Boolean()
+
     class Meta:
         model = TutorialCode
         fields = ('tutorial', 'code', 'is_published') + \
@@ -49,6 +53,8 @@ class TutorialCodeType(DjangoObjectType):
 
 
 class ExecResultJsonType(DjangoObjectType):
+    is_published = Boolean()
+
     class Meta:
         model = ExecResultJson
         fields = ('code', 'graph', 'json',

@@ -9,6 +9,7 @@ class ZHCN(PublishedMixin, TimeDateMixin, models.Model):
     # meta
     translator = models.ManyToManyField(User)
     tutorial = models.OneToOneField(Tutorial, on_delete=models.CASCADE)
+    abstract = models.TextField()
     # content
     content_md = models.TextField()
     content_html = models.TextField()

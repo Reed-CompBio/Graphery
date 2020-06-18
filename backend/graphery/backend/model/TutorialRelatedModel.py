@@ -58,7 +58,7 @@ class TutorialCode(TimeDateMixin, models.Model):
     code = models.TextField()
 
     @property
-    def is_published(self):
+    def is_published(self) -> bool:
         return self.tutorial.is_published
 
 
@@ -71,7 +71,7 @@ class ExecResultJson(TimeDateMixin, models.Model):
     json = JSONField()
 
     @property
-    def is_published(self):
+    def is_published(self) -> bool:
         """
         the code execution result is published when the
         tutorial and the graph are both published
