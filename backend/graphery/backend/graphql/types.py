@@ -77,7 +77,7 @@ class ExecResultJsonType(DjangoObjectType):
                       'a graph. '
 
 
-TransBaseFields = ('original_tutorial', 'author',
+TransBaseFields = ('original_tutorial', 'authors',
                    'abstract', 'content_md', 'content_html',
                    ) + \
                   time_date_mixin_field + \

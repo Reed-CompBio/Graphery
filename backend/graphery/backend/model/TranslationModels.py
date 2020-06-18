@@ -10,7 +10,7 @@ from .trans_list import add_trans_table
 class TranslationBase(PublishedMixin, TimeDateMixin, models.Model):
     # meta
     authors = models.ManyToManyField(User)
-    original_tutorial = models.OneToOneField(Tutorial, on_delete=models.CASCADE)
+    tutorial_anchor = models.OneToOneField(Tutorial, on_delete=models.CASCADE)
     abstract = models.TextField()
     # content
     content_md = models.TextField()
