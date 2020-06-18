@@ -10,7 +10,7 @@ from .UserModel import User
 
 
 class Category(models.Model):
-    category = models.CharField(max_length=30, unique=True, default=_('unclassified'),
+    category = models.CharField(max_length=30, unique=True, default=_('uncategorized'),
                                 blank=False, null=False)
 
 
