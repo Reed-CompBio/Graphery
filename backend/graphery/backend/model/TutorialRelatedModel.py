@@ -19,12 +19,7 @@ class Tutorial(PublishedMixin, TimeDateMixin, models.Model):
     # meta data
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     url = models.CharField(max_length=50, unique=True, blank=False, null=False)
-    authors = models.ManyToManyField(User)
     categories = models.ManyToManyField(Category)
-    abstract = models.TextField(blank=True)
-    # content
-    content_md = models.TextField('markdown tutorial')
-    content_html = models.TextField('HTML tutorial')
 
     class Meta:
         indexes = [

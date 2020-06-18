@@ -1,12 +1,8 @@
 from typing import Optional
 
-from graphery.backend.model.TutorialRelatedModel import Tutorial
+translation_tables = []
 
-translation_tables = ['enus']
-
-translation_table_mapping = {
-    'enus': Tutorial
-}
+translation_table_mapping = {}
 
 
 def add_trans_table(cls: type):

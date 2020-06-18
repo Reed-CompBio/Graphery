@@ -114,16 +114,5 @@ class User(AbstractUser):
     def all_articles(self) -> Optional[QuerySet]:
         if self.role == ROLES.VISITOR:
             return None
-        return self.original_articles | self.translated_articles
-
-    @property
-    def original_articles(self) -> QuerySet:
-        return self.tutorial_set.all()
-
-    @property
-    def translated_articles(self) -> QuerySet:
-        result = QuerySet()
-        for title in translation_tables:
-            result = result | getattr(self, f'{title}_set').objects.all()
-
-        return result
+        # TODO fix later
+        return None

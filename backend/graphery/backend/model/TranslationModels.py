@@ -9,7 +9,7 @@ from .trans_list import add_trans_table
 
 class TranslationBase(PublishedMixin, TimeDateMixin, models.Model):
     # meta
-    translator = models.ManyToManyField(User)
+    authors = models.ManyToManyField(User)
     original_tutorial = models.OneToOneField(Tutorial, on_delete=models.CASCADE)
     abstract = models.TextField()
     # content
@@ -18,6 +18,11 @@ class TranslationBase(PublishedMixin, TimeDateMixin, models.Model):
 
     class Meta:
         abstract = True
+
+
+@add_trans_table
+class ENUS(TranslationBase):
+    pass
 
 
 @add_trans_table

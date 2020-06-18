@@ -1,28 +1,16 @@
 from ..model.mixins import time_date_mixin_field, published_mixin_field
 from ..models import User
 from ..models import Category, Tutorial, Graph, TutorialCode, ExecResultJson
-from ..models import ZHCN
+from ..models import ENUS, ZHCN
 from graphene_django.types import DjangoObjectType
 import graphene
 
 
-class TutorialInterface(graphene.Interface):
-    abstract = graphene.String()
-    content_md = graphene.String()
-    content_html = graphene.String()
-
-
 class UserType(DjangoObjectType):
-    all_articles = graphene.List(TutorialInterface)
-    original_articles = graphene.List(TutorialInterface)
-    translated_articles = graphene.List(TutorialInterface)
-
     class Meta:
         model = User
         fields = ('username', 'email', 'role',
                   'is_verified', 'date_joined',
-                  'all_articles', 'original_articles',
-                  'translated_articles'
                   )
 
 
@@ -34,12 +22,10 @@ class CategoryType(DjangoObjectType):
 
 class TutorialType(DjangoObjectType):
     class Meta:
-        interfaces = (TutorialInterface, )
         model = Tutorial
-        fields = ('id', 'url', 'authors',
-                  'categories', 'abstract',
-                  'content_md', 'content_html',
-                  'graph_set', 'tutorialcode_set',
+        fields = ('id', 'url',
+                  'categories', 'graph_set',
+                  'tutorialcode_set',
                   ) + \
                  time_date_mixin_field + \
                  published_mixin_field
@@ -78,22 +64,30 @@ class ExecResultJsonType(DjangoObjectType):
                  published_mixin_field
 
 
-class TransInterface(graphene.Interface):
-    translator = graphene.Field(UserType)
+TransBaseFields = ('original_tutorial', 'author',
+                   'abstract', 'content_md', 'content_html',
+                   ) + \
+                  time_date_mixin_field + \
+                  published_mixin_field
+
+
+class TutorialInterface(graphene.Interface):
+    authors = graphene.List(UserType)
     original_tutorial = graphene.Field(TutorialType)
+    abstract = graphene.String()
+    content_md = graphene.String()
+    content_html = graphene.String()
 
 
-class TransType(graphene.ObjectType):
+class ENUSTransType(DjangoObjectType):
     class Meta:
-        interfaces = (TutorialInterface, TransInterface, )
+        interfaces = (TutorialInterface,)
+        model = ENUS
+        fields = TransBaseFields
 
 
 class ZHCNTransType(DjangoObjectType):
     class Meta:
-        types = (TransType, )
+        interfaces = (TutorialInterface,)
         model = ZHCN
-        fields = ('original_tutorial', 'translator',
-                  'abstract', 'content_md', 'content_html',
-                  ) + \
-                 time_date_mixin_field + \
-                 published_mixin_field
+        fields = TransBaseFields
