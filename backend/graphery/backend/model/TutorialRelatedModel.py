@@ -6,8 +6,6 @@ from django.utils.translation import gettext_lazy as _
 
 from .mixins import TimeDateMixin, PublishedMixin
 
-from .UserModel import User
-
 
 class Category(models.Model):
     category = models.CharField(max_length=30, unique=True, default=_('uncategorized'),

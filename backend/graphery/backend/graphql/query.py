@@ -1,10 +1,7 @@
-from django.core.handlers.wsgi import WSGIRequest
-
 import graphene
 from graphql_jwt.decorators import login_required
 from graphql.execution.base import ResolveInfo
 
-from ..model.TranslationModels import TranslationBase
 from ..model.trans_list import get_translation_table
 from ..models import Category, Tutorial, Graph
 
@@ -15,13 +12,16 @@ class Query(graphene.ObjectType):
     user_info = graphene.Field(UserType)
     all_categories = graphene.List(CategoryType)
     all_tutorial_info = graphene.List(TutorialType)
-    all_translation_info = graphene.List(TutorialInterface, translation=graphene.String(default_value='en-us'))
+    all_translation_info = graphene.List(TutorialInterface,
+                                         translation=graphene.String(default_value='en-us'))
 
-    tutorial = graphene.Field(TutorialInterface, url=graphene.String(default_value=None),
-                                            id=graphene.String(default_value=None),
-                                            translation=graphene.String(default_value='en-us'))
-    graph = graphene.Field(GraphType, url=graphene.String(default_value=None),
-                                      id=graphene.String(default_value=None))
+    tutorial = graphene.Field(TutorialInterface,
+                              url=graphene.String(default_value=None),
+                              id=graphene.String(default_value=None),
+                              translation=graphene.String(default_value='en-us'))
+    graph = graphene.Field(GraphType,
+                           url=graphene.String(default_value=None),
+                           id=graphene.String(default_value=None))
 
     @login_required
     def resolve_user_info(self, info: ResolveInfo, **kwargs):
@@ -34,13 +34,11 @@ class Query(graphene.ObjectType):
         return Tutorial.objects.all()
 
     def resolve_all_translation_info(self, info: ResolveInfo, **kwargs):
-        translation = kwargs.get('translation', None)
-        if translation:
-            trans_table = get_translation_table(translation)
-            if trans_table:
-                return trans_table.objects.all()
+        trans_table = get_translation_table(kwargs['translation'])
+        if trans_table:
+            return trans_table.objects.all()
 
-            return None
+        return None
 
     def resolve_tutorial(self, info: ResolveInfo, **kwargs):
         url = kwargs['url']
@@ -54,8 +52,8 @@ class Query(graphene.ObjectType):
         return None
 
     def resolve_graph(self, info: ResolveInfo, **kwargs):
-        url = kwargs.get('url', None)
-        idt = kwargs.get('id', None)
+        url = kwargs['url']
+        idt = kwargs['id']
         if url:
             return Graph.objects.get(url=url)
         elif idt:
