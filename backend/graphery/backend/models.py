@@ -113,7 +113,8 @@ class User(AbstractUser):
 
 
 class Category(models.Model):
-    category = models.CharField(max_length=30)
+    category = models.CharField(max_length=30, unique=True, default=_('unclassified'),
+                                blank=False, null=False)
 
 
 class Tutorial(TimeDateMixin, models.Model):
@@ -157,3 +158,8 @@ class GraphInitialCodeExecResultJson(TimeDateMixin, models.Model):
     graph = models.ForeignKey(Graph, on_delete=models.CASCADE)
     # content
     json = JSONField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['code', 'graph'], name='code exec result constraint')
+        ]
