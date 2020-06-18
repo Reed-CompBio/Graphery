@@ -20,11 +20,16 @@ class Tutorial(PublishedMixin, TimeDateMixin, models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     url = models.CharField(max_length=50, unique=True, blank=False, null=False)
     authors = models.ManyToManyField(User)
-    category = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category)
     abstract = models.TextField(blank=True)
     # content
     content_md = models.TextField('markdown tutorial')
     content_html = models.TextField('HTML tutorial')
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['url'])
+        ]
 
 
 class Graph(PublishedMixin, TimeDateMixin, models.Model):
@@ -39,6 +44,11 @@ class Graph(PublishedMixin, TimeDateMixin, models.Model):
     # belongs to
     tutorial = models.ManyToManyField(Tutorial)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['url'])
+        ]
+
 
 class TutorialCode(TimeDateMixin, models.Model):
     # automatically generated primary key
@@ -52,7 +62,7 @@ class TutorialCode(TimeDateMixin, models.Model):
         return self.tutorial.is_published
 
 
-class GraphInitialCodeExecResultJson(TimeDateMixin, models.Model):
+class ExecResultJson(TimeDateMixin, models.Model):
     # automatically generated primary key
     # relations
     code = models.ForeignKey(TutorialCode, on_delete=models.CASCADE)

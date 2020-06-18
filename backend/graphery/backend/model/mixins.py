@@ -15,3 +15,9 @@ class PublishedMixin(models.Model):
 
     class Meta:
         abstract = True
+
+
+time_date_mixin_field = ('created_time', 'modified_time')
+
+
+published_mixin_field = ('is_published', )
