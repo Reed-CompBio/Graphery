@@ -1,12 +1,12 @@
+from typing import Optional
+
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
-
-
-translation_tables = ('zhcn', )
+from ..model.trans_list import translation_tables
 
 
 # User Configurations
@@ -70,11 +70,11 @@ class UserManager(BaseUserManager):
                                  role=ROLES.ADMINISTRATOR, **extra_fields)
 
 
-class ROLES(models.TextChoices):
-    ADMINISTRATOR = 'AD', 'Administrator'
-    AUTHOR = 'AU', 'author'
-    TRANSLATOR = 'TR', 'translator'
-    VISITOR = 'VI', 'visitor'
+class ROLES(models.IntegerChoices):
+    ADMINISTRATOR = 60, 'Administrator'
+    AUTHOR = 40, 'author'
+    TRANSLATOR = 20, 'translator'
+    VISITOR = 0, 'visitor'
 
 
 class User(AbstractUser):
@@ -99,7 +99,7 @@ class User(AbstractUser):
     is_verified = models.BooleanField(default=True, help_text=_(
         'Show whether the account is verified'
     ))
-    role = models.CharField(max_length=2, choices=ROLES.choices, default=ROLES.VISITOR)
+    role = models.SmallIntegerField(choices=ROLES.choices, default=ROLES.VISITOR)
 
     objects = UserManager()
 
@@ -111,7 +111,9 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ('email',)
 
     @property
-    def all_article(self) -> QuerySet:
+    def all_articles(self) -> Optional[QuerySet]:
+        if self.role == ROLES.VISITOR:
+            return None
         return self.original_articles | self.translated_articles
 
     @property
