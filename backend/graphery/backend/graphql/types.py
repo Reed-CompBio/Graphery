@@ -12,12 +12,14 @@ class UserType(DjangoObjectType):
         fields = ('username', 'email', 'role',
                   'is_verified', 'date_joined',
                   )
+        description = 'User type. Login required to get info an account. '
 
 
 class CategoryType(DjangoObjectType):
     class Meta:
         model = Category
         fields = ('category', 'tutorial_set')
+        description = 'Category of a tutorial'
 
 
 class TutorialType(DjangoObjectType):
@@ -29,6 +31,12 @@ class TutorialType(DjangoObjectType):
                   ) + \
                  time_date_mixin_field + \
                  published_mixin_field
+        description = 'The tutorial anchor for an tutorial article. ' \
+                      'The contents are in translation table that ' \
+                      'corresponds to certain language you want to ' \
+                      'query. This type only contains meta info' \
+                      'like id, url, category, associated graphs' \
+                      'associated codes etc.'
 
 
 class GraphType(DjangoObjectType):
@@ -40,6 +48,8 @@ class GraphType(DjangoObjectType):
                   ) + \
                  time_date_mixin_field + \
                  published_mixin_field
+        description = 'Graph type that contains info of a graph like ' \
+                      'cyjs, style json, and layout json'
 
 
 class TutorialCodeType(DjangoObjectType):
@@ -50,6 +60,7 @@ class TutorialCodeType(DjangoObjectType):
         fields = ('tutorial', 'code', 'is_published') + \
                  time_date_mixin_field + \
                  published_mixin_field
+        description = 'The code content of a tutorial. '
 
 
 class ExecResultJsonType(DjangoObjectType):
@@ -62,6 +73,8 @@ class ExecResultJsonType(DjangoObjectType):
                   ) + \
                  time_date_mixin_field + \
                  published_mixin_field
+        description = 'The execution result of a piece of code on ' \
+                      'a graph. '
 
 
 TransBaseFields = ('original_tutorial', 'author',
@@ -84,6 +97,7 @@ class ENUSTransType(DjangoObjectType):
         interfaces = (TutorialInterface,)
         model = ENUS
         fields = TransBaseFields
+        description = 'The en-us translations of tutorials'
 
 
 class ZHCNTransType(DjangoObjectType):
@@ -91,3 +105,4 @@ class ZHCNTransType(DjangoObjectType):
         interfaces = (TutorialInterface,)
         model = ZHCN
         fields = TransBaseFields
+        description = 'The zh-cn translations of tutorials'
