@@ -17,7 +17,8 @@ class Query(graphene.ObjectType):
     all_tutorial_info = graphene.List(TutorialType)
     all_translation_info = graphene.List(TransType, translation=graphene.NonNull(graphene.String))
 
-    tutorial = graphene.Field(TutorialType, url=graphene.String(), id=graphene.String())
+    tutorial = graphene.Field(TutorialType, url=graphene.String(), id=graphene.String(),
+                              translation=graphene.String(required=True, default_value='en-us'))
     graph = graphene.Field(GraphType, url=graphene.String(), id=graphene.String())
 
     @login_required
@@ -42,6 +43,7 @@ class Query(graphene.ObjectType):
     def resolve_tutorial(self, info: ResolveInfo, **kwargs):
         url = kwargs.get('url', None)
         idt = kwargs.get('id', None)
+        translation = kwargs['translation']
         if url:
             return Tutorial.objects.get(url=url)
         elif idt:
