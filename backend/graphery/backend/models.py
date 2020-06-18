@@ -1,4 +1,3 @@
-import uuid
 from uuid import uuid4
 
 from django.contrib.auth.base_user import BaseUserManager
@@ -8,11 +7,10 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-
-# User Configurations
 from .mixins import TimeDateMixin
 
 
+# User Configurations
 class UserNameValidator(RegexValidator):
     # require the length of the user name be at least 6
     regex = r'^[^0-9][\w-]{4,}[^-_]\Z'
@@ -121,7 +119,7 @@ class Category(models.Model):
 class Tutorial(TimeDateMixin, models.Model):
     # primary key is generated automatically
     # meta data
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     url = models.CharField(max_length=50, unique=True, blank=False, null=False)
     authors = models.ManyToManyField(User)
     category = models.ManyToManyField(Category)
@@ -130,15 +128,10 @@ class Tutorial(TimeDateMixin, models.Model):
     content_md = models.TextField('markdown tutorial')
     content_html = models.TextField('HTML tutorial')
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(name='tutorial id_url constraint', fields=['id', 'url'])
-        ]
-
 
 class Graph(TimeDateMixin, models.Model):
     # automatically generated primary key
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     url = models.CharField(max_length=50, unique=True, blank=False, null=False)
     graph_info = models.TextField()
     # json
@@ -147,11 +140,6 @@ class Graph(TimeDateMixin, models.Model):
     styles = ArrayField(JSONField())
     # belongs to
     tutorial = models.ManyToManyField(Tutorial)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(name='graph id_url constraint', fields=['id', 'url'])
-        ]
 
 
 class TutorialCode(TimeDateMixin, models.Model):
@@ -169,8 +157,3 @@ class GraphInitialCodeExecResultJson(TimeDateMixin, models.Model):
     graph = models.ForeignKey(Graph, on_delete=models.CASCADE)
     # content
     json = JSONField()
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['code', 'graph'], name='code graph constraint')
-        ]
