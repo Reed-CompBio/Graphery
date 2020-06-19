@@ -26,3 +26,11 @@ class TutorialAnchorTest(TestCase):
     def test_empty_url(self):
         with self.assertRaises(IntegrityError):
             tutorial = Tutorial.objects.create()
+
+    def test_category_linking(self):
+        category = Category.objects.create()
+        tutorial = Tutorial.objects.create(url='a-default-url')
+        tutorial.categories.add(category)
+        self.assertEqual(tutorial.categories.all()[0].category, category.category)
+
+    

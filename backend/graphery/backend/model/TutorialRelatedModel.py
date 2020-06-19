@@ -22,7 +22,7 @@ class Tutorial(PublishedMixin, TimeDateMixin, models.Model):
     # meta data
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     # TODO add a url verification
-    url = models.CharField(max_length=50, unique=True, blank=False, null=False, default=None)
+    url = models.CharField(max_length=50, unique=True, blank=False, null=False)
     categories = models.ManyToManyField(Category)
 
     class Meta:
