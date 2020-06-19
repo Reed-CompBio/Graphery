@@ -109,6 +109,8 @@ class User(AbstractUser):
     # when creating a user via the createsuperuser management command.
     REQUIRED_FIELDS = ('email',)
 
+    # TODO add a property field that tells the program what privilege this user has
+
     @property
     def all_articles(self) -> Optional[QuerySet]:
         if self.role == ROLES.VISITOR:

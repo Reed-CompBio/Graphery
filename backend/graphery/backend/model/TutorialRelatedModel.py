@@ -11,12 +11,18 @@ class Category(models.Model):
     category = models.CharField(max_length=30, unique=True, default=_('uncategorized'),
                                 blank=False, null=False)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['category'])
+        ]
+
 
 class Tutorial(PublishedMixin, TimeDateMixin, models.Model):
     # primary key is generated automatically
     # meta data
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    url = models.CharField(max_length=50, unique=True, blank=False, null=False)
+    # TODO add a url verification
+    url = models.CharField(max_length=50, unique=True, blank=False, null=False, default=None)
     categories = models.ManyToManyField(Category)
 
     class Meta:
