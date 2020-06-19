@@ -6,7 +6,6 @@ from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
-from ..model.trans_list import translation_tables
 
 
 # User Configurations
@@ -53,7 +52,7 @@ class UserManager(BaseUserManager):
         the_role = extra_fields.pop('role', ROLES.VISITOR)
         return self._create_user(email=email, username=username,
                                  password=password, is_staff=is_staff,
-                                 is_superuser=is_superuser, the_role=the_role,
+                                 is_superuser=is_superuser, role=the_role,
                                  **extra_fields)
 
     def create_superuser(self, email, username, password, **extra_fields):
