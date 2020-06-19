@@ -25,3 +25,11 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# Debug middleware
+# _debug {
+#     sql {
+#       rawSql
+#     }
+#   }
+GRAPHENE.get('MIDDLEWARE').append('graphene_django.debug.DjangoDebugMiddleware')
