@@ -1,5 +1,7 @@
 from typing import Optional
 
+from django.db.models import Model
+
 translation_tables = []
 
 translation_types = []
@@ -19,6 +21,6 @@ def add_trans_table(cls: type):
     return cls
 
 
-def get_translation_table(table_name: str) -> Optional['TranslationBase']:
+def get_translation_table(table_name: str) -> Optional[Model]:
     table_name = table_name.replace('-', '').replace('_', '').lower()
     return translation_table_mapping.get(table_name, None)

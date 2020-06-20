@@ -15,16 +15,18 @@ class Query(graphene.ObjectType):
     user_info = graphene.Field(UserType)
     all_categories = graphene.List(CategoryType)
     all_tutorial_info = graphene.List(TutorialType)
+    tutorial_count = graphene.Int()
     all_translation_info = graphene.List(TutorialInterface,
-                                         translation=graphene.String(default_value='en-us'))
+                                         translation=graphene.String())
+    not_translated_count = graphene.Int(translation=graphene.String())
 
     tutorial = graphene.Field(TutorialInterface,
-                              url=graphene.String(default_value=None),
-                              id=graphene.String(default_value=None),
-                              translation=graphene.String(default_value='en-us'))
+                              url=graphene.String(),
+                              id=graphene.String(),
+                              translation=graphene.String())
     graph = graphene.Field(GraphType,
-                           url=graphene.String(default_value=None),
-                           id=graphene.String(default_value=None))
+                           url=graphene.String(),
+                           id=graphene.String())
 
     # The most efficient method of finding whether a model with a unique field is a member of a QuerySet
     # def resolve_username_exist(self, info, username):
@@ -43,14 +45,20 @@ class Query(graphene.ObjectType):
     def resolve_all_tutorial_info(self, info: ResolveInfo, **kwargs):
         return Tutorial.objects.all()
 
-    def resolve_all_translation_info(self, info: ResolveInfo, **kwargs):
-        trans_table = get_translation_table(kwargs['translation'])
+    def resolve_tutorial_count(self, info: ResolveInfo, **kwargs):
+        return Tutorial.objects.all().count()
+
+    def resolve_all_translation_info(self, info: ResolveInfo, translation='en-us'):
+        trans_table = get_translation_table(translation)
         if trans_table:
             return trans_table.objects.all()
         return None
 
-    def resolve_tutorial(self, info: ResolveInfo, url=None, id=None, **kwargs):
-        translation_table = get_translation_table(kwargs['translation'])
+    def resolve_not_translated_count(self, info: ResolveInfo, translation='en-us'):
+        return Tutorial.objects.all().count() - get_translation_table(translation).objects.all().count()
+
+    def resolve_tutorial(self, info: ResolveInfo, url=None, id=None, translation='en-us'):
+        translation_table = get_translation_table(translation)
         if translation_table:
             if url:
                 return translation_table.objects.get(tutorial_anchor__url=url)
@@ -58,7 +66,7 @@ class Query(graphene.ObjectType):
                 return translation_table.objects.get(tutorial_anchor__id=id)
         return None
 
-    def resolve_graph(self, info: ResolveInfo, url=None, id=None, **kwargs):
+    def resolve_graph(self, info: ResolveInfo, url=None, id=None):
         if url:
             return Graph.objects.get(url=url)
         elif id:
