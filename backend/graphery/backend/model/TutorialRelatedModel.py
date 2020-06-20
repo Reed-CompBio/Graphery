@@ -8,8 +8,8 @@ from .mixins import TimeDateMixin, PublishedMixin
 
 
 class Category(models.Model):
-    category = models.CharField(max_length=30, unique=True, default=_('uncategorized'),
-                                blank=False, null=False)
+    category = models.CharField(primary_key=True, max_length=30, unique=True,
+                                default=_('uncategorized'), blank=False, null=False)
 
     class Meta:
         indexes = [
@@ -22,7 +22,7 @@ class Tutorial(PublishedMixin, TimeDateMixin, models.Model):
     # meta data
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     # TODO add a url verification
-    url = models.CharField(max_length=50, unique=True, blank=False, null=False)
+    url = models.CharField(max_length=100, unique=True, blank=False, null=False)
     categories = models.ManyToManyField(Category)
 
     class Meta:
@@ -34,7 +34,7 @@ class Tutorial(PublishedMixin, TimeDateMixin, models.Model):
 class Graph(PublishedMixin, TimeDateMixin, models.Model):
     # automatically generated primary key
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    url = models.CharField(max_length=50, unique=True, blank=False, null=False)
+    url = models.CharField(max_length=100, unique=True, blank=False, null=False)
     graph_info = models.TextField()
     # json
     initial_cyjs = JSONField()
