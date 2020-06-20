@@ -13,6 +13,7 @@ graphene-django = "*"
 psycopg2-binary = "*"
 django-graphql-jwt = "*"
 click = "*"
+markdown = "*"
 
 [requires]
 python_version = "3.8"
