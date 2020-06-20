@@ -6,7 +6,7 @@ from ..model.trans_list import get_translation_table
 # from ..models import User
 from ..models import Category, Tutorial, Graph
 
-from .types import UserType, CategoryType, TutorialType, GraphType, TutorialInterface
+from .types import UserType, CategoryType, TutorialType, GraphType, TutorialInterface, ENUSTransType
 
 
 class Query(graphene.ObjectType):
@@ -47,25 +47,20 @@ class Query(graphene.ObjectType):
         trans_table = get_translation_table(kwargs['translation'])
         if trans_table:
             return trans_table.objects.all()
-
         return None
 
-    def resolve_tutorial(self, info: ResolveInfo, **kwargs):
-        url = kwargs['url']
-        idt = kwargs['id']
+    def resolve_tutorial(self, info: ResolveInfo, url=None, id=None, **kwargs):
         translation_table = get_translation_table(kwargs['translation'])
         if translation_table:
             if url:
-                return translation_table.objects.get(original_tutorial__url=url)
-            elif idt:
-                return translation_table.objects.get(original_tutorial__id=idt)
+                return translation_table.objects.get(tutorial_anchor__url=url)
+            elif id:
+                return translation_table.objects.get(tutorial_anchor__id=id)
         return None
 
-    def resolve_graph(self, info: ResolveInfo, **kwargs):
-        url = kwargs['url']
-        idt = kwargs['id']
+    def resolve_graph(self, info: ResolveInfo, url=None, id=None, **kwargs):
         if url:
             return Graph.objects.get(url=url)
-        elif idt:
-            return Graph.objects.get(id=idt)
+        elif id:
+            return Graph.objects.get(id=id)
         return None

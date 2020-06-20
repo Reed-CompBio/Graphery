@@ -77,7 +77,7 @@ class ExecResultJsonType(DjangoObjectType):
                       'a graph. '
 
 
-TransBaseFields = ('original_tutorial', 'authors',
+TransBaseFields = ('tutorial_anchor', 'authors',
                    'abstract', 'content_md', 'content_html',
                    ) + \
                   time_date_mixin_field + \
@@ -85,11 +85,14 @@ TransBaseFields = ('original_tutorial', 'authors',
 
 
 class TutorialInterface(graphene.Interface):
-    authors = graphene.List(UserType)
-    original_tutorial = graphene.Field(TutorialType)
+    authors = graphene.List(graphene.String)
+    tutorial_anchor = graphene.Field(TutorialType)
     abstract = graphene.String()
     content_md = graphene.String()
     content_html = graphene.String()
+
+    def resolve_authors(self, info, **kwargs):
+        return self.authors.all().values_list('username', flat=True)
 
 
 class ENUSTransType(DjangoObjectType):
