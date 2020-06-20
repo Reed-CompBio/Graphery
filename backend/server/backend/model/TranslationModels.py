@@ -4,7 +4,7 @@ from .mixins import PublishedMixin, TimeDateMixin
 from .UserModel import User
 from .TutorialRelatedModel import Tutorial
 
-from .trans_list import add_trans_table
+from .translation_collection import add_trans_table
 
 
 class TranslationBase(PublishedMixin, TimeDateMixin, models.Model):

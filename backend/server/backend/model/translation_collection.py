@@ -2,7 +2,14 @@ from typing import Optional
 
 translation_tables = []
 
+translation_types = []
+
 translation_table_mapping = {}
+
+
+def add_trans_type(cls: type):
+    translation_types.append(cls)
+    return cls
 
 
 def add_trans_table(cls: type):

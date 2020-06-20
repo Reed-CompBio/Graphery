@@ -1,4 +1,5 @@
 from ..model.mixins import time_date_mixin_field, published_mixin_field
+from ..model.translation_collection import add_trans_type
 from ..models import User
 from ..models import Category, Tutorial, Graph, TutorialCode, ExecResultJson
 from ..models import ENUS, ZHCN
@@ -95,6 +96,7 @@ class TutorialInterface(graphene.Interface):
         return self.authors.all().values_list('username', flat=True)
 
 
+@add_trans_type
 class ENUSTransType(DjangoObjectType):
     class Meta:
         interfaces = (TutorialInterface,)
@@ -103,6 +105,7 @@ class ENUSTransType(DjangoObjectType):
         description = 'The en-us translations of tutorials'
 
 
+@add_trans_type
 class ZHCNTransType(DjangoObjectType):
     class Meta:
         interfaces = (TutorialInterface,)

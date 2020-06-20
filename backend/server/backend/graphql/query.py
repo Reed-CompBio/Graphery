@@ -2,7 +2,7 @@ import graphene
 from graphql_jwt.decorators import login_required
 from graphql.execution.base import ResolveInfo
 
-from ..model.trans_list import get_translation_table
+from ..model.translation_collection import get_translation_table
 # from ..models import User
 from ..models import Category, Tutorial, Graph
 
