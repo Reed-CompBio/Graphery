@@ -11,30 +11,20 @@ class Category(models.Model):
     category = models.CharField(primary_key=True, max_length=30, unique=True,
                                 default=_('uncategorized'), blank=False, null=False)
 
-    class Meta:
-        indexes = [
-            models.Index(fields=['category'])
-        ]
-
 
 class Tutorial(PublishedMixin, TimeDateMixin, models.Model):
     # primary key is generated automatically
     # meta data
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     # TODO add a url verification
-    url = models.CharField(max_length=100, unique=True, blank=False, null=False)
+    url = models.CharField(max_length=100, unique=True, blank=False, null=False, db_index=True)
     categories = models.ManyToManyField(Category)
-
-    class Meta:
-        indexes = [
-            models.Index(fields=['url'])
-        ]
 
 
 class Graph(PublishedMixin, TimeDateMixin, models.Model):
     # automatically generated primary key
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    url = models.CharField(max_length=100, unique=True, blank=False, null=False)
+    url = models.CharField(max_length=100, unique=True, blank=False, null=False, db_index=True)
     graph_info = models.TextField()
     # json
     initial_cyjs = JSONField()
@@ -42,11 +32,6 @@ class Graph(PublishedMixin, TimeDateMixin, models.Model):
     styles = ArrayField(JSONField())
     # belongs to
     tutorial = models.ManyToManyField(Tutorial)
-
-    class Meta:
-        indexes = [
-            models.Index(fields=['url'])
-        ]
 
 
 class TutorialCode(TimeDateMixin, models.Model):
