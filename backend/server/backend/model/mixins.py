@@ -30,3 +30,6 @@ time_date_mixin_field = ('created_time', 'modified_time')
 
 
 published_mixin_field = ('is_published', )
+
+
+uuid_mixin_field = ('id', )

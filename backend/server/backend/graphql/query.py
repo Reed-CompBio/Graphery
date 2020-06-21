@@ -2,11 +2,10 @@ import graphene
 from graphql_jwt.decorators import login_required
 from graphql.execution.base import ResolveInfo
 
-from ..model.translation_collection import get_translation_table
 # from ..models import User
 from ..models import Category, Tutorial, Graph
 
-from .types import UserType, CategoryType, TutorialType, GraphType, TutorialInterface, ENUSTransType
+from .types import UserType, CategoryType, TutorialType, GraphType
 
 
 class Query(graphene.ObjectType):
@@ -16,7 +15,6 @@ class Query(graphene.ObjectType):
     all_categories = graphene.List(CategoryType)
     all_tutorial_info = graphene.List(TutorialType)
     tutorial_count = graphene.Int()
-    not_translated_count = graphene.Int(translation=graphene.String())
 
     tutorial = graphene.Field(TutorialType,
                               url=graphene.String(),
@@ -44,9 +42,6 @@ class Query(graphene.ObjectType):
 
     def resolve_tutorial_count(self, info: ResolveInfo, **kwargs):
         return Tutorial.objects.all().count()
-
-    def resolve_not_translated_count(self, info: ResolveInfo, translation='en-us'):
-        return Tutorial.objects.all().count() - get_translation_table(translation).objects.all().count()
 
     def resolve_tutorial(self, info: ResolveInfo, url=None, id=None):
         if url:

@@ -32,7 +32,8 @@ class TutorialCode(UUIDMixin, TimeDateMixin, models.Model):
     # relations
     tutorial = models.ForeignKey(Tutorial, on_delete=models.CASCADE)
     # content
-    code = models.TextField()
+    # TODO unique necessary? or unique together with tutorial? Unique for now.
+    code = models.TextField(unique=True)
 
     @property
     def is_published(self) -> bool:

@@ -1,5 +1,5 @@
-from ..model.mixins import time_date_mixin_field, published_mixin_field
-from ..model.translation_collection import add_trans_type, translation_tables, process_trans_name
+from ..model.mixins import time_date_mixin_field, published_mixin_field, uuid_mixin_field
+from ..model.translation_collection import add_trans_type, process_trans_name
 from ..models import User
 from ..models import Category, Tutorial, Graph, TutorialCode, ExecResultJson
 from ..models import ENUS, ZHCN
@@ -12,7 +12,7 @@ class UserType(DjangoObjectType):
         model = User
         fields = ('username', 'email', 'role',
                   'is_verified', 'date_joined',
-                  )
+                  ) + uuid_mixin_field
         description = 'User type. Login required to get info an account. '
 
 
@@ -46,12 +46,13 @@ class TutorialType(DjangoObjectType):
 
     class Meta:
         model = Tutorial
-        fields = ('id', 'url', 'content',
+        fields = ('url', 'content',
                   'categories', 'graph_set',
                   'tutorialcode_set',
                   ) + \
                  time_date_mixin_field + \
-                 published_mixin_field
+                 published_mixin_field + \
+                 uuid_mixin_field
 
         description = 'The tutorial anchor for an tutorial article. ' \
                       'The contents are in translation table that ' \
@@ -64,12 +65,13 @@ class TutorialType(DjangoObjectType):
 class GraphType(DjangoObjectType):
     class Meta:
         model = Graph
-        fields = ('id', 'url', 'graph_info',
+        fields = ('url', 'graph_info',
                   'initial_cyjs', 'layouts',
                   'styles', 'tutorial'
                   ) + \
                  time_date_mixin_field + \
-                 published_mixin_field
+                 published_mixin_field + \
+                 uuid_mixin_field
         description = 'Graph type that contains info of a graph like ' \
                       'cyjs, style json, and layout json'
 
@@ -81,7 +83,8 @@ class TutorialCodeType(DjangoObjectType):
         model = TutorialCode
         fields = ('tutorial', 'code', 'is_published') + \
                  time_date_mixin_field + \
-                 published_mixin_field
+                 published_mixin_field + \
+                 uuid_mixin_field
         description = 'The code content of a tutorial. '
 
 
@@ -94,7 +97,8 @@ class ExecResultJsonType(DjangoObjectType):
                   'is_published',
                   ) + \
                  time_date_mixin_field + \
-                 published_mixin_field
+                 published_mixin_field + \
+                 uuid_mixin_field
         description = 'The execution result of a piece of code on ' \
                       'a graph. '
 
@@ -103,8 +107,8 @@ TransBaseFields = ('tutorial_anchor', 'authors',
                    'abstract', 'content_md', 'content_html',
                    ) + \
                   time_date_mixin_field + \
-                  published_mixin_field
-
+                  published_mixin_field + \
+                  uuid_mixin_field
 
 @add_trans_type
 class ENUSTransType(DjangoObjectType):

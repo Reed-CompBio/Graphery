@@ -7,11 +7,10 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
 
-
-# User Configurations
 from .mixins import UUIDMixin
 
 
+# User Configurations
 class UserNameValidator(RegexValidator):
     # require the length of the user name be at least 6
     regex = r'^[^0-9][\w-]{4,}[^-_]\Z'
