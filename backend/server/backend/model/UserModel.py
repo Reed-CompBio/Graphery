@@ -9,6 +9,9 @@ from django.utils.translation import gettext_lazy as _
 
 
 # User Configurations
+from .mixins import UUIDMixin
+
+
 class UserNameValidator(RegexValidator):
     # require the length of the user name be at least 6
     regex = r'^[^0-9][\w-]{4,}[^-_]\Z'
@@ -76,8 +79,7 @@ class ROLES(models.IntegerChoices):
     VISITOR = 0, 'visitor'
 
 
-class User(AbstractUser):
-    id = models.UUIDField(primary_key=True)
+class User(UUIDMixin, AbstractUser):
     username_validator = UserNameValidator()
 
     username = models.CharField(
