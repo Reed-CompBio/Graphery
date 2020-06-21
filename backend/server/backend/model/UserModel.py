@@ -77,6 +77,7 @@ class ROLES(models.IntegerChoices):
 
 
 class User(AbstractUser):
+    id = models.UUIDField(primary_key=True)
     username_validator = UserNameValidator()
 
     username = models.CharField(
