@@ -16,14 +16,11 @@ class Query(graphene.ObjectType):
     all_categories = graphene.List(CategoryType)
     all_tutorial_info = graphene.List(TutorialType)
     tutorial_count = graphene.Int()
-    all_translation_info = graphene.List(TutorialInterface,
-                                         translation=graphene.String())
     not_translated_count = graphene.Int(translation=graphene.String())
 
-    tutorial = graphene.Field(TutorialInterface,
+    tutorial = graphene.Field(TutorialType,
                               url=graphene.String(),
-                              id=graphene.String(),
-                              translation=graphene.String())
+                              id=graphene.String())
     graph = graphene.Field(GraphType,
                            url=graphene.String(),
                            id=graphene.String())
@@ -48,22 +45,14 @@ class Query(graphene.ObjectType):
     def resolve_tutorial_count(self, info: ResolveInfo, **kwargs):
         return Tutorial.objects.all().count()
 
-    def resolve_all_translation_info(self, info: ResolveInfo, translation='en-us'):
-        trans_table = get_translation_table(translation)
-        if trans_table:
-            return trans_table.objects.all()
-        return None
-
     def resolve_not_translated_count(self, info: ResolveInfo, translation='en-us'):
         return Tutorial.objects.all().count() - get_translation_table(translation).objects.all().count()
 
-    def resolve_tutorial(self, info: ResolveInfo, url=None, id=None, translation='en-us'):
-        translation_table = get_translation_table(translation)
-        if translation_table:
-            if url:
-                return translation_table.objects.get(tutorial_anchor__url=url)
-            elif id:
-                return translation_table.objects.get(tutorial_anchor__id=id)
+    def resolve_tutorial(self, info: ResolveInfo, url=None, id=None):
+        if url:
+            return Tutorial.objects.get(url=url)
+        elif id:
+            return Tutorial.objects.get(id=id)
         return None
 
     def resolve_graph(self, info: ResolveInfo, url=None, id=None):

@@ -21,6 +21,14 @@ def add_trans_table(cls: type):
     return cls
 
 
+def process_trans_name(trans_code: str) -> str:
+    return trans_code.replace('-', '').replace('_', '').lower()
+
+
+def has_translation(trans_code: str) -> bool:
+    return trans_code in translation_tables
+
+
 def get_translation_table(table_name: str) -> Optional[Model]:
-    table_name = table_name.replace('-', '').replace('_', '').lower()
+    table_name = process_trans_name(table_name)
     return translation_table_mapping.get(table_name, None)

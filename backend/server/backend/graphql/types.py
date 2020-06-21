@@ -1,5 +1,5 @@
 from ..model.mixins import time_date_mixin_field, published_mixin_field
-from ..model.translation_collection import add_trans_type
+from ..model.translation_collection import add_trans_type, translation_tables, process_trans_name
 from ..models import User
 from ..models import Category, Tutorial, Graph, TutorialCode, ExecResultJson
 from ..models import ENUS, ZHCN
@@ -16,6 +16,16 @@ class UserType(DjangoObjectType):
         description = 'User type. Login required to get info an account. '
 
 
+class TutorialInterface(graphene.Interface):
+    authors = graphene.List(graphene.String)
+    abstract = graphene.String()
+    content_md = graphene.String()
+    content_html = graphene.String()
+
+    def resolve_authors(self, info, **kwargs):
+        return self.authors.all().values_list('username', flat=True)
+
+
 class CategoryType(DjangoObjectType):
     class Meta:
         model = Category
@@ -24,14 +34,24 @@ class CategoryType(DjangoObjectType):
 
 
 class TutorialType(DjangoObjectType):
+    categories = graphene.List(graphene.String)
+    content = graphene.Field(TutorialInterface, translation=graphene.String(), required=True)
+
+    def resolve_categories(self, info, **kwargs):
+        return self.categories.all().values_list('category', flat=True)
+
+    def resolve_content(self, info, translation='en-us', **kwargs):
+        return getattr(self, process_trans_name(translation), None)
+
     class Meta:
         model = Tutorial
-        fields = ('id', 'url',
+        fields = ('id', 'url', 'content',
                   'categories', 'graph_set',
                   'tutorialcode_set',
                   ) + \
                  time_date_mixin_field + \
                  published_mixin_field
+
         description = 'The tutorial anchor for an tutorial article. ' \
                       'The contents are in translation table that ' \
                       'corresponds to certain language you want to ' \
@@ -83,17 +103,6 @@ TransBaseFields = ('tutorial_anchor', 'authors',
                    ) + \
                   time_date_mixin_field + \
                   published_mixin_field
-
-
-class TutorialInterface(graphene.Interface):
-    authors = graphene.List(graphene.String)
-    tutorial_anchor = graphene.Field(TutorialType)
-    abstract = graphene.String()
-    content_md = graphene.String()
-    content_html = graphene.String()
-
-    def resolve_authors(self, info, **kwargs):
-        return self.authors.all().values_list('username', flat=True)
 
 
 @add_trans_type
