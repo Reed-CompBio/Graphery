@@ -8,6 +8,7 @@ from .translation_collection import add_trans_table
 
 
 class TranslationBase(PublishedMixin, TimeDateMixin, models.Model):
+    title = models.CharField(max_length=100, unique=True, blank=False, null=False, db_index=True)
     # meta
     authors = models.ManyToManyField(User)
     tutorial_anchor = models.OneToOneField(Tutorial, on_delete=models.CASCADE)
