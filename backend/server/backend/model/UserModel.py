@@ -11,15 +11,7 @@ from .mixins import UUIDMixin
 
 
 # User Configurations
-class UserNameValidator(RegexValidator):
-    # require the length of the user name be at least 6
-    regex = r'^[^0-9][\w-]{4,}[^-_]\Z'
-    message = _(
-        'Enter a valid username. This value may contain only letters, '
-        'numbers, and /-/_ characters.'
-        'The length should be at least 6 characters'
-        'The username should not start with a number of end with _/-'
-    )
+from .validators import UserNameValidator
 
 
 class UserManager(BaseUserManager):

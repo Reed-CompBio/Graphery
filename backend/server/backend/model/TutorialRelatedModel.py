@@ -1,8 +1,10 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 
 from .mixins import TimeDateMixin, PublishedMixin, UUIDMixin
+from .translation_collection import process_trans_name
 
 
 class Category(models.Model):
@@ -13,8 +15,11 @@ class Category(models.Model):
 class Tutorial(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
     # meta data
     # TODO add a url verification
-    url = models.SlugField(max_length=100, unique=True, blank=False, null=False, db_index=True)
+    url = models.CharField(max_length=100, unique=True, blank=False, null=False)
     categories = models.ManyToManyField(Category)
+
+    def get_translation(self, translation: str):
+        return getattr(self, process_trans_name(translation), None)
 
 
 class GraphPriority(models.IntegerChoices):
@@ -24,7 +29,7 @@ class GraphPriority(models.IntegerChoices):
 
 
 class Graph(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
-    url = models.SlugField(max_length=100, unique=True, blank=False, null=False, db_index=True)
+    url = models.CharField(max_length=100, unique=True, blank=False, null=False)
     graph_info = models.TextField()
     priority = models.PositiveSmallIntegerField(choices=GraphPriority.choices, default=GraphPriority.MAIN)
     # json

@@ -24,6 +24,7 @@ class TutorialInterface(graphene.Interface):
     abstract = graphene.String()
     content_md = graphene.String()
     content_html = graphene.String()
+    is_published = graphene.Boolean()
 
     def resolve_authors(self, info, **kwargs):
         return self.authors.all().values_list('username', flat=True)
@@ -40,14 +41,17 @@ class TutorialType(DjangoObjectType):
     categories = graphene.List(graphene.String)
     content = graphene.Field(TutorialInterface, translation=graphene.String(), required=True)
 
-    def resolve_categories(self, info, **kwargs):
+    def resolve_categories(self, info):
         return self.categories.all().values_list('category', flat=True)
 
     def resolve_content(self, info, translation='en-us', **kwargs):
-        content = getattr(self, process_trans_name(translation), None)
+        content = self.get_translation(translation)
         if content:
             return content
         raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ')
+
+    def resolve_code(self, info):
+        return getattr(self, 'code', Code(id='00000000-0000-0000-0000-000000000000', code='# Empty \n'))
 
     class Meta:
         model = Tutorial

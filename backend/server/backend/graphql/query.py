@@ -4,6 +4,7 @@ from graphql_jwt.decorators import login_required
 from graphql.execution.base import ResolveInfo
 
 # from ..models import User
+from ..model.validators import validate
 from ..models import Category, Tutorial, Graph
 
 from .types import UserType, CategoryType, TutorialType, GraphType
