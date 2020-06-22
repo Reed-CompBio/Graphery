@@ -48,6 +48,48 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         user = User.objects.get(username='default_user')
         self.assertEqual(user.email, 'default@reed.edu')
 
+    def test_tutorial_url_exist(self):
+        pass
+
+    def test_tutorial_url_not_exist(self):
+        pass
+
+    def test_tutorial_content_trans_exist(self):
+        pass
+
+    def test_tutorial_content_trans_not_exist(self):
+        pass
+
+    def test_code_exist(self):
+        pass
+
+    def test_code_not_exist(self):
+        pass
+
+    def test_graph_exist(self):
+        pass
+
+    def test_graphs_not_exist(self):
+        pass
+
+    def test_graph_ranking(self):
+        pass
+
+    def test_code_exec_json_exist(self):
+        pass
+
+    def test_code_exec_json_not_exist(self):
+        pass
+
+    def test_all_tutorial_inf(self):
+        pass
+
+    def test_published_field(self):
+        pass
+
+    def test_sorting(self):
+        pass
+
     def test_tutorial_anchor_get(self):
         client = Client(schema=schema)
         query = '''
@@ -55,6 +97,7 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
                 tutorial(url: $url) {   
                 content(translation: $translation) {
                   authors
+                  abstract
                   contentMd
                   contentHtml
                 }
@@ -102,6 +145,3 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
             }
         ''')
         print(info_response)
-
-    # def test_get_user_info(self):
-
