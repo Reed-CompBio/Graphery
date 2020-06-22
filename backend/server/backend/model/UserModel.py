@@ -100,7 +100,7 @@ class User(UUIDMixin, AbstractUser):
     is_verified = models.BooleanField(default=True, help_text=_(
         'Show whether the account is verified'
     ))
-    role = models.SmallIntegerField(choices=ROLES.choices, default=ROLES.VISITOR)
+    role = models.PositiveSmallIntegerField(choices=ROLES.choices, default=ROLES.VISITOR)
 
     objects = UserManager()
 

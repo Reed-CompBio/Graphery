@@ -13,19 +13,24 @@ class Category(models.Model):
 class Tutorial(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
     # meta data
     # TODO add a url verification
-    url = models.CharField(max_length=100, unique=True, blank=False, null=False, db_index=True)
+    url = models.SlugField(max_length=100, unique=True, blank=False, null=False, db_index=True)
     categories = models.ManyToManyField(Category)
 
 
+class GraphPriority(models.IntegerChoices):
+    MAIN = 60, 'Main Graph'
+    SUPP = 40, 'Supplement Graph'
+    TRIV = 20, 'Trivial Graph'
+
+
 class Graph(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
-    url = models.CharField(max_length=100, unique=True, blank=False, null=False, db_index=True)
+    url = models.SlugField(max_length=100, unique=True, blank=False, null=False, db_index=True)
     graph_info = models.TextField()
+    priority = models.PositiveSmallIntegerField(choices=GraphPriority.choices, default=GraphPriority.MAIN)
     # json
-    initial_cyjs = JSONField()
-    layouts = ArrayField(JSONField())
-    styles = ArrayField(JSONField())
+    cyjs = JSONField()
     # belongs to
-    tutorial = models.ManyToManyField(Tutorial)
+    tutorials = models.ManyToManyField(Tutorial)
 
 
 class TutorialCode(UUIDMixin, TimeDateMixin, models.Model):

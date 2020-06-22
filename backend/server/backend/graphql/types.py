@@ -66,8 +66,8 @@ class GraphType(DjangoObjectType):
     class Meta:
         model = Graph
         fields = ('url', 'graph_info',
-                  'initial_cyjs', 'layouts',
-                  'styles', 'tutorial'
+                  'cyjs', 'tutorials',
+                  'execresultjson_set',
                   ) + \
                  time_date_mixin_field + \
                  published_mixin_field + \
@@ -81,7 +81,7 @@ class TutorialCodeType(DjangoObjectType):
 
     class Meta:
         model = TutorialCode
-        fields = ('tutorial', 'code', 'is_published') + \
+        fields = ('tutorial', 'code', 'execresultjson_set') + \
                  time_date_mixin_field + \
                  published_mixin_field + \
                  uuid_mixin_field
@@ -93,9 +93,7 @@ class ExecResultJsonType(DjangoObjectType):
 
     class Meta:
         model = ExecResultJson
-        fields = ('code', 'graph', 'json',
-                  'is_published',
-                  ) + \
+        fields = ('code', 'graph', 'json', ) + \
                  time_date_mixin_field + \
                  published_mixin_field + \
                  uuid_mixin_field
@@ -109,6 +107,7 @@ TransBaseFields = ('tutorial_anchor', 'authors',
                   time_date_mixin_field + \
                   published_mixin_field + \
                   uuid_mixin_field
+
 
 @add_trans_type
 class ENUSTransType(DjangoObjectType):
