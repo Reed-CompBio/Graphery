@@ -1,11 +1,6 @@
 from django.db import IntegrityError
 from django.test import TestCase
 from backend.models import *
-from graphene_django.utils.testing import GraphQLTestCase
-from graphery.schema import schema
-from graphene.test import Client
-from graphql_jwt.testcases import JSONWebTokenTestCase
-import json
 
 
 class CategoryTest(TestCase):
@@ -24,124 +19,75 @@ class CategoryTest(TestCase):
 
 
 class TutorialAnchorTest(TestCase):
+    def setUp(self):
+        self.tutorial = Tutorial.objects.create(url='this-is-url')
+
+        self.default_category = Category.objects.create()
+        self.tutorial.categories.add(self.default_category)
+        self.new_category = Category.objects.create(category='new category')
 
     def test_init(self):
-        tutorial = Tutorial(url='this-is-url')
-        self.assertEqual(tutorial.url, 'this-is-url')
+        self.assertEqual(self.tutorial.url, 'this-is-url')
 
     def test_empty_url(self):
         with self.assertRaises(IntegrityError):
+            # TODO something's wrong here
             tutorial = Tutorial.objects.create()
 
     def test_category_linking(self):
-        category = Category.objects.create()
-        tutorial = Tutorial.objects.create(url='a-default-url')
-        tutorial.categories.add(category)
-        self.assertEqual(tutorial.categories.all()[0].category, category.category)
+        self.tutorial.categories.add(self.new_category)
+        self.assertEqual(self.tutorial.categories.all()[0].category, self.new_category.category)
+
+    def test_access_through_category(self):
+        self.assertIn(self.tutorial, self.default_category.tutorial_set.all())
 
 
-class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
-    GRAPHQL_SCHEMA = schema
-    fixtures = ['test_data.json', ]
-
-    def test_fixture(self):
-        user = User.objects.get(username='default_user')
-        self.assertEqual(user.email, 'default@reed.edu')
-
-    def test_tutorial_url_exist(self):
+class GraphTest(TestCase):
+    def test_graph_url(self):
         pass
 
-    def test_tutorial_url_not_exist(self):
+    def test_graph_empty_url(self):
         pass
 
-    def test_tutorial_content_trans_exist(self):
+    def test_graph_priority(self):
         pass
 
-    def test_tutorial_content_trans_not_exist(self):
+    def test_tutorial_linking(self):
         pass
 
-    def test_code_exist(self):
+    def test_access_through_tutorial(self):
         pass
 
-    def test_code_not_exist(self):
+    def test_content(self):
         pass
 
-    def test_graph_exist(self):
+
+class CodeTest(TestCase):
+    def test_code_content(self):
         pass
 
-    def test_graphs_not_exist(self):
+    def test_tutorial_linking(self):
         pass
 
-    def test_graph_ranking(self):
+    def test_tutorial_access(self):
         pass
 
-    def test_code_exec_json_exist(self):
+
+class ResultJsonTest(TestCase):
+    def test_code_linking(self):
         pass
 
-    def test_code_exec_json_not_exist(self):
+    def test_graph_linking(self):
         pass
 
-    def test_all_tutorial_inf(self):
+    def test_unique_together(self):
         pass
 
-    def test_published_field(self):
+    def test_code_access(self):
         pass
 
-    def test_sorting(self):
+    def test_graph_access(self):
         pass
 
-    def test_tutorial_anchor_get(self):
-        client = Client(schema=schema)
-        query = '''
-            query getTutorialPost($url: String, $translation: String="en-us") {
-                tutorial(url: $url) {   
-                content(translation: $translation) {
-                  authors
-                  abstract
-                  contentMd
-                  contentHtml
-                }
-                code {
-                  id
-                  code
-                }
-                graphSet {
-                  id
-                  cyjs
-                  execresultjsonSet {
-                    id
-                  }
-                }
-              }
-            }
-        '''
-        variables = {
-            "url": "test-tutorial3",
-            "translation": "zhcn"
-        }
-        response = client.execute(query, variables=variables)
-        print(response)
-
-    def test_login_and_get_user_info(self):
-        response = self.client.execute('''
-            mutation {
-                tokenAuth(username: "default_user", password: "password") {
-                    payload
-                    refreshExpiresIn
-                    token
-                }
-            }
-        ''')
-        print(response)
-        info_response = self.client.execute('''
-            query {
-                userInfo {
-                    id
-                    email
-                    role
-                    isVerified
-                    dateJoined
-                }
-            }
-        ''')
-        print(info_response)
+    def test_content(self):
+        pass
