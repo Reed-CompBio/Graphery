@@ -1,3 +1,4 @@
+import textwrap
 import unittest
 from typing import Iterable
 
@@ -21,11 +22,13 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
 
     standard_query = '''
         query getTutorialPost($url: String, $translation: String) {
-            tutorial(url: $url) {   
+            tutorial(url: $url) {
+            id
             url
             isPublished
             categories
             content(translation: $translation){
+              id
               title
               authors
               abstract
@@ -33,10 +36,12 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
               isPublished
             }
             code {
+              id
               code
               isPublished
             }
             graphSet {
+              id
               graphInfo
               cyjs
               isPublished
@@ -128,7 +133,18 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         self.assertTrue(all(e_author in authors for e_author in expected_authors))
 
     def test_code_exist(self):
-        pass
+        variable = {
+            'url': 'test-default'
+        }
+        response, content = self.get_response_and_content(variable)
+        code = content['data']['tutorial']['code']
+        self.assertResponseNoErrors(response)
+        self.assertEqual(code['id'], '27214739-a9aa-457f-9d71-d29d36bb19f6')
+        self.assertEqual(code['code'], textwrap.dedent('''
+            def hello():
+               print('hello world :)')
+            '''))
+
 
     def test_code_not_exist(self):
         pass

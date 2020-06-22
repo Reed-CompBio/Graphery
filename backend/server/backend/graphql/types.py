@@ -19,6 +19,7 @@ class UserType(DjangoObjectType):
 
 
 class TutorialInterface(graphene.Interface):
+    id = graphene.UUID()
     title = graphene.String()
     authors = graphene.List(graphene.String)
     abstract = graphene.String()
