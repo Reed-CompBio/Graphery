@@ -1,3 +1,4 @@
+import unittest
 from typing import Iterable
 
 from django.db import IntegrityError
@@ -7,6 +8,8 @@ from graphql_jwt.testcases import JSONWebTokenTestCase
 
 from graphery.schema import schema
 from backend.models import *
+
+from parameterized import parameterized
 
 import json
 
@@ -73,23 +76,56 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
                                  content,
                                  ('Tutorial matching query does not exist.', ))
 
-    def test_tutorial_categories(self):
+    @parameterized.expand([
+        ('test-tutorial1', ('lol', 'like')),
+        ('test-tutorial3', ('uncategorized', )),
+        ('test-tutorial4', ())
+    ])
+    def test_tutorial_categories(self, url, expected_cat):
         variables = {
-            'url': 'test-tutorial1'
+            'url': url
         }
         response, content = self.get_response_and_content(variables)
         categories = content['data']['tutorial']['categories']
-        self.assertEqual(len(categories), 2)
-        self.assertTrue(all(cat in categories for cat in ('like', 'lol')))
+        self.assertEqual(len(categories), len(expected_cat))
+        self.assertTrue(all(cat in categories for cat in expected_cat))
 
-    def test_tutorial_content_trans_exist(self):
-        pass
-
-    def test_tutorial_content_authors(self):
-        pass
+    @parameterized.expand([
+        ('test-default', ),
+        ('test-tutorial1', ),
+        ('test-tutorial3', )
+    ])
+    def test_tutorial_content_trans_exist(self, url):
+        variables = {
+            'url': url,
+            'translation': 'zh-cn'
+        }
+        response, content = self.get_response_and_content(variables)
+        self.assertResponseNoErrors(response)
 
     def test_tutorial_content_trans_not_exist(self):
-        pass
+        variables = {
+            'url': 'test-tutorial4',
+            'translation': 'zh-cn'
+        }
+        response, content = self.get_response_and_content(variables)
+        self.error_message_match(response, content, ('This tutorial does not provide zh-cn translation for now. ', ))
+
+    @parameterized.expand([
+        ('test-tutorial3', 'zh-cn', ('author4', 'author5')),
+        ('test-default', 'zh-cn', ('default_user', )),
+        ('test-tutorial1', 'zh-cn', ()),
+
+    ])
+    def test_tutorial_content_authors(self, url, trans, expected_authors):
+        variables = {
+            'url': url,
+            'translation': trans
+        }
+        response, content = self.get_response_and_content(variables)
+        authors = content['data']['tutorial']['content']['authors']
+        self.assertEqual(len(authors), len(expected_authors))
+        self.assertTrue(all(e_author in authors for e_author in expected_authors))
 
     def test_code_exist(self):
         pass
@@ -151,7 +187,6 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
             "translation": "zhcn"
         }
         response = client.execute(query, variables=variables)
-        print(response)
 
     def test_login_and_get_user_info(self):
         response = self.client.execute('''
@@ -163,7 +198,6 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
                 }
             }
         ''')
-        print(response)
         info_response = self.client.execute('''
             query {
                 userInfo {
