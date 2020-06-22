@@ -1,3 +1,5 @@
+from graphql import GraphQLError
+
 from ..model.mixins import time_date_mixin_field, published_mixin_field, uuid_mixin_field
 from ..model.translation_collection import add_trans_type, process_trans_name
 from ..models import User
@@ -42,7 +44,10 @@ class TutorialType(DjangoObjectType):
         return self.categories.all().values_list('category', flat=True)
 
     def resolve_content(self, info, translation='en-us', **kwargs):
-        return getattr(self, process_trans_name(translation), None)
+        content = getattr(self, process_trans_name(translation), None)
+        if content:
+            return content
+        raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ')
 
     class Meta:
         model = Tutorial

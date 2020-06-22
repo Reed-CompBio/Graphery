@@ -1,6 +1,8 @@
 from django.db import IntegrityError
 from django.test import TestCase
 from backend.models import Category, Tutorial
+from graphene_django.utils.testing import GraphQLTestCase
+from graphery.schema import schema
 
 
 class CategoryTest(TestCase):
@@ -19,6 +21,7 @@ class CategoryTest(TestCase):
 
 
 class TutorialAnchorTest(TestCase):
+
     def test_init(self):
         tutorial = Tutorial(url='this-is-url')
         self.assertEqual(tutorial.url, 'this-is-url')
@@ -33,4 +36,10 @@ class TutorialAnchorTest(TestCase):
         tutorial.categories.add(category)
         self.assertEqual(tutorial.categories.all()[0].category, category.category)
 
-    
+
+class GraphQLAPITest(GraphQLTestCase):
+    GRAPHQL_SCHEMA = schema
+    fixtures = ['test_data.json', ]
+
+    # def
+
