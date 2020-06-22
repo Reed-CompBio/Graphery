@@ -1,3 +1,5 @@
+from typing import Iterable
+
 from django.db import IntegrityError
 from graphene.test import Client
 from graphene_django.utils import GraphQLTestCase
@@ -40,6 +42,16 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         }
     '''
 
+    def get_response_and_content(self, variables: dict = None):
+        response = self.query(self.standard_query, variables=variables)
+        content = json.loads(response.content)
+        return response, content
+
+    def error_message_match(self, response, content, messages: Iterable[str]):
+        self.assertResponseHasErrors(response)
+        rep = zip(content['errors'], messages)
+        self.assertTrue(all(error['message'] == message for (error, message) in rep))
+
     def test_fixture(self):
         user = User.objects.get(username='default_user')
         self.assertEqual(user.email, 'default@reed.edu')
@@ -48,22 +60,27 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         variables = {
             'url': 'test-tutorial2'
         }
-        response = self.query(self.standard_query, variables=variables)
+        response, content = self.get_response_and_content(variables)
         self.assertResponseNoErrors(response)
-        js = json.loads(response.content)
-        self.assertEqual(js['data']['tutorial']['url'], 'test-tutorial2')
+        self.assertEqual(content['data']['tutorial']['url'], 'test-tutorial2')
 
     def test_tutorial_url_not_exist(self):
         variables = {
             'url': 'test-tutorial-not-exist'
         }
-        response = self.query(self.standard_query, variables=variables)
-        self.assertResponseHasErrors(response)
-        js = json.loads(response.content)
-        self.assertEqual(js['errors'][0]['message'], 'Tutorial matching query does not exist.')
+        response, content = self.get_response_and_content(variables)
+        self.error_message_match(response,
+                                 content,
+                                 ('Tutorial matching query does not exist.', ))
 
     def test_tutorial_categories(self):
-        pass
+        variables = {
+            'url': 'test-tutorial1'
+        }
+        response, content = self.get_response_and_content(variables)
+        categories = content['data']['tutorial']['categories']
+        self.assertEqual(len(categories), 2)
+        self.assertTrue(all(cat in categories for cat in ('like', 'lol')))
 
     def test_tutorial_content_trans_exist(self):
         pass
