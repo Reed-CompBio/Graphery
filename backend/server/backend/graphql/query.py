@@ -1,4 +1,5 @@
 import graphene
+from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
 from graphql.execution.base import ResolveInfo
 
@@ -48,11 +49,11 @@ class Query(graphene.ObjectType):
             return Tutorial.objects.get(url=url)
         elif id:
             return Tutorial.objects.get(id=id)
-        return None
+        raise GraphQLError(f'The tutorial you requested with url={url}, id={id} does not exist.')
 
     def resolve_graph(self, info: ResolveInfo, url=None, id=None):
         if url:
             return Graph.objects.get(url=url)
         elif id:
             return Graph.objects.get(id=id)
-        return None
+        raise GraphQLError(f'The graph you requested with url={url}, id={id} does not exist.')
