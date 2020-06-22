@@ -33,7 +33,7 @@ class Graph(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
     tutorials = models.ManyToManyField(Tutorial)
 
 
-class TutorialCode(UUIDMixin, TimeDateMixin, models.Model):
+class Code(UUIDMixin, TimeDateMixin, models.Model):
     # relations
     # TODO I suppose this should a one-to-one field.
     tutorial = models.OneToOneField(Tutorial, on_delete=models.CASCADE)
@@ -48,7 +48,7 @@ class TutorialCode(UUIDMixin, TimeDateMixin, models.Model):
 
 class ExecResultJson(UUIDMixin, TimeDateMixin, models.Model):
     # relations
-    code = models.ForeignKey(TutorialCode, on_delete=models.CASCADE)
+    code = models.ForeignKey(Code, on_delete=models.CASCADE)
     graph = models.ForeignKey(Graph, on_delete=models.CASCADE)
     # content
     json = JSONField()

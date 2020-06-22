@@ -1,7 +1,7 @@
 from ..model.mixins import time_date_mixin_field, published_mixin_field, uuid_mixin_field
 from ..model.translation_collection import add_trans_type, process_trans_name
 from ..models import User
-from ..models import Category, Tutorial, Graph, TutorialCode, ExecResultJson
+from ..models import Category, Tutorial, Graph, Code, ExecResultJson
 from ..models import ENUS, ZHCN
 from graphene_django.types import DjangoObjectType
 import graphene
@@ -48,7 +48,7 @@ class TutorialType(DjangoObjectType):
         model = Tutorial
         fields = ('url', 'content',
                   'categories', 'graph_set',
-                  'tutorialcode_set',
+                  'code',
                   ) + \
                  time_date_mixin_field + \
                  published_mixin_field + \
@@ -76,11 +76,11 @@ class GraphType(DjangoObjectType):
                       'cyjs, style json, and layout json'
 
 
-class TutorialCodeType(DjangoObjectType):
+class CodeType(DjangoObjectType):
     is_published = graphene.Boolean()
 
     class Meta:
-        model = TutorialCode
+        model = Code
         fields = ('tutorial', 'code', 'execresultjson_set') + \
                  time_date_mixin_field + \
                  published_mixin_field + \
