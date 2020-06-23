@@ -22,5 +22,5 @@ from graphql_jwt.decorators import jwt_cookie
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^graphql$', jwt_cookie(GraphQLView.as_view(graphiql=True))),
+    url('graphql', jwt_cookie(GraphQLView.as_view(graphiql=True))),
 ]

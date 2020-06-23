@@ -7,7 +7,7 @@ from .mixins import TimeDateMixin, PublishedMixin, UUIDMixin
 from .translation_collection import process_trans_name
 
 
-class Category(models.Model):
+class Category(PublishedMixin, models.Model):
     category = models.CharField(primary_key=True, max_length=30, unique=True,
                                 default=_('uncategorized'), blank=False, null=False)
 
