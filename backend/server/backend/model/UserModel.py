@@ -108,8 +108,9 @@ class User(UUIDMixin, AbstractUser):
     # TODO add a property field that tells the program what privilege this user has
 
     @property
-    def all_articles(self) -> Optional[QuerySet]:
-        if self.role == ROLES.VISITOR:
-            return None
-        # TODO fix later
-        return None
+    def is_anonymous(self) -> bool:
+        return not self.is_active
+
+    @property
+    def is_authenticated(self) -> bool:
+        return self.is_active
