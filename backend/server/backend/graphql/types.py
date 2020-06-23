@@ -15,14 +15,11 @@ import graphene
 from copy import copy
 
 
-# class HasPublishedDjangoObjectType(DjangoObjectType):
-#     class Meta:
-#         abstract = True
-# 
+# class HasPublishedDjangoObjectType(graphene.ObjectType):
 #     @classmethod
 #     def get_queryset(cls, queryset: QuerySet, info):
 #         if info.context.user.is_anonymous:
-#             return queryset.filter(published=True)
+#             return queryset.filter(is_published=True)
 #         return queryset
 
 
@@ -81,7 +78,7 @@ class TutorialType(DjangoObjectType):
     @classmethod
     def get_queryset(cls, queryset: QuerySet, info):
         if info.context.user.is_anonymous:
-            return queryset.filter(published=True)
+            return queryset.filter(is_published=True)
         return queryset
 
     @time_date_field_adder
