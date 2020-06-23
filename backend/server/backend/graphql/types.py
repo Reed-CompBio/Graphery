@@ -1,6 +1,7 @@
 from typing import Tuple, Any, Iterable
 
 from django.db.models import QuerySet
+from graphene_django import DjangoListField
 from graphql import GraphQLError
 
 from ..model.mixins import uuid_field_adder, time_date_field_adder, published_field_adder
@@ -14,15 +15,8 @@ import graphene
 
 from copy import copy
 
+
 # TODO add fields explicitly using DjangoList, not graphene.List so that field works with get_queryset
-# class HasPublishedDjangoObjectType(graphene.ObjectType):
-#     @classmethod
-#     def get_queryset(cls, queryset: QuerySet, info):
-#         if info.context.user.is_anonymous:
-#             return queryset.filter(is_published=True)
-#         return queryset
-
-
 class UserType(DjangoObjectType):
     role = graphene.Int(required=True)
 
@@ -88,7 +82,7 @@ class TutorialType(DjangoObjectType):
         model = Tutorial
         fields = ('url', 'content',
                   'categories', 'graph_set',
-                  'code',
+                  'code', 'graphs'
                   )
 
         description = 'The tutorial anchor for an tutorial article. ' \
@@ -101,6 +95,12 @@ class TutorialType(DjangoObjectType):
 
 class GraphType(DjangoObjectType):
     priority = graphene.Int(required=True)
+
+    @classmethod
+    def get_queryset(cls, queryset: QuerySet, info):
+        if info.context.user.is_anonymous:
+            return queryset.filter(is_published=True)
+        return queryset
 
     @time_date_field_adder
     @published_field_adder
