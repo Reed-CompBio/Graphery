@@ -42,6 +42,7 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
             }
             graphSet {
               id
+              priority
               graphInfo
               cyjs
               isPublished
@@ -145,18 +146,41 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
                print('hello world :)')
             '''))
 
-
     def test_code_not_exist(self):
-        pass
+        variable = {
+            'url': 'test-tutorial1'
+        }
+        response, content = self.get_response_and_content(variable)
+        code = content['data']['tutorial']['code']
+        self.assertResponseNoErrors(response)
+        self.assertEqual(code['id'], '00000000-0000-0000-0000-000000000000')
+        self.assertEqual(code['code'], '# Empty \n')
 
     def test_graph_exist(self):
-        pass
+        variables = {
+            'url': 'test-default'
+        }
+        response, content = self.get_response_and_content(variables)
+        graph_set = content['data']['tutorial']['graphSet']
+        self.assertEqual(len(graph_set), 2)
 
     def test_graphs_not_exist(self):
-        pass
+        variables = {
+            'url': 'test-tutorial4'
+        }
+        response, content = self.get_response_and_content(variables)
+        graph_set = content['data']['tutorial']['graphSet']
+        self.assertEqual(len(graph_set), 0)
 
     def test_graph_ranking(self):
-        pass
+        variables = {
+            'url': 'test-default'
+        }
+        response, content = self.get_response_and_content(variables)
+        graph_set = content['data']['tutorial']['graphSet']
+        self.assertEqual(len(graph_set), 2)
+        for graph in graph_set:
+            self.assertIn('priority', graph)
 
     def test_code_exec_json_exist(self):
         pass
@@ -165,7 +189,7 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         pass
 
     def test_all_tutorial_inf(self):
-        pass
+        query = ''''''
 
     def test_published_field(self):
         pass

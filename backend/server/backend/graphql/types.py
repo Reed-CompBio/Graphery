@@ -10,6 +10,8 @@ import graphene
 
 
 class UserType(DjangoObjectType):
+    role = graphene.Int(required=True)
+
     class Meta:
         model = User
         fields = ('username', 'email', 'role',
@@ -26,6 +28,8 @@ class TutorialInterface(graphene.Interface):
     content_md = graphene.String()
     content_html = graphene.String()
     is_published = graphene.Boolean()
+    createdTime = graphene.DateTime()
+    modifiedTime = graphene.DateTime()
 
     def resolve_authors(self, info, **kwargs):
         return self.authors.all().values_list('username', flat=True)
@@ -40,13 +44,13 @@ class CategoryType(DjangoObjectType):
 
 class TutorialType(DjangoObjectType):
     categories = graphene.List(graphene.String)
-    content = graphene.Field(TutorialInterface, translation=graphene.String(), required=True)
+    content = graphene.Field(TutorialInterface, translation=graphene.String(), default=graphene.String(), required=True)
 
     def resolve_categories(self, info):
         return self.categories.all().values_list('category', flat=True)
 
-    def resolve_content(self, info, translation='en-us', **kwargs):
-        content = self.get_translation(translation)
+    def resolve_content(self, info, translation: str = 'en-us', default: str = '', **kwargs):
+        content = self.get_translation(translation, default)
         if content:
             return content
         raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ')
@@ -73,11 +77,14 @@ class TutorialType(DjangoObjectType):
 
 
 class GraphType(DjangoObjectType):
+    priority = graphene.Int(required=True)
+
     class Meta:
         model = Graph
         fields = ('url', 'graph_info',
                   'cyjs', 'tutorials',
                   'execresultjson_set',
+                  'priority'
                   ) + \
                  time_date_mixin_field + \
                  published_mixin_field + \

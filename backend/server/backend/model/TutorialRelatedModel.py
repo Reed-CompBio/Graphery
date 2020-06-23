@@ -18,8 +18,10 @@ class Tutorial(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
     url = models.CharField(max_length=100, unique=True, blank=False, null=False)
     categories = models.ManyToManyField(Category)
 
-    def get_translation(self, translation: str):
-        return getattr(self, process_trans_name(translation), None)
+    def get_translation(self, translation: str, default: str):
+        return getattr(self,
+                       process_trans_name(translation),
+                       getattr(self, process_trans_name(default), None))
 
 
 class GraphPriority(models.IntegerChoices):
