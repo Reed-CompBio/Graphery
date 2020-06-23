@@ -1,8 +1,6 @@
 from typing import Tuple, Any, Iterable
 
 from django.db.models import QuerySet
-from graphene_django import DjangoListField
-from graphene_django.registry import Registry
 from graphql import GraphQLError, ResolveInfo
 
 from ..model.UserModel import ROLES
@@ -33,6 +31,10 @@ class PublishedFilterBase(DjangoObjectType):
 # TODO add fields explicitly using DjangoList, not graphene.List so that field works with get_queryset
 class UserType(DjangoObjectType):
     role = graphene.Int(required=True)
+
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        return queryset.filter(is_active=True)
 
     @uuid_field_adder
     class Meta:
@@ -71,17 +73,27 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
     categories = graphene.List(graphene.String)
 
     def resolve_categories(self, info):
-        return self.categories.all().values_list('category', flat=True)
+        raw_results = self.categories.all()
+        if info.context.user.is_anonymous or info.context.user.role < ROLES.TRANSLATOR:
+            raw_results = raw_results.filter(is_published=True)
+        return raw_results.values_list('category', flat=True)
 
-    def resolve_content(self, info, translation: str = 'en-us', default: str = '', **kwargs):
+    def resolve_content(self, info, translation: str = 'en-us', default: str = 'en-us', **kwargs):
         content = self.get_translation(translation, default)
         if content:
-            return content
+            if content.is_published or \
+                    not (info.context.user.is_anonymous or info.context.user.role < ROLES.TRANSLATOR):
+                return content
         raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
                            f'{f"No results come from {default} translation either" if default else ""}')
 
     def resolve_code(self, info):
-        return getattr(self, 'code', Code(id='00000000-0000-0000-0000-000000000000', code='# Empty \n'))
+        code = getattr(self, 'code', None)
+        if code and \
+                (code.is_published or not (
+                        info.context.user.is_anonymous or info.context.user.role < ROLES.TRANSLATOR)):
+            return code
+        return Code(id='00000000-0000-0000-0000-000000000000', code='# Empty \n', tutorial=Tutorial())
 
     @time_date_field_adder
     @published_field_adder
@@ -104,6 +116,10 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
 class GraphType(PublishedFilterBase, DjangoObjectType):
     priority = graphene.Int(required=True)
 
+    # Don't worried about tutorials and execresultjson_set since
+    # they are convered under ManyToOneRel/ManyToManyRel/ManyToManyField
+    # and will be automatically translated to DjangoListField
+
     @time_date_field_adder
     @published_field_adder
     @uuid_field_adder
@@ -121,6 +137,9 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
 class CodeType(PublishedFilterBase, DjangoObjectType):
     is_published = graphene.Boolean()
 
+    def resolve_is_published(self, info):
+        return self.is_published
+
     @time_date_field_adder
     @published_field_adder
     @uuid_field_adder
@@ -133,12 +152,15 @@ class CodeType(PublishedFilterBase, DjangoObjectType):
 class ExecResultJsonType(PublishedFilterBase, DjangoObjectType):
     is_published = graphene.Boolean()
 
+    def resolve_is_published(self, info):
+        return self.is_published
+
     @time_date_field_adder
     @published_field_adder
     @uuid_field_adder
     class Meta:
         model = ExecResultJson
-        fields = ('code', 'graph', 'json', )
+        fields = ('code', 'graph', 'json',)
         description = 'The execution result of a piece of code on ' \
                       'a graph. '
 

@@ -51,10 +51,9 @@ class Query(graphene.ObjectType):
         return Tutorial.objects.all().count()
 
     def resolve_tutorial(self, info: ResolveInfo, url=None, id=None):
-        raw_result = Tutorial.objects.all()
+        raw_result: QuerySet = Tutorial.objects.all()
         if info.context.user.is_anonymous or info.context.user.role < ROLES.TRANSLATOR:
-            raw_result: QuerySet = raw_result.filter(is_published=True)
-
+            raw_result = raw_result.filter(is_published=True)
         if url:
             return raw_result.get(url=url)
         elif id:
@@ -63,7 +62,7 @@ class Query(graphene.ObjectType):
         raise GraphQLError(f'The tutorial you requested with url={url}, id={id} does not exist.')
 
     def resolve_graph(self, info: ResolveInfo, url=None, id=None):
-        raw_result = Graph.objects.all()
+        raw_result: QuerySet = Graph.objects.all()
         if info.context.user.is_anonymous:
             raw_result = raw_result.filter(is_published=True)
 
