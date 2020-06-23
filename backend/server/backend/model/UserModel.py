@@ -64,6 +64,9 @@ class UserManager(BaseUserManager):
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().filter(is_active=True)
 
+    def real_all(self) -> QuerySet:
+        return super().get_queryset()
+
 
 class ROLES(models.IntegerChoices):
     ADMINISTRATOR = 60, 'Administrator'
