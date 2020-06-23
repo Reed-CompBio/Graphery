@@ -2,7 +2,6 @@ from typing import Optional
 
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
-from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
@@ -61,6 +60,9 @@ class UserManager(BaseUserManager):
         return self._create_user(email=email, username=username, password=password,
                                  is_staff=True, is_superuser=True,
                                  role=ROLES.ADMINISTRATOR, **extra_fields)
+
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().filter(is_active=True)
 
 
 class ROLES(models.IntegerChoices):

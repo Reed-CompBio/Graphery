@@ -32,10 +32,6 @@ class PublishedFilterBase(DjangoObjectType):
 class UserType(DjangoObjectType):
     role = graphene.Int(required=True)
 
-    @classmethod
-    def get_queryset(cls, queryset, info):
-        return queryset.filter(is_active=True)
-
     @uuid_field_adder
     class Meta:
         model = User
