@@ -1,4 +1,6 @@
 import graphene
+from django.db.models import QuerySet
+from graphene_django import DjangoListField
 from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
 from graphql.execution.base import ResolveInfo
@@ -14,8 +16,8 @@ class Query(graphene.ObjectType):
     # username_exist = graphene.Boolean(username=graphene.String(required=True))
     # email_exist = graphene.Boolean()
     user_info = graphene.Field(UserType)
-    all_categories = graphene.List(CategoryType)
-    all_tutorial_info = graphene.List(TutorialType)
+    all_categories = DjangoListField(CategoryType)
+    all_tutorial_info = DjangoListField(TutorialType)
     tutorial_count = graphene.Int()
 
     tutorial = graphene.Field(TutorialType,
@@ -43,18 +45,29 @@ class Query(graphene.ObjectType):
         return Tutorial.objects.all()
 
     def resolve_tutorial_count(self, info: ResolveInfo, **kwargs):
+        if info.context.user.is_anonymous:
+            return Tutorial.objects.filter(is_published=True).count()
         return Tutorial.objects.all().count()
 
     def resolve_tutorial(self, info: ResolveInfo, url=None, id=None):
+        raw_result = Tutorial.objects.all()
+        if info.context.user.is_anonymous:
+            raw_result: QuerySet = raw_result.filter(is_published=True)
+
         if url:
-            return Tutorial.objects.get(url=url)
+            raw_result.get(url=url)
         elif id:
-            return Tutorial.objects.get(id=id)
+            raw_result.get(id=id)
+
         raise GraphQLError(f'The tutorial you requested with url={url}, id={id} does not exist.')
 
     def resolve_graph(self, info: ResolveInfo, url=None, id=None):
+        raw_result = Graph.objects.all()
+        if info.context.user.is_anonymous:
+            raw_result = raw_result.filter(is_published=True)
+
         if url:
-            return Graph.objects.get(url=url)
+            return raw_result.get(url=url)
         elif id:
-            return Graph.objects.get(id=id)
+            return raw_result.get(id=id)
         raise GraphQLError(f'The graph you requested with url={url}, id={id} does not exist.')

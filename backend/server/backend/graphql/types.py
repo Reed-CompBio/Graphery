@@ -14,7 +14,7 @@ import graphene
 
 from copy import copy
 
-
+# TODO add fields explicitly using DjangoList, not graphene.List so that field works with get_queryset
 # class HasPublishedDjangoObjectType(graphene.ObjectType):
 #     @classmethod
 #     def get_queryset(cls, queryset: QuerySet, info):
