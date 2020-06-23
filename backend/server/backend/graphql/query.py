@@ -3,7 +3,7 @@ from django.db.models import QuerySet
 from graphene_django import DjangoListField
 from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
-from graphql.execution.base import ResolveInfo
+from graphql import ResolveInfo
 
 # from ..models import User
 from ..model.validators import validate
