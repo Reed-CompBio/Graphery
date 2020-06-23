@@ -2,8 +2,10 @@ from typing import Tuple, Any, Iterable
 
 from django.db.models import QuerySet
 from graphene_django import DjangoListField
-from graphql import GraphQLError
+from graphene_django.registry import Registry
+from graphql import GraphQLError, ResolveInfo
 
+from ..model.UserModel import ROLES
 from ..model.mixins import uuid_field_adder, time_date_field_adder, published_field_adder
 from ..model.translation_collection import add_trans_type, process_trans_name
 from ..models import User
@@ -14,6 +16,18 @@ from graphene_django.types import DjangoObjectType
 import graphene
 
 from copy import copy
+
+
+class PublishedFilterBase(DjangoObjectType):
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def get_queryset(cls, queryset: QuerySet, info: ResolveInfo):
+        user = info.context.user
+        if user.is_anonymous or user.role < ROLES.TRANSLATOR:
+            return queryset.filter(is_published=True)
+        return queryset
 
 
 # TODO add fields explicitly using DjangoList, not graphene.List so that field works with get_queryset
@@ -44,7 +58,7 @@ class TutorialInterface(graphene.Interface):
         return self.authors.all().values_list('username', flat=True)
 
 
-class CategoryType(DjangoObjectType):
+class CategoryType(PublishedFilterBase, DjangoObjectType):
     @published_field_adder
     class Meta:
         model = Category
@@ -52,9 +66,9 @@ class CategoryType(DjangoObjectType):
         description = 'Category of a tutorial'
 
 
-class TutorialType(DjangoObjectType):
-    categories = graphene.List(graphene.String)
+class TutorialType(PublishedFilterBase, DjangoObjectType):
     content = graphene.Field(TutorialInterface, translation=graphene.String(), default=graphene.String(), required=True)
+    categories = graphene.List(graphene.String)
 
     def resolve_categories(self, info):
         return self.categories.all().values_list('category', flat=True)
@@ -69,12 +83,6 @@ class TutorialType(DjangoObjectType):
     def resolve_code(self, info):
         return getattr(self, 'code', Code(id='00000000-0000-0000-0000-000000000000', code='# Empty \n'))
 
-    @classmethod
-    def get_queryset(cls, queryset: QuerySet, info):
-        if info.context.user.is_anonymous:
-            return queryset.filter(is_published=True)
-        return queryset
-
     @time_date_field_adder
     @published_field_adder
     @uuid_field_adder
@@ -82,7 +90,7 @@ class TutorialType(DjangoObjectType):
         model = Tutorial
         fields = ('url', 'content',
                   'categories', 'graph_set',
-                  'code', 'graphs'
+                  'code',
                   )
 
         description = 'The tutorial anchor for an tutorial article. ' \
@@ -93,14 +101,8 @@ class TutorialType(DjangoObjectType):
                       'associated codes etc.'
 
 
-class GraphType(DjangoObjectType):
+class GraphType(PublishedFilterBase, DjangoObjectType):
     priority = graphene.Int(required=True)
-
-    @classmethod
-    def get_queryset(cls, queryset: QuerySet, info):
-        if info.context.user.is_anonymous:
-            return queryset.filter(is_published=True)
-        return queryset
 
     @time_date_field_adder
     @published_field_adder
@@ -116,7 +118,7 @@ class GraphType(DjangoObjectType):
                       'cyjs, style json, and layout json'
 
 
-class CodeType(DjangoObjectType):
+class CodeType(PublishedFilterBase, DjangoObjectType):
     is_published = graphene.Boolean()
 
     @time_date_field_adder
@@ -128,7 +130,7 @@ class CodeType(DjangoObjectType):
         description = 'The code content of a tutorial. '
 
 
-class ExecResultJsonType(DjangoObjectType):
+class ExecResultJsonType(PublishedFilterBase, DjangoObjectType):
     is_published = graphene.Boolean()
 
     @time_date_field_adder
@@ -162,7 +164,7 @@ def model_class_constructor(attributes: Iterable[Tuple[str, Any]]):
 
 
 @add_trans_type
-class ENUSTransType(DjangoObjectType):
+class ENUSTransType(PublishedFilterBase, DjangoObjectType):
     Meta = model_class_constructor((
         ('model', ENUS),
         ('description', 'The en-us translations of tutorials')
@@ -170,7 +172,7 @@ class ENUSTransType(DjangoObjectType):
 
 
 @add_trans_type
-class ZHCNTransType(DjangoObjectType):
+class ZHCNTransType(PublishedFilterBase, DjangoObjectType):
     Meta = model_class_constructor((
         ('model', ZHCN),
         ('description', 'The zh-cn translations of tutorials')

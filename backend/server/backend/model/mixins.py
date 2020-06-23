@@ -2,10 +2,6 @@ from typing import Tuple
 from uuid import uuid4
 
 from django.db import models
-from django.db.models import QuerySet
-from graphql import ResolveInfo
-
-from backend.model.filters import published_filter
 
 
 class TimeDateMixin(models.Model):
@@ -26,23 +22,6 @@ class PublishedMixin(models.Model):
 
 class UUIDMixin(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-
-    class Meta:
-        abstract = True
-
-
-class FilterMixin(models.Model):
-    _universal_editor = [published_filter]
-    filters = []
-
-    @classmethod
-    def filtered_queryset(cls,
-                          info: ResolveInfo = None
-                          ) -> QuerySet:
-        raw_queryset = cls.objects.all()
-        for single_filter in cls.filters + cls._universal_editor:
-            raw_queryset = single_filter(raw_queryset, info)
-        return raw_queryset
 
     class Meta:
         abstract = True

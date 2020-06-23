@@ -1,9 +1,8 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 
-from .mixins import TimeDateMixin, PublishedMixin, UUIDMixin, FilterMixin
+from .mixins import TimeDateMixin, PublishedMixin, UUIDMixin
 from .translation_collection import process_trans_name
 
 
@@ -12,7 +11,7 @@ class Category(PublishedMixin, models.Model):
                                 default=_('uncategorized'), blank=False, null=False)
 
 
-class Tutorial(FilterMixin, UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
+class Tutorial(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
     # meta data
     # TODO add a url verification
     url = models.CharField(max_length=100, unique=True, blank=False, null=False)
@@ -30,7 +29,7 @@ class GraphPriority(models.IntegerChoices):
     TRIV = 20, 'Trivial Graph'
 
 
-class Graph(FilterMixin, UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
+class Graph(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
     url = models.CharField(max_length=100, unique=True, blank=False, null=False)
     graph_info = models.TextField()
     priority = models.PositiveSmallIntegerField(choices=GraphPriority.choices, default=GraphPriority.MAIN)
@@ -40,7 +39,7 @@ class Graph(FilterMixin, UUIDMixin, PublishedMixin, TimeDateMixin, models.Model)
     tutorials = models.ManyToManyField(Tutorial)
 
 
-class Code(FilterMixin, UUIDMixin, TimeDateMixin, models.Model):
+class Code(UUIDMixin, TimeDateMixin, models.Model):
     # relations
     # TODO I suppose this should a one-to-one field.
     tutorial = models.OneToOneField(Tutorial, on_delete=models.CASCADE)
@@ -53,7 +52,7 @@ class Code(FilterMixin, UUIDMixin, TimeDateMixin, models.Model):
         return self.tutorial.is_published
 
 
-class ExecResultJson(FilterMixin, UUIDMixin, TimeDateMixin, models.Model):
+class ExecResultJson(UUIDMixin, TimeDateMixin, models.Model):
     # relations
     code = models.ForeignKey(Code, on_delete=models.CASCADE)
     graph = models.ForeignKey(Graph, on_delete=models.CASCADE)
