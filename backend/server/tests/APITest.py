@@ -218,6 +218,12 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
             self.assertResponseNoErrors(response)
 
     def test_published_field(self):
+        # published tutorial vs not published tutorial
+        # published tutorial not published attrs like content, authors(is_active actually),
+        # published graph vs not published graph
+        # published categories vs not published categories
+        cat_query = '''
+        '''
         pass
 
     def test_sorting(self):

@@ -1,3 +1,5 @@
+from typing import Iterable
+
 import graphene
 from django.db.models import QuerySet
 from graphene_django import DjangoListField
@@ -24,6 +26,8 @@ class Query(graphene.ObjectType):
     tutorial = graphene.Field(TutorialType,
                               url=graphene.String(),
                               id=graphene.String())
+    tutorials = DjangoListField(TutorialType,
+                                         categoryies=graphene.List(graphene.String))
     graph = graphene.Field(GraphType,
                            url=graphene.String(),
                            id=graphene.String())
@@ -59,7 +63,18 @@ class Query(graphene.ObjectType):
         elif id:
             return raw_result.get(id=id)
 
-        raise GraphQLError(f'The tutorial you requested with url={url}, id={id} does not exist.')
+        raise GraphQLError('The tutorial you requested with url={}, id={} does not exist.'.format(url, id))
+
+    def resolve_tutorials(self, info: ResolveInfo, category_names: Iterable = ()):
+        results = QuerySet()
+        for category_name in category_names:
+            try:
+                category = Category.objects.get(category=category_name)
+                results.union(category.tutorial_set.all())
+            except Category.DoesNotExist:
+                raise GraphQLError('Category {} does not exist in database. The request cannot be completed'
+                                   .format(category_name))
+        return results
 
     def resolve_graph(self, info: ResolveInfo, url=None, id=None):
         raw_result: QuerySet = Graph.objects.all()
@@ -70,4 +85,4 @@ class Query(graphene.ObjectType):
             return raw_result.get(url=url)
         elif id:
             return raw_result.get(id=id)
-        raise GraphQLError(f'The graph you requested with url={url}, id={id} does not exist.')
+        raise GraphQLError('The graph you requested with url={}, id={} does not exist.'.format(url, id))

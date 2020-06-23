@@ -130,6 +130,11 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
                       'cyjs, style json, and layout json'
 
 
+# the is_published fields below are not resolved with specific resolvers since
+# they can't be accessed by API and the related fields are already covered
+# under DjangoListField.
+
+
 class CodeType(PublishedFilterBase, DjangoObjectType):
     is_published = graphene.Boolean()
 
