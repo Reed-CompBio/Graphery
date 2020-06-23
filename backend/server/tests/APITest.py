@@ -188,8 +188,34 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
     def test_code_exec_json_not_exist(self):
         pass
 
-    def test_all_tutorial_inf(self):
-        query = ''''''
+    @parameterized.expand([
+        ('en-us', '', False),
+        ('zh-cn', '', True),
+        ('zh-cn', 'en-us', False)
+    ])
+    def test_all_tutorial_inf(self, trans: str, default: str, has_error: bool):
+        query = '''
+            query allTutorialInfo($translation: String, $default: String){
+              allTutorialInfo {
+                url
+                content(translation: $translation, default: $default) {
+                  title
+                  authors
+                  abstract
+                  modifiedTime
+                }
+              }
+            }
+        '''
+        variables = {
+            'translation': trans,
+            'default': default,
+        }
+        response = self.query(query, variables=variables)
+        if has_error:
+            self.assertResponseHasErrors(response)
+        else:
+            self.assertResponseNoErrors(response)
 
     def test_published_field(self):
         pass

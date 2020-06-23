@@ -53,7 +53,8 @@ class TutorialType(DjangoObjectType):
         content = self.get_translation(translation, default)
         if content:
             return content
-        raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ')
+        raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
+                           f'{f"No results come from {default} translation either" if default else ""}')
 
     def resolve_code(self, info):
         return getattr(self, 'code', Code(id='00000000-0000-0000-0000-000000000000', code='# Empty \n'))
