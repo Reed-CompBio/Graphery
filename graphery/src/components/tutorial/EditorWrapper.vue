@@ -59,16 +59,7 @@
         v-model="tab"
       >
         <q-tab-panel name="code">
-          <div
-            id="editor-panel"
-            class="editor-light"
-            :style="editorWrapperStyle"
-          >
-            <div id="editor" :style="editorWrapperStyle"></div>
-            <q-inner-loading :showing="editor === null">
-              <q-spinner-pie size="64px" color="primary" />
-            </q-inner-loading>
-          </div>
+          <Editor :height="45"></Editor>
         </q-tab-panel>
         <q-tab-panel name="info">
           <!-- TODO fill in info section -->
@@ -96,22 +87,19 @@
 </template>
 
 <script>
-  import { editorTabHeight } from '@/store/states/meta.ts';
   import { mapState, mapGetters } from 'vuex';
   let aceEditor;
   let Range;
-  let monacoEditor;
 
   export default {
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
+      Editor: () => import('@/components/tutorial/Editor.vue'),
     },
     data() {
       return {
         editorShow: true,
         tab: 'code',
-        editor: null,
-        content: '',
         isPanning: false,
         pos: {
           x: window.innerWidth / 4,
@@ -181,39 +169,6 @@
             );
           });
       },
-      initMonacoEditor() {
-        import('monaco-editor')
-          .then((md) => {
-            console.debug('monaco editor module: ', md);
-            monacoEditor = md;
-
-            // TODO store user edited code
-            this.editor = monacoEditor.editor.create(
-              document.getElementById('editor'),
-              {
-                fontSize: this.fontSize,
-                foldingStrategy: 'indentation', // 代码可分小段折叠
-                automaticLayout: true, // 自适应布局
-                overviewRulerBorder: false, // 不要滚动条的边框
-                scrollBeyondLastLine: false, // 取消代码后面一大段空白
-                readOnly: false,
-                theme: this.dark ? 'hc-black' : 'vs',
-                language: 'python',
-                minimap: {
-                  enabled: false,
-                  // TODO add an option here?
-                },
-              }
-            );
-            console.debug('mounted monaco editor');
-          })
-          .catch((err) => {
-            console.error(
-              'An error occurs when initializing the monaco code editor',
-              err
-            );
-          });
-      },
     },
     computed: {
       ...mapState('settings', [
@@ -224,23 +179,12 @@
         'wrap',
       ]),
       ...mapGetters('tutorials', ['codesEmpty']),
-      editorWrapperStyle() {
-        return {
-          height: `calc(40vh - ${editorTabHeight}px)`,
-        };
-      },
       editorPos() {
         return {
           top: `${this.pos.y}px`,
           left: `${this.pos.x}px`,
         };
       },
-    },
-    mounted() {
-      this.initMonacoEditor();
-    },
-    destroyed() {
-      this.editor.dispose();
     },
   };
 </script>
