@@ -5,11 +5,10 @@ from django.utils.translation import gettext_lazy as _
 
 from .mixins import UUIDMixin
 
-
-# User Configurations
 from .validators import UserNameValidator
 
 
+# User Configurations
 class UserManager(BaseUserManager):
     def _create_user(self, username, email, password, is_staff, is_superuser, role, **kwargs):
         """
@@ -63,9 +62,9 @@ class UserManager(BaseUserManager):
 
 class ROLES(models.IntegerChoices):
     ADMINISTRATOR = 60, 'Administrator'
-    AUTHOR = 40, 'author'
-    TRANSLATOR = 20, 'translator'
-    VISITOR = 0, 'visitor'
+    AUTHOR = 40, 'Author'
+    TRANSLATOR = 20, 'Translator'
+    VISITOR = 0, 'Visitor'
 
 
 class User(UUIDMixin, AbstractUser):
