@@ -7,9 +7,9 @@ from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
 from graphql import ResolveInfo
 
-# from ..models import User
 from ..model.UserModel import ROLES
 # from ..model.validators import validate
+from ..model.filters import show_published
 from ..models import Category, Tutorial, Graph
 
 from .types import UserType, CategoryType, TutorialType, GraphType
@@ -49,14 +49,16 @@ class Query(graphene.ObjectType):
     def resolve_all_tutorial_info(self, info: ResolveInfo, **kwargs):
         return Tutorial.objects.all()
 
-    def resolve_tutorial_count(self, info: ResolveInfo, **kwargs):
-        if info.context.user.is_anonymous or info.context.user.role < ROLES.TRANSLATOR:
+    @show_published
+    def resolve_tutorial_count(self, info: ResolveInfo, is_published_only: bool, **kwargs):
+        if is_published_only:
             return Tutorial.objects.filter(is_published=True).count()
         return Tutorial.objects.all().count()
 
-    def resolve_tutorial(self, info: ResolveInfo, url=None, id=None):
+    @show_published
+    def resolve_tutorial(self, info: ResolveInfo, is_published_only: bool, url=None, id=None):
         raw_result: QuerySet = Tutorial.objects.all()
-        if info.context.user.is_anonymous or info.context.user.role < ROLES.TRANSLATOR:
+        if is_published_only:
             raw_result = raw_result.filter(is_published=True)
         if url:
             return raw_result.get(url=url)
@@ -65,20 +67,26 @@ class Query(graphene.ObjectType):
 
         raise GraphQLError('The tutorial you requested with url={}, id={} does not exist.'.format(url, id))
 
-    def resolve_tutorials(self, info: ResolveInfo, category_names: Iterable = ()):
-        results = QuerySet()
-        for category_name in category_names:
+    @show_published
+    def resolve_tutorials(self, info: ResolveInfo, is_published_only: bool, categoryies: Iterable = ()):
+        results = Tutorial.objects.none()
+        for category_name in categoryies:
             try:
                 category = Category.objects.get(category=category_name)
-                results.union(category.tutorial_set.all())
+                if category.is_published or not is_published_only:
+                    results = results | category.tutorial_set.all()
             except Category.DoesNotExist:
                 raise GraphQLError('Category {} does not exist in database. The request cannot be completed'
                                    .format(category_name))
+
+        print(results.query)
         return results
 
-    def resolve_graph(self, info: ResolveInfo, url=None, id=None):
+    @show_published
+    def resolve_graph(self, info: ResolveInfo, is_published_only, url=None, id=None):
+        print(info)
         raw_result: QuerySet = Graph.objects.all()
-        if info.context.user.is_anonymous:
+        if is_published_only:
             raw_result = raw_result.filter(is_published=True)
 
         if url:

@@ -4,6 +4,7 @@ from django.db.models import QuerySet
 from graphql import GraphQLError, ResolveInfo
 
 from ..model.UserModel import ROLES
+from ..model.filters import show_published
 from ..model.mixins import uuid_field_adder, time_date_field_adder, published_field_adder
 from ..model.translation_collection import add_trans_type, process_trans_name
 from ..models import User
@@ -22,8 +23,8 @@ class PublishedFilterBase(DjangoObjectType):
 
     @classmethod
     def get_queryset(cls, queryset: QuerySet, info: ResolveInfo):
-        user = info.context.user
-        if user.is_anonymous or user.role < ROLES.TRANSLATOR:
+        # use show_published decorator
+        if info.context.user.is_anonymous or info.context.user.role < ROLES.TRANSLATOR:
             return queryset.filter(is_published=True)
         return queryset
 
@@ -68,26 +69,30 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
     content = graphene.Field(TutorialInterface, translation=graphene.String(), default=graphene.String(), required=True)
     categories = graphene.List(graphene.String)
 
-    def resolve_categories(self, info):
+    @show_published
+    def resolve_categories(self, info, is_published_only: bool):
         raw_results = self.categories.all()
-        if info.context.user.is_anonymous or info.context.user.role < ROLES.TRANSLATOR:
+        if is_published_only:
             raw_results = raw_results.filter(is_published=True)
         return raw_results.values_list('category', flat=True)
 
-    def resolve_content(self, info, translation: str = 'en-us', default: str = 'en-us', **kwargs):
+    @show_published
+    def resolve_content(self, 
+                        info, 
+                        is_published_only: bool, 
+                        translation: str = 'en-us', 
+                        default: str = 'en-us'):
         content = self.get_translation(translation, default)
         if content:
-            if content.is_published or \
-                    not (info.context.user.is_anonymous or info.context.user.role < ROLES.TRANSLATOR):
+            if content.is_published or not is_published_only:
                 return content
         raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
                            f'{f"No results come from {default} translation either" if default else ""}')
 
-    def resolve_code(self, info):
+    @show_published
+    def resolve_code(self, info, is_published_only: bool):
         code = getattr(self, 'code', None)
-        if code and \
-                (code.is_published or not (
-                        info.context.user.is_anonymous or info.context.user.role < ROLES.TRANSLATOR)):
+        if code and (code.is_published or not is_published_only):
             return code
         return Code(id='00000000-0000-0000-0000-000000000000', code='# Empty \n', tutorial=Tutorial())
 
