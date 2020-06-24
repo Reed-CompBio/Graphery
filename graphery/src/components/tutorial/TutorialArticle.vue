@@ -88,7 +88,7 @@
       transition-show="fade"
       transition-hide="fade"
     >
-      <q-spinner-radio size="64px" color="primary"></q-spinner-radio>
+      <q-spinner-pie size="64px" color="primary"></q-spinner-pie>
     </q-inner-loading>
   </div>
 </template>
