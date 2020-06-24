@@ -61,12 +61,7 @@ class UserManager(BaseUserManager):
                                  is_staff=True, is_superuser=True,
                                  role=ROLES.ADMINISTRATOR, **extra_fields)
 
-    # TODO, cannot rewrite this
-    def get_queryset(self) -> QuerySet:
-        return super().get_queryset().filter(is_active=True)
-
-    def real_all(self) -> QuerySet:
-        return super().get_queryset()
+    # I don't need to override get_queryset here since I already override is_anonymous and is_authenticated
 
 
 class ROLES(models.IntegerChoices):

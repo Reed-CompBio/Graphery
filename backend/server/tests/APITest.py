@@ -1,11 +1,7 @@
 import textwrap
-import unittest
 from typing import Iterable
 
-from django.db import IntegrityError
-from graphene.test import Client
 from graphene_django.utils import GraphQLTestCase
-from graphql_jwt.testcases import JSONWebTokenTestCase
 
 from graphery.schema import schema
 from backend.models import *
