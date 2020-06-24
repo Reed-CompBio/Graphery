@@ -88,9 +88,7 @@ class GraphQLAPITest(GraphQLTestCase):
         self._client.cookies = SimpleCookie()
 
     def error_message_match(self, response, content, messages: Iterable[str]):
-        # self.assertResponseHasErrors(response)
-        self.assertIn('errors', content)
-        print(content)
+        self.assertResponseHasErrors(response)
         rep = zip(content['errors'], messages)
         self.assertTrue(all(error['message'] == message for (error, message) in rep))
 
@@ -139,7 +137,6 @@ class GraphQLAPITest(GraphQLTestCase):
             'url': url
         }
         response, content = self.get_response_and_content(variables=variables)
-        print(content)
         categories = content['data']['tutorial']['categories']
         self.assertEqual(len(categories), len(expected_cat))
         self.assertTrue(all(cat in categories for cat in expected_cat))
@@ -266,10 +263,49 @@ class GraphQLAPITest(GraphQLTestCase):
         else:
             self.assertResponseNoErrors(response)
 
+    def test_all_graph_info(self):
+        graph_query = '''
+            query {
+               allGraphInfo {
+                id
+              }
+            }
+        '''
+        response, content = self.get_response_and_content(query=graph_query)
+        self.assertResponseNoErrors(response)
+        self.assertEqual(len(content['data']['allGraphInfo']), 2)
+
     def test_published_field(self):
+        self.login_as_su()
+
         # published tutorial vs not published tutorial
+        t2_variables = {
+            'url': 'test-tutorial2'
+        }
+        t2_response, t2_content = self.get_response_and_content(variables=t2_variables)
+        self.assertResponseNoErrors(t2_response)
+        self.assertEqual(t2_content['data']['tutorial']['url'], 'test-tutorial2')
+
         # published tutorial not published attrs like content, authors(is_active actually),
+        td_variables = {
+            'url': 'test-default'
+        }
+        td_response, td_content = self.get_response_and_content(variables=td_variables)
+        self.assertResponseNoErrors(td_response)
+        self.assertEqual(len(td_content['data']['tutorial']['graphSet']), 3)
+
         # published graph vs not published graph
+        graph_query = '''
+            query {
+               allGraphInfo {
+                id
+              }
+            }
+        '''
+        g_response, g_content = self.get_response_and_content(query=graph_query)
+        self.assertResponseNoErrors(g_response)
+        self.assertEqual(len(g_content['data']['allGraphInfo']), 3)
+
         # published categories vs not published categories
         cat_query = '''
            query {
@@ -278,11 +314,10 @@ class GraphQLAPITest(GraphQLTestCase):
                 }
             }
         '''
-        self.login_as_su()
-        response, content = self.get_response_and_content(query=cat_query)
-        self.assertResponseNoErrors(response)
+        t2_response,  t2_content = self.get_response_and_content(query=cat_query)
+        self.assertResponseNoErrors(t2_response)
         expected_cats = ({'category': 'like'}, {'category': 'lol'}, {'category': 'uncategorized'})
-        cats: list = content['data']['allCategories']
+        cats: list =  t2_content['data']['allCategories']
         self.assertEqual(len(expected_cats), len(cats))
         self.assertTrue(all(expected_cat in cats for expected_cat in expected_cats))
         self.reset_login()

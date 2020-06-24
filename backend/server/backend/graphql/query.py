@@ -21,6 +21,7 @@ class Query(graphene.ObjectType):
     user_info = graphene.Field(UserType)
     all_categories = DjangoListField(CategoryType)
     all_tutorial_info = DjangoListField(TutorialType)
+    all_graph_info = DjangoListField(GraphType)
     tutorial_count = graphene.Int()
 
     tutorial = graphene.Field(TutorialType,
@@ -40,14 +41,17 @@ class Query(graphene.ObjectType):
     #     return User.objects.filter(email=email).exists()
 
     @login_required
-    def resolve_user_info(self, info: ResolveInfo, **kwargs):
+    def resolve_user_info(self, info: ResolveInfo):
         return info.context.user
 
-    def resolve_all_categories(self, info: ResolveInfo, **kwargs):
+    def resolve_all_categories(self, info: ResolveInfo):
         return Category.objects.all()
 
-    def resolve_all_tutorial_info(self, info: ResolveInfo, **kwargs):
+    def resolve_all_tutorial_info(self, info: ResolveInfo):
         return Tutorial.objects.all()
+
+    def resolve_all_graph_info(self, info: ResolveInfo):
+        return Graph.objects.all()
 
     @show_published
     def resolve_tutorial_count(self, info: ResolveInfo, is_published_only: bool, **kwargs):
