@@ -2,7 +2,7 @@
   <div style="overflow: hidden;">
     <q-resize-observer @resize="resizeAction"></q-resize-observer>
     <q-splitter
-      v-if="$q.screen.gt.xs"
+      v-if="notTortureSmallScreen"
       v-model="splitPos"
       :style="tutorialStyle"
       :horizontal="$q.screen.lt.md"
@@ -25,7 +25,10 @@
       </template>
     </q-splitter>
     <TutorialArticle v-else></TutorialArticle>
-    <EditorWrapper ref="editorWrapper"></EditorWrapper>
+    <EditorWrapper
+      ref="editorWrapper"
+      v-if="notTortureSmallScreen"
+    ></EditorWrapper>
   </div>
 </template>
 
@@ -62,6 +65,9 @@
         return {
           height: `calc(100vh - ${headerSize}px)`,
         };
+      },
+      notTortureSmallScreen() {
+        return this.$q.screen.gt.xs;
       },
     },
     methods: {
