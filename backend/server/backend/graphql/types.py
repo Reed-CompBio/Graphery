@@ -58,6 +58,7 @@ class TutorialInterface(graphene.Interface):
 
 
 class CategoryType(PublishedFilterBase, DjangoObjectType):
+    @uuid_field_adder
     @published_field_adder
     class Meta:
         model = Category
