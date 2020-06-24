@@ -83,6 +83,10 @@ class GraphQLAPITest(GraphQLTestCase):
         self.assertResponseNoErrors(login_rep)
         self.assertEqual(login_content['data']['userInfo']['username'], 'super_user')
 
+    def reset_login(self):
+        from http.cookies import SimpleCookie
+        self._client.cookies = SimpleCookie()
+
     def error_message_match(self, response, content, messages: Iterable[str]):
         # self.assertResponseHasErrors(response)
         self.assertIn('errors', content)
@@ -274,18 +278,19 @@ class GraphQLAPITest(GraphQLTestCase):
                 }
             }
         '''
-
+        self.login_as_su()
         response, content = self.get_response_and_content(query=cat_query)
         self.assertResponseNoErrors(response)
-        expected_cats = ({'category': 'like'}, {'category': 'uncategorized'})
+        expected_cats = ({'category': 'like'}, {'category': 'lol'}, {'category': 'uncategorized'})
         cats: list = content['data']['allCategories']
         self.assertEqual(len(expected_cats), len(cats))
         self.assertTrue(all(expected_cat in cats for expected_cat in expected_cats))
+        self.reset_login()
 
     def test_sorting(self):
         pass
 
-    def try_login_and_get_user_info(self):
+    def test_login_and_get_user_info_reset_test(self):
         # self.client.login(user)
         username = 'default_user'
         response = self.query('''
@@ -306,3 +311,13 @@ class GraphQLAPITest(GraphQLTestCase):
             }
         ''')
         self.assertEqual(content['data']['userInfo']['username'], username)
+        self.reset_login()
+        response, content = self.get_response_and_content('''
+            query {
+                userInfo {
+                    username
+                }
+            }
+        ''')
+        self.assertResponseHasErrors(response)
+        self.error_message_match(response, content, ('You do not have permission to perform this action', ))
