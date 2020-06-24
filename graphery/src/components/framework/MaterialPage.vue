@@ -6,7 +6,7 @@
         <slot></slot>
       </div>
     </div>
-    <!-- TODO add protocol section -->
+    <!-- TODO add license section -->
   </q-page>
 </template>
 
@@ -17,7 +17,6 @@
     clear: both
 
   .page
-    /* TODO use quasar sass variables */
     @media (max-width: $breakpoint-xs-max)
       padding-left: 0px
       padding-right: 0px

@@ -197,7 +197,7 @@
         // this.toggleLoading();
       },
       addToAuthorFilter(author) {
-        // TODO apply author filter
+        // TODO apply author filter I don't need this
         console.debug(`add ${author} to author filter`);
       },
       addToCategoryFilter(category) {

@@ -59,7 +59,7 @@
   let dagre;
 
   import { graphMenuHeaderSize } from '../../store/states/meta';
-  import { mapState, mapGetters, mapActions } from 'vuex';
+  import { mapState, mapGetters } from 'vuex';
   import {
     panzoomDefaults,
     dagreOptions,
@@ -182,7 +182,6 @@
       moduleLoad() {
         this.moduleLoadedNum += 1;
       },
-      ...mapActions('tutorials', ['clearAll']),
       /**
        * Triggers a graph resize, forcing it to repaint itself. Useful when the graph nodes and edges have been
        * modified, or when an older browser doesn't render the graph until it is resized.
@@ -280,11 +279,6 @@
           this.cyInstance.resize();
         }
       },
-    },
-    destroyed() {
-      // TODO destroy raises errors
-      this.clearAll();
-      // TODO restore states in vuex
     },
   };
 </script>

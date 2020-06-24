@@ -34,7 +34,7 @@
 
 <script>
   import { headerSize } from '../store/states/meta';
-  import { mapState } from 'vuex';
+  import { mapActions, mapState } from 'vuex';
 
   export default {
     props: ['name'],
@@ -71,6 +71,7 @@
       },
     },
     methods: {
+      ...mapActions('tutorials', ['clearAll']),
       updateTutorialContent() {
         console.log('API calls to get details of the tutorial');
         // TODO
@@ -122,6 +123,10 @@
 
       // pull tutorials
       this.updateTutorialContent();
+    },
+    destroyed() {
+      this.clearAll();
+      // TODO restore states in vuex
     },
   };
 </script>

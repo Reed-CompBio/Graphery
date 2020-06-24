@@ -1,7 +1,6 @@
 import { RootState, SettingInfos, SettingState } from '@/store/states/state';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 
-// TODO remove this and use web storage instead
 const state: SettingState = {
   settingVer: '1.0.0',
   // color
