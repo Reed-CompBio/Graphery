@@ -1,6 +1,6 @@
 <template>
-  <div id="editor-panel" class="editor-light" :style="editorWrapperStyle">
-    <div id="editor" :style="editorWrapperStyle"></div>
+  <div id="editor-panel" class="editor-light">
+    <div id="editor" class="full-height"></div>
     <q-inner-loading :showing="editor === null">
       <q-spinner-pie size="64px" color="primary" />
     </q-inner-loading>
@@ -8,12 +8,10 @@
 </template>
 
 <script>
-  import { editorTabHeight } from '@/store/states/meta.ts';
+  import { mapState } from 'vuex';
   let monacoEditor;
 
   export default {
-    // TODO don't do this. Make it more universal
-    props: ['height'],
     data() {
       return {
         editor: null,
@@ -21,11 +19,13 @@
       };
     },
     computed: {
-      editorWrapperStyle() {
-        return {
-          height: `calc(${this.height}vh - ${editorTabHeight}px)`,
-        };
-      },
+      ...mapState('settings', [
+        'dark',
+        'tabNum',
+        'softTab',
+        'fontSize',
+        'wrap',
+      ]),
     },
     methods: {
       initMonacoEditor() {

@@ -59,7 +59,7 @@
         v-model="tab"
       >
         <q-tab-panel name="code">
-          <Editor :height="45"></Editor>
+          <Editor :style="editorWrapperStyle"></Editor>
         </q-tab-panel>
         <q-tab-panel name="info">
           <!-- TODO fill in info section -->
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex';
+  import { editorTabHeight } from '@/store/states/meta.ts';
   let aceEditor;
   let Range;
 
@@ -171,18 +171,15 @@
       },
     },
     computed: {
-      ...mapState('settings', [
-        'dark',
-        'tabNum',
-        'softTab',
-        'fontSize',
-        'wrap',
-      ]),
-      ...mapGetters('tutorials', ['codesEmpty']),
       editorPos() {
         return {
           top: `${this.pos.y}px`,
           left: `${this.pos.x}px`,
+        };
+      },
+      editorWrapperStyle() {
+        return {
+          height: `calc(45vh - ${editorTabHeight}px)`,
         };
       },
     },

@@ -20,7 +20,7 @@
         />
       </template>
       <template v-slot:after>
-        <Editor :height="100"></Editor>
+        <Editor class="full-height"></Editor>
       </template>
     </q-splitter>
   </div>

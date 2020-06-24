@@ -6,7 +6,7 @@
       </h3>
     </div>
     <div>
-      <p>Not implemented</p>
+      <p>Coming Soon</p>
     </div>
   </MaterialPage>
 </template>
