@@ -1,9 +1,6 @@
-from typing import Optional
-
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
-from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
 
 from .mixins import UUIDMixin
@@ -14,7 +11,7 @@ from .validators import UserNameValidator
 
 
 class UserManager(BaseUserManager):
-    def _create_user(self, email, username, password, is_staff, is_superuser, role, **extra_fields):
+    def _create_user(self, username, email, password, is_staff, is_superuser, role, **kwargs):
         """
         Creates and saves a User with the given username, email and password.
         """
@@ -26,40 +23,40 @@ class UserManager(BaseUserManager):
                           is_staff=is_staff,
                           is_superuser=is_superuser,
                           role=role,
-                          **extra_fields)
+                          **kwargs)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, username, password, **extra_fields):
+    def create_user(self, username, email, password, **kwargs):
         """
         create a user with email, password, and username. Username is required
         @param email:
         @param password:
         @param username:
-        @param extra_fields:
+        @param kwargs:
         @return:
         """
-        is_staff = extra_fields.pop('is_staff', False)
-        is_superuser = extra_fields.pop('is_superuser', False)
-        the_role = extra_fields.pop('role', ROLES.VISITOR)
-        return self._create_user(email=email, username=username,
+        is_staff = kwargs.pop('is_staff', False)
+        is_superuser = kwargs.pop('is_superuser', False)
+        the_role = kwargs.pop('role', ROLES.VISITOR)
+        return self._create_user(username=username, email=email,
                                  password=password, is_staff=is_staff,
                                  is_superuser=is_superuser, role=the_role,
-                                 **extra_fields)
+                                 **kwargs)
 
-    def create_superuser(self, email, username, password, **extra_fields):
+    def create_superuser(self, username, email, password, **kwargs):
         """
         Create a super user with a email, password, and username. Username is required
         @param email:
         @param password:
         @param username:
-        @param extra_fields:
+        @param kwargs:
         @return:
         """
-        return self._create_user(email=email, username=username, password=password,
+        return self._create_user(username=username, email=email, password=password,
                                  is_staff=True, is_superuser=True,
-                                 role=ROLES.ADMINISTRATOR, **extra_fields)
+                                 role=ROLES.ADMINISTRATOR, **kwargs)
 
     # I don't need to override get_queryset here since I already override is_anonymous and is_authenticated
 
@@ -105,6 +102,7 @@ class User(UUIDMixin, AbstractUser):
     REQUIRED_FIELDS = ('email',)
 
     # TODO add a property field that tells the program what privilege this user has
+    # TODO add a deactivate func so that an account can be discarded
 
     @property
     def is_anonymous(self) -> bool:
