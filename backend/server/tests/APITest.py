@@ -15,7 +15,7 @@ from parameterized import parameterized
 import json
 
 
-class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
+class GraphQLAPITest(GraphQLTestCase):
     GRAPHQL_SCHEMA = schema
     GRAPHQL_URL = '/graphql'
     fixtures = ['test_data.json', ]
@@ -51,13 +51,42 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         }
     '''
 
-    def get_response_and_content(self, variables: dict = None):
-        response = self.query(self.standard_query, variables=variables)
+    def get_response_and_content(self, query=standard_query, variables: dict = None):
+        response = self.query(query, variables=variables)
         content = json.loads(response.content)
         return response, content
 
+    def get_user_info(self):
+        return self.get_response_and_content(query='''
+            query {
+                userInfo {
+                    id
+                    username
+                }
+            }
+        ''')
+
+    def login_as_su(self):
+        response, content = self.get_response_and_content(
+            query='''
+                mutation {
+                    tokenAuth(username: "super_user", password: "password") {
+                        payload
+                        refreshExpiresIn
+                        token
+                    }
+                }
+            '''
+        )
+        self.assertResponseNoErrors(response)
+        login_rep, login_content = self.get_user_info()
+        self.assertResponseNoErrors(login_rep)
+        self.assertEqual(login_content['data']['userInfo']['username'], 'super_user')
+
     def error_message_match(self, response, content, messages: Iterable[str]):
-        self.assertResponseHasErrors(response)
+        # self.assertResponseHasErrors(response)
+        self.assertIn('errors', content)
+        print(content)
         rep = zip(content['errors'], messages)
         self.assertTrue(all(error['message'] == message for (error, message) in rep))
 
@@ -65,48 +94,63 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         user = User.objects.get(username='default_user')
         self.assertEqual(user.email, 'default@reed.edu')
 
-    def test_tutorial_url_exist(self):
-        variables = {
-            'url': 'test-tutorial2'
-        }
-        response, content = self.get_response_and_content(variables)
-        self.assertResponseNoErrors(response)
-        self.assertEqual(content['data']['tutorial']['url'], 'test-tutorial2')
-
-    def test_tutorial_url_not_exist(self):
-        variables = {
-            'url': 'test-tutorial-not-exist'
-        }
-        response, content = self.get_response_and_content(variables)
-        self.error_message_match(response,
-                                 content,
-                                 ('Tutorial matching query does not exist.', ))
-
     @parameterized.expand([
-        ('test-tutorial1', ('lol', 'like')),
-        ('test-tutorial3', ('uncategorized', )),
-        ('test-tutorial4', ())
+        ('test-tutorial1',),
+        ('test-tutorial3',),
+        ('test-tutorial4',),
+        ('test-tutorial5',),
+        ('test-default',),
     ])
-    def test_tutorial_categories(self, url, expected_cat):
+    def test_tutorial_url_exist(self, url):
         variables = {
             'url': url
         }
-        response, content = self.get_response_and_content(variables)
+        response, content = self.get_response_and_content(variables=variables)
+        self.assertResponseNoErrors(response)
+        self.assertEqual(content['data']['tutorial']['url'], url)
+
+    @parameterized.expand([
+        ('test-tutorial-not-exist',
+         'The tutorial you requested with url=test-tutorial-not-exist, id=None does not exist.'
+         ),
+        ('test-tutorial2', 'The tutorial you requested with url=test-tutorial2, id=None does not exist.'),
+        (None, 'In tutorial query, the url and id arguments can not both be empty.')
+    ])
+    def test_tutorial_url_not_exist(self, url, msg):
+        variables = {
+            'url': url
+        }
+        response, content = self.get_response_and_content(variables=variables)
+        self.error_message_match(response,
+                                 content,
+                                 (msg, ))
+
+    @parameterized.expand([
+        ('test-tutorial1', ('like',)),
+        ('test-tutorial3', ('uncategorized',)),
+        ('test-tutorial4', ())
+    ])
+    def test_tutorial_categories_published_only(self, url, expected_cat):
+        variables = {
+            'url': url
+        }
+        response, content = self.get_response_and_content(variables=variables)
+        print(content)
         categories = content['data']['tutorial']['categories']
         self.assertEqual(len(categories), len(expected_cat))
         self.assertTrue(all(cat in categories for cat in expected_cat))
 
     @parameterized.expand([
-        ('test-default', ),
-        ('test-tutorial1', ),
-        ('test-tutorial3', )
+        ('test-default',),
+        ('test-tutorial1',),
+        ('test-tutorial3',)
     ])
     def test_tutorial_content_trans_exist(self, url):
         variables = {
             'url': url,
             'translation': 'zh-cn'
         }
-        response, content = self.get_response_and_content(variables)
+        response, content = self.get_response_and_content(variables=variables)
         self.assertResponseNoErrors(response)
 
     def test_tutorial_content_trans_not_exist(self):
@@ -114,12 +158,13 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
             'url': 'test-tutorial4',
             'translation': 'zh-cn'
         }
-        response, content = self.get_response_and_content(variables)
-        self.error_message_match(response, content, ('This tutorial does not provide zh-cn translation for now. ', ))
+        response, content = self.get_response_and_content(variables=variables)
+        self.error_message_match(response, content, ('This tutorial does not provide zh-cn translation for now. ',))
 
     @parameterized.expand([
-        ('test-tutorial3', 'zh-cn', ('author4', 'author5')),
-        ('test-default', 'zh-cn', ('default_user', )),
+        # removed author 5 since it does not exist
+        ('test-tutorial3', 'zh-cn', ('author4', )),
+        ('test-default', 'zh-cn', ('default_user',)),
         ('test-tutorial1', 'zh-cn', ()),
 
     ])
@@ -128,7 +173,7 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
             'url': url,
             'translation': trans
         }
-        response, content = self.get_response_and_content(variables)
+        response, content = self.get_response_and_content(variables=variables)
         authors = content['data']['tutorial']['content']['authors']
         self.assertEqual(len(authors), len(expected_authors))
         self.assertTrue(all(e_author in authors for e_author in expected_authors))
@@ -137,7 +182,7 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         variable = {
             'url': 'test-default'
         }
-        response, content = self.get_response_and_content(variable)
+        response, content = self.get_response_and_content(variables=variable)
         code = content['data']['tutorial']['code']
         self.assertResponseNoErrors(response)
         self.assertEqual(code['id'], '27214739-a9aa-457f-9d71-d29d36bb19f6')
@@ -150,7 +195,7 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         variable = {
             'url': 'test-tutorial1'
         }
-        response, content = self.get_response_and_content(variable)
+        response, content = self.get_response_and_content(variables=variable)
         code = content['data']['tutorial']['code']
         self.assertResponseNoErrors(response)
         self.assertEqual(code['id'], '00000000-0000-0000-0000-000000000000')
@@ -160,7 +205,7 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         variables = {
             'url': 'test-default'
         }
-        response, content = self.get_response_and_content(variables)
+        response, content = self.get_response_and_content(variables=variables)
         graph_set = content['data']['tutorial']['graphSet']
         self.assertEqual(len(graph_set), 2)
 
@@ -168,7 +213,7 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         variables = {
             'url': 'test-tutorial4'
         }
-        response, content = self.get_response_and_content(variables)
+        response, content = self.get_response_and_content(variables=variables)
         graph_set = content['data']['tutorial']['graphSet']
         self.assertEqual(len(graph_set), 0)
 
@@ -176,7 +221,7 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         variables = {
             'url': 'test-default'
         }
-        response, content = self.get_response_and_content(variables)
+        response, content = self.get_response_and_content(variables=variables)
         graph_set = content['data']['tutorial']['graphSet']
         self.assertEqual(len(graph_set), 2)
         for graph in graph_set:
@@ -211,7 +256,7 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
             'translation': trans,
             'default': default,
         }
-        response = self.query(query, variables=variables)
+        response, content = self.get_response_and_content(query=query, variables=variables)
         if has_error:
             self.assertResponseHasErrors(response)
         else:
@@ -223,62 +268,41 @@ class GraphQLAPITest(GraphQLTestCase, JSONWebTokenTestCase):
         # published graph vs not published graph
         # published categories vs not published categories
         cat_query = '''
+           query {
+                allCategories {
+                    category
+                }
+            }
         '''
-        pass
+
+        response, content = self.get_response_and_content(query=cat_query)
+        self.assertResponseNoErrors(response)
+        expected_cats = ({'category': 'like'}, {'category': 'uncategorized'})
+        cats: list = content['data']['allCategories']
+        self.assertEqual(len(expected_cats), len(cats))
+        self.assertTrue(all(expected_cat in cats for expected_cat in expected_cats))
 
     def test_sorting(self):
         pass
 
-    def test_tutorial_anchor_get(self):
-        client = Client(schema=schema)
-        query = '''
-            query getTutorialPost($url: String, $translation: String="en-us") {
-                tutorial(url: $url) {   
-                content(translation: $translation) {
-                  authors
-                  abstract
-                  contentMd
-                  contentHtml
-                }
-                code {
-                  id
-                  code
-                }
-                graphSet {
-                  id
-                  cyjs
-                  execresultjsonSet {
-                    id
-                  }
-                }
-              }
-            }
-        '''
-        variables = {
-            "url": "test-tutorial3",
-            "translation": "zhcn"
-        }
-        response = client.execute(query, variables=variables)
-
-    def test_login_and_get_user_info(self):
-        response = self.client.execute('''
+    def try_login_and_get_user_info(self):
+        # self.client.login(user)
+        username = 'default_user'
+        response = self.query('''
             mutation {
-                tokenAuth(username: "default_user", password: "password") {
+                tokenAuth(username: "%s", password: "password") {
                     payload
                     refreshExpiresIn
                     token
                 }
             }
-        ''')
-        info_response = self.client.execute('''
+        ''' % username)
+        self.assertResponseNoErrors(response)
+        response, content = self.get_response_and_content('''
             query {
                 userInfo {
-                    id
-                    email
-                    role
-                    isVerified
-                    dateJoined
+                    username
                 }
             }
         ''')
-        print(info_response)
+        self.assertEqual(content['data']['userInfo']['username'], username)

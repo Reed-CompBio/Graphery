@@ -61,6 +61,7 @@ class UserManager(BaseUserManager):
                                  is_staff=True, is_superuser=True,
                                  role=ROLES.ADMINISTRATOR, **extra_fields)
 
+    # TODO, cannot rewrite this
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().filter(is_active=True)
 

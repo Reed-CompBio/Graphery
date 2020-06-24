@@ -80,9 +80,9 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
     @show_published
     def resolve_content(self, 
                         info, 
-                        is_published_only: bool, 
+                        is_published_only: bool,
                         translation: str = 'en-us', 
-                        default: str = 'en-us'):
+                        default: str = ''):
         content = self.get_translation(translation, default)
         if content:
             if content.is_published or not is_published_only:

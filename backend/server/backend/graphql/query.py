@@ -60,12 +60,15 @@ class Query(graphene.ObjectType):
         raw_result: QuerySet = Tutorial.objects.all()
         if is_published_only:
             raw_result = raw_result.filter(is_published=True)
-        if url:
-            return raw_result.get(url=url)
-        elif id:
-            return raw_result.get(id=id)
+        try:
+            if url:
+                return raw_result.get(url=url)
+            elif id:
+                return raw_result.get(id=id)
+        except Tutorial.DoesNotExist:
+            raise GraphQLError('The tutorial you requested with url={}, id={} does not exist.'.format(url, id))
 
-        raise GraphQLError('The tutorial you requested with url={}, id={} does not exist.'.format(url, id))
+        raise GraphQLError('In tutorial query, the url and id arguments can not both be empty.')
 
     @show_published
     def resolve_tutorials(self, info: ResolveInfo, is_published_only: bool, categoryies: Iterable = ()):
@@ -83,7 +86,7 @@ class Query(graphene.ObjectType):
         return results
 
     @show_published
-    def resolve_graph(self, info: ResolveInfo, is_published_only, url=None, id=None):
+    def resolve_graph(self, info: ResolveInfo, is_published_only: bool, url=None, id=None):
         print(info)
         raw_result: QuerySet = Graph.objects.all()
         if is_published_only:
