@@ -13,7 +13,7 @@ import traceback
 from types import FrameType, FunctionType
 from typing import Iterable, Tuple, Any, Mapping, Optional, List, Callable, Union
 
-from .recorder import Recorder
+from bundle.utils.recorder import Recorder
 from .variables import CommonVariable, Exploding, BaseVariable
 from . import utils, pycompat
 
@@ -158,7 +158,7 @@ class FileWriter(object):
 
 
 thread_global = threading.local()
-DISABLED = bool(os.getenv('PYSNOOPER_DISABLED', ''))
+DISABLED = bool(os.getenv('SEEKER_DISABLED', ''))
 
 
 class Tracer:
@@ -191,6 +191,7 @@ class Tracer:
                          v if isinstance(v, BaseVariable) else Exploding(v)
                          for v in utils.ensure_tuple(watch_explode)
                      ]
+
         self.frame_to_local_reprs = {}
         self.start_times = {}
         self.depth = depth
@@ -214,12 +215,13 @@ class Tracer:
     @classmethod
     def get_recorder(cls) -> Recorder:
         if not cls._recorder:
-            cls.new_recorder()
+            # For testing, Tracer should not create recorder by itself
+            cls.set_new_recorder(Recorder())
         return cls._recorder
 
     @classmethod
-    def new_recorder(cls) -> None:
-        cls._recorder = Recorder()
+    def set_new_recorder(cls, recorder: Recorder) -> None:
+        cls._recorder = recorder
 
     @classmethod
     def get_recorder_change_list(cls) -> List[dict]:

@@ -17,7 +17,7 @@ from bundle.utils.cache_file_helpers import TempSysPathAdder, load_zip_file, ver
 def test_dump_result(zip_file_dir, unzip_dir):
     zip_file_path = pathlib.Path(os.path.dirname(os.path.realpath(__file__))) / 'zip_files' / zip_file_dir
 
-    with controller(unzip_dir) as cache_folder, TempSysPathAdder(cache_folder):
+    with controller as folder_creator, folder_creator(unzip_dir) as cache_folder, TempSysPathAdder(cache_folder):
         load_zip_file(zip_file_path, cache_folder.cache_folder_path)
         assert verify_unloaded_files(cache_folder.cache_folder_path)
 

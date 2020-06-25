@@ -97,8 +97,7 @@ def truncate(string, max_length):
 
 
 def ensure_tuple(x):
-    if isinstance(x, collections_abc.Iterable) and \
-                                               not isinstance(x, string_types):
+    if isinstance(x, collections_abc.Iterable) and not isinstance(x, string_types):
         return tuple(x)
     else:
         return x,
