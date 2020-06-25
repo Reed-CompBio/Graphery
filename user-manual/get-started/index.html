@@ -226,6 +226,13 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#graph-objects" class="md-nav__link">
     Graph Objects
   </a>
@@ -273,6 +280,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#file-conventions" class="md-nav__link">
+    File conventions
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -309,6 +323,18 @@
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../backend-docs/utils/" title="Utilities" class="md-nav__link">
+      Utilities
+    </a>
+  </li>
+
         
           
           
@@ -365,6 +391,13 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#graph-objects" class="md-nav__link">
     Graph Objects
   </a>
@@ -412,6 +445,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#file-conventions" class="md-nav__link">
+    File conventions
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -429,11 +469,15 @@
                 
                 
                 <h1 id="get-started">Get Started</h1>
+<!-- TODO supply a single graph -->
+
+<h2 id="introduction">Introduction</h2>
+<p>The get stated section is intended for writers who want to prepare their codes for tutorials.</p>
 <h2 id="graph-objects">Graph Objects</h2>
 <p>There are several main building blocks for a graph: <code>Node</code>, <code>NodeSet</code>, <code>Edge</code>, <code>EdgeSet</code>, <code>Graph</code>. In this section, we will go over these concepts.</p>
 <h3 id="node"><code>Node</code></h3>
-<p>Every <code>Node</code> object has a unique id and a name. When the name of a node is not specified specifically, it is filled with it's id and a prefix. For <code>Node</code>, the default prefix is <code>n</code>. So the name of a node with id <code>1</code> is <code>n1</code>. Two <code>Node</code> instances are equal if and only if their ids are equal. Every <code>Node</code> instance has a <code>properties</code> field that collects all the properties this node has. The properties will be displayed once your mouse curser is hovered on the node.</p>
-<p>Some magic methods are overriden so that you can use the basic operators llike <code>==</code> and <code>!=</code>. The equality follows the rules above. </p>
+<p>Every <code>Node</code> object has a unique id and a name. When the name of a node is not specified specifically, it is filled with it's id and a prefix. For <code>Node</code>, the default prefix is <code>n</code>. So the name of a node with id <code>1</code> is <code>n1</code>. Two <code>Node</code> instances are equal if and only if their ids are equal. Every <code>Node</code> instance has a <code>properties</code> field that collects the properties of the instance. The properties will be displayed in a tooltip once your mouse curser is hovered on the node.</p>
+<p>Some magic methods are overridden so that you can use the basic operators like <code>==</code> and <code>!=</code>. The equality follows the rules above.</p>
 <pre><code class="python"># assume n1 and n2 are Node instances
 n1 == n2    # if the id of n1 is equal to that of n2
 n1 != n2    # the negation of equality above
@@ -445,7 +489,7 @@ n1 &lt;= n2
 
 <p>The representation string of a Node object is <code>Node(id: the_node_id)</code>.</p>
 <h3 id="nodeset"><code>NodeSet</code></h3>
-<p><code>NodeSet</code> describes a set of nodes. The elements in the set are unique. It is also not editable (for now). You can also use python native operators to get the relationships between <code>Node</code> and <code>NodeSet</code>. </p>
+<p><code>NodeSet</code> describes a set of nodes. The elements in the set are unique. It is also not editable (for now). You can also use python native operators to get the relationships between <code>Node</code> and <code>NodeSet</code>.</p>
 <pre><code class="python"># assume n1, n2, and n3 are Node instances; node_set is a NodeSet instance
 # the ids of the three nodes are 1, 2, 3 respectively
 # also, n1 and n3 are in node_set while n2 is not
@@ -460,8 +504,8 @@ print(node_set)     # print out [Node(id: 1), Node(id: 3)
 </code></pre>
 
 <h3 id="edge"><code>Edge</code></h3>
-<p><code>Edge</code> is like <code>Node</code> since every instance of <code>Edge</code> has a <code>id</code> and <code>name</code>. The same rules described above are also applied to <code>Edge</code>. The <code>properties</code> field is also present in <code>Edge</code>. It can be accessed using the same method. </p>
-<p>Naturally, instances of <code>Edge</code> also support native pyton operators. But there are more in <code>Edge</code>.</p>
+<p><code>Edge</code> is like <code>Node</code> since every instance of <code>Edge</code> has a <code>id</code> and <code>name</code>. The same rules described above are also applied to <code>Edge</code>. The <code>properties</code> field is also present in <code>Edge</code>. It can be accessed using the same method. An additional field in an <code>Edge</code> instance is <code>directed</code>, which indicates whether the edge is directed.</p>
+<p>Naturally, instances of <code>Edge</code> also support native python operators. But there are more in <code>Edge</code>.</p>
 <pre><code class="python"># assuming n1, n2 and n3 are Node instances
 # e1 is an Edge instance which is from n1 to n2
 n1 in e1            # evaluated True
@@ -473,15 +517,19 @@ len(e1)             # is equal to 2 and does not make sense at all
 
 <p>The representation string of a Edge object is <code>Edge(id: the_edge_id)</code></p>
 <h3 id="edgeset"><code>EdgeSet</code></h3>
-<p>The <code>EdgeSet</code> is similiar to <code>NodeSet</code>. All the operators are supported. </p>
+<p>The <code>EdgeSet</code> is similar to <code>NodeSet</code>. All the operators are supported.</p>
 <h3 id="graph"><code>Graph</code></h3>
-<p>The a <code>Graph</code> instance has a node set and an edge set which are represented by <code>NodeSet</code> and <code>EdgeSet</code>. You can access the node set by calling <code>graph.nodes</code> or <code>graph.V</code> assuming <code>graph</code> is a <code>Graph</code> instance. Similiarly, the edge set can be accessed by <code>graph.edges</code> or <code>graph.E</code>. </p>
+<p>The a <code>Graph</code> instance has a node set and an edge set which are represented by <code>NodeSet</code> and <code>EdgeSet</code>. You can access the node set by calling <code>graph.nodes</code> or <code>graph.V</code> assuming <code>graph</code> is a <code>Graph</code> instance. Similarly, the edge set can be accessed by <code>graph.edges</code> or <code>graph.E</code>.</p>
 <pre><code class="python"># assuming n1, n2, n3, and n4 are nodes in a graph named g1
-# e1, e2, e3 are edges 
+# e1, e2, e3 are edges
 n1 in g1            # evaluated True
 e1 in g1            # evaluated True
 g1.empty()          # evaluated False since the graph is not empty
 </code></pre>
+
+<h2 id="file-conventions">File conventions</h2>
+<p>The files you submit to the backend must contain a <code>entry.py</code> file. The backend will import <code>entry.py</code> and select functions with special prefix and postfix to run tracer on. The files can contain other python files and files other file python source format that may severs as data preparations, etc. But the backend will not import those files. You need to explicit append <code>@tracer()</code> to the functions and supply a list of variables which you want to trace.</p>
+<!-- TODO use @tracer to automatically generate prefix and postfix for functions -->
                 
               
               
@@ -515,13 +563,13 @@ g1.empty()          # evaluated False since the graph is not empty
           </a>
         
         
-          <a href="../../backend-docs/api-specification/" title="APIs" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../../backend-docs/utils/" title="Utilities" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                APIs
+                Utilities
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">
