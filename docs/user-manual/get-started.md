@@ -1,13 +1,20 @@
 # Get Started
 
+<!-- TODO supply a single graph -->
+
+## Introduction
+
+The get stated section is intended for writers who want to prepare their codes for tutorials.
+
 ## Graph Objects
 
 There are several main building blocks for a graph: `Node`, `NodeSet`, `Edge`, `EdgeSet`, `Graph`. In this section, we will go over these concepts.
 
 ### `Node`
-Every `Node` object has a unique id and a name. When the name of a node is not specified specifically, it is filled with it's id and a prefix. For `Node`, the default prefix is `n`. So the name of a node with id `1` is `n1`. Two `Node` instances are equal if and only if their ids are equal. Every `Node` instance has a `properties` field that collects the properties of the instance. The properties will be displayed in a tooptip once your mouse curser is hovered on the node.
 
-Some magic methods are overriden so that you can use the basic operators llike `==` and `!=`. The equality follows the rules above. 
+Every `Node` object has a unique id and a name. When the name of a node is not specified specifically, it is filled with it's id and a prefix. For `Node`, the default prefix is `n`. So the name of a node with id `1` is `n1`. Two `Node` instances are equal if and only if their ids are equal. Every `Node` instance has a `properties` field that collects the properties of the instance. The properties will be displayed in a tooltip once your mouse curser is hovered on the node.
+
+Some magic methods are overridden so that you can use the basic operators like `==` and `!=`. The equality follows the rules above.
 
 ```python
 # assume n1 and n2 are Node instances
@@ -22,7 +29,8 @@ n1 <= n2
 The representation string of a Node object is `Node(id: the_node_id)`.
 
 ### `NodeSet`
-`NodeSet` describes a set of nodes. The elements in the set are unique. It is also not editable (for now). You can also use python native operators to get the relationships between `Node` and `NodeSet`. 
+
+`NodeSet` describes a set of nodes. The elements in the set are unique. It is also not editable (for now). You can also use python native operators to get the relationships between `Node` and `NodeSet`.
 
 ```python
 # assume n1, n2, and n3 are Node instances; node_set is a NodeSet instance
@@ -38,10 +46,11 @@ for node in node_set:
 print(node_set)		# print out [Node(id: 1), Node(id: 3)
 ```
 
-### `Edge` 
-`Edge` is like `Node` since every instance of `Edge` has a `id` and `name`. The same rules described above are also applied to `Edge`. The `properties` field is also present in `Edge`. It can be accessed using the same method. An additional field in an `Edge` instance is `directed`, which indicates whether the edge is directed. 
+### `Edge`
 
-Naturally, instances of `Edge` also support native pyton operators. But there are more in `Edge`.
+`Edge` is like `Node` since every instance of `Edge` has a `id` and `name`. The same rules described above are also applied to `Edge`. The `properties` field is also present in `Edge`. It can be accessed using the same method. An additional field in an `Edge` instance is `directed`, which indicates whether the edge is directed.
+
+Naturally, instances of `Edge` also support native python operators. But there are more in `Edge`.
 
 ```python
 # assuming n1, n2 and n3 are Node instances
@@ -57,17 +66,22 @@ The representation string of a Edge object is `Edge(id: the_edge_id)`
 
 ### `EdgeSet`
 
-The `EdgeSet` is similiar to `NodeSet`. All the operators are supported. 
+The `EdgeSet` is similar to `NodeSet`. All the operators are supported.
 
 ### `Graph`
 
-The a `Graph` instance has a node set and an edge set which are represented by `NodeSet` and `EdgeSet`. You can access the node set by calling `graph.nodes` or `graph.V` assuming `graph` is a `Graph` instance. Similiarly, the edge set can be accessed by `graph.edges` or `graph.E`. 
+The a `Graph` instance has a node set and an edge set which are represented by `NodeSet` and `EdgeSet`. You can access the node set by calling `graph.nodes` or `graph.V` assuming `graph` is a `Graph` instance. Similarly, the edge set can be accessed by `graph.edges` or `graph.E`.
 
 ```python
 # assuming n1, n2, n3, and n4 are nodes in a graph named g1
-# e1, e2, e3 are edges 
+# e1, e2, e3 are edges
 n1 in g1			# evaluated True
 e1 in g1			# evaluated True
 g1.empty()			# evaluated False since the graph is not empty
 ```
 
+## File conventions
+
+The files you submit to the backend must contain a `entry.py` file. The backend will import `entry.py` and select functions with special prefix and postfix to run tracer on. The files can contain other python files and files other file python source format that may severs as data preparations, etc. But the backend will not import those files. You need to explicit append `@tracer()` to the functions and supply a list of variables which you want to trace.
+
+<!-- TODO use @tracer to automatically generate prefix and postfix for functions -->

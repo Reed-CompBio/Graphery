@@ -85,7 +85,7 @@ class Graph:
         return False
 
     @staticmethod
-    def graph_generator(graph_json: str = ''):
+    def graph_generator(graph_json: str = '') -> 'Graph':
         """
         generate a graph instance from json
         template:
