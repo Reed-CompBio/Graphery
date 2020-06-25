@@ -36,15 +36,15 @@ export interface TutorialState {
   articleId: string | null;
   article: {
     title: string;
-    content: string;
+    contentHtml: string;
     authors: string[];
     categories: string[];
-    time: string;
+    modifiedTime: string;
   } | null;
-  graphIDs: string[] | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
   graphs: Graph[] | null;
   codes: { [id: string]: { graphId: string; codes: string } } | null;
+  resultJson: string | object | null;
 }
 
 export const enum GraphLayoutEngines {
@@ -56,15 +56,15 @@ export interface TutorialRequestState {
   articleId?: string;
   article?: {
     title: string;
-    content: string;
+    contentHtml: string;
     authors: string[];
     categories: string[];
-    time: string;
+    modifiedTime: string;
   } | null;
-  graphIDs?: string[] | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
   graphs?: Graph[] | null;
   codes?: { [id: string]: { graphId: string; codes: string } } | null;
+  resultJson?: string | object | null;
 }
 
 export interface SettingInfos {

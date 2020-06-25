@@ -11,7 +11,7 @@ import { MutationTree, ActionTree, GetterTree } from 'vuex';
  */
 const pseudoContent = {
   title: 'Lorem Ipsum',
-  content:
+  contentHtml:
     '<articl><p>' +
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Augue interdum velit euismod in pellentesque massa placerat. Felis imperdiet proin fermentum leo vel orci porta non. Risus sed vulputate odio ut. Pharetra massa massa ultricies mi quis hendrerit. Elementum sagittis vitae et leo duis ut diam. Sodales ut eu sem integer vitae justo eget magna fermentum. Semper risus in hendrerit gravida rutrum quisque non tellus. Tristique et egestas quis ipsum. Nunc scelerisque viverra mauris in aliquam. Varius vel pharetra vel turpis nunc eget lorem dolor.\n' +
     '</p><p>' +
@@ -55,16 +55,17 @@ const pseudoContent = {
     '</p></articl>',
   authors: ['Me'],
   categories: ['hhh'],
-  time: Date(),
+  modifiedTime: Date(),
 };
 
 const state: TutorialState = {
   // TODO do I need the ids?
   articleId: null,
   article: pseudoContent,
-  graphIDs: null,
+  // graphIDs: null,
   graphs: null,
   codes: null,
+  resultJson: null,
   // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 
@@ -131,24 +132,24 @@ const mutations: MutationTree<TutorialState> = {
    * @param {TutorialRequestState} value of the request
    * @todo refined errors
    */
-  LOAD_GRAPH_IDS(state, value: TutorialRequestState) {
-    if (!state.graphIDs) {
-      // TODO hasBeenInitialized
-      throw Error;
-    }
-
-    if (!value.graphIDs) {
-      // TODO argument
-      throw Error;
-    }
-
-    state.graphIDs = value.graphIDs;
-
-    console.debug(`Loaded Graph Ids`);
-  },
-  CLEAR_GRAPH_IDS(state) {
-    state.graphIDs = null;
-  },
+  // LOAD_GRAPH_IDS(state, value: TutorialRequestState) {
+  //   if (!state.graphIDs) {
+  //     // TODO hasBeenInitialized
+  //     throw Error;
+  //   }
+  //
+  //   if (!value.graphIDs) {
+  //     // TODO argument
+  //     throw Error;
+  //   }
+  //
+  //   state.graphIDs = value.graphIDs;
+  //
+  //   console.debug(`Loaded Graph Ids`);
+  // },
+  // CLEAR_GRAPH_IDS(state) {
+  //   state.graphIDs = null;
+  // },
   LOAD_GRAPHS(state, value) {
     // state.graphs = value;
   },
@@ -166,6 +167,7 @@ const mutations: MutationTree<TutorialState> = {
 };
 
 const actions: ActionTree<TutorialState, RootState> = {
+  // TODO API calls go here
   loadTutorial({ commit }, tutorialId) {
     let article = null;
     let graphIds = null;
@@ -175,11 +177,11 @@ const actions: ActionTree<TutorialState, RootState> = {
     commit('LOAD_ARTICLE', article);
     commit('LOAD_GRAPH_IDS', graphIds);
   },
-  loadGraphsByIds({ commit }, graphIds) {
-    let graphs;
-    // TODO promises
-    commit('LOAD_GRAPHS', graphs);
-  },
+  // loadGraphsByIds({ commit }, graphIds) {
+  //   let graphs;
+  //   // TODO promises
+  //   commit('LOAD_GRAPHS', graphs);
+  // },
   loadCodes({ commit }, graphIds) {
     let codes;
     // TODO promises
@@ -202,7 +204,7 @@ const getters: GetterTree<TutorialState, RootState> = {
     // return state.article ? state.article.title : null;
   },
   content(state) {
-    return state.article && state.article.content;
+    return state.article && state.article.contentHtml;
     // return state.article ? state.article.content : null;
   },
   authors(state) {
@@ -212,7 +214,7 @@ const getters: GetterTree<TutorialState, RootState> = {
     return state.article && state.article.categories;
   },
   articleTime(state) {
-    return state.article && state.article.time;
+    return state.article && state.article.modifiedTime;
   },
   articleEmpty(state) {
     return state.article === null;

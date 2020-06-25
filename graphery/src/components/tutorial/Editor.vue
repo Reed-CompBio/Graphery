@@ -1,5 +1,8 @@
 <template>
   <div id="editor-panel" class="editor-light">
+    <div id="result-slider">
+      <!--      <q-slider></q-slider>-->
+    </div>
     <div id="editor" class="full-height"></div>
     <q-inner-loading :showing="editor === null">
       <q-spinner-pie size="64px" color="primary" />
