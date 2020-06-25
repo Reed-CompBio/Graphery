@@ -16,6 +16,7 @@
       return {
         editor: null,
         content: '',
+        decorations: [],
       };
     },
     computed: {
@@ -39,20 +40,38 @@
               document.getElementById('editor'),
               {
                 fontSize: this.fontSize,
-                foldingStrategy: 'indentation', // 代码可分小段折叠
-                automaticLayout: true, // 自适应布局
-                overviewRulerBorder: false, // 不要滚动条的边框
-                scrollBeyondLastLine: false, // 取消代码后面一大段空白
+                foldingStrategy: 'indentation', // fold text by indentation
+                automaticLayout: true, // auto resize
+                overviewRulerBorder: false, // scroll bar no boarder
+                scrollBeyondLastLine: false, // remove blank space at the end of the editor
                 readOnly: false,
                 theme: this.dark ? 'hc-black' : 'vs',
                 language: 'python',
                 minimap: {
                   enabled: false,
-                  // TODO add an option here?
                 },
+                glyphMargin: true,
               }
             );
             console.debug('mounted monaco editor');
+
+            // Set text to editor
+            this.editor.setValue(
+              ['def hello():', '\tprint("hello world :)")'].join('\n')
+            );
+
+            const decoration = {
+              range: new monacoEditor.Range(2, 1, 2, 1),
+              options: {
+                isWholeLine: true,
+                className: 'exec-line-box',
+                glyphMarginClassName: 'exec-line-pointer',
+                glyphMarginHoverMessage: 'Executing this line',
+              },
+            };
+            this.decorations = this.editor.deltaDecorations(this.decorations, [
+              decoration,
+            ]);
           })
           .catch((err) => {
             console.error(
@@ -70,3 +89,7 @@
     },
   };
 </script>
+
+<style lang="sass">
+  @import "~@/styles/editor.sass"
+</style>
