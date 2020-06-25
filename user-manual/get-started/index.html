@@ -478,54 +478,58 @@
 <h3 id="node"><code>Node</code></h3>
 <p>Every <code>Node</code> object has a unique id and a name. When the name of a node is not specified specifically, it is filled with it's id and a prefix. For <code>Node</code>, the default prefix is <code>n</code>. So the name of a node with id <code>1</code> is <code>n1</code>. Two <code>Node</code> instances are equal if and only if their ids are equal. Every <code>Node</code> instance has a <code>properties</code> field that collects the properties of the instance. The properties will be displayed in a tooltip once your mouse curser is hovered on the node.</p>
 <p>Some magic methods are overridden so that you can use the basic operators like <code>==</code> and <code>!=</code>. The equality follows the rules above.</p>
-<pre><code class="python"># assume n1 and n2 are Node instances
-n1 == n2    # if the id of n1 is equal to that of n2
-n1 != n2    # the negation of equality above
-n1 &gt; n2     # if the id of n1 is bigger than n2
-n1 &lt; n2     # if the id of n1 is smaller than n2
-n1 &gt;= n2
-n1 &lt;= n2
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="c1"># assume n1 and n2 are Node instances</span>
+<span class="n">n1</span> <span class="o">==</span> <span class="n">n2</span>    <span class="c1"># if the id of n1 is equal to that of n2</span>
+<span class="n">n1</span> <span class="o">!=</span> <span class="n">n2</span>    <span class="c1"># the negation of equality above</span>
+<span class="n">n1</span> <span class="o">&gt;</span> <span class="n">n2</span>     <span class="c1"># if the id of n1 is bigger than n2</span>
+<span class="n">n1</span> <span class="o">&lt;</span> <span class="n">n2</span>     <span class="c1"># if the id of n1 is smaller than n2</span>
+<span class="n">n1</span> <span class="o">&gt;=</span> <span class="n">n2</span>
+<span class="n">n1</span> <span class="o">&lt;=</span> <span class="n">n2</span>
+</code></pre></div>
+
 
 <p>The representation string of a Node object is <code>Node(id: the_node_id)</code>.</p>
 <h3 id="nodeset"><code>NodeSet</code></h3>
 <p><code>NodeSet</code> describes a set of nodes. The elements in the set are unique. It is also not editable (for now). You can also use python native operators to get the relationships between <code>Node</code> and <code>NodeSet</code>.</p>
-<pre><code class="python"># assume n1, n2, and n3 are Node instances; node_set is a NodeSet instance
-# the ids of the three nodes are 1, 2, 3 respectively
-# also, n1 and n3 are in node_set while n2 is not
-len(node_set) == 2  # evaluated True
-node_set[1] == n1   # evaluated True
-n3 in node_set      # evaluated True
-n2 not in node_set  # evaluated True
-for node in node_set:
-    print(node)     # this will print Node(id: 1) and Node(id: 3)
-                    # on separated lines
-print(node_set)     # print out [Node(id: 1), Node(id: 3)
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="c1"># assume n1, n2, and n3 are Node instances; node_set is a NodeSet instance</span>
+<span class="c1"># the ids of the three nodes are 1, 2, 3 respectively</span>
+<span class="c1"># also, n1 and n3 are in node_set while n2 is not</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">node_set</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>  <span class="c1"># evaluated True</span>
+<span class="n">node_set</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">n1</span>   <span class="c1"># evaluated True</span>
+<span class="n">n3</span> <span class="ow">in</span> <span class="n">node_set</span>      <span class="c1"># evaluated True</span>
+<span class="n">n2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">node_set</span>  <span class="c1"># evaluated True</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">node_set</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>     <span class="c1"># this will print Node(id: 1) and Node(id: 3)</span>
+                    <span class="c1"># on separated lines</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">node_set</span><span class="p">)</span>     <span class="c1"># print out [Node(id: 1), Node(id: 3)</span>
+</code></pre></div>
+
 
 <h3 id="edge"><code>Edge</code></h3>
 <p><code>Edge</code> is like <code>Node</code> since every instance of <code>Edge</code> has a <code>id</code> and <code>name</code>. The same rules described above are also applied to <code>Edge</code>. The <code>properties</code> field is also present in <code>Edge</code>. It can be accessed using the same method. An additional field in an <code>Edge</code> instance is <code>directed</code>, which indicates whether the edge is directed.</p>
 <p>Naturally, instances of <code>Edge</code> also support native python operators. But there are more in <code>Edge</code>.</p>
-<pre><code class="python"># assuming n1, n2 and n3 are Node instances
-# e1 is an Edge instance which is from n1 to n2
-n1 in e1            # evaluated True
-n3 in e1            # evaluated False
-for node in edge:
-    print(node)     # this will print Node(id: 1) and Node(id: 2)
-len(e1)             # is equal to 2 and does not make sense at all
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="c1"># assuming n1, n2 and n3 are Node instances</span>
+<span class="c1"># e1 is an Edge instance which is from n1 to n2</span>
+<span class="n">n1</span> <span class="ow">in</span> <span class="n">e1</span>            <span class="c1"># evaluated True</span>
+<span class="n">n3</span> <span class="ow">in</span> <span class="n">e1</span>            <span class="c1"># evaluated False</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">edge</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>     <span class="c1"># this will print Node(id: 1) and Node(id: 2)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">e1</span><span class="p">)</span>             <span class="c1"># is equal to 2 and does not make sense at all</span>
+</code></pre></div>
+
 
 <p>The representation string of a Edge object is <code>Edge(id: the_edge_id)</code></p>
 <h3 id="edgeset"><code>EdgeSet</code></h3>
 <p>The <code>EdgeSet</code> is similar to <code>NodeSet</code>. All the operators are supported.</p>
 <h3 id="graph"><code>Graph</code></h3>
 <p>The a <code>Graph</code> instance has a node set and an edge set which are represented by <code>NodeSet</code> and <code>EdgeSet</code>. You can access the node set by calling <code>graph.nodes</code> or <code>graph.V</code> assuming <code>graph</code> is a <code>Graph</code> instance. Similarly, the edge set can be accessed by <code>graph.edges</code> or <code>graph.E</code>.</p>
-<pre><code class="python"># assuming n1, n2, n3, and n4 are nodes in a graph named g1
-# e1, e2, e3 are edges
-n1 in g1            # evaluated True
-e1 in g1            # evaluated True
-g1.empty()          # evaluated False since the graph is not empty
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="c1"># assuming n1, n2, n3, and n4 are nodes in a graph named g1</span>
+<span class="c1"># e1, e2, e3 are edges</span>
+<span class="n">n1</span> <span class="ow">in</span> <span class="n">g1</span>            <span class="c1"># evaluated True</span>
+<span class="n">e1</span> <span class="ow">in</span> <span class="n">g1</span>            <span class="c1"># evaluated True</span>
+<span class="n">g1</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>          <span class="c1"># evaluated False since the graph is not empty</span>
+</code></pre></div>
+
 
 <h2 id="file-conventions">File conventions</h2>
 <p>The files you submit to the backend must contain a <code>entry.py</code> file. The backend will import <code>entry.py</code> and select functions with special prefix and postfix to run tracer on. The files can contain other python files and files other file python source format that may severs as data preparations, etc. But the backend will not import those files. You need to explicit append <code>@tracer()</code> to the functions and supply a list of variables which you want to trace.</p>
