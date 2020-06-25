@@ -102,10 +102,9 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
     @uuid_field_adder
     class Meta:
         model = Tutorial
-        fields = ('url', 'content',
-                  'categories', 'graph_set',
-                  'code',
-                  )
+        fields = ('url', 'name',
+                  'content', 'categories',
+                  'graph_set', 'code',)
 
         description = 'The tutorial anchor for an tutorial article. ' \
                       'The contents are in translation table that ' \
@@ -127,11 +126,10 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
     @uuid_field_adder
     class Meta:
         model = Graph
-        fields = ('url', 'graph_info',
-                  'cyjs', 'tutorials',
-                  'execresultjson_set',
-                  'priority'
-                  )
+        fields = ('url', 'name',
+                  'graph_info', 'cyjs',
+                  'tutorials', 'execresultjson_set',
+                  'priority')
         description = 'Graph type that contains info of a graph like ' \
                       'cyjs, style json, and layout json'
 

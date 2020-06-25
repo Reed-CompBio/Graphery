@@ -15,6 +15,7 @@ class Tutorial(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
     # meta data
     # TODO add a url verification
     url = models.CharField(max_length=100, unique=True, blank=False, null=False)
+    name = models.CharField(max_length=100, unique=True, blank=False, null=False)
     categories = models.ManyToManyField(Category)
 
     def get_translation(self, translation: str, default: str):
@@ -31,6 +32,7 @@ class GraphPriority(models.IntegerChoices):
 
 class Graph(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
     url = models.CharField(max_length=100, unique=True, blank=False, null=False)
+    name = models.CharField(max_length=100, unique=True, blank=False, null=False)
     graph_info = models.TextField()
     priority = models.PositiveSmallIntegerField(choices=GraphPriority.choices, default=GraphPriority.MAIN)
     # json
