@@ -305,7 +305,7 @@ class Tracer:
             return simple_wrapper
 
     def write(self, s):
-        s = u'{self.prefix}{s}\n'.format(**locals())
+        s = u'{input}\n'.format(input=s)
         self._write(s)
 
     def __enter__(self):
