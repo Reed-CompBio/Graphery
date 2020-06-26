@@ -14,20 +14,16 @@ class Controller:
         self.main_cache_folder = CacheFolder(cache_path, auto_delete=False)
         self.log_folder = CacheFolder(cache_path, auto_delete=False)
         self.tracer_cls = tracer
-        self.recorder = None
-        self.processor = None
+        self.recorder = Recorder()
+        self.processor = Processor()
 
         self.main_cache_folder.__enter__()
         self.tracer_cls.set_log_file_dir(self.log_folder.cache_folder_path)
 
-    def load_new_recorder(self) -> None:
-        self.recorder = Recorder()
+        self.tracer_cls.set_new_recorder(self.recorder)
 
     def get_recorded_content(self):
         return self.recorder.changes
-
-    def load_new_processor(self) -> None:
-        self.processor = Processor()
 
     def __call__(self, dir_name: Union[str, pathlib.Path] = None,
                        mode: int = 0o777,
@@ -39,17 +35,16 @@ class Controller:
             return self.main_cache_folder
 
     def __enter__(self):
-        self.load_new_recorder()
-        self.load_new_processor()
+        self.recorder.purge()
+        self.processor.purge()
 
-        self.tracer_cls.set_new_recorder(self.recorder)
         self.tracer_cls.set_log_file_name(str(time()))
         # TODO give a prompt that the current session is under this time stamp
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        # TODO process data here
-        pass
+        self.processor.load_data(change_list=self.recorder.changes, variables=self.recorder.variables)
+        self.processor.generate_result_json()
 
     def __del__(self):
         self.main_cache_folder.__exit__(None, None, None)

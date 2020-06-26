@@ -27,8 +27,13 @@ def test_dump_result(zip_file_dir, unzip_dir):
                               for attr_name in [item for item in dir(imported_module)
                                                 if item.startswith('graphery_')]
                               ]
-        for func in graphery_functions:
-            result = func()
+        # for func in graphery_functions:
+        #     result = func()
+
+        result = graphery_functions[0]()
 
         del sys.modules['entry']
         del imported_module
+
+    print(controller.processor.result)
+    print(controller.processor.result_json)

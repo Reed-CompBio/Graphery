@@ -1,13 +1,13 @@
 from copy import copy
-from typing import Tuple, Mapping, List, Any, Iterable, MutableMapping, Optional
+from typing import Tuple, Mapping, List, Any, Iterable, MutableMapping, Optional, Set
 import json
 
 from bundle.GraphObjects.Edge import Edge
 from bundle.GraphObjects.Node import Node
 
 
-def make_tuple(var) -> Tuple:
-    return var,
+def identifier_to_name(identifier: Tuple[str, str]) -> str:
+    return '{}#{}'.format(*identifier)
 
 
 class Processor:
@@ -17,13 +17,13 @@ class Processor:
 
     ACCESSED_COLOR = "#B15928"
     ACCESSED_IDENTIFIER = ('global', '__accessed_variables')
+    ACCESSED_ID_NAME = identifier_to_name(ACCESSED_IDENTIFIER)
     """
     Processor should return the state at that line if changes took place in the code
     if some variables are not changed, I will record it's value. If it's empty, the corresponding
     value will be set to none.
     """
     def __init__(self, variable_number_limit: int = 10):
-        # TODO put the register work to recorder
         self.variable_number_limit = variable_number_limit
         self._no_limit = False
         self.variable_color_map: dict = {}
@@ -33,43 +33,43 @@ class Processor:
     def _no_limit_override(self, flag: bool) -> None:
         self._no_limit = flag
 
-    def load_variables_and_create_color_map(self, variables: List[Tuple[str, str]]) -> None:
+    def load_variables_and_create_color_map(self, variables: Set[Tuple[str, str]]) -> None:
         if len(variables) > self.variable_number_limit and not self._no_limit:
             raise AssertionError('The number of variable input cannot exceed {}!'.format(self.variable_number_limit))
 
         self.create_color_map(variables)
 
-    def create_color_map(self, variables: List[Tuple[str, str]]) -> None:
+    def create_color_map(self, variables: Set[Tuple[str, str]]) -> None:
         for variable, color in zip(variables, self.COLOR_PALETTE):
             self.variable_color_map[variable] = color
 
     def get_result_json(self) -> Mapping:
-        if not self.result_json:
-            self.generate_result_json()
         return self.result_json
 
     def generate_result_json(self) -> None:
         self.result_json = json.dumps(self.result)
 
-    def load_data(self, change_list: List[Mapping], variables: List[Tuple]) -> object:
+    def load_data(self, change_list: List[Mapping], variables: Set[Tuple[str, str]]) -> object:
         self.load_variables_and_create_color_map(variables=variables)
 
         # init the mapping with None values, indicating at the beginning of the program nothing is initialized
-        record_mapping = {self.ACCESSED_IDENTIFIER: None}
-        record_mapping.update(zip(variables, [None] * len(variables)))
+        record_mapping: MutableMapping[str, Any] = {self.ACCESSED_ID_NAME: None}
+        record_mapping.update(zip([identifier_to_name(var) for var in variables], [None] * len(variables)))
+
+        # append it in the first item of the list?
 
         for mapping in change_list:
             self.result.append(self.generate_record_template(
                 record_mapping=record_mapping,
                 line=mapping['line'],
                 variable_changes=mapping['variables'],
-                accessed_variables=mapping['accessed']
+                accessed_variables=mapping['accesses']
             ))
 
         return self.result
 
     def generate_record_template(self,
-                                 record_mapping: MutableMapping[Tuple[str, str], Any],
+                                 record_mapping: MutableMapping[str, Any],
                                  line: int,
                                  variable_changes: Mapping[Tuple[str, str], Any],
                                  accessed_variables: List) -> Mapping:
@@ -99,8 +99,6 @@ class Processor:
         if variable_changes is None and accessed_variables is None:
             return {'line': line, 'variables': None}
 
-        record_mapping = copy(record_mapping)
-
         if isinstance(variable_changes, Mapping):
             # only update the changes by looping through variable change list
             for key, value in variable_changes.items():
@@ -113,11 +111,12 @@ class Processor:
                 else:
                     variable_value = repr(value)
 
-                record_mapping[key] = variable_value
+                record_mapping[identifier_to_name(key)] = variable_value
 
-        record_mapping[self.ACCESSED_IDENTIFIER] = self.resolve_accessed(accessed_variables=accessed_variables)
+        record_mapping[self.ACCESSED_ID_NAME] = self.resolve_accessed(accessed_variables=accessed_variables)
 
-        return {'line': line, 'variables': record_mapping}
+        # only save a copy of the dict or all the `variables` will point to one thing
+        return {'line': line, 'variables': copy(record_mapping)}
 
     @classmethod
     def resolve_accessed(cls, accessed_variables) -> Optional[List]:
@@ -135,3 +134,8 @@ class Processor:
 
             return record
         return None
+
+    def purge(self):
+        self.variable_color_map: dict = {}
+        self.result = []
+        self.result_json = None

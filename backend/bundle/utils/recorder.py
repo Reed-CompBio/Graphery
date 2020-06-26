@@ -97,3 +97,7 @@ class Recorder:
         @return: None
         """
         self.get_last_ac().append(access_changes)
+
+    def purge(self):
+        self.changes: List[dict] = []
+        self.variables: Set[Tuple[str, str]] = set()
