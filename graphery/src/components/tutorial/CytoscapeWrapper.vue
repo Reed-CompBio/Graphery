@@ -233,44 +233,61 @@
             import('tippy.js')
               .then((tp) => {
                 console.debug('Tippy module: ', tp);
-
                 Tippy = tp.default;
                 this.moduleLoad();
               })
               .then(() => {
-                this.setupInteractivityTest(this.cyInstance);
+                this.setupInteractivity(this.cyInstance);
               });
           });
       },
-      makeTippy(ref) {},
-      setupInteractivityTest(instance) {
+      makeTippy(node, text) {
+        const ref = node.popperRef();
+        const dummyDomEle = document.createElement('div');
+        const tip = Tippy(dummyDomEle, {
+          onCreate: function(instance) {
+            instance.popperInstance.reference = ref;
+          },
+          lazy: false, // mandatory
+          trigger: 'manual', // mandatory
+
+          // dom element inside the tippy:
+          content: function() {
+            // function can be better for performance
+            const div = document.createElement('div');
+
+            div.innerHTML = text;
+
+            return div;
+          },
+
+          // your own preferences:
+          arrow: true,
+          placement: 'bottom',
+          theme: 'material',
+          hideOnClick: 'true',
+          delay: [0, 2000],
+          animation: 'fade',
+          multiple: false,
+          flip: true,
+          flipOnUpdate: true,
+          duration: [250, 275],
+          allowHTML: true,
+          touch: true,
+          // sticky: 'popper', // don't need it
+
+          // if interactive:
+          interactive: true,
+          appendTo: document.body, // or append dummyDomEle to document.body
+        });
+
+        return tip;
+      },
+      setupInteractivity(instance) {
         // show node tooltips
         instance.on('mouseover', 'node', (event) => {
           const node = event.target;
-          const ref = node.popperRef();
-          this.tippy = new Tippy(ref, {
-            content: () => {
-              this.testValue += 1;
-              return `test content ${this.testValue}`;
-            },
-            // style setup
-            theme: 'light-border',
-            lazy: false,
-            trigger: 'manual',
-            arrow: true,
-            placement: 'left',
-            hideOnClick: 'true',
-            delay: [0, 2000],
-            animation: 'fade',
-            multiple: false,
-            sticky: true,
-            flip: true,
-            flipOnUpdate: true,
-            duration: [250, 275],
-            allowHTML: true,
-            interactive: true,
-            touch: true,
-          });
+          this.tippy = this.makeTippy(node, `test content ${this.testValue}`);
           this.tippy.show();
         });
         instance.on('mouseout', 'node', (_) => {
@@ -282,27 +299,8 @@
         // show edge tooltips
         instance.on('mouseover', 'edge', (event) => {
           const node = event.target;
-          const ref = node.popperRef();
-          this.tippy = new Tippy(ref, {
-            content: `test content ${this.testValue}`,
-            // style setup
-            theme: 'light-border',
-            lazy: false,
-            trigger: 'manual',
-            arrow: true,
-            placement: 'left',
-            hideOnClick: 'true',
-            delay: [0, 2000],
-            animation: 'fade',
-            multiple: false,
-            sticky: true,
-            flip: true,
-            flipOnUpdate: true,
-            duration: [250, 275],
-            allowHTML: true,
-            interactive: true,
-            touch: true,
-          });
+          this.tippy = this.makeTippy(node, `test content ${this.testValue}`);
+          this.tippy.show();
         });
 
         instance.on('mouseout', 'edge', (_) => {
@@ -381,7 +379,7 @@
 
 <style lang="sass">
   @import '~@/styles/panzoom.css'
-  @import '~tippy.js/themes/light-border.css'
+  @import '~tippy.js/dist/tippy.css'
 
   .graph-menu-bar
     min-height: 56px
