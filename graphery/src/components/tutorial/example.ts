@@ -1,25 +1,20 @@
 export default {
-  /* TODO cy.style()
-   *   .resetToDefault() // start a fresh default stylesheet
-   *   .selector('node')
-   *   .style('background-color', 'magenta')
-   *   .update()
+  /* TODO cy.style(obj) and cy.removeStyle(name)
    * TODO add a strict version lol with <200b> unicode in it.
    */
   style: [
     {
       selector: 'node',
       css: {
-        label: 'data(label)',
+        label: 'data(id)',
         'text-valign': 'bottom',
         'text-halign': 'center',
         height: '60px',
         width: '60px',
         'border-color': 'black',
         'border-opacity': '1',
-        // 'background-image':
-        //   'https://farm8.staticflickr.com/7272/7633179468_3e19e45a0c_b.jpg',
-        'overlay-color': 'red',
+        'background-image':
+          'https://farm8.staticflickr.com/7272/7633179468_3e19e45a0c_b.jpg',
       },
     },
     {
@@ -60,16 +55,10 @@ export default {
         scratch: {
           _degree: '20',
         },
-        // node style
-        style: {
-          label: 'data(id)',
-          // 'background-color': 'green',
-          'overlay-color': 'lightblue',
-        },
       },
-      { data: { id: 1, label: 'N1' } },
-      { data: { id: 2, label: 'N2' } },
-      { data: { id: 3, label: 'N3' } },
+      { data: { id: 1 } },
+      { data: { id: 2 } },
+      { data: { id: 3 } },
       { data: { id: 4 } },
       { data: { id: 5 } },
       { data: { id: 6 } },

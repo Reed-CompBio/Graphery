@@ -77,6 +77,7 @@
             ]);
           })
           .catch((err) => {
+            // TODO setup popup
             console.error(
               'An error occurs when initializing the monaco code editor',
               err

@@ -136,51 +136,56 @@
           cytoscape = cy.default;
 
           console.debug('cytoscape module: ', cy);
-
+        })
+        .then(() => {
           // start init
-          {
-            const element = document.createElement('div');
-            element.setAttribute('id', 'cy-mounting-point');
-            element.setAttribute('class', 'cytoscape');
-            element.setAttribute('class', 'full-height');
 
-            this.$refs.cy.appendChild(element);
+          const element = document.createElement('div');
+          element.setAttribute('id', 'cy-mounting-point');
+          element.setAttribute('class', 'cytoscape');
+          element.setAttribute('class', 'full-height');
 
-            // When passing objects to Cytoscape.js for creating elements, animations, layouts, etc.,
-            // the objects are considered owned by Cytoscape. __** this may cause conflicts when workint with vuex **__
-            // When desired, the programmer can copy objects manually before passing them to Cytoscape. However,
-            // copying is not necessary for most programmers most of the time.
-            //
-            // cannot use get element by id
-            // NOTE: Vue will try to create observers for each property in this nested cytoscape object
-            //       and it crashed my browser several times. By freezing it, we tell Vue to not bother
-            //       about it. This isn't a reactive property anyway, just a variable in the component.
+          this.$refs.cy.appendChild(element);
 
-            this.cyInstance = Object.freeze(
-              cytoscape({
-                container: element,
-                // animation settings
-                textureOnViewport: this.renderViewportOnly,
-                hideEdgesOnViewport: this.hideEdgeWhenRendering,
-                motionBlur: this.motionBlurEnabled,
-                zoom: 1,
-                styleEnabled: true,
-                ...example,
-              })
-            );
-            console.debug('cy obj is mounted', this.cyInstance);
+          /*
+           * When passing objects to Cytoscape.js for creating elements, animations, layouts, etc.,
+           * the objects are considered owned by Cytoscape. __** this may cause conflicts when working with vuex **__
+           * When desired, the programmer can copy objects manually before passing them to Cytoscape. However,
+           * copying is not necessary for most programmers most of the time.
+           *
+           * cannot use get element by id
+           * NOTE: Vue will try to create observers for each property in this nested cytoscape object
+           *       and it crashed my browser several times. By freezing it, we tell Vue to not bother
+           *       about it. This isn't a reactive property anyway, just a variable in the component.
+           *
+           */
 
-            // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph
-            this.$nextTick(() => {
-              this.resizeGraph();
-            });
+          this.cyInstance = Object.freeze(
+            cytoscape({
+              container: element,
+              // animation settings
+              textureOnViewport: this.renderViewportOnly,
+              hideEdgesOnViewport: this.hideEdgeWhenRendering,
+              motionBlur: this.motionBlurEnabled,
+              zoom: 1,
+              styleEnabled: true,
+              ...example,
+            })
+          );
+          console.debug('cy obj is mounted', this.cyInstance);
 
-            this.moduleLoad();
-          }
+          // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph
+          this.$nextTick(() => {
+            this.resizeGraph();
+          });
 
+          this.moduleLoad();
+        })
+        .then(() => {
           this.registerExtensions();
         })
         .catch((error) => {
+          // TODO load up popup
           console.debug('error occur', error);
         });
     },
@@ -188,11 +193,6 @@
       moduleLoad() {
         this.moduleLoadedNum += 1;
       },
-      /**
-       * Triggers a graph resize, forcing it to repaint itself. Useful when the graph nodes and edges have been
-       * modified, or when an older browser doesn't render the graph until it is resized.
-       * @see https://github.com/cytoscape/cytoscape.js/issues/1748
-       */
       registerExtensions() {
         import('cytoscape-panzoom').then((pz) => {
           console.debug('cytoscape panzoom module: ', pz);
@@ -226,7 +226,9 @@
             console.debug('cytoscape popper module: ', pp);
 
             popper = pp.default;
-            cytoscape.use(popper);
+            if (typeof cytoscape('core', 'popper') !== 'function') {
+              cytoscape.use(popper);
+            }
             this.moduleLoad();
           })
           .then(() => {
@@ -237,14 +239,14 @@
                 this.moduleLoad();
               })
               .then(() => {
-                this.setupInteractivity(this.cyInstance);
+                this.setupTooltips(this.cyInstance);
               });
           });
       },
       makeTippy(node, text) {
         const ref = node.popperRef();
         const dummyDomEle = document.createElement('div');
-        const tip = Tippy(dummyDomEle, {
+        return Tippy(dummyDomEle, {
           onCreate: function(instance) {
             instance.popperInstance.reference = ref;
           },
@@ -280,10 +282,8 @@
           interactive: true,
           appendTo: document.body, // or append dummyDomEle to document.body
         });
-
-        return tip;
       },
-      setupInteractivity(instance) {
+      setupTooltips(instance) {
         // show node tooltips
         instance.on('mouseover', 'node', (event) => {
           const node = event.target;
@@ -308,6 +308,15 @@
             this.tippy.hide();
           }
         });
+      },
+      highlightElement(id, color) {
+        this.cyInstance.getElementById(id).style({
+          'overlay-color': color,
+          'overlay-opacity': 0.5,
+        });
+      },
+      unhighlightElement(id) {
+        this.cyInstance.getElementById(id).removeStyle('overlay-opacity');
       },
       /**
        * copied from
@@ -368,6 +377,11 @@
         }
         return false;
       },
+      /**
+       * Triggers a graph resize, forcing it to repaint itself. Useful when the graph nodes and edges have been
+       * modified, or when an older browser doesn't render the graph until it is resized.
+       * @see https://github.com/cytoscape/cytoscape.js/issues/1748
+       */
       resizeGraph() {
         if (this.cyInstance) {
           this.cyInstance.resize();

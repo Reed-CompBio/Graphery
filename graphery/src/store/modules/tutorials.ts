@@ -190,7 +190,7 @@ const actions: ActionTree<TutorialState, RootState> = {
   clearAll({ commit }) {
     commit('CLEAR_ARTICLE_ID');
     commit('CLEAR_ARTICLE');
-    commit('CLEAR_GRAPH_IDS');
+    // commit('CLEAR_GRAPH_IDS');
     commit('CLEAR_GRAPHS');
     commit('CLEAR_CODES');
   },
