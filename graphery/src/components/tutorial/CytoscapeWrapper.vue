@@ -54,9 +54,13 @@
 </template>
 
 <script>
+  import pp from 'cytoscape-popper';
+  console.log(pp);
   let cytoscape;
   let panzoom;
   let dagre;
+  let Tippy;
+  let popper;
 
   import { graphMenuHeaderSize } from '../../store/states/meta';
   import { mapState, mapGetters } from 'vuex';
@@ -77,7 +81,9 @@
         cyInstance: null,
         graphChoice: '', // used in drop menu to select graphs
         moduleLoadedNum: 0,
-        moduleTargetNum: 3,
+        moduleTargetNum: 5,
+        tippy: null,
+        testValue: 0,
       };
     },
     computed: {
@@ -193,7 +199,7 @@
           panzoom = pz.default;
 
           if (typeof cytoscape('core', 'panzoom') !== 'function') {
-            panzoom(cytoscape);
+            cytoscape.use(panzoom);
           }
 
           this.cyInstance.panzoom(panzoomDefaults);
@@ -213,6 +219,96 @@
 
           this.updateLayout();
           this.moduleLoad();
+        });
+
+        import('cytoscape-popper')
+          .then((pp) => {
+            console.debug('cytoscape popper module: ', pp);
+
+            popper = pp.default;
+            cytoscape.use(popper);
+            this.moduleLoad();
+          })
+          .then(() => {
+            import('tippy.js')
+              .then((tp) => {
+                console.debug('Tippy module: ', tp);
+
+                Tippy = tp.default;
+                this.moduleLoad();
+              })
+              .then(() => {
+                this.setupInteractivityTest(this.cyInstance);
+              });
+          });
+      },
+      makeTippy(ref) {},
+      setupInteractivityTest(instance) {
+        // show node tooltips
+        instance.on('mouseover', 'node', (event) => {
+          const node = event.target;
+          const ref = node.popperRef();
+          this.tippy = new Tippy(ref, {
+            content: () => {
+              this.testValue += 1;
+              return `test content ${this.testValue}`;
+            },
+            // style setup
+            theme: 'light-border',
+            lazy: false,
+            trigger: 'manual',
+            arrow: true,
+            placement: 'left',
+            hideOnClick: 'true',
+            delay: [0, 2000],
+            animation: 'fade',
+            multiple: false,
+            sticky: true,
+            flip: true,
+            flipOnUpdate: true,
+            duration: [250, 275],
+            allowHTML: true,
+            interactive: true,
+            touch: true,
+          });
+          this.tippy.show();
+        });
+        instance.on('mouseout', 'node', (_) => {
+          if (this.tippy !== null) {
+            this.tippy.hide();
+          }
+        });
+
+        // show edge tooltips
+        instance.on('mouseover', 'edge', (event) => {
+          const node = event.target;
+          const ref = node.popperRef();
+          this.tippy = new Tippy(ref, {
+            content: `test content ${this.testValue}`,
+            // style setup
+            theme: 'light-border',
+            lazy: false,
+            trigger: 'manual',
+            arrow: true,
+            placement: 'left',
+            hideOnClick: 'true',
+            delay: [0, 2000],
+            animation: 'fade',
+            multiple: false,
+            sticky: true,
+            flip: true,
+            flipOnUpdate: true,
+            duration: [250, 275],
+            allowHTML: true,
+            interactive: true,
+            touch: true,
+          });
+        });
+
+        instance.on('mouseout', 'edge', (_) => {
+          if (this.tippy !== null) {
+            this.tippy.hide();
+          }
         });
       },
       /**
@@ -285,6 +381,7 @@
 
 <style lang="sass">
   @import '~@/styles/panzoom.css'
+  @import '~tippy.js/themes/light-border.css'
 
   .graph-menu-bar
     min-height: 56px
