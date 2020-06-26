@@ -1,4 +1,4 @@
-from typing import Tuple, Any, List
+from typing import Tuple, Any, List, Set
 
 
 class Recorder:
@@ -26,6 +26,10 @@ class Recorder:
     """
     def __init__(self):
         self.changes: List[dict] = []
+        self.variables: Set[Tuple[str, str]] = set()
+
+    def register_variable(self, identifier: Tuple[str, str]) -> None:
+        self.variables.add(identifier)
 
     def add_record(self, line_no: int = -1) -> None:
         """
@@ -72,18 +76,19 @@ class Recorder:
             self.get_last_record()['accesses'] = []
         return self.get_last_record()['accesses']
 
-    def add_vc_to_last_record(self, variable_change: Tuple[str, Any]) -> None:
+    def add_vc_to_last_record(self, variable_identifier: Tuple[str, str], variable_state: Any) -> None:
         """
         add a variable change to the last record
-        @param variable_change: (accessed variable name, variable content)
+        @param variable_identifier: (name_space, variable_name)
+        @param variable_state: the variable state
         @return: None
         """
-        if isinstance(variable_change, Tuple):
-            self.get_last_vc()[variable_change[0]] = variable_change[1]
+        # if isinstance(variable_change, Tuple):
+        self.get_last_vc()[variable_identifier] = variable_state
 
-    def add_vc_to_previous_record(self, variable_change: Tuple[str, Any]) -> None:
-        if isinstance(variable_change, Tuple) and len(self.changes) > 1:
-            self.get_previous_vc()[variable_change[0]] = variable_change[1]
+    def add_vc_to_previous_record(self, variable_identifier: Tuple[str, str], variable_state: Any) -> None:
+        # if isinstance(variable_change, Tuple) and len(self.changes) > 1:
+        self.get_previous_vc()[variable_identifier] = variable_state
 
     def add_ac_to_last_record(self, access_changes: Any) -> None:
         """
@@ -92,12 +97,3 @@ class Recorder:
         @return: None
         """
         self.get_last_ac().append(access_changes)
-
-
-class GraphRecorder(Recorder):
-    """
-    A recorder dedicated to graph objects
-    @note: I don't think I need it
-    """
-    def __init__(self):
-        super(Recorder, self).__init__()

@@ -6,19 +6,16 @@ def make_tuple(var) -> Tuple:
 
 
 class Processor:
+    """
+    Processor should return the state at that line if changes took place in the code
+    if some variables are not changed, I will record it's value. If it's empty, the corresponding
+    value will be set to none.
+    """
     def __init__(self, variable_number_limit: int = 10):
-        self.variables = set()
+        # TODO put the register work to recorder
         self.variable_number_limit = variable_number_limit
         self.variable_color_map: Mapping = None
         self.result_json: Mapping = None
-
-    def register_variable(self, variable) -> None:
-        if len(self.variables) >= self.variable_number_limit:
-            raise AssertionError('You cannot trace more than 10 variables')
-        self.variables.add(make_tuple(variable))
-
-    def clear_storage(self) -> None:
-        self.variables = set()
 
     def create_color_map(self) -> None:
         pass

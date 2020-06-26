@@ -12,6 +12,7 @@ def use_samples():
 
 def test_simple_loop(use_samples):
     use_samples.simple_loop_trace_non()
+    print(use_samples.tracer.get_recorder_change_list())
     assert ChangeList() \
                .record(5) \
                .loop_records(10, (6,), (7,)) \

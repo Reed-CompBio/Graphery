@@ -239,6 +239,9 @@ class Tracer:
         if DISABLED:
             return function_or_class
 
+        # add prefix
+        self.prefix = function_or_class.__name__
+
         if inspect.isclass(function_or_class):
             return self._wrap_class(function_or_class)
         else:
@@ -442,17 +445,19 @@ class Tracer:
                          'New var:....... ')
 
         for name, (value, value_repr) in local_reprs.items():
-
+            identifier = (self.prefix, name)
             if name not in old_local_reprs:
+                self.recorder.register_variable(identifier)
+
                 if event == 'call':
                     # TODO it seems to work but I am not sure about this
-                    self.recorder.add_vc_to_last_record((name, value))
+                    self.recorder.add_vc_to_last_record(identifier, value)
                 else:
-                    self.recorder.add_vc_to_previous_record((name, value))
+                    self.recorder.add_vc_to_previous_record(identifier, value)
                 self.write('{indent}{newish_string}{name} = {value_repr}'.format(
                     **locals()))
             elif old_local_reprs[name][1] != value_repr:
-                self.recorder.add_vc_to_previous_record((name, value))
+                self.recorder.add_vc_to_previous_record(identifier, value)
                 self.write('{indent}Modified var:.. {name} = {value_repr}'.format(
                     **locals()))
 
