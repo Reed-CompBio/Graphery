@@ -74,7 +74,7 @@ export default {
       { data: { id: 16 } },
     ],
     edges: [
-      { data: { source: 0, target: 1 } },
+      { data: { source: 0, target: 1, directed: true } },
       { data: { source: 1, target: 2 } },
       { data: { source: 1, target: 3 } },
       { data: { source: 2, target: 7 } },

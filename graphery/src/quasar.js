@@ -52,6 +52,8 @@ import {
   QSpace,
   QSlider,
   QToggle,
+  QExpansionItem,
+  QVirtualScroll,
   // My plugins
   Notify,
   // My directive
@@ -108,6 +110,8 @@ Vue.use(Quasar, {
     QSpace,
     QSlider,
     QToggle,
+    QExpansionItem,
+    QVirtualScroll,
   },
   directives: { TouchPan },
   plugins: { Notify },

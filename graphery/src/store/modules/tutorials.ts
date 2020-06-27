@@ -66,6 +66,7 @@ const state: TutorialState = {
   graphs: null,
   codes: null,
   resultJson: null,
+  variableObj: null,
   // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 
@@ -228,6 +229,12 @@ const getters: GetterTree<TutorialState, RootState> = {
     // return state.codes === null;
     // TODO return false for test purpose, remove it afterwards
     return false;
+  },
+  resultJsonEmpty(state) {
+    return state.resultJson === null;
+  },
+  variableObjEmpty(state) {
+    return state.variableObj === null;
   },
   getGraphList(state) {
     const arr: { name: string; value: string }[] = [];

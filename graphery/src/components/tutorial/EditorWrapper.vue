@@ -57,8 +57,9 @@
         keep-alive
         class="tutorial-tab-panes"
         v-model="tab"
+        style="height: 100% !important;"
       >
-        <q-tab-panel name="code">
+        <q-tab-panel name="code" class="full-height">
           <Editor :style="editorWrapperStyle"></Editor>
         </q-tab-panel>
         <q-tab-panel name="info">

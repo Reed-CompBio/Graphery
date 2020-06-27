@@ -40,6 +40,8 @@ class Comparable(metaclass=ABCMeta):
         @param identity: unique id for this object
         @param name: displayed name for this object
         """
+        # TODO read SUID if id is not present.
+        # TODO think of an naming convention for id
         assert identity is not None
         self.identity = identity
         self.name = name if name else self._PREFIX + str(identity)

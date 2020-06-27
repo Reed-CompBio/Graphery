@@ -44,7 +44,8 @@ export interface TutorialState {
   // use v-for to spread graphs and make :key bind to id (or serial code?)
   graphs: Graph[] | null;
   codes: { [id: string]: { graphId: string; codes: string } } | null;
-  resultJson: string | object | null;
+  resultJson: string | null;
+  variableObj: [] | null;
 }
 
 export const enum GraphLayoutEngines {
@@ -64,7 +65,8 @@ export interface TutorialRequestState {
   // use v-for to spread graphs and make :key bind to id (or serial code?)
   graphs?: Graph[] | null;
   codes?: { [id: string]: { graphId: string; codes: string } } | null;
-  resultJson?: string | object | null;
+  resultJson?: string | null;
+  variableObj?: [] | null;
 }
 
 export interface SettingInfos {
