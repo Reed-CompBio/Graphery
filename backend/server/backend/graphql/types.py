@@ -5,7 +5,7 @@ from graphql import GraphQLError, ResolveInfo
 
 from ..model.UserModel import ROLES
 from ..model.filters import show_published
-from ..model.mixins import uuid_field_adder, time_date_field_adder, published_field_adder
+from ..model.mixins import field_adder, time_date_mixin_field, published_mixin_field, uuid_mixin_field
 from ..model.translation_collection import add_trans_type, process_trans_name
 from ..models import User
 from ..models import Category, Tutorial, Graph, Code, ExecResultJson
@@ -33,7 +33,7 @@ class PublishedFilterBase(DjangoObjectType):
 class UserType(DjangoObjectType):
     role = graphene.Int(required=True)
 
-    @uuid_field_adder
+    @field_adder(uuid_mixin_field)
     class Meta:
         model = User
         fields = ('username', 'email', 'role',
@@ -58,8 +58,7 @@ class TutorialInterface(graphene.Interface):
 
 
 class CategoryType(PublishedFilterBase, DjangoObjectType):
-    @uuid_field_adder
-    @published_field_adder
+    @field_adder(uuid_mixin_field, published_mixin_field)
     class Meta:
         model = Category
         fields = ('category', 'tutorial_set')
@@ -97,9 +96,7 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
             return code
         return Code(id='00000000-0000-0000-0000-000000000000', code='# Empty \n', tutorial=Tutorial())
 
-    @time_date_field_adder
-    @published_field_adder
-    @uuid_field_adder
+    @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
         model = Tutorial
         fields = ('url', 'name',
@@ -121,9 +118,7 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
     # they are convered under ManyToOneRel/ManyToManyRel/ManyToManyField
     # and will be automatically translated to DjangoListField
 
-    @time_date_field_adder
-    @published_field_adder
-    @uuid_field_adder
+    @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
         model = Graph
         fields = ('url', 'name',
@@ -145,9 +140,7 @@ class CodeType(PublishedFilterBase, DjangoObjectType):
     def resolve_is_published(self, info):
         return self.is_published
 
-    @time_date_field_adder
-    @published_field_adder
-    @uuid_field_adder
+    @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
         model = Code
         fields = ('tutorial', 'code', 'execresultjson_set')
@@ -160,12 +153,10 @@ class ExecResultJsonType(PublishedFilterBase, DjangoObjectType):
     def resolve_is_published(self, info):
         return self.is_published
 
-    @time_date_field_adder
-    @published_field_adder
-    @uuid_field_adder
+    @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
         model = ExecResultJson
-        fields = ('code', 'graph', 'json',)
+        fields = ('code', 'graph', 'json', 'variables')
         description = 'The execution result of a piece of code on ' \
                       'a graph. '
 
@@ -175,9 +166,7 @@ TransBaseFields = ('tutorial_anchor', 'authors',
                    )
 
 
-@time_date_field_adder
-@published_field_adder
-@uuid_field_adder
+@field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
 class MetaBase:
     interfaces = (TutorialInterface,)
     fields = TransBaseFields

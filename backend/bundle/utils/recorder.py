@@ -31,6 +31,7 @@ class Recorder:
     def register_variable(self, identifier: Tuple[str, str]) -> None:
         self.variables.add(identifier)
 
+    # TODO test this
     def add_record(self, line_no: int = -1) -> None:
         """
         add a record to the change list

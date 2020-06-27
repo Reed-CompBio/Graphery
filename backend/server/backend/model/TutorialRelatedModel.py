@@ -60,6 +60,7 @@ class ExecResultJson(UUIDMixin, TimeDateMixin, models.Model):
     graph = models.ForeignKey(Graph, on_delete=models.CASCADE)
     # content
     json = JSONField()
+    variables = JSONField()
 
     @property
     def is_published(self) -> bool:

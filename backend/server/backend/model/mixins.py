@@ -27,9 +27,10 @@ class UUIDMixin(models.Model):
         abstract = True
 
 
-def field_adder(extra_fields: Tuple):
+def field_adder(*extra_fields: Tuple):
     def wrapper(cls):
-        cls.fields += extra_fields
+        for fields in extra_fields:
+            cls.fields += fields
         return cls
 
     return wrapper
@@ -37,12 +38,6 @@ def field_adder(extra_fields: Tuple):
 
 time_date_mixin_field = ('created_time', 'modified_time')
 
-time_date_field_adder = field_adder(time_date_mixin_field)
-
 published_mixin_field = ('is_published',)
 
-published_field_adder = field_adder(published_mixin_field)
-
 uuid_mixin_field = ('id',)
-
-uuid_field_adder = field_adder(uuid_mixin_field)
