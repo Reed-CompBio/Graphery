@@ -4,7 +4,7 @@
     <q-page-container>
       <router-view></router-view>
     </q-page-container>
-    <Footer v-if="!this.$route.fullPath.startsWith('/tutorial/')"></Footer>
+    <Footer v-if="showFooter"></Footer>
     <NavigationDrawer></NavigationDrawer>
     <Notification></Notification>
   </q-layout>
@@ -13,15 +13,21 @@
 <script lang="ts">
   import Vue from 'vue';
 
+  const showFooterRe = /^(\/tutorial\/|\/graph\/)/;
+
   export default Vue.extend({
     name: 'App',
-
     components: {
       Header: () => import('@/components/framework/Header.vue'),
       Footer: () => import('@/components/framework/Footer.vue'),
       NavigationDrawer: () =>
         import('@/components/framework/NavigationDrawer.vue'),
       Notification: () => import('@/components/framework/Notification.vue'),
+    },
+    computed: {
+      showFooter() {
+        return !showFooterRe.test(this.$route.fullPath);
+      },
     },
     mounted() {
       // draw ascii art

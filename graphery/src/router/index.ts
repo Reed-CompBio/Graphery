@@ -24,19 +24,14 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: '',
-        component: () =>
-          import(
-            /* webpackChunkName: "editor" */
-            '@/components/tutorial/Editor.vue'
-          ),
-      },
-      {
-        path: '#editor',
-        component: () =>
-          import(
-            /* webpackChunkName: "editor" */
-            '@/components/tutorial/Editor.vue'
-          ),
+        components: {
+          editor: () =>
+            import(
+              /* webpackChunkName: "editor" */
+              '@/components/tutorial/Editor.vue'
+            ),
+          block: () => import('@/components/framework/LicenseCard.vue'),
+        },
       },
     ],
   },
