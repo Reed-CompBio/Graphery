@@ -1,35 +1,8 @@
 <template>
-  <div id="editor-panel" style="overflow-y: auto;">
-    <div id="result-wrapper" style="z-index: auto;" class="q-mx-sm">
-      <q-expansion-item :value="expanded" dense>
-        <div class="q-mx-md">
-          <q-slider
-            v-model="sliderPos"
-            :min="1"
-            label
-            :max="sliderLength"
-            :step="1"
-            dense
-            :disable="disableStepSlider"
-          ></q-slider>
-          <q-virtual-scroll
-            virtual-scroll-horizontal
-            :items="variableDisplayList"
-          >
-            <template v-slot="{ item, index }">
-              <div :key="index" :class="item.class">
-                #{{ index }} - {{ item }}
-              </div>
-            </template>
-          </q-virtual-scroll>
-        </div>
-      </q-expansion-item>
-
-      <!--      <q-slider></q-slider>-->
-    </div>
+  <div id="editor-panel" style="height: auto;">
     <!--    style="height: calc(100% - 48px)"-->
     <!--    TODO fix height -->
-    <div id="editor" style="height: calc(100% - 50px)"></div>
+    <div id="editor" class="full-height"></div>
     <q-inner-loading :showing="editor === null">
       <q-spinner-pie size="64px" color="primary" />
     </q-inner-loading>
@@ -88,7 +61,7 @@
         for (const [key, value] of Object.entries(this.variableObj)) {
           let variableValue;
           if (typeof value === 'object') {
-            variableValue = value['name'];
+            variableValue = value['id'];
           } else {
             variableValue = value;
           }
