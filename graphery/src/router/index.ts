@@ -21,6 +21,24 @@ const routes: Array<RouteConfig> = [
     props: true,
     component: () =>
       import(/* webpackChunkName: "tutorial" */ '@/views/Tutorial.vue'),
+    children: [
+      {
+        path: '',
+        component: () =>
+          import(
+            /* webpackChunkName: "editor" */
+            '@/components/tutorial/Editor.vue'
+          ),
+      },
+      {
+        path: '#editor',
+        component: () =>
+          import(
+            /* webpackChunkName: "editor" */
+            '@/components/tutorial/Editor.vue'
+          ),
+      },
+    ],
   },
   {
     path: '/graphs',

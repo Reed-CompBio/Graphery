@@ -1,5 +1,7 @@
 <template>
-  <div id="editor-panel" style="height: auto;">
+  <div id="editor-panel">
+    <q-resize-observer @resize="resizeAction"></q-resize-observer>
+
     <!--    style="height: calc(100% - 48px)"-->
     <!--    TODO fix height -->
     <div id="editor" class="full-height"></div>
@@ -104,6 +106,9 @@
             this.editor.setValue(
               ['def hello():', '\tprint("hello world :)")'].join('\n')
             );
+
+            this.editor.layout();
+            // TODO respond to splitter resize
           })
           .catch((err) => {
             // TODO setup popup
@@ -132,6 +137,11 @@
       },
       moveToLine(line, message = 'Executing this line') {
         this.changeDecoration(this.generateDecoration(line, message));
+      },
+      resizeAction() {
+        if (this.editor) {
+          this.editor.layout();
+        }
       },
     },
     mounted() {

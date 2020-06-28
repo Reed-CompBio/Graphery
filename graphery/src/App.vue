@@ -4,7 +4,7 @@
     <q-page-container>
       <router-view></router-view>
     </q-page-container>
-    <Footer v-if="this.$route.name !== 'Tutorial'"></Footer>
+    <Footer v-if="!this.$route.fullPath.startsWith('/tutorial/')"></Footer>
     <NavigationDrawer></NavigationDrawer>
     <Notification></Notification>
   </q-layout>

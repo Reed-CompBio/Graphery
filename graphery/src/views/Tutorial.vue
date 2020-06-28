@@ -1,6 +1,5 @@
 <template>
   <div style="overflow: hidden;">
-    <q-resize-observer @resize="resizeAction"></q-resize-observer>
     <q-splitter
       v-if="notTortureSmallScreen"
       v-model="splitPos"
@@ -10,7 +9,31 @@
       separator-style="width: 4px"
     >
       <template v-slot:before>
-        <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
+        <q-splitter
+          v-model="editorSplitPos"
+          horizontal
+          separator-class="bg-light-blue"
+          separator-style="width: 4px"
+        >
+          <template v-slot:before>
+            <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
+          </template>
+          <template v-slot:separator>
+            <q-avatar
+              color="primary"
+              text-color="white"
+              size="20px"
+              icon="mdi-drag"
+            />
+          </template>
+          <template v-slot:after>
+            <EditorWrapper
+              ref="editorWrapper"
+              v-if="notTortureSmallScreen"
+              class="full-height"
+            ></EditorWrapper>
+          </template>
+        </q-splitter>
       </template>
       <template v-slot:separator>
         <q-avatar
@@ -25,10 +48,6 @@
       </template>
     </q-splitter>
     <TutorialArticle v-else></TutorialArticle>
-    <EditorWrapper
-      ref="editorWrapper"
-      v-if="notTortureSmallScreen"
-    ></EditorWrapper>
   </div>
 </template>
 
@@ -46,7 +65,9 @@
       EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
     },
     data() {
-      return {};
+      return {
+        editorSplitPos: 60,
+      };
     },
     computed: {
       ...mapState('settings', ['graphSplitPos']),
@@ -80,12 +101,6 @@
         // 3. API calls using graph info to get graphs
         // 4. Extract graphs details , turn off loading for the graph section and load graphs
         // 5. (think about mini editor, how to manage the data in the backend)
-      },
-      resizeAction() {
-        // suppress an error with if here
-        if (this.$refs.editorWrapper) {
-          this.$refs.editorWrapper.resizeEditorPos();
-        }
       },
     },
     watch: {
