@@ -65,18 +65,30 @@
         </q-btn>
       </q-btn-group>
     </q-bar>
-    <div class="row" style="height: calc(100% - 32px)">
-      <div class="col full-height">
-        <q-card class="popup-wrapper full-height">
-          <Editor ref="editorComponent" class="full-height"></Editor>
-          <!--          <router-view class="full-height" :name="routerViewName"></router-view>-->
-          <!-- TODO use child router link instead of tab panel -->
-          <!-- TODO use q-fab instead of sticky -->
-        </q-card>
-      </div>
-      <div class="col-2 full-height">
-        <VariableList></VariableList>
-      </div>
+    <div class="row" style="height: calc(100% - 32px); overflow: hidden;">
+      <q-splitter
+        v-model="codeValueListSplitPos"
+        separator-class="resizable-v-separator-splitter"
+        separator-style="width: 4px;"
+        class="full-height full-width"
+      >
+        <template v-slot:before>
+          <q-card class="popup-wrapper full-height">
+            <Editor ref="editorComponent" class="full-height"></Editor>
+            <!--          <router-view class="full-height" :name="routerViewName"></router-view>-->
+            <!-- TODO use child router link instead of tab panel -->
+            <!-- TODO use q-fab instead of sticky -->
+          </q-card>
+        </template>
+        <template v-slot:separator>
+          <div
+            style="border-left: 4px solid rgb(179, 179, 179); border-radius: 25px; height: 10%;"
+          ></div>
+        </template>
+        <template v-slot:after>
+          <VariableList></VariableList>
+        </template>
+      </q-splitter>
     </div>
     <!-- page sticky button -->
     <!--    <q-page-sticky-->
@@ -117,6 +129,7 @@
         routerViewName: 'editor',
         isPlaying: false,
         sliderPos: 1,
+        codeValueListSplitPos: (5 / 6) * 100,
       };
     },
     computed: {
@@ -179,7 +192,7 @@
       },
     },
     mounted() {
-      setInterval(() => {
+      setTimeout(() => {
         this.initWrapperState();
       }, 2000);
     },
