@@ -11,6 +11,7 @@
           ? tutorialHorizontalSeparatorStyle
           : tutorialVerticalSeparatorStyle
       "
+      class="overflow-hidden-splitter"
     >
       <template v-slot:before>
         <q-splitter
@@ -18,6 +19,7 @@
           v-model="editorSplitPos"
           horizontal
           :separator-style="tutorialHorizontalSeparatorStyle"
+          class="overflow-visible-splitter"
         >
           <template v-slot:before>
             <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
@@ -174,6 +176,8 @@
 </script>
 
 <style lang="sass">
-  #graph-code-section > .q-splitter__after
-    overflow-y: hidden
+  .overflow-visible-splitter > .q-splitter__after
+      overflow: visible
+  .overflow-hidden-splitter > .q-splitter__before
+      overflow: hidden
 </style>
