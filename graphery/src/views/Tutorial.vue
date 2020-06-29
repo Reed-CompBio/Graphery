@@ -23,9 +23,7 @@
             <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
           </template>
           <template v-slot:separator>
-            <div
-              style="border-top: 4px solid #b3b3b3; width: 10%; border-radius: 25px;"
-            ></div>
+            <div :style="tutorialHorizontalSeparatorIconStyle"></div>
           </template>
           <template v-slot:after>
             <EditorWrapper
@@ -39,13 +37,10 @@
       <!-- TODO 放大缩小 -->
       <template v-slot:separator>
         <div
-          style="border-top: 4px solid #b3b3b3; width: 10%; border-radius: 25px;"
+          :style="tutorialHorizontalSeparatorIconStyle"
           v-if="$q.screen.lt.md"
         ></div>
-        <div
-          style="border-left: 4px solid #b3b3b3; height: 10%; border-radius: 25px;"
-          v-else
-        ></div>
+        <div :style="tutorialVerticalSeparatorIconStyle" v-else></div>
       </template>
       <template v-slot:after>
         <TutorialArticle class="full-height"></TutorialArticle>
@@ -72,6 +67,8 @@
       return {
         editorSplitPos: 60,
         tutorialSeparatorWidth: 8, // px
+        tutorialSeparatorIconSize: 4, // px
+        tutorialSeparatorIconLength: 10, // %
       };
     },
     computed: {
@@ -100,6 +97,20 @@
       tutorialVerticalSeparatorStyle() {
         return {
           width: `${this.tutorialSeparatorWidth}px`,
+        };
+      },
+      tutorialHorizontalSeparatorIconStyle() {
+        return {
+          'border-top': `${this.tutorialSeparatorIconSize}px solid #b3b3b3`,
+          'border-radius': '25px',
+          width: `${this.tutorialSeparatorIconLength}%`,
+        };
+      },
+      tutorialVerticalSeparatorIconStyle() {
+        return {
+          'border-left': `${this.tutorialSeparatorIconSize}px solid #b3b3b3`,
+          'border-radius': '25px',
+          height: `${this.tutorialSeparatorIconLength}%`,
         };
       },
       notTortureSmallScreen() {

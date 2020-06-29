@@ -14,7 +14,7 @@
         :step="1"
         snap
         dense
-        style="width: 45%;"
+        style="width: 40%;"
         label-always
         :disable="disableStepSlider"
       ></q-slider>
