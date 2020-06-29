@@ -23,21 +23,23 @@
       <q-btn-group flat class="q-mr-md">
         <!--        <div>-->
         <q-btn dense icon="mdi-skip-backward">
-          <SwitchTooltip :text="$t('five steps back')"></SwitchTooltip>
+          <SwitchTooltip :text="$t('tooltips.fiveStepsBack')"></SwitchTooltip>
         </q-btn>
         <q-btn dense icon="mdi-skip-previous">
-          <SwitchTooltip :text="$t('one step back')"></SwitchTooltip>
+          <SwitchTooltip :text="$t('tooltips.oneStepBack')"></SwitchTooltip>
         </q-btn>
         <!--        </div>-->
         <q-btn dense :icon="playPauseButton">
-          <SwitchTooltip :text="$t('auto run')"></SwitchTooltip>
+          <SwitchTooltip :text="$t('tooltips.autoRun')"></SwitchTooltip>
         </q-btn>
         <!--        <div>-->
         <q-btn dense icon="mdi-skip-next">
-          <SwitchTooltip :text="$t('one step forward')"></SwitchTooltip>
+          <SwitchTooltip :text="$t('tooltips.oneStepForward')"></SwitchTooltip>
         </q-btn>
         <q-btn dense icon="mdi-skip-forward">
-          <SwitchTooltip :text="$t('five steps forward')"></SwitchTooltip>
+          <SwitchTooltip
+            :text="$t('tooltips.fiveStepsForward')"
+          ></SwitchTooltip>
         </q-btn>
         <!-- TODO auto play maybe?  -->
       </q-btn-group>

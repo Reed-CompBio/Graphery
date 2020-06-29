@@ -7,11 +7,11 @@
     "copyCodes": "复制代码",
     "pasteCodes": "粘贴代码",
     "showEditorAndMore": "显示编辑器",
-    "one step back": "前进一步",
-    "one step forward": "后退一步",
-    "five steps back": "后退五步",
-    "five steps forward": "前进五步",
-    "auto run": "自动执行"
+    "oneStepBack": "前进一步",
+    "oneStepForward": "后退一步",
+    "fiveStepsBack": "后退五步",
+    "fiveStepsForward": "前进五步",
+    "autoRun": "自动执行"
   },
   "nav": {
     "Home": "首页",
