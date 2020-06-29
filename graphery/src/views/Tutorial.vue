@@ -6,6 +6,11 @@
       v-model="splitPos"
       :style="tutorialStyle"
       :horizontal="$q.screen.lt.md"
+      :separator-class="
+        $q.screen.lt.md
+          ? 'resizable-h-separator-splitter'
+          : 'resizable-v-separator-splitter'
+      "
       :separator-style="
         $q.screen.lt.md
           ? tutorialHorizontalSeparatorStyle
@@ -18,6 +23,7 @@
           id="graph-code-section"
           v-model="editorSplitPos"
           horizontal
+          separator-class="resizable-h-separator-splitter"
           :separator-style="tutorialHorizontalSeparatorStyle"
           class="overflow-visible-splitter"
         >
@@ -177,7 +183,15 @@
 
 <style lang="sass">
   .overflow-visible-splitter > .q-splitter__after
-      overflow: visible
+    overflow: visible
   .overflow-hidden-splitter > .q-splitter__before
-      overflow: hidden
+    overflow: hidden
+  .resizable-h-separator-splitter:hover, .resizable-v-separator-splitter:hover
+    transform: scale(1.5)
+  .resizable-h-separator-splitter, .resizable-v-separator-splitter
+    transition: 300ms ease-out
+  .resizable-h-separator-splitter:hover
+    height: 12px
+  .resizable-v-separator-splitter:hover
+    width: 12px
 </style>
