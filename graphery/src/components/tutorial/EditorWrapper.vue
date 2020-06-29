@@ -4,7 +4,6 @@
       <q-icon name="mdi-function" />
       <div style="text-transform: uppercase;">{{ routerViewName }}</div>
       <q-space />
-      <!-- TODO a bug here, can't display the pin above the slider, debug it and remove label-always -->
       <q-slider
         id="stepper-slider"
         v-model="sliderPos"
@@ -74,10 +73,11 @@
           <!-- TODO use q-fab instead of sticky -->
         </q-card>
       </div>
-      <div class="col-2">
+      <div class="col-2 full-height">
         <VariableList></VariableList>
       </div>
     </div>
+    <!-- page sticky button -->
     <q-page-sticky
       v-if="$q.screen.gt.xs"
       position="bottom-left"

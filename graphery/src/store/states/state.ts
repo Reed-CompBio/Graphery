@@ -45,7 +45,7 @@ export interface TutorialState {
   graphs: Graph[] | null;
   codes: { [id: string]: { graphId: string; codes: string } } | null;
   resultJson: string | null;
-  variableObj: [] | null;
+  variableObj: object | null;
 }
 
 export const enum GraphLayoutEngines {
@@ -66,7 +66,7 @@ export interface TutorialRequestState {
   graphs?: Graph[] | null;
   codes?: { [id: string]: { graphId: string; codes: string } } | null;
   resultJson?: string | null;
-  variableObj?: [] | null;
+  variableObj?: object | null;
 }
 
 export interface SettingInfos {

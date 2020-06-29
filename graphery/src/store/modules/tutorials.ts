@@ -58,6 +58,22 @@ const pseudoContent = {
   modifiedTime: Date(),
 };
 
+const pseudoVariableList = {
+  i: 10,
+  j: 5,
+  node: {
+    id: 10,
+    color: '#A6CEE3',
+    label: 'Node(id: 10)',
+  },
+  edge: {
+    id: 18,
+    color: '#A6CEE3',
+    label: 'Edge(id: 18)',
+  },
+};
+
+// TODO remove the pseudo content!
 const state: TutorialState = {
   // TODO do I need the ids?
   articleId: null,
@@ -66,7 +82,7 @@ const state: TutorialState = {
   graphs: null,
   codes: null,
   resultJson: null,
-  variableObj: null,
+  variableObj: pseudoVariableList,
   // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 

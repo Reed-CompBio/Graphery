@@ -36,7 +36,6 @@
           <template v-slot:after>
             <EditorWrapper
               ref="editorWrapper"
-              v-if="notTortureSmallScreen"
               class="full-height"
             ></EditorWrapper>
           </template>
