@@ -64,7 +64,7 @@
         </q-card>
       </div>
       <div class="col-2">
-        <CodeController></CodeController>
+        <VariableList></VariableList>
       </div>
     </div>
     <q-page-sticky
@@ -97,7 +97,7 @@
   export default {
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
-      CodeController: () => import('@/components/tutorial/CodeController.vue'),
+      VariableList: () => import('@/components/tutorial/VariableList.vue'),
     },
     data() {
       return {

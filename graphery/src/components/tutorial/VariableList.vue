@@ -59,6 +59,6 @@
 
 <style lang="sass">
   #variable-list-scroll
-    width: 90%
-    vertical-align: middle
+      width: 90%
+      vertical-align: middle
 </style>
