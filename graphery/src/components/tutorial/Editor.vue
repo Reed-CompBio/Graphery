@@ -1,9 +1,6 @@
 <template>
   <div id="editor-panel">
     <q-resize-observer @resize="resizeAction"></q-resize-observer>
-
-    <!--    style="height: calc(100% - 48px)"-->
-    <!--    TODO fix height -->
     <div id="editor" class="full-height"></div>
     <q-inner-loading :showing="editor === null">
       <q-spinner-pie size="64px" color="primary" />
@@ -35,45 +32,6 @@
       ]),
       ...mapState('tutorials', ['resultJson', 'variableObj']),
       ...mapGetters('tutorials', ['resultJsonEmpty', 'variableObjEmpty']),
-      resultObject() {
-        if (this.resultJsonEmpty) {
-          return [];
-        }
-        return JSON.parse(this.resultJson);
-      },
-      sliderLength() {
-        if (this.resultObject) {
-          return this.resultObject.length + 1;
-        }
-        return 1;
-      },
-      disableStepSlider() {
-        return this.sliderLength === 1;
-      },
-      variableDisplayList() {
-        if (this.variableObjEmpty) {
-          return [
-            {
-              label: 'Status',
-              value: 'Empty',
-            },
-          ];
-        }
-        const variableList = [];
-        for (const [key, value] of Object.entries(this.variableObj)) {
-          let variableValue;
-          if (typeof value === 'object') {
-            variableValue = value['id'];
-          } else {
-            variableValue = value;
-          }
-          variableList.push({
-            label: key.split('#').join('.'),
-            value: variableValue,
-          });
-        }
-        return variableList;
-      },
     },
     methods: {
       initMonacoEditor() {
@@ -92,7 +50,7 @@
                 overviewRulerBorder: false, // scroll bar no boarder
                 scrollBeyondLastLine: false, // remove blank space at the end of the editor
                 readOnly: false,
-                theme: this.dark ? 'hc-black' : 'vs',
+                theme: this.dark ? 'vs-dark' : 'vs',
                 language: 'python',
                 minimap: {
                   enabled: false,

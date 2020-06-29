@@ -1,19 +1,20 @@
 <template>
+  <!-- change list and app bar color -->
   <div style="overflow: hidden;">
     <q-splitter
       v-if="notTortureSmallScreen"
       v-model="splitPos"
       :style="tutorialStyle"
       :horizontal="$q.screen.lt.md"
-      separator-class="bg-light-blue"
-      separator-style="width: 4px"
+      :separator-style="tutorialSeparatorStyle"
     >
       <template v-slot:before>
         <q-splitter
+          id="graph-code-section"
           v-model="editorSplitPos"
           horizontal
           separator-class="bg-light-blue"
-          separator-style="width: 4px"
+          :separator-style="tutorialSeparatorStyle"
         >
           <template v-slot:before>
             <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
@@ -35,13 +36,18 @@
           </template>
         </q-splitter>
       </template>
+      <!-- TODO 放大缩小 -->
       <template v-slot:separator>
-        <q-avatar
-          color="primary"
-          text-color="white"
-          size="32px"
-          icon="mdi-drag"
-        />
+        <div
+          style="border-left: 4px solid #b3b3b3; height: 5%; border-radius: 25px;"
+        ></div>
+        <!--        <q-separator style="z-index: 2000" vertical color="white" />-->
+        <!--        <q-avatar-->
+        <!--          color="primary"-->
+        <!--          text-color="white"-->
+        <!--          size="32px"-->
+        <!--          icon="mdi-drag"-->
+        <!--        />-->
       </template>
       <template v-slot:after>
         <TutorialArticle class="full-height"></TutorialArticle>
@@ -67,6 +73,7 @@
     data() {
       return {
         editorSplitPos: 60,
+        tutorialSeparatorWidth: 4, // px
       };
     },
     computed: {
@@ -85,6 +92,11 @@
       tutorialStyle() {
         return {
           height: `calc(100vh - ${headerSize}px)`,
+        };
+      },
+      tutorialSeparatorStyle() {
+        return {
+          width: `${this.tutorialSeparatorWidth}px`,
         };
       },
       notTortureSmallScreen() {
@@ -145,3 +157,8 @@
     },
   };
 </script>
+
+<style lang="sass">
+  #graph-code-section > .q-splitter__after
+    overflow-y: hidden
+</style>
