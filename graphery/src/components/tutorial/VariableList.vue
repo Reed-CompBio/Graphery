@@ -8,7 +8,7 @@
     >
       <template v-slot="{ item, index }">
         <q-card :key="index" class="q-my-lg q-py-sm q-px-md text-center">
-          <div class="mock-h6">
+          <div class="mock-h6" :style="`background-color: ${item.color}`">
             {{ item.label }}
           </div>
           {{ item.value }}
@@ -43,9 +43,11 @@
 
         for (const [key, value] of Object.entries(this.variableObj)) {
           let variableValue;
+          let variableColor;
           if (value) {
             if (typeof value === 'object') {
               variableValue = value['label'];
+              variableColor = value['color'];
             } else {
               variableValue = value;
             }
@@ -53,7 +55,9 @@
             variableValue = 'Empty';
           }
           variableList.push({
+            // TODO temporary work round
             label: key.split('#')[1],
+            color: variableColor,
             value: variableValue,
           });
         }

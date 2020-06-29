@@ -26,9 +26,9 @@ export const panzoomDefaults = {
 export const dagreOptions = {
   name: 'dagre',
   // dagre algorithm options, uses default value on undefined
-  nodeSep: 100, // the separation between adjacent nodes in the same rank
-  edgeSep: 30, // the separation between adjacent edges in the same rank
-  rankSep: 140, // the separation between adjacent nodes in the same rank
+  nodeSep: 15, // the separation between adjacent nodes in the same rank
+  edgeSep: 10, // the separation between adjacent edges in the same rank
+  rankSep: 30, // the separation between adjacent nodes in the same rank
   rankDir: 'TB', // 'TB' for top to bottom flow, 'LR' for left to right
   minLen: function(_) {
     return 1;

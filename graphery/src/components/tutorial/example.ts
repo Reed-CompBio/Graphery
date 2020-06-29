@@ -9,8 +9,8 @@ export default {
         label: 'data(id)',
         'text-valign': 'bottom',
         'text-halign': 'center',
-        height: '60px',
-        width: '60px',
+        height: '15px',
+        width: '15px',
         'border-color': 'black',
         'border-opacity': '1',
         'background-image':
