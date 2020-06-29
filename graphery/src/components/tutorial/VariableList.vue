@@ -8,9 +8,9 @@
     >
       <template v-slot="{ item, index }">
         <q-card :key="index" class="q-my-lg q-py-sm q-px-md text-center">
-          <h6 style="margin: 0 0">
+          <div class="mock-h6">
             {{ item.label }}
-          </h6>
+          </div>
           {{ item.value }}
         </q-card>
       </template>
@@ -43,13 +43,17 @@
         console.log(this.variableObj);
         for (const [key, value] of Object.entries(this.variableObj)) {
           let variableValue;
-          if (typeof value === 'object') {
-            variableValue = value['label'];
+          if (value) {
+            if (typeof value === 'object') {
+              variableValue = value['label'];
+            } else {
+              variableValue = value;
+            }
           } else {
-            variableValue = value;
+            variableValue = 'Empty';
           }
           variableList.push({
-            label: key.split('#').join('.'),
+            label: key.split('#')[1],
             value: variableValue,
           });
         }
@@ -63,4 +67,10 @@
   #variable-list-scroll
       width: 90%
       vertical-align: middle
+  .mock-h6
+    font-size: 1.25rem
+    font-weight: 500
+    line-height: 2rem
+    letter-spacing: 0.0125em
+    text-wrap: normal
 </style>

@@ -32,7 +32,7 @@
           <SwitchTooltip :text="$t('tooltips.autoRun')"></SwitchTooltip>
         </q-btn>
         <!--        <div>-->
-        <q-btn dense icon="mdi-skip-next">
+        <q-btn dense icon="mdi-skip-next" @click="nextStep">
           <SwitchTooltip :text="$t('tooltips.oneStepForward')"></SwitchTooltip>
         </q-btn>
         <q-btn dense icon="mdi-skip-forward">
@@ -68,7 +68,8 @@
     <div class="row" style="height: calc(100% - 32px)">
       <div class="col full-height">
         <q-card class="popup-wrapper full-height">
-          <router-view class="full-height" :name="routerViewName"></router-view>
+          <Editor ref="editorComponent" class="full-height"></Editor>
+          <!--          <router-view class="full-height" :name="routerViewName"></router-view>-->
           <!-- TODO use child router link instead of tab panel -->
           <!-- TODO use q-fab instead of sticky -->
         </q-card>
@@ -78,36 +79,37 @@
       </div>
     </div>
     <!-- page sticky button -->
-    <q-page-sticky
-      v-if="$q.screen.gt.xs"
-      position="bottom-left"
-      :offset="[30, 30]"
-    >
-      <q-fab direction="up" color="primary" icon="more_horiz">
-        <q-fab-action
-          color="secondary"
-          icon="mdi-code-json"
-          @click.prevent="switchTabView('editor')"
-        />
-        <q-fab-action
-          color="skyblue"
-          icon="block"
-          @click.prevent="switchTabView('block')"
-        />
-      </q-fab>
-      <!-- TODO change the translation -->
-      <SwitchTooltip :text="$t('tooltips.showEditorAndMore')"></SwitchTooltip>
-      <!--      <q-btn round color="primary" icon="mdi-code-json" @click="toggleEditor" />-->
-    </q-page-sticky>
+    <!--    <q-page-sticky-->
+    <!--      v-if="$q.screen.gt.xs"-->
+    <!--      position="bottom-left"-->
+    <!--      :offset="[30, 30]"-->
+    <!--    >-->
+    <!--      <q-fab direction="up" color="primary" icon="more_horiz">-->
+    <!--        <q-fab-action-->
+    <!--          color="secondary"-->
+    <!--          icon="mdi-code-json"-->
+    <!--          @click.prevent="switchTabView('editor')"-->
+    <!--        />-->
+    <!--        <q-fab-action-->
+    <!--          color="skyblue"-->
+    <!--          icon="block"-->
+    <!--          @click.prevent="switchTabView('block')"-->
+    <!--        />-->
+    <!--      </q-fab>-->
+    <!--      &lt;!&ndash; TODO change the translation &ndash;&gt;-->
+    <!--      <SwitchTooltip :text="$t('tooltips.showEditorAndMore')"></SwitchTooltip>-->
+    <!--      &lt;!&ndash;      <q-btn round color="primary" icon="mdi-code-json" @click="toggleEditor" />&ndash;&gt;-->
+    <!--    </q-page-sticky>-->
   </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex';
 
   export default {
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
+      Editor: () => import('@/components/tutorial/Editor.vue'),
       VariableList: () => import('@/components/tutorial/VariableList.vue'),
     },
     data() {
@@ -118,7 +120,11 @@
       };
     },
     computed: {
-      ...mapGetters('tutorials', ['resultJsonEmpty', 'variableObjEmpty']),
+      ...mapGetters('tutorials', [
+        'resultJsonEmpty',
+        'variableObjEmpty',
+        'resultJsonArr',
+      ]),
 
       playPauseButton() {
         if (this.isPlaying) {
@@ -127,26 +133,55 @@
           return 'mdi-play';
         }
       },
-      resultObject() {
-        if (this.resultJsonEmpty) {
-          return [];
-        }
-        return JSON.parse(this.resultJson);
-      },
       sliderLength() {
-        if (this.resultObject) {
-          return this.resultObject.length + 1;
-        }
-        return 1;
+        return this.resultJsonArr.length + 1;
       },
       disableStepSlider() {
         return this.sliderLength === 1;
       },
+      resultJsonArrPos() {
+        return this.sliderPos - 1;
+      },
     },
     methods: {
+      ...mapActions('tutorials', ['loadVariableList']),
       switchTabView(tabName) {
         this.routerViewName = tabName;
       },
+      // Stepper button actions
+      notFull(deltaStep = 1) {
+        return this.sliderPos + deltaStep <= this.sliderLength;
+      },
+      incrementSliderPos(deltaPos = 1) {
+        this.sliderPos += deltaPos;
+      },
+      loadNextVariableState(variableState) {
+        if (variableState) {
+          this.loadVariableList(variableState);
+        }
+      },
+      loadInfo(lineObject) {
+        this.$refs.editorComponent.moveToLine(lineObject['line']);
+        this.loadNextVariableState(lineObject['variables']);
+      },
+      initWrapperState() {
+        // called after the api call
+        if (this.resultJsonArr) {
+          this.loadInfo(this.resultJsonArr[0]);
+        }
+      },
+      nextStep() {
+        if (this.resultJsonArr && this.notFull()) {
+          this.incrementSliderPos();
+          this.loadInfo(this.resultJsonArr[this.resultJsonArrPos]);
+          // TODO editor load line
+        }
+      },
+    },
+    mounted() {
+      setInterval(() => {
+        this.initWrapperState();
+      }, 2000);
     },
   };
 </script>
