@@ -118,6 +118,7 @@
     watch: {
       name: function(newVal, oldVal) {
         // ensures page updating when the url is changed
+        // TODO I don't think I need this
         console.log(`route change from ${oldVal} to ${newVal}`);
         this.updateTutorialContent();
       },
