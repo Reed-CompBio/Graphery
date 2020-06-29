@@ -6,26 +6,26 @@
       v-model="splitPos"
       :style="tutorialStyle"
       :horizontal="$q.screen.lt.md"
-      :separator-style="tutorialSeparatorStyle"
+      :separator-style="
+        $q.screen.lt.md
+          ? tutorialHorizontalSeparatorStyle
+          : tutorialVerticalSeparatorStyle
+      "
     >
       <template v-slot:before>
         <q-splitter
           id="graph-code-section"
           v-model="editorSplitPos"
           horizontal
-          separator-class="bg-light-blue"
-          :separator-style="tutorialSeparatorStyle"
+          :separator-style="tutorialHorizontalSeparatorStyle"
         >
           <template v-slot:before>
             <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
           </template>
           <template v-slot:separator>
-            <q-avatar
-              color="primary"
-              text-color="white"
-              size="20px"
-              icon="mdi-drag"
-            />
+            <div
+              style="border-top: 4px solid #b3b3b3; width: 10%; border-radius: 25px;"
+            ></div>
           </template>
           <template v-slot:after>
             <EditorWrapper
@@ -39,15 +39,13 @@
       <!-- TODO 放大缩小 -->
       <template v-slot:separator>
         <div
-          style="border-left: 4px solid #b3b3b3; height: 5%; border-radius: 25px;"
+          style="border-top: 4px solid #b3b3b3; width: 10%; border-radius: 25px;"
+          v-if="$q.screen.lt.md"
         ></div>
-        <!--        <q-separator style="z-index: 2000" vertical color="white" />-->
-        <!--        <q-avatar-->
-        <!--          color="primary"-->
-        <!--          text-color="white"-->
-        <!--          size="32px"-->
-        <!--          icon="mdi-drag"-->
-        <!--        />-->
+        <div
+          style="border-left: 4px solid #b3b3b3; height: 10%; border-radius: 25px;"
+          v-else
+        ></div>
       </template>
       <template v-slot:after>
         <TutorialArticle class="full-height"></TutorialArticle>
@@ -73,7 +71,7 @@
     data() {
       return {
         editorSplitPos: 60,
-        tutorialSeparatorWidth: 4, // px
+        tutorialSeparatorWidth: 8, // px
       };
     },
     computed: {
@@ -94,7 +92,12 @@
           height: `calc(100vh - ${headerSize}px)`,
         };
       },
-      tutorialSeparatorStyle() {
+      tutorialHorizontalSeparatorStyle() {
+        return {
+          height: `${this.tutorialSeparatorWidth}px`,
+        };
+      },
+      tutorialVerticalSeparatorStyle() {
         return {
           width: `${this.tutorialSeparatorWidth}px`,
         };
