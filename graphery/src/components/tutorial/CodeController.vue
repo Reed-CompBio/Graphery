@@ -1,23 +1,20 @@
 <!-- TODO use pop up edit? -->
 <template>
-  <div id="code-controller-wrapper" class="full-height">
-    <div id="stepper-button-group" class="row flex-center"></div>
-    <div id="controller-section" class="row">
-      <div id="stepper-section" class="col-3">
-        <div id="stepper-slider" class="flex-center">
-          <div class="q-mx-md"></div>
-        </div>
-      </div>
-      <div id="variable-section" class="col-9">
-        <q-virtual-scroll class="flex-center" :items="variableDisplayList">
-          <template v-slot="{ item, index }">
-            <q-card style="width: 70%" :key="index"
-              >#{{ index }} - {{ item.label }} - {{ item.value }}</q-card
-            >
-          </template>
-        </q-virtual-scroll>
-      </div>
-    </div>
+  <div id="code-controller-wrapper" class="full-height row flex-center">
+    <q-virtual-scroll
+      class=""
+      :items="variableDisplayList"
+      id="variable-list-scroll"
+    >
+      <template v-slot="{ item, index }">
+        <q-card :key="index" class="q-py-sm q-px-md text-center">
+          <h6 style="margin: 0 0">
+            {{ item.label }}
+          </h6>
+          {{ item.value }}
+        </q-card>
+      </template>
+    </q-virtual-scroll>
   </div>
 </template>
 
@@ -59,3 +56,9 @@
     },
   };
 </script>
+
+<style lang="sass">
+  #variable-list-scroll
+    width: 90%
+    vertical-align: middle
+</style>

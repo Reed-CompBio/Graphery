@@ -4,7 +4,7 @@
       <q-icon name="mdi-function" />
       <div style="text-transform: uppercase;">{{ routerViewName }}</div>
       <q-space />
-      <!-- TODO a bug here, can't display the pin above the slider -->
+      <!-- TODO a bug here, can't display the pin above the slider, debug it and remove label-always -->
       <q-slider
         id="stepper-slider"
         v-model="sliderPos"
