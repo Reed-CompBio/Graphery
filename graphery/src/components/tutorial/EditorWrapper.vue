@@ -16,6 +16,7 @@
         style="width: 40%;"
         label-always
         :disable="disableStepSlider"
+        @change="updateInfoFromSliderChange"
       ></q-slider>
       <!-- TODO  get the button actions done -->
       <!-- stepper button group -->
@@ -147,7 +148,7 @@
         }
       },
       sliderLength() {
-        return this.resultJsonArr.length + 1;
+        return this.resultJsonArr.length;
       },
       disableStepSlider() {
         return this.sliderLength === 1;
@@ -166,7 +167,11 @@
         return this.sliderPos + deltaStep <= this.sliderLength;
       },
       incrementSliderPos(deltaPos = 1) {
-        this.sliderPos += deltaPos;
+        if (this.notFull(deltaPos)) {
+          this.sliderPos += deltaPos;
+          return true;
+        }
+        return false;
       },
       loadNextVariableState(variableState) {
         if (variableState) {
@@ -176,19 +181,22 @@
       loadInfo(lineObject) {
         this.$refs.editorComponent.moveToLine(lineObject['line']);
         this.loadNextVariableState(lineObject['variables']);
+        this.$emit('updateCyWithVarObj', lineObject['variables']);
       },
       initWrapperState() {
         // called after the api call
-        if (this.resultJsonArr) {
+        if (this.resultJsonArr && this.incrementSliderPos()) {
           this.loadInfo(this.resultJsonArr[0]);
         }
       },
       nextStep() {
-        if (this.resultJsonArr && this.notFull()) {
-          this.incrementSliderPos();
+        if (this.resultJsonArr && this.incrementSliderPos()) {
           this.loadInfo(this.resultJsonArr[this.resultJsonArrPos]);
           // TODO editor load line
         }
+      },
+      updateInfoFromSliderChange() {
+        console.log('temp');
       },
     },
     mounted() {

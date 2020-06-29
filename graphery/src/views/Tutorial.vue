@@ -23,7 +23,7 @@
           id="graph-code-section"
           v-model="editorSplitPos"
           horizontal
-          separator-class="resizable-h-separator-splitter"
+          separator-class="resizable-h-separator-splitter zero-z-index-separator"
           :separator-style="tutorialHorizontalSeparatorStyle"
           class="overflow-visible-splitter"
         >
@@ -37,6 +37,7 @@
             <EditorWrapper
               ref="editorWrapper"
               class="full-height"
+              @updateCyWithVarObj="updateCytoscapeWithVarObj"
             ></EditorWrapper>
           </template>
         </q-splitter>
@@ -135,6 +136,9 @@
         // 4. Extract graphs details , turn off loading for the graph section and load graphs
         // 5. (think about mini editor, how to manage the data in the backend)
       },
+      updateCytoscapeWithVarObj(varObj) {
+        this.$refs.cytoscapeWrapper.highlightVarObj(varObj);
+      },
     },
     watch: {
       name: function(newVal, oldVal) {
@@ -181,6 +185,8 @@
 </script>
 
 <style lang="sass">
+  .zero-z-index-separator
+    z-index: 0
   .overflow-visible-splitter > .q-splitter__after
     overflow: visible
   .overflow-hidden-splitter > .q-splitter__before

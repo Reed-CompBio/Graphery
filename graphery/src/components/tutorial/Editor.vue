@@ -66,7 +66,7 @@
                 'from bundle.seeker import tracer\n' +
                 '\n' +
                 '\n' +
-                "@tracer('edge', 'node')\n" +
+                "@tracer('edge', 'node', 'degree_dict')\n" +
                 'def graphery_count_degree_by_edges() -> None:\n' +
                 '    degree_dict = {}\n' +
                 '\n' +
@@ -107,6 +107,7 @@
         );
       },
       moveToLine(line, message = 'Executing this line') {
+        // TODO scroll into view
         this.changeDecoration(this.generateDecoration(line, message));
       },
       resizeAction() {

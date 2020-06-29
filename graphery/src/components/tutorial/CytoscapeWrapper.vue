@@ -84,6 +84,8 @@
         moduleTargetNum: 5,
         tippy: null,
         testValue: 0,
+        lastVarObj: {},
+        // TODO remember to clear this out
       };
     },
     computed: {
@@ -308,6 +310,20 @@
             this.tippy.hide();
           }
         });
+      },
+      highlightVarObj(varObj) {
+        if (varObj) {
+          for (const [varName, varValue] of Object.entries(varObj)) {
+            if (varValue && typeof varValue === 'object') {
+              if (this.lastVarObj[varName] !== varValue['id']) {
+                this.unhighlightElement(this.lastVarObj[varName]);
+                this.lastVarObj[varName] = varValue['id'];
+              }
+
+              this.highlightElement(varValue['id'], varValue['color']);
+            }
+          }
+        }
       },
       highlightElement(id, color) {
         this.cyInstance.getElementById(id).style({

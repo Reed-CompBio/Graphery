@@ -43,12 +43,11 @@ export default {
       },
     },
   ],
-
   elements: {
     nodes: [
       {
         data: {
-          id: 0,
+          id: 'n0',
           label: 'N0',
           degree: '10',
         },
@@ -56,43 +55,205 @@ export default {
           _degree: '20',
         },
       },
-      { data: { id: 1 } },
-      { data: { id: 2 } },
-      { data: { id: 3 } },
-      { data: { id: 4 } },
-      { data: { id: 5 } },
-      { data: { id: 6 } },
-      { data: { id: 7 } },
-      { data: { id: 8 } },
-      { data: { id: 9 } },
-      { data: { id: 10 } },
-      { data: { id: 11 } },
-      { data: { id: 12 } },
-      { data: { id: 13 } },
-      { data: { id: 14 } },
-      { data: { id: 15 } },
-      { data: { id: 16 } },
+      {
+        data: {
+          id: 'n1',
+          label: 'N1',
+        },
+      },
+      {
+        data: {
+          id: 'n2',
+          label: 'N2',
+        },
+      },
+      {
+        data: {
+          id: 'n3',
+          label: 'N3',
+        },
+      },
+      {
+        data: {
+          id: 'n4',
+        },
+      },
+      {
+        data: {
+          id: 'n5',
+        },
+      },
+      {
+        data: {
+          id: 'n6',
+        },
+      },
+      {
+        data: {
+          id: 'n7',
+        },
+      },
+      {
+        data: {
+          id: 'n8',
+        },
+      },
+      {
+        data: {
+          id: 'n9',
+        },
+      },
+      {
+        data: {
+          id: 'n10',
+        },
+      },
+      {
+        data: {
+          id: 'n11',
+        },
+      },
+      {
+        data: {
+          id: 'n12',
+        },
+      },
+      {
+        data: {
+          id: 'n13',
+        },
+      },
+      {
+        data: {
+          id: 'n14',
+        },
+      },
+      {
+        data: {
+          id: 'n15',
+        },
+      },
+      {
+        data: {
+          id: 'n16',
+        },
+      },
     ],
     edges: [
-      { data: { source: 0, target: 1, directed: true } },
-      { data: { source: 1, target: 2 } },
-      { data: { source: 1, target: 3 } },
-      { data: { source: 2, target: 7 } },
-      { data: { source: 2, target: 11 } },
-      { data: { source: 3, target: 4 } },
-      { data: { source: 3, target: 16 } },
-      { data: { source: 4, target: 5 } },
-      { data: { source: 4, target: 6 } },
-      { data: { source: 6, target: 8 } },
-      { data: { source: 8, target: 9 } },
-      { data: { source: 8, target: 10 } },
-      { data: { source: 11, target: 12 } },
-      { data: { source: 12, target: 13 } },
-      { data: { source: 13, target: 14 } },
-      { data: { source: 13, target: 15 } },
+      {
+        data: {
+          source: 'n0',
+          target: 'n1',
+          id: 0,
+        },
+      },
+      {
+        data: {
+          source: 'n1',
+          target: 'n2',
+          id: 1,
+        },
+      },
+      {
+        data: {
+          source: 'n1',
+          target: 'n3',
+          id: 2,
+        },
+      },
+      {
+        data: {
+          source: 'n2',
+          target: 'n7',
+          id: 3,
+        },
+      },
+      {
+        data: {
+          source: 'n2',
+          target: 'n11',
+          id: 4,
+        },
+      },
+      {
+        data: {
+          source: 'n3',
+          target: 'n4',
+          id: 5,
+        },
+      },
+      {
+        data: {
+          source: 'n3',
+          target: 'n16',
+          id: 6,
+        },
+      },
+      {
+        data: {
+          source: 'n4',
+          target: 'n5',
+          id: 7,
+        },
+      },
+      {
+        data: {
+          source: 'n4',
+          target: 'n6',
+          id: 8,
+        },
+      },
+      {
+        data: {
+          source: 'n6',
+          target: 'n8',
+          id: 9,
+        },
+      },
+      {
+        data: {
+          source: 'n8',
+          target: 'n9',
+          id: 10,
+        },
+      },
+      {
+        data: {
+          source: 'n8',
+          target: 'n10',
+          id: 11,
+        },
+      },
+      {
+        data: {
+          source: 'n11',
+          target: 'n12',
+          id: 12,
+        },
+      },
+      {
+        data: {
+          source: 'n12',
+          target: 'n13',
+          id: 13,
+        },
+      },
+      {
+        data: {
+          source: 'n13',
+          target: 'n14',
+          id: 14,
+        },
+      },
+      {
+        data: {
+          source: 'n13',
+          target: 'n15',
+          id: 15,
+        },
+      },
     ],
   },
-
   layout: {
     name: 'grid',
     padding: 5,

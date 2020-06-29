@@ -40,7 +40,7 @@
           ];
         }
         const variableList = [];
-        console.log(this.variableObj);
+
         for (const [key, value] of Object.entries(this.variableObj)) {
           let variableValue;
           if (value) {
