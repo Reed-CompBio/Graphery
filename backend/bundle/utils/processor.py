@@ -16,7 +16,7 @@ class Processor:
                      "#CAB2D6", "#6A3D9A", "#FFFF99", ]
 
     ACCESSED_COLOR = "#B15928"
-    ACCESSED_IDENTIFIER = ('global', '__accessed_variables')
+    ACCESSED_IDENTIFIER = ('global', 'accessed var')
     ACCESSED_ID_NAME = identifier_to_name(ACCESSED_IDENTIFIER)
     """
     Processor should return the state at that line if changes took place in the code
@@ -56,6 +56,8 @@ class Processor:
         record_mapping: MutableMapping[str, Any] = {self.ACCESSED_ID_NAME: None}
         record_mapping.update(zip([identifier_to_name(var) for var in variables], [None] * len(variables)))
 
+        init_mapping = copy(record_mapping)
+
         # append it in the first item of the list?
 
         for mapping in change_list:
@@ -65,6 +67,10 @@ class Processor:
                 variable_changes=mapping['variables'],
                 accessed_variables=mapping['accesses']
             ))
+
+        # insert
+        if self.result and self.result[0]['variables'] is None:
+            self.result[0]['variables'] = init_mapping
 
         return self.result
 
@@ -102,14 +108,16 @@ class Processor:
         if isinstance(variable_changes, Mapping):
             # only update the changes by looping through variable change list
             for key, value in variable_changes.items():
+                representation = repr(value)
                 # TODO use graph elements' parent class
                 if isinstance(value, (Node, Edge)):
                     variable_value = {
                         'id': value.identity,
-                        'color': self.variable_color_map[key]
+                        'color': self.variable_color_map[key],
+                        'label': representation
                     }
                 else:
-                    variable_value = repr(value)
+                    variable_value = representation
 
                 record_mapping[identifier_to_name(key)] = variable_value
 

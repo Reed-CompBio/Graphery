@@ -10,8 +10,8 @@ from bundle.utils.cache_file_helpers import TempSysPathAdder, load_zip_file, ver
 
 @pytest.mark.parametrize('zip_file_dir, unzip_dir', [
     pytest.param(
-        'simple_graph_with_degree_algorithm.zip',
-        'simple_graph_with_degree_algorithm',
+        'example_degree_algorithm_test.zip',
+        'example_degree_algorithm_test'
     )
 ])
 def test_dump_result(zip_file_dir, unzip_dir):
@@ -27,10 +27,12 @@ def test_dump_result(zip_file_dir, unzip_dir):
                               for attr_name in [item for item in dir(imported_module)
                                                 if item.startswith('graphery_')]
                               ]
-        # for func in graphery_functions:
-        #     result = func()
+        for func in graphery_functions:
+            result = func()
 
-        result = graphery_functions[0]()
+        print(graphery_functions)
+
+
 
         del sys.modules['entry']
         del imported_module
