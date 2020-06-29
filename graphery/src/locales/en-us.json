@@ -6,7 +6,12 @@
     "runCodeLocally": "Run code locally",
     "copyCodes": "Copy codes",
     "pasteCodes": "Paste codes",
-    "showEditorAndMore": "Show editor"
+    "showEditorAndMore": "Show editor",
+    "one step back": "One Step Back",
+    "one step forward": "One Step Forward",
+    "five steps back": "Five Steps Back",
+    "five steps forward": "Five Steps Forward",
+    "auto run": "Auto Run"
   },
   "nav": {
     "Home": "Home",

@@ -22,15 +22,24 @@
       <!-- stepper button group -->
       <q-btn-group flat class="q-mr-md">
         <!--        <div>-->
-        <q-btn flat dense round icon="mdi-skip-backward"></q-btn>
-        <q-btn flat dense round icon="mdi-skip-previous"></q-btn>
+        <q-btn dense icon="mdi-skip-backward">
+          <SwitchTooltip :text="$t('five steps back')"></SwitchTooltip>
+        </q-btn>
+        <q-btn dense icon="mdi-skip-previous">
+          <SwitchTooltip :text="$t('one step back')"></SwitchTooltip>
+        </q-btn>
         <!--        </div>-->
-        <q-btn flat dense round :icon="playPauseButton"></q-btn>
+        <q-btn dense :icon="playPauseButton">
+          <SwitchTooltip :text="$t('auto run')"></SwitchTooltip>
+        </q-btn>
         <!--        <div>-->
-        <q-btn flat dense round icon="mdi-skip-next"></q-btn>
-        <q-btn flat dense round icon="mdi-skip-forward"></q-btn>
-        <!-- TODO auto play -->
-        <!--        </div>-->
+        <q-btn dense icon="mdi-skip-next">
+          <SwitchTooltip :text="$t('one step forward')"></SwitchTooltip>
+        </q-btn>
+        <q-btn dense icon="mdi-skip-forward">
+          <SwitchTooltip :text="$t('five steps forward')"></SwitchTooltip>
+        </q-btn>
+        <!-- TODO auto play maybe?  -->
       </q-btn-group>
       <!-- execution button group -->
       <q-btn-group flat class="q-mr-md" v-touch-pan.prevent.mouse="null">
@@ -41,7 +50,7 @@
           ></SwitchTooltip>
         </q-btn>
         <q-btn dense>
-          <q-icon name="mdi-play" />
+          <q-icon name="mdi-cloud-download" />
           <SwitchTooltip :text="$t('tooltips.runCodeLocally')"></SwitchTooltip>
         </q-btn>
       </q-btn-group>
