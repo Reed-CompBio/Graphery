@@ -9,6 +9,7 @@
         v-model="sliderPos"
         :min="1"
         label
+        :label-value="`${sliderPos}/${sliderLength}`"
         :max="sliderLength"
         :step="1"
         snap
@@ -181,7 +182,7 @@
         return this.resultJsonArr.length;
       },
       disableStepSlider() {
-        return this.sliderLength <= 1;
+        return this.sliderLength < 1;
       },
       resultJsonArrPos() {
         return this.sliderPos - 1;
@@ -204,6 +205,7 @@
       // Stepper button actions
       isWalkable(deltaStep = 1) {
         return (
+          !this.disableStepSlider &&
           1 <= this.sliderPos + deltaStep &&
           this.sliderPos + deltaStep <= this.sliderLength
         );
@@ -233,10 +235,13 @@
               return lineObject;
             }
           }
+          // Which should never happen since the backend ensures the first element must have a var dict
+          throw Error(
+            'The execution result json is not valid. Please send a feedback to the developer.'
+          );
         }
-        throw Error(
-          'The execution result json is not valid. Please send a feedback to the developer.'
-        );
+
+        return null;
       },
       initWrapperState() {
         // called after the api call
