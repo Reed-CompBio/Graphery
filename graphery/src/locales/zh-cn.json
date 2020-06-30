@@ -11,7 +11,9 @@
     "oneStepForward": "后退一步",
     "fiveStepsBack": "后退五步",
     "fiveStepsForward": "前进五步",
-    "autoRun": "自动执行"
+    "autoRun": "自动执行",
+    "showLabelAlways": "始终展示滑块标签",
+    "notShowLabelAlways": "不始终展示滑块标签"
   },
   "nav": {
     "Home": "首页",

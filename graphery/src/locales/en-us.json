@@ -11,7 +11,9 @@
     "oneStepForward": "One Step Forward",
     "fiveStepsBack": "Five Steps Back",
     "fiveStepsForward": "Five Steps Forward",
-    "autoRun": "Auto Run"
+    "autoRun": "Auto Run",
+    "showLabelAlways": "Show Slider Always",
+    "notShowLabelAlways": "Not Always Show Slider Label"
   },
   "nav": {
     "Home": "Home",

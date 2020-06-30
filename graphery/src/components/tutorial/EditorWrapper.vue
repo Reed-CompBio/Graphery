@@ -14,14 +14,28 @@
         snap
         dense
         style="width: 40%;"
+        :label-always="showLabelAlways"
         :disable="disableStepSlider"
         @change="updateInfoFromSliderChange"
       ></q-slider>
       <!-- TODO  get the button actions done -->
       <!-- stepper button group -->
       <q-btn-group flat class="q-mr-md">
+        <q-btn dense @click="showLabelAlwaysSwitch">
+          <q-icon
+            :name="
+              showLabelAlways ? 'mdi-label-off-outline' : 'mdi-label-outline'
+            "
+          ></q-icon>
+          <SwitchTooltip :text="$t('tooltips.showLabelAlways')"></SwitchTooltip>
+        </q-btn>
         <!--        <div>-->
-        <q-btn dense icon="mdi-skip-backward">
+        <q-btn
+          dense
+          icon="mdi-skip-backward"
+          @click="previousSeveralSteps"
+          :disable="isPreviousButtonDisable"
+        >
           <SwitchTooltip :text="$t('tooltips.fiveStepsBack')"></SwitchTooltip>
         </q-btn>
         <q-btn
@@ -33,7 +47,7 @@
           <SwitchTooltip :text="$t('tooltips.oneStepBack')"></SwitchTooltip>
         </q-btn>
         <!--        </div>-->
-        <q-btn dense :icon="playPauseButton">
+        <q-btn dense :icon="playPauseButton" :disable="isNextButtonDisable">
           <SwitchTooltip :text="$t('tooltips.autoRun')"></SwitchTooltip>
         </q-btn>
         <!--        <div>-->
@@ -45,7 +59,12 @@
         >
           <SwitchTooltip :text="$t('tooltips.oneStepForward')"></SwitchTooltip>
         </q-btn>
-        <q-btn dense icon="mdi-skip-forward">
+        <q-btn
+          dense
+          icon="mdi-skip-forward"
+          @click="nextSeveralSteps"
+          :disable="isNextButtonDisable"
+        >
           <SwitchTooltip
             :text="$t('tooltips.fiveStepsForward')"
           ></SwitchTooltip>
@@ -138,8 +157,10 @@
       return {
         routerViewName: 'editor',
         isPlaying: false,
+        showLabelAlways: false,
         sliderPos: 1,
         codeValueListSplitPos: (5 / 6) * 100,
+        advanceSteps: 5,
       };
     },
     computed: {
@@ -176,6 +197,9 @@
       ...mapActions('tutorials', ['loadVariableList']),
       switchTabView(tabName) {
         this.routerViewName = tabName;
+      },
+      showLabelAlwaysSwitch() {
+        this.showLabelAlways = !this.showLabelAlways;
       },
       // Stepper button actions
       isWalkable(deltaStep = 1) {
@@ -217,6 +241,14 @@
           this.loadInfo(this.resultJsonArr[0]);
         }
       },
+      previousSeveralSteps() {
+        if (this.resultJsonArr) {
+          const previousLineObj = this.incrementSliderPos(-this.advanceSteps)
+            ? this.getTheLastState(this.resultJsonArrPos)
+            : this.resultJsonArr[0];
+          this.loadInfo(previousLineObj);
+        }
+      },
       previousStep() {
         if (this.resultJsonArr && this.incrementSliderPos(-1)) {
           const previousLineObj = this.resultJsonArr[this.resultJsonArrPos];
@@ -232,6 +264,16 @@
           if (nextLineObj['variables']) {
             this.loadInfo(nextLineObj);
           }
+        }
+      },
+      nextSeveralSteps() {
+        if (this.resultJsonArr) {
+          const nextLineObj = this.getTheLastState(
+            this.incrementSliderPos(this.advanceSteps)
+              ? this.resultJsonArrPos
+              : this.sliderLength - 1
+          );
+          this.loadInfo(nextLineObj);
         }
       },
       updateInfoFromSliderChange(posValue) {
