@@ -157,7 +157,7 @@
       return {
         routerViewName: 'editor',
         isPlaying: false,
-        showLabelAlways: false,
+        showLabelAlways: true,
         sliderPos: 1,
         codeValueListSplitPos: (5 / 6) * 100,
         advanceSteps: 5,
@@ -243,9 +243,10 @@
       },
       previousSeveralSteps() {
         if (this.resultJsonArr) {
-          const previousLineObj = this.incrementSliderPos(-this.advanceSteps)
-            ? this.getTheLastState(this.resultJsonArrPos)
-            : this.resultJsonArr[0];
+          if (!this.incrementSliderPos(-this.advanceSteps)) {
+            this.sliderPos = 0;
+          }
+          const previousLineObj = this.getTheLastState(this.resultJsonArrPos);
           this.loadInfo(previousLineObj);
         }
       },
@@ -268,11 +269,10 @@
       },
       nextSeveralSteps() {
         if (this.resultJsonArr) {
-          const nextLineObj = this.getTheLastState(
-            this.incrementSliderPos(this.advanceSteps)
-              ? this.resultJsonArrPos
-              : this.sliderLength - 1
-          );
+          if (!this.incrementSliderPos(this.advanceSteps)) {
+            this.sliderPos = this.sliderLength;
+          }
+          const nextLineObj = this.getTheLastState(this.resultJsonArrPos);
           this.loadInfo(nextLineObj);
         }
       },
