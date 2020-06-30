@@ -14,7 +14,6 @@
         snap
         dense
         style="width: 40%;"
-        label-always
         :disable="disableStepSlider"
         @change="updateInfoFromSliderChange"
       ></q-slider>
@@ -74,7 +73,7 @@
         class="full-height full-width"
       >
         <template v-slot:before>
-          <q-card class="popup-wrapper full-height">
+          <q-card class="popup-wrapper full-height" style="overflow-y: hidden;">
             <Editor ref="editorComponent" class="full-height"></Editor>
             <!--          <router-view class="full-height" :name="routerViewName"></router-view>-->
             <!-- TODO use child router link instead of tab panel -->
@@ -174,29 +173,43 @@
         return false;
       },
       loadNextVariableState(variableState) {
-        if (variableState) {
-          this.loadVariableList(variableState);
-        }
+        this.loadVariableList(variableState);
       },
       loadInfo(lineObject) {
         this.$refs.editorComponent.moveToLine(lineObject['line']);
         this.loadNextVariableState(lineObject['variables']);
         this.$emit('updateCyWithVarObj', lineObject['variables']);
       },
+      getTheLastState(index) {
+        if (this.resultJsonArr) {
+          for (let i = index; i >= 0; i--) {
+            const lineObject = this.resultJsonArr[i];
+            if (lineObject['variables']) {
+              return lineObject;
+            }
+          }
+        }
+        return null;
+      },
       initWrapperState() {
         // called after the api call
+        // TODO editor load line
         if (this.resultJsonArr && this.incrementSliderPos()) {
           this.loadInfo(this.resultJsonArr[0]);
         }
       },
       nextStep() {
         if (this.resultJsonArr && this.incrementSliderPos()) {
-          this.loadInfo(this.resultJsonArr[this.resultJsonArrPos]);
-          // TODO editor load line
+          const nextLineObj = this.resultJsonArr[this.resultJsonArrPos];
+          if (nextLineObj) {
+            this.loadInfo(nextLineObj);
+          }
         }
       },
-      updateInfoFromSliderChange() {
-        console.log('temp');
+      updateInfoFromSliderChange(posValue) {
+        const arrIndex = posValue - 1;
+        const lineObject = this.getTheLastState(arrIndex);
+        this.loadInfo(lineObject);
       },
     },
     mounted() {

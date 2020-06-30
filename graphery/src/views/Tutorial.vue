@@ -28,7 +28,10 @@
           class="overflow-visible-splitter"
         >
           <template v-slot:before>
-            <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
+            <CytoscapeWrapper
+              ref="cytoscapeWrapper"
+              style="overflow-y: hidden;"
+            ></CytoscapeWrapper>
           </template>
           <template v-slot:separator>
             <div :style="tutorialHorizontalSeparatorIconStyle"></div>
