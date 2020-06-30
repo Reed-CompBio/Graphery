@@ -194,7 +194,7 @@
       initWrapperState() {
         // called after the api call
         // TODO editor load line
-        if (this.resultJsonArr && this.incrementSliderPos()) {
+        if (this.resultJsonArr) {
           this.loadInfo(this.resultJsonArr[0]);
         }
       },

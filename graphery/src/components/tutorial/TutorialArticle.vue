@@ -1,11 +1,10 @@
 <template>
-  <div>
+  <div id="articleWrapper">
     <div
       ref="tc"
       v-show="!articleEmpty"
       class="full-height q-px-lg"
       style="overflow-y: auto; overflow-x: hidden;"
-      @scroll="updatePosPercentage"
     >
       <div class="q-mt-xl">
         <div id="tutorial-title" class="text-h2">{{ title }}</div>
@@ -46,7 +45,8 @@
           </q-breadcrumbs>
         </div>
       </div>
-      <!-- what about xss attacks? -->
+
+      <!-- actual contents goes into here -->
       <div id="tutorial-content" v-html="content"></div>
 
       <LicenseCard></LicenseCard>
@@ -122,11 +122,16 @@
       share() {
         // TODO copy to clipboard
       },
-      updatePosPercentage({ verticalPercentage }) {
-        this.articleViewPercentage = parseFloat(verticalPercentage);
+
+      updatePosPercentage(info) {
+        console.log(info);
       },
       scrollToTop() {
-        this.$refs.tc.setScrollPosition(0, 500);
+        document.getElementById('articleWrapper').scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        });
       },
     },
     mounted() {
