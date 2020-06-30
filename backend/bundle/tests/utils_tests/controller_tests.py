@@ -32,7 +32,9 @@ def test_dump_result(zip_file_dir, unzip_dir):
 
         print(graphery_functions)
 
-
+        from guppy import hpy
+        h = hpy()
+        print(h.heap())
 
         del sys.modules['entry']
         del imported_module
