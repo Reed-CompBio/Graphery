@@ -216,7 +216,9 @@
         return false;
       },
       loadNextVariableState(variableState) {
-        this.loadVariableList(variableState);
+        if (variableState) {
+          this.loadVariableList(variableState);
+        }
       },
       loadInfo(lineObject) {
         this.$refs.editorComponent.moveToLine(lineObject['line']);
@@ -232,7 +234,9 @@
             }
           }
         }
-        return null;
+        throw Error(
+          'The execution result json is not valid. Please send a feedback to the developer.'
+        );
       },
       initWrapperState() {
         // called after the api call
@@ -253,18 +257,14 @@
       previousStep() {
         if (this.resultJsonArr && this.incrementSliderPos(-1)) {
           const previousLineObj = this.resultJsonArr[this.resultJsonArrPos];
-          if (previousLineObj['variables']) {
-            this.loadInfo(previousLineObj);
-          }
+          this.loadInfo(previousLineObj);
         }
       },
       // TODO something wrong here
       nextStep() {
         if (this.resultJsonArr && this.incrementSliderPos()) {
           const nextLineObj = this.resultJsonArr[this.resultJsonArrPos];
-          if (nextLineObj['variables']) {
-            this.loadInfo(nextLineObj);
-          }
+          this.loadInfo(nextLineObj);
         }
       },
       nextSeveralSteps() {
