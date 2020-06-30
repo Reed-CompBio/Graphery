@@ -20,8 +20,8 @@ import {
   QItemLabel,
   // My extensions
   QBar,
-  QBreadcrumbs,
-  QBreadcrumbsEl,
+  // QBreadcrumbs,
+  // QBreadcrumbsEl,
   QIntersection,
   QCard,
   QCardSection,
@@ -80,8 +80,8 @@ Vue.use(Quasar, {
     QItemLabel,
     // my addons
     QBar,
-    QBreadcrumbs,
-    QBreadcrumbsEl,
+    // QBreadcrumbs,
+    // QBreadcrumbsEl,
     QIntersection,
     QCard,
     QCardSection,

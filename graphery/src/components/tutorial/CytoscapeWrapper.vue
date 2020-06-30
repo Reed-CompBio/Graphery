@@ -54,8 +54,6 @@
 </template>
 
 <script>
-  import pp from 'cytoscape-popper';
-  console.log(pp);
   let cytoscape;
   let panzoom;
   let dagre;

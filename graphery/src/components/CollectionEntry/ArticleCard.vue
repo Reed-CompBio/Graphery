@@ -8,33 +8,39 @@
           </h6>
         </section>
         <section>
-          <q-breadcrumbs>
-            <q-breadcrumbs-el v-if="authors">
-              <q-chip
-                clickable
-                v-for="author in authors"
-                :key="author"
-                icon="mdi-card-account-details"
-                @click="$emit('author-filter', author)"
-              >
-                {{ author }}
-              </q-chip>
-            </q-breadcrumbs-el>
-            <q-breadcrumbs-el v-if="categories">
-              <q-chip
-                clickable
-                v-for="category in categories"
-                :key="category"
-                icon="category"
-                @click="$emit('category-filter', category)"
-              >
-                {{ category }}
-              </q-chip>
-            </q-breadcrumbs-el>
-            <q-breadcrumbs-el v-if="time">
-              <q-chip icon="mdi-calendar-month"> {{ time }}</q-chip>
-            </q-breadcrumbs-el>
-          </q-breadcrumbs>
+          <div>
+            <q-chip
+              clickable
+              v-if="!isTutorialAnchorPublished"
+              icon="mdi-book-lock"
+            >
+              Tutorial Not Published
+            </q-chip>
+            <q-chip clickable v-if="!isTransPublished" icon="mdi-book-lock">
+              Translation Not Published
+            </q-chip>
+          </div>
+          <div>
+            <q-chip
+              clickable
+              v-for="author in authors"
+              :key="author"
+              icon="mdi-card-account-details"
+              @click="$emit('author-filter', author)"
+            >
+              {{ author }}
+            </q-chip>
+            <q-chip
+              clickable
+              v-for="category in categories"
+              :key="category"
+              icon="category"
+              @click="$emit('category-filter', category)"
+            >
+              {{ category }}
+            </q-chip>
+            <q-chip icon="mdi-calendar-month"> {{ modifiedTime }}</q-chip>
+          </div>
         </section>
         <section class="article-abstract-section">
           <p>
@@ -42,7 +48,7 @@
           </p>
         </section>
         <q-card-actions>
-          <q-btn :to="`/tutorial/${id}`"> Read More </q-btn>
+          <q-btn :to="`/tutorial/${url}`"> Read More </q-btn>
         </q-card-actions>
       </q-card>
     </q-intersection>
@@ -51,7 +57,16 @@
 
 <script>
   export default {
-    props: ['title', 'authors', 'categories', 'time', 'abstract', 'id'],
+    props: [
+      'title',
+      'authors',
+      'categories',
+      'modifiedTime',
+      'abstract',
+      'url',
+      'isTransPublished',
+      'isTutorialAnchorPublished',
+    ],
   };
 </script>
 

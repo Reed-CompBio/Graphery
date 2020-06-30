@@ -99,13 +99,15 @@
               </div>
               <ArticleCard
                 v-for="info in displayedInfos"
-                :key="info.id"
-                :title="info.title"
-                :authors="info.authors"
+                :key="info.url"
+                :url="info.url"
                 :categories="info.categories"
-                :time="info.time"
-                :abstract="info.abstract"
-                :id="info.id"
+                :isTutorialAnchorPublished="info.isPublished"
+                :title="info.content.title"
+                :authors="info.content.authors"
+                :modifiedTime="info.content.modifiedTime"
+                :abstract="info.content.abstract"
+                :isTransPublished="info.content.isPublished"
                 @category-filter="addToCategoryFilter"
                 @author-filter="addToAuthorFilter"
               ></ArticleCard>
@@ -174,13 +176,17 @@
         setTimeout(() => {
           for (let i = 0; i < 10; i++) {
             this.infos.push({
-              title: 'Example',
-              authors: ['me', 'her'],
+              url: i.toString(),
+              isPublished: false,
               categories: ['1', '2'],
-              time: new Date().toLocaleString(),
-              abstract:
-                'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-              id: i.toString(),
+              content: {
+                title: 'Example',
+                authors: ['me', 'her'],
+                modifiedTime: new Date().toLocaleString(),
+                abstract:
+                  'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
+                isPublished: false,
+              },
             });
           }
           // TODO modify this to accommodate the real apis

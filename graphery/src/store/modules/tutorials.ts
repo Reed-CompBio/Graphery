@@ -56,6 +56,7 @@ const pseudoContent = {
   authors: ['Me'],
   categories: ['hhh'],
   modifiedTime: Date(),
+  isPublished: false,
 };
 
 const pseudoResultJson =
@@ -79,13 +80,14 @@ const pseudoVariableList = {
 // TODO remove the pseudo content!
 const state: TutorialState = {
   // TODO do I need the ids?
-  articleId: null,
-  article: null,
+  articleUrl: null,
+  articleContent: pseudoContent,
   // graphIDs: null,
   graphs: null,
   codes: null,
   resultJson: pseudoResultJson,
   variableObj: null,
+  isPublished: false,
   // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 
@@ -100,24 +102,24 @@ const mutations: MutationTree<TutorialState> = {
   LOAD_ARTICLE_ID(state, value: TutorialRequestState) {
     // the start entry of a tutorial storage
 
-    if (!state.articleId) {
+    if (!state.articleUrl) {
       // the article id must be null to be intialized
       // TODO hasBeenInitialized
       throw Error;
     }
 
-    if (!(value.articleId && value.articleId.trim())) {
+    if (!(value.articleUrl && value.articleUrl.trim())) {
       // TODO wrong argument
       throw Error;
     }
 
-    state.articleId = value.articleId;
+    state.articleUrl = value.articleUrl;
 
-    console.debug(`Loaded With New Article Id ${state.articleId} With Article Id 
-                 ${value.articleId}`);
+    console.debug(`Loaded With New Article Id ${state.articleUrl} With Article Id 
+                 ${value.articleUrl}`);
   },
   CLEAR_ARTICLE_ID(state) {
-    state.articleId = null;
+    state.articleUrl = null;
   },
   /**
    * Load a new article.
@@ -128,23 +130,23 @@ const mutations: MutationTree<TutorialState> = {
    * @todo refine errors
    */
   LOAD_ARTICLE(state, value: TutorialRequestState) {
-    if (!state.article) {
+    if (!state.articleContent) {
       // the article must not be null
       // TODO hasBeenInitialized
       throw Error;
     }
 
-    if (!(value.article && value.article)) {
+    if (!(value.articleContent && value.articleContent)) {
       // TODO wrong argument
       throw Error;
     }
 
-    state.article = value.article;
+    state.articleContent = value.articleContent;
 
     console.debug(`Loaded Article`);
   },
   CLEAR_ARTICLE(state) {
-    state.article = null;
+    state.articleContent = null;
   },
   /**
    *
@@ -229,24 +231,27 @@ const actions: ActionTree<TutorialState, RootState> = {
 
 const getters: GetterTree<TutorialState, RootState> = {
   title(state) {
-    return state.article && state.article.title;
-    // return state.article ? state.article.title : null;
+    return state.articleContent && state.articleContent.title;
+    // return state.articleContent ? state.articleContent.title : null;
   },
   content(state) {
-    return state.article && state.article.contentHtml;
-    // return state.article ? state.article.content : null;
+    return state.articleContent && state.articleContent.contentHtml;
+    // return state.articleContent ? state.articleContent.content : null;
   },
   authors(state) {
-    return state.article && state.article.authors;
+    return state.articleContent && state.articleContent.authors;
   },
   categories(state) {
-    return state.article && state.article.categories;
+    return state.articleContent && state.articleContent.categories;
   },
   articleTime(state) {
-    return state.article && state.article.modifiedTime;
+    return state.articleContent && state.articleContent.modifiedTime;
   },
   articleEmpty(state) {
-    return state.article === null;
+    return state.articleContent === null;
+  },
+  anchorPublished(state) {
+    return state.isPublished;
   },
   graphsEmpty(state) {
     // return state.graphs === null;

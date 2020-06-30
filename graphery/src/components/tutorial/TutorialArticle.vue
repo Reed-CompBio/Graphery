@@ -9,40 +9,42 @@
       <div class="q-mt-xl">
         <div id="tutorial-title" class="text-h2">{{ title }}</div>
         <div id="tutorial-info" class="q-mb-lg">
-          <q-breadcrumbs>
-            <q-breadcrumbs-el v-if="authors">
-              <q-chip
-                clickable
-                v-for="author in authors"
-                :key="author"
-                icon="mdi-card-account-details"
-                @click="$emit('author-filter', author)"
-              >
-                <!-- may be I don't need the author filter -->
-                {{ author }}
-              </q-chip>
-            </q-breadcrumbs-el>
-            <q-breadcrumbs-el v-if="categories">
-              <q-chip
-                clickable
-                v-for="category in categories"
-                :key="category"
-                icon="category"
-                @click="$emit('category-filter', category)"
-              >
-                {{ category }}
-              </q-chip>
-            </q-breadcrumbs-el>
-            <q-breadcrumbs-el v-if="articleTime">
-              <q-chip icon="mdi-calendar-month"> {{ articleTime }}</q-chip>
-            </q-breadcrumbs-el>
-            <q-breadcrumbs-el>
-              <q-btn flat rounded dense @click="share">
-                <SwitchTooltip :text="$t('tooltips.Share')"></SwitchTooltip>
-                <q-icon name="mdi-share-variant"></q-icon>
-              </q-btn>
-            </q-breadcrumbs-el>
-          </q-breadcrumbs>
+          <div>
+            <q-chip
+              clickable
+              v-if="!content.anchorPublished"
+              icon="mdi-book-lock"
+            >
+              Tutorial Not Published
+            </q-chip>
+            <q-chip clickable v-if="!content.isPublished" icon="mdi-book-lock">
+              Translation Not Published
+            </q-chip>
+          </div>
+          <q-chip
+            clickable
+            v-for="author in authors"
+            :key="author"
+            icon="mdi-card-account-details"
+            @click="$emit('author-filter', author)"
+          >
+            <!-- may be I don't need the author filter -->
+            {{ author }}
+          </q-chip>
+          <q-chip
+            clickable
+            v-for="category in categories"
+            :key="category"
+            icon="category"
+            @click="$emit('category-filter', category)"
+          >
+            {{ category }}
+          </q-chip>
+          <q-chip icon="mdi-calendar-month"> {{ articleTime }}</q-chip>
+          <q-btn flat rounded dense @click="share">
+            <SwitchTooltip :text="$t('tooltips.Share')"></SwitchTooltip>
+            <q-icon name="mdi-share-variant"></q-icon>
+          </q-btn>
         </div>
       </div>
 
@@ -115,6 +117,7 @@
         'authors',
         'categories',
         'articleTime',
+        'anchorPublished',
       ]),
     },
     methods: {
