@@ -151,8 +151,16 @@
   export default {
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
-      Editor: () => import('@/components/tutorial/Editor.vue'),
-      VariableList: () => import('@/components/tutorial/VariableList.vue'),
+      Editor: () =>
+        import('@/components/tutorial/Editor.vue').then((md) => {
+          // TODO notify the initializer here
+          return md;
+        }),
+      VariableList: () =>
+        import('@/components/tutorial/VariableList.vue').then((md) => {
+          // TODO notify the initializer here
+          return md;
+        }),
     },
     data() {
       return {
@@ -288,6 +296,7 @@
       },
     },
     mounted() {
+      // TODO fix this, load init state after the API call is made
       setTimeout(() => {
         this.initWrapperState();
       }, 2000);
