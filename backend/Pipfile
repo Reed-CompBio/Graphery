@@ -7,6 +7,7 @@ verify_ssl = true
 pytest = "*"
 coverage = "*"
 parameterized = "*"
+guppy3 = "*"
 
 [packages]
 django = "*"
