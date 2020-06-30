@@ -80,7 +80,7 @@ const pseudoVariableList = {
 const state: TutorialState = {
   // TODO do I need the ids?
   articleId: null,
-  article: pseudoContent,
+  article: null,
   // graphIDs: null,
   graphs: null,
   codes: null,

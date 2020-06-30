@@ -24,7 +24,12 @@
         <q-btn dense icon="mdi-skip-backward">
           <SwitchTooltip :text="$t('tooltips.fiveStepsBack')"></SwitchTooltip>
         </q-btn>
-        <q-btn dense icon="mdi-skip-previous">
+        <q-btn
+          dense
+          icon="mdi-skip-previous"
+          @click="previousStep"
+          :disable="isPreviousButtonDisable"
+        >
           <SwitchTooltip :text="$t('tooltips.oneStepBack')"></SwitchTooltip>
         </q-btn>
         <!--        </div>-->
@@ -32,7 +37,12 @@
           <SwitchTooltip :text="$t('tooltips.autoRun')"></SwitchTooltip>
         </q-btn>
         <!--        <div>-->
-        <q-btn dense icon="mdi-skip-next" @click="nextStep">
+        <q-btn
+          dense
+          icon="mdi-skip-next"
+          @click="nextStep"
+          :disable="isNextButtonDisable"
+        >
           <SwitchTooltip :text="$t('tooltips.oneStepForward')"></SwitchTooltip>
         </q-btn>
         <q-btn dense icon="mdi-skip-forward">
@@ -150,10 +160,16 @@
         return this.resultJsonArr.length;
       },
       disableStepSlider() {
-        return this.sliderLength === 1;
+        return this.sliderLength <= 1;
       },
       resultJsonArrPos() {
         return this.sliderPos - 1;
+      },
+      isNextButtonDisable() {
+        return !this.isWalkable();
+      },
+      isPreviousButtonDisable() {
+        return !this.isWalkable(-1);
       },
     },
     methods: {
@@ -162,11 +178,14 @@
         this.routerViewName = tabName;
       },
       // Stepper button actions
-      notFull(deltaStep = 1) {
-        return this.sliderPos + deltaStep <= this.sliderLength;
+      isWalkable(deltaStep = 1) {
+        return (
+          1 <= this.sliderPos + deltaStep &&
+          this.sliderPos + deltaStep <= this.sliderLength
+        );
       },
       incrementSliderPos(deltaPos = 1) {
-        if (this.notFull(deltaPos)) {
+        if (this.isWalkable(deltaPos)) {
           this.sliderPos += deltaPos;
           return true;
         }
@@ -198,10 +217,19 @@
           this.loadInfo(this.resultJsonArr[0]);
         }
       },
+      previousStep() {
+        if (this.resultJsonArr && this.incrementSliderPos(-1)) {
+          const previousLineObj = this.resultJsonArr[this.resultJsonArrPos];
+          if (previousLineObj['variables']) {
+            this.loadInfo(previousLineObj);
+          }
+        }
+      },
+      // TODO something wrong here
       nextStep() {
         if (this.resultJsonArr && this.incrementSliderPos()) {
           const nextLineObj = this.resultJsonArr[this.resultJsonArrPos];
-          if (nextLineObj) {
+          if (nextLineObj['variables']) {
             this.loadInfo(nextLineObj);
           }
         }

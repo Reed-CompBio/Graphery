@@ -6,8 +6,9 @@
       :items="variableDisplayList"
       id="variable-list-scroll"
     >
+      <!-- make cards wrap when the width is enough -->
       <template v-slot="{ item, index }">
-        <q-card :key="index" class="q-my-lg q-py-sm q-px-md text-center">
+        <q-card :key="index" class="q-my-md q-py-sm q-px-md text-center">
           <div class="mock-h6" :style="`background-color: ${item.color}`">
             {{ item.label }}
           </div>
