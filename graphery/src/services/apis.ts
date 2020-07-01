@@ -11,7 +11,7 @@ export const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
 });
 
-export async function apiCallWrapper(
+export async function apiCaller(
   query: string,
   variables: object | null = null
 ) {
@@ -21,7 +21,7 @@ export async function apiCallWrapper(
     });
     vuex.commit('SET_CSRF_TOKEN', token);
   }
-  return await apiClient.post(
+  const response = await apiClient.post(
     '/graphql',
     {
       query,
@@ -33,4 +33,6 @@ export async function apiCallWrapper(
       },
     }
   );
+
+  return [response.data.data, response.data.errors];
 }

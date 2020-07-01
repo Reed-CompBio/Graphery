@@ -1,7 +1,7 @@
 <template>
   <CollectionPage
     :title="$t('nav.Graphs')"
-    api="graphs-api-path"
+    query="graphs-api-path"
   ></CollectionPage>
 </template>
 

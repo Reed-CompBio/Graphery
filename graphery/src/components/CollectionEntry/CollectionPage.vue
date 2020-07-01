@@ -122,13 +122,15 @@
 
 <script>
   import { mapState } from 'vuex';
+  import { apiCaller } from '../../services/apis';
+
   export default {
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       ArticleCard: () => import('@/components/CollectionEntry/ArticleCard.vue'),
     },
     props: {
-      api: String,
+      query: String,
       title: String,
     },
     data() {
@@ -169,30 +171,21 @@
         this.searchLoading = false;
       },
       getInfoList() {
-        console.debug('api call path: ', this.api);
+        console.debug('api query: ', this.query);
         // TODO API calls to get tutorial lists
         console.debug('start getting tutorial infos');
         this.toggleLoading();
-        setTimeout(() => {
-          for (let i = 0; i < 10; i++) {
-            this.infos.push({
-              url: i.toString(),
-              isPublished: false,
-              categories: ['1', '2'],
-              content: {
-                title: 'Example',
-                authors: ['me', 'her'],
-                modifiedTime: new Date().toLocaleString(),
-                abstract:
-                  'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-                isPublished: false,
-              },
-            });
+        apiCaller(this.query, this.variables).then(([data, errors]) => {
+          if (errors !== undefined) {
+            console.error(errors);
           }
-          // TODO modify this to accommodate the real apis
+          // TODO for now
+          if (data) {
+            this.infos = this.rawInfos = data.allTutorialInfo;
+          }
+
           this.finishLoading();
-          console.debug('finished loading tutorial infos');
-        }, 1000);
+        });
       },
       search() {
         if (this.searchLoading) {

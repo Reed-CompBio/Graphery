@@ -12,17 +12,11 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import { apiCallWrapper } from '@/services/apis';
 
   const showFooterRe = /^(\/tutorial\/|\/graph\/)/;
 
   export default Vue.extend({
     name: 'App',
-    data() {
-      return {
-        apiCallWrapper,
-      };
-    },
     components: {
       Header: () => import('@/components/framework/Header.vue'),
       Footer: () => import('@/components/framework/Footer.vue'),

@@ -3,9 +3,9 @@
     <q-intersection once transition="scale" class="expandable-helper">
       <q-card class="article-card-wrapper">
         <section>
-          <h6>
+          <h5>
             {{ title }}
-          </h6>
+          </h5>
         </section>
         <section>
           <div>
@@ -42,7 +42,7 @@
             <q-chip icon="mdi-calendar-month"> {{ modifiedTime }}</q-chip>
           </div>
         </section>
-        <section class="article-abstract-section">
+        <section class="article-abstract-section q-mx-md">
           <p>
             {{ abstract }}
           </p>
@@ -73,7 +73,7 @@
 <style lang="sass">
   .article-card-wrapper
     padding: 3px 20px
-    h6
+    h5
       margin: 10px 0px
     .article-abstract-section
       margin-top: 15px
