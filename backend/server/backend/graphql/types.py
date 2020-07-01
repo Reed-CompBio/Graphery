@@ -50,10 +50,10 @@ class TutorialInterface(graphene.Interface):
     content_md = graphene.String()
     content_html = graphene.String()
     is_published = graphene.Boolean()
-    createdTime = graphene.DateTime()
-    modifiedTime = graphene.DateTime()
+    created_time = graphene.DateTime()
+    modified_time = graphene.DateTime()
 
-    def resolve_authors(self, info, **kwargs):
+    def resolve_authors(self, info):
         return self.authors.all().values_list('username', flat=True)
 
 
