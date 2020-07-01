@@ -7,6 +7,7 @@ import notifications from '@/store/modules/notifications';
 import tutorials from '@/store/modules/tutorials';
 import settings from '@/store/modules/settings';
 import createPersistedState from 'vuex-persistedstate';
+import { BaseState } from '@/store/states/state';
 
 export default new Vuex.Store({
   // TODO Make it lazy load
@@ -18,10 +19,14 @@ export default new Vuex.Store({
   plugins: [createPersistedState({ paths: ['settings'] })],
   state: {
     drawer: false,
-  },
+    csrfToken: null,
+  } as BaseState,
   mutations: {
     CHANGE_DRAWER_STATE(state, value) {
       state.drawer = value;
+    },
+    SET_CSRF_TOKEN(state, token: string) {
+      state.csrfToken = token;
     },
   },
   actions: {

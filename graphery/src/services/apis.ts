@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import vuex from '../store/index';
 
 const PRO_BASE_URL = 'http://localhost:8082';
 const DEV_BASE_URL = 'http://localhost:8082';
@@ -10,38 +11,26 @@ export const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
 });
 
-export function apiCallWrapper(
+export async function apiCallWrapper(
   query: string,
-  variables: object | null = null,
-  callback: (response: AxiosResponse) => null
+  variables: object | null = null
 ) {
-  apiClient
-    .get('/csrf')
-    .then((re) => {
+  if (vuex.state.csrfToken === null) {
+    const token = await apiClient.get('/csrf').then((re) => {
       return re.data.csrfToken;
-    })
-    .then((csrfToken) => {
-      apiClient
-        .post(
-          '/graphql',
-          {
-            query,
-            variables,
-          },
-          {
-            headers: {
-              'X-CSRFToken': csrfToken,
-            },
-          }
-        )
-        .then((re) => {
-          callback(re);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    })
-    .catch((err) => {
-      console.error(err);
     });
+    vuex.commit('SET_CSRF_TOKEN', token);
+  }
+  return await apiClient.post(
+    '/graphql',
+    {
+      query,
+      variables,
+    },
+    {
+      headers: {
+        'X-CSRFToken': vuex.state.csrfToken,
+      },
+    }
+  );
 }

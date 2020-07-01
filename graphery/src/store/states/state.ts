@@ -101,3 +101,8 @@ export interface SettingInfos {
 export interface SettingState extends SettingInfos {
   settingVer: '1.0.0';
 }
+
+export interface BaseState {
+  drawer: boolean;
+  csrfToken: string | null;
+}
