@@ -255,9 +255,7 @@ const getters: GetterTree<TutorialState, RootState> = {
     return state.graphs === null;
   },
   codesEmpty(state) {
-    // return state.codes === null;
-    // TODO return false for test purpose, remove it afterwards
-    return false;
+    return state.codes === null;
   },
   resultJsonArrEmpty(state, getter) {
     return getter.resultJsonArr.length === 0;
@@ -268,8 +266,10 @@ const getters: GetterTree<TutorialState, RootState> = {
     }
     return JSON.parse(getter.resultJson);
   },
-  variableObjEmpty(state) {
-    return state.variableObj === null;
+  variableObjEmpty(state, getter) {
+    return (
+      getter.codesEmpty || getter.graphsEmpty || state.variableObj === null
+    );
   },
   getGraphList(state) {
     const arr: { label: string; value: string }[] = [];
@@ -304,6 +304,17 @@ const getters: GetterTree<TutorialState, RootState> = {
   },
   getGraphByIndex: (state) => (index: number) => {
     return state.graphs && state.graphs[index];
+  },
+  currentGraph(state, getter) {
+    return getter.getGraphById(state.currentGraphId) || null;
+  },
+  currentGraphJsonObj(state, getter) {
+    if (getter.currentGraph && getter.currentGraph.cyjs) {
+      // which should always happen since the graphs are chosen by ids which corresponds
+      // defined graphs
+      return JSON.parse(getter.currentGraph.cyjs);
+    }
+    return null;
   },
 };
 

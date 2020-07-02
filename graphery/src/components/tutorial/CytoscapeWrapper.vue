@@ -9,6 +9,7 @@
           label="Graph"
           :multiple="false"
           dropdown-icon="mdi-menu-down"
+          :loading="graphsEmpty"
         >
           <template v-slot:no-option>
             <q-item>
@@ -99,6 +100,8 @@
         'getGraphById',
         'getGraphByIndex',
         'graphsEmpty',
+        'currentGraph',
+        'currentGraphJsonObj',
       ]),
       ...mapGetters('settings', ['graphBackgroundColor']),
       graphChoice: {
@@ -130,16 +133,6 @@
         return {
           height: `calc(100% - ${graphMenuHeaderSize}px)`,
         };
-      },
-      // graph helpers
-      currentGraph() {
-        return this.getGraphById(this.currentGraphId) || null;
-      },
-      currentGraphJsonObj() {
-        if (this.currentGraph.cyjs) {
-          return this.currentGraph && JSON.parse(this.currentGraph.cyjs);
-        }
-        return null;
       },
     },
     methods: {

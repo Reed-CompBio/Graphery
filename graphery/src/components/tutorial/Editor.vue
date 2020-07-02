@@ -2,14 +2,14 @@
   <div id="editor-panel">
     <q-resize-observer @resize="resizeAction"></q-resize-observer>
     <div id="editor" class="full-height"></div>
-    <q-inner-loading :showing="editor === null">
+    <q-inner-loading :showing="editor === null || codesEmpty">
       <q-spinner-pie size="64px" color="primary" />
     </q-inner-loading>
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex';
+  import { mapGetters, mapState } from 'vuex';
   let monacoEditor;
 
   export default {
@@ -30,6 +30,8 @@
         'fontSize',
         'wrap',
       ]),
+      ...mapState('tutorials', ['codes']),
+      ...mapGetters('tutorials', ['codesEmpty']),
     },
     methods: {
       initMonacoEditor() {
@@ -59,22 +61,22 @@
             console.debug('mounted monaco editor');
 
             // load text to editor
-            this.editor.setValue(
-              'from supply import graph_obj as graph\n' +
-                'from bundle.seeker import tracer\n' +
-                '\n' +
-                '\n' +
-                "@tracer('edge', 'node', 'degree_dict')\n" +
-                'def graphery_count_degree_by_edges() -> None:\n' +
-                '    degree_dict = {}\n' +
-                '\n' +
-                '    for edge in graph.edges:\n' +
-                '        for node in edge:\n' +
-                '            if node in degree_dict:\n' +
-                '                degree_dict[node] += 1\n' +
-                '            else: \n' +
-                '                degree_dict[node] = 1\n'
-            );
+            // this.editor.setValue(
+            //   'from supply import graph_obj as graph\n' +
+            //     'from bundle.seeker import tracer\n' +
+            //     '\n' +
+            //     '\n' +
+            //     "@tracer('edge', 'node', 'degree_dict')\n" +
+            //     'def graphery_count_degree_by_edges() -> None:\n' +
+            //     '    degree_dict = {}\n' +
+            //     '\n' +
+            //     '    for edge in graph.edges:\n' +
+            //     '        for node in edge:\n' +
+            //     '            if node in degree_dict:\n' +
+            //     '                degree_dict[node] += 1\n' +
+            //     '            else: \n' +
+            //     '                degree_dict[node] = 1\n'
+            // );
 
             this.editor.layout();
             // TODO respond to splitter resize
@@ -111,6 +113,13 @@
       resizeAction() {
         if (this.editor) {
           this.editor.layout();
+        }
+      },
+    },
+    watch: {
+      codes: function() {
+        if (this.editor && this.codes) {
+          this.editor.setValue(this.codes);
         }
       },
     },
