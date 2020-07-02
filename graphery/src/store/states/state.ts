@@ -38,6 +38,7 @@ export interface TutorialState {
   articleContent: {
     title: string;
     contentHtml: string;
+    // Meta data
     authors: string[];
     categories: string[];
     modifiedTime: string;

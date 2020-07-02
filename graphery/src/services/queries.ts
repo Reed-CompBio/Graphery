@@ -35,5 +35,11 @@ query ($url: String, $translation: String, $default: String = "en-us") {
       priority
       cyjs
     }
+    code {
+      code
+      execresultjsonSet {
+        json
+      }
+    }
   }
 }`;

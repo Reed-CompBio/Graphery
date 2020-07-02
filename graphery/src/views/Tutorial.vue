@@ -138,15 +138,18 @@
           url: this.name,
           translation: this.$i18n.locale,
           default: 'en-us',
-        }).then(([data, errors]) => {
-          if (errors !== undefined) {
-            console.log(errors);
-          }
+        })
+          .then(([data, errors]) => {
+            if (errors !== undefined || !data) {
+              console.log(errors);
+              // TODO throw error here
+            }
 
-          if (data) {
             this.loadTutorial(data.tutorial);
-          }
-        });
+          })
+          .catch((err) => {
+            // TODO in error
+          });
         // 1. API calls to get page conentent
         // 2. Extract articles and graph info, turn off loading for the article section and load article
         // 3. API calls using graph info to get graphs

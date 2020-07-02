@@ -10,14 +10,10 @@
         <div id="tutorial-title" class="text-h2">{{ title }}</div>
         <div id="tutorial-info" class="q-mb-lg">
           <div>
-            <q-chip
-              clickable
-              v-if="!content.anchorPublished"
-              icon="mdi-book-lock"
-            >
+            <q-chip clickable v-if="!isAnchorPublished" icon="mdi-book-lock">
               Tutorial Not Published
             </q-chip>
-            <q-chip clickable v-if="!content.isPublished" icon="mdi-book-lock">
+            <q-chip clickable v-if="!isTransPublished" icon="mdi-book-lock">
               Translation Not Published
             </q-chip>
           </div>
@@ -40,7 +36,9 @@
           >
             {{ category }}
           </q-chip>
-          <q-chip icon="mdi-calendar-month"> {{ articleTime }}</q-chip>
+          <q-chip icon="mdi-calendar-month">
+            {{ toLocalDateString($i18n.locale, articleModTime) }}</q-chip
+          >
           <q-btn flat rounded dense @click="share">
             <SwitchTooltip :text="$t('tooltips.Share')"></SwitchTooltip>
             <q-icon name="mdi-share-variant"></q-icon>
@@ -49,7 +47,7 @@
       </div>
 
       <!-- actual contents goes into here -->
-      <div id="tutorial-content" v-html="content"></div>
+      <div id="tutorial-content" v-html="htmlContent"></div>
 
       <LicenseCard></LicenseCard>
 
@@ -57,6 +55,7 @@
     </div>
     <!-- add a protocol info section -->
 
+    <!-- TODO fix this -->
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <transition
         appear
@@ -96,7 +95,8 @@
 </template>
 
 <script>
-  import { mapState, mapGetters, mapActions } from 'vuex';
+  import { mapGetters, mapActions } from 'vuex';
+  import { toLocalDateString } from '../../services/helpers';
 
   export default {
     components: {
@@ -109,23 +109,23 @@
       };
     },
     computed: {
-      ...mapState('tutorials', ['article']),
       ...mapGetters('tutorials', [
         'articleEmpty',
         'title',
-        'content',
+        'htmlContent',
         'authors',
         'categories',
-        'articleTime',
-        'anchorPublished',
+        'articleModTime',
+        'isAnchorPublished',
+        'isTransPublished',
       ]),
     },
     methods: {
       ...mapActions('tutorials', ['loadTutorial']),
+      toLocalDateString,
       share() {
         // TODO copy to clipboard
       },
-
       updatePosPercentage(info) {
         console.log(info);
       },

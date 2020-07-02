@@ -228,7 +228,7 @@ const getters: GetterTree<TutorialState, RootState> = {
     return state.articleContent && state.articleContent.title;
     // return state.articleContent ? state.articleContent.title : null;
   },
-  content(state) {
+  htmlContent(state) {
     return state.articleContent && state.articleContent.contentHtml;
     // return state.articleContent ? state.articleContent.content : null;
   },
@@ -238,14 +238,17 @@ const getters: GetterTree<TutorialState, RootState> = {
   categories(state) {
     return state.articleContent && state.articleContent.categories;
   },
-  articleTime(state) {
+  articleModTime(state) {
     return state.articleContent && state.articleContent.modifiedTime;
   },
   articleEmpty(state) {
     return state.articleContent === null;
   },
-  anchorPublished(state) {
+  isAnchorPublished(state) {
     return state.isPublished;
+  },
+  isTransPublished(state) {
+    return state.articleContent && state.articleContent.isPublished;
   },
   graphsEmpty(state) {
     // return state.graphs === null;
