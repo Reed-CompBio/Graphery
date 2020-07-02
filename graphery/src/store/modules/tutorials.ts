@@ -83,6 +83,7 @@ const state: TutorialState = {
   articleUrl: null,
   articleContent: pseudoContent,
   // graphIDs: null,
+  currentGraphId: null,
   graphs: null,
   codes: null,
   resultJson: pseudoResultJson,
@@ -148,30 +149,12 @@ const mutations: MutationTree<TutorialState> = {
   CLEAR_ARTICLE(state) {
     state.articleContent = null;
   },
-  /**
-   *
-   * @param {state} state of current store
-   * @param {TutorialRequestState} value of the request
-   * @todo refined errors
-   */
-  // LOAD_GRAPH_IDS(state, value: TutorialRequestState) {
-  //   if (!state.graphIDs) {
-  //     // TODO hasBeenInitialized
-  //     throw Error;
-  //   }
-  //
-  //   if (!value.graphIDs) {
-  //     // TODO argument
-  //     throw Error;
-  //   }
-  //
-  //   state.graphIDs = value.graphIDs;
-  //
-  //   console.debug(`Loaded Graph Ids`);
-  // },
-  // CLEAR_GRAPH_IDS(state) {
-  //   state.graphIDs = null;
-  // },
+  LOAD_CURRENT_GRAPH_ID(state, value: string) {
+    state.currentGraphId = value;
+  },
+  CLEAR_CURRENT_GRAPH_ID(state) {
+    state.currentGraphId = null;
+  },
   LOAD_GRAPHS(state, value) {
     // state.graphs = value;
   },
@@ -212,7 +195,7 @@ const actions: ActionTree<TutorialState, RootState> = {
   clearAll({ commit }) {
     commit('CLEAR_ARTICLE_ID');
     commit('CLEAR_ARTICLE');
-    // commit('CLEAR_GRAPH_IDS');
+    commit('CLEAR_CURRENT_GRAPH_ID');
     commit('CLEAR_GRAPHS');
     commit('CLEAR_CODES');
 
@@ -251,9 +234,7 @@ const getters: GetterTree<TutorialState, RootState> = {
     return state.articleContent && state.articleContent.isPublished;
   },
   graphsEmpty(state) {
-    // return state.graphs === null;
-    // TODO return false for test purpose, remove it afterwards
-    return false;
+    return state.graphs === null;
   },
   codesEmpty(state) {
     // return state.codes === null;
@@ -288,16 +269,11 @@ const getters: GetterTree<TutorialState, RootState> = {
     return arr;
   },
   getGraphById: (state) => (id: string) => {
+    // TODO may return undefined
     return state.graphs && state.graphs.find((g) => g.id === id);
   },
   getGraphByIndex: (state) => (index: number) => {
     return state.graphs && state.graphs[index];
-  },
-  getCodeById: (state) => (id: string) => {
-    return state.codes && state.codes[id];
-  },
-  getCodeByIndex: (state) => (index: number) => {
-    return state.codes && state.codes[Object.keys(state.codes)[index]];
   },
 };
 

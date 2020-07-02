@@ -76,7 +76,6 @@
     data() {
       return {
         cyInstance: null,
-        graphChoice: '', // used in drop menu to select graphs
         moduleLoadedNum: 0,
         moduleTargetNum: 5,
         tippy: null,
@@ -93,26 +92,24 @@
         'motionSensitivityLevel',
       ]),
       // TODO watch to every cy options
+      ...mapState('tutorials', ['currentGraphId']),
       ...mapGetters('tutorials', [
         'getGraphList',
         'getGraphById',
         'getGraphByIndex',
-        'articleEmpty',
         'graphsEmpty',
-        'codesEmpty',
       ]),
       ...mapGetters('settings', ['graphBackgroundColor']),
+      graphChoice: {
+        get() {
+          return this.currentGraphId;
+        },
+        set(value) {
+          this.$store.commit('LOAD_CURRENT_GRAPH_ID', value);
+        },
+      },
       libLoading() {
         return this.moduleLoadedNum < this.moduleTargetNum;
-      },
-      currentGraph() {
-        return this.getGraphByIndex(this.selector);
-      },
-      currentGraphId() {
-        return this.currentGraph && this.currentGraph.id;
-      },
-      currentGraphJson() {
-        return this.currentGraph && this.currentGraph.cyjs;
       },
       currentGraphLayoutEngine() {
         return this.currentGraph && this.currentGraph.layoutEngine;
@@ -127,66 +124,13 @@
           height: `calc(100% - ${graphMenuHeaderSize}px)`,
         };
       },
-    },
-    mounted() {
-      import('cytoscape')
-        .then((cy) => {
-          // async load cytoscape
-          cytoscape = cy.default;
-
-          console.debug('cytoscape module: ', cy);
-        })
-        .then(() => {
-          // start init
-
-          const element = document.createElement('div');
-          element.setAttribute('id', 'cy-mounting-point');
-          element.setAttribute('class', 'cytoscape');
-          element.setAttribute('class', 'full-height');
-
-          this.$refs.cy.appendChild(element);
-
-          /*
-           * When passing objects to Cytoscape.js for creating elements, animations, layouts, etc.,
-           * the objects are considered owned by Cytoscape. __** this may cause conflicts when working with vuex **__
-           * When desired, the programmer can copy objects manually before passing them to Cytoscape. However,
-           * copying is not necessary for most programmers most of the time.
-           *
-           * cannot use get element by id
-           * NOTE: Vue will try to create observers for each property in this nested cytoscape object
-           *       and it crashed my browser several times. By freezing it, we tell Vue to not bother
-           *       about it. This isn't a reactive property anyway, just a variable in the component.
-           *
-           */
-
-          this.cyInstance = Object.freeze(
-            cytoscape({
-              container: element,
-              // animation settings
-              textureOnViewport: this.renderViewportOnly,
-              hideEdgesOnViewport: this.hideEdgeWhenRendering,
-              motionBlur: this.motionBlurEnabled,
-              zoom: 1,
-              styleEnabled: true,
-              ...example,
-            })
-          );
-          console.debug('cy obj is mounted', this.cyInstance);
-
-          // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph
-          this.$nextTick(() => {
-            this.resizeGraph();
-          });
-
-          this.moduleLoad();
-        })
-        .then(() => {
-          this.registerExtensions();
-        })
-        .catch((error) => {
-          // TODO load up popup
-          console.debug('error occur', error);
-        });
+      // graph helpers
+      currentGraph() {
+        return this.getGraphById(this.currentGraphId) || null;
+      },
+      currentGraphJsonObj() {
+        return this.currentGraph && JSON.parse(this.currentGraph.cyjs);
+      },
     },
     methods: {
       moduleLoad() {
@@ -308,6 +252,31 @@
           }
         });
       },
+      reloadCyWithFullJson(json) {
+        if (this.cyInstance && json) {
+          this.cyInstance.elements().remove();
+          this.cyInstance.add(json.elements);
+          this.cyInstance
+            .style()
+            .resetToDefault()
+            .fromJson(json.style)
+            .update();
+        }
+      },
+      // highlight helper function
+      highlightElement(id, color) {
+        this.cyInstance.getElementById(id).style({
+          'overlay-color': color,
+          'overlay-opacity': 0.5,
+        });
+      },
+      unhighlightElement(id) {
+        this.cyInstance
+          .getElementById(id)
+          .removeStyle('overlay-opacity')
+          .update();
+      },
+      // highlight interface
       highlightVarObj(varObj) {
         if (varObj) {
           for (const [varName, varValue] of Object.entries(varObj)) {
@@ -322,14 +291,16 @@
           }
         }
       },
-      highlightElement(id, color) {
-        this.cyInstance.getElementById(id).style({
-          'overlay-color': color,
-          'overlay-opacity': 0.5,
-        });
-      },
-      unhighlightElement(id) {
-        this.cyInstance.getElementById(id).removeStyle('overlay-opacity');
+      // clearHighlight() {
+      //   // TODO I don't need this because when the graph is clear out, the style is reset as well
+      //   if (this.lastVarObj) {
+      //     for (const [_, varValue] of Object.entries(this.lastVarObj)) {
+      //       this.unhighlightElement(varValue);
+      //     }
+      //   }
+      // },
+      reloadGraph() {
+        this.reloadCyWithFullJson(this.currentGraphJsonObj);
       },
       /**
        * copied from
@@ -400,6 +371,72 @@
           this.cyInstance.resize();
         }
       },
+    },
+    watch: {
+      currentGraph: function() {
+        this.reloadGraph();
+      },
+    },
+    mounted() {
+      import('cytoscape')
+        .then((cy) => {
+          // async load cytoscape
+          cytoscape = cy.default;
+
+          console.debug('cytoscape module: ', cy);
+        })
+        .then(() => {
+          // start init
+
+          const element = document.createElement('div');
+          element.setAttribute('id', 'cy-mounting-point');
+          element.setAttribute('class', 'cytoscape');
+          element.setAttribute('class', 'full-height');
+
+          this.$refs.cy.appendChild(element);
+
+          /*
+           * When passing objects to Cytoscape.js for creating elements, animations, layouts, etc.,
+           * the objects are considered owned by Cytoscape. __** this may cause conflicts when working with vuex **__
+           * When desired, the programmer can copy objects manually before passing them to Cytoscape. However,
+           * copying is not necessary for most programmers most of the time.
+           *
+           * cannot use get element by id
+           * NOTE: Vue will try to create observers for each property in this nested cytoscape object
+           *       and it crashed my browser several times. By freezing it, we tell Vue to not bother
+           *       about it. This isn't a reactive property anyway, just a variable in the component.
+           *
+           */
+
+          this.cyInstance = Object.freeze(
+            cytoscape({
+              container: element,
+              // animation settings
+              textureOnViewport: this.renderViewportOnly,
+              hideEdgesOnViewport: this.hideEdgeWhenRendering,
+              motionBlur: this.motionBlurEnabled,
+              zoom: 1,
+              styleEnabled: true,
+            })
+          );
+          console.debug('cy obj is mounted', this.cyInstance);
+
+          this.reloadCyWithFullJson(example);
+
+          // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph
+          this.$nextTick(() => {
+            this.resizeGraph();
+          });
+
+          this.moduleLoad();
+        })
+        .then(() => {
+          this.registerExtensions();
+        })
+        .catch((error) => {
+          // TODO load up popup
+          console.error('error occur', error);
+        });
     },
   };
 </script>

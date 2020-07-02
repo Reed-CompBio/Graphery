@@ -45,6 +45,7 @@ export interface TutorialState {
     isPublished: boolean;
   } | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
+  currentGraphId: string | null;
   graphs: Graph[] | null;
   codes: { [id: string]: { graphId: string; codes: string } } | null;
   resultJson: string | null;
