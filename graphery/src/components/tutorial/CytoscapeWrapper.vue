@@ -5,8 +5,8 @@
         <q-select
           class="graph-selector"
           :options="getGraphList"
-          :value="graphChoice"
-          label="Loading Graphs..."
+          v-model="graphChoice"
+          label="Graph"
           :multiple="false"
           dropdown-icon="mdi-menu-down"
         >
@@ -81,6 +81,7 @@
         tippy: null,
         testValue: 0,
         lastVarObj: {},
+        choseGraphObj: null,
         // TODO remember to clear this out
       };
     },
@@ -102,10 +103,16 @@
       ...mapGetters('settings', ['graphBackgroundColor']),
       graphChoice: {
         get() {
-          return this.currentGraphId;
+          return this.choseGraphObj;
         },
-        set(value) {
-          this.$store.commit('LOAD_CURRENT_GRAPH_ID', value);
+        set(choseGraphObj) {
+          if (choseGraphObj !== this.choseGraphObj) {
+            this.choseGraphObj = choseGraphObj;
+            this.$store.commit(
+              'tutorials/LOAD_CURRENT_GRAPH_ID',
+              choseGraphObj.value
+            );
+          }
         },
       },
       libLoading() {
@@ -129,7 +136,10 @@
         return this.getGraphById(this.currentGraphId) || null;
       },
       currentGraphJsonObj() {
-        return this.currentGraph && JSON.parse(this.currentGraph.cyjs);
+        if (this.currentGraph.cyjs) {
+          return this.currentGraph && JSON.parse(this.currentGraph.cyjs);
+        }
+        return null;
       },
     },
     methods: {
@@ -373,6 +383,9 @@
       },
     },
     watch: {
+      getGraphList: function() {
+        this.graphChoice = this.getGraphList[0];
+      },
       currentGraph: function() {
         this.reloadGraph();
       },
