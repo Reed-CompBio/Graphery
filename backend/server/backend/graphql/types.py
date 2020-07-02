@@ -147,7 +147,17 @@ class CodeType(PublishedFilterBase, DjangoObjectType):
         description = 'The code content of a tutorial. '
 
 
-class ExecResultJsonType(PublishedFilterBase, DjangoObjectType):
+class ExecResultJsonType(DjangoObjectType):
+    # TODO something's wrong here due to publishedFilterBase
+    #   my speculation is that when the query set is empty
+    #   django can't query a user-defined property
+    #   CodeType should fail too, but I did some processing
+    #   in the tutorialType.
+    #   one fix can be get the number of queries anb if it's
+    #   zero, just return an object.none()
+    #   But in a real world case, that should not happen since
+    #   there will at least be one graph and a piece of code
+    #   However, i still need to handle the edge case.
     is_published = graphene.Boolean()
 
     def resolve_is_published(self, info):
