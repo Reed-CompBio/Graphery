@@ -15,6 +15,7 @@ query ($translation: String, $default: String) {
 }`;
 // TODO look into the defaults
 
+// TODo the graph id is pulled twice hmmm
 export const pullTutorialDetailQuery = `
 query ($url: String, $translation: String, $default: String = "en-us") {
   tutorial(url: $url) {
@@ -39,6 +40,9 @@ query ($url: String, $translation: String, $default: String = "en-us") {
       code
       execresultjsonSet {
         json
+        graph {
+          id
+        }
       }
     }
   }

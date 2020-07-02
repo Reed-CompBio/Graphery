@@ -32,6 +32,11 @@ export interface Graph {
   info: string;
 }
 
+export interface ResultJsonType {
+  json: string;
+  graphId: string;
+}
+
 export interface TutorialState {
   articleUrl: string | null;
   isPublished: boolean | null;
@@ -48,7 +53,7 @@ export interface TutorialState {
   currentGraphId: string | null;
   graphs: Graph[] | null;
   codes: { [id: string]: { graphId: string; codes: string } } | null;
-  resultJson: string | null;
+  resultJsonList: ResultJsonType[];
   variableObj: object | null;
 }
 

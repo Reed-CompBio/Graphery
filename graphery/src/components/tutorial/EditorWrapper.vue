@@ -174,7 +174,7 @@
     },
     computed: {
       ...mapGetters('tutorials', [
-        'resultJsonEmpty',
+        'resultJsonArrEmpty',
         'variableObjEmpty',
         'resultJsonArr',
       ]),
@@ -203,7 +203,7 @@
       },
     },
     methods: {
-      ...mapActions('tutorials', ['loadVariableList']),
+      ...mapActions('tutorials', ['loadVariableObj']),
       switchTabView(tabName) {
         this.routerViewName = tabName;
       },
@@ -227,7 +227,7 @@
       },
       loadNextVariableState(variableState) {
         if (variableState) {
-          this.loadVariableList(variableState);
+          this.loadVariableObj(variableState);
         }
       },
       loadInfo(lineObject) {
@@ -236,7 +236,7 @@
         this.$emit('updateCyWithVarObj', lineObject['variables']);
       },
       getTheLastState(index) {
-        if (this.resultJsonArr) {
+        if (!this.resultJsonArrEmpty) {
           for (let i = index; i >= 0; i--) {
             const lineObject = this.resultJsonArr[i];
             if (lineObject['variables']) {
@@ -254,12 +254,12 @@
       initWrapperState() {
         // called after the api call
         // TODO editor load line
-        if (this.resultJsonArr) {
+        if (!this.resultJsonArrEmpty) {
           this.loadInfo(this.resultJsonArr[0]);
         }
       },
       previousSeveralSteps() {
-        if (this.resultJsonArr) {
+        if (!this.resultJsonArrEmpty) {
           if (!this.incrementSliderPos(-this.advanceSteps)) {
             this.sliderPos = 0;
           }
@@ -268,20 +268,20 @@
         }
       },
       previousStep() {
-        if (this.resultJsonArr && this.incrementSliderPos(-1)) {
+        if (!this.resultJsonArrEmpty && this.incrementSliderPos(-1)) {
           const previousLineObj = this.resultJsonArr[this.resultJsonArrPos];
           this.loadInfo(previousLineObj);
         }
       },
       // TODO something wrong here
       nextStep() {
-        if (this.resultJsonArr && this.incrementSliderPos()) {
+        if (!this.resultJsonArrEmpty && this.incrementSliderPos()) {
           const nextLineObj = this.resultJsonArr[this.resultJsonArrPos];
           this.loadInfo(nextLineObj);
         }
       },
       nextSeveralSteps() {
-        if (this.resultJsonArr) {
+        if (!this.resultJsonArrEmpty) {
           if (!this.incrementSliderPos(this.advanceSteps)) {
             this.sliderPos = this.sliderLength;
           }
@@ -293,6 +293,15 @@
         const arrIndex = posValue - 1;
         const lineObject = this.getTheLastState(arrIndex);
         this.loadInfo(lineObject);
+      },
+      reloadStepper() {
+        this.sliderPos = 1;
+        this.loadVariableObj(null);
+      },
+    },
+    watch: {
+      resultJsonArr: function() {
+        this.reloadStepper();
       },
     },
     mounted() {

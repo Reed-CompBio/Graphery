@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex';
+  import { mapState } from 'vuex';
   let monacoEditor;
 
   export default {
@@ -30,8 +30,6 @@
         'fontSize',
         'wrap',
       ]),
-      ...mapState('tutorials', ['resultJson', 'variableObj']),
-      ...mapGetters('tutorials', ['resultJsonEmpty', 'variableObjEmpty']),
     },
     methods: {
       initMonacoEditor() {

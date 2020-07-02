@@ -81,7 +81,7 @@ const pseudoGraphList: Graph[] = [
   },
 ];
 
-const pseudoVariableList = {
+const pseudoVariableObj = {
   i: 10,
   j: 5,
   node: {
@@ -104,7 +104,7 @@ const state: TutorialState = {
   currentGraphId: null,
   graphs: null,
   codes: null,
-  resultJson: pseudoResultJson,
+  resultJsonList: [],
   variableObj: null,
   isPublished: false,
   // use v-for to spread graphs and make :key bind to id (or serial code?)
@@ -207,7 +207,7 @@ const actions: ActionTree<TutorialState, RootState> = {
     // TODO promises
     commit('LOAD_CODES', codes);
   },
-  loadVariableList({ commit }, list) {
+  loadVariableObj({ commit }, list) {
     commit('LOAD_VARIABLE_OBJ', list);
   },
   clearAll({ commit }) {
@@ -259,14 +259,14 @@ const getters: GetterTree<TutorialState, RootState> = {
     // TODO return false for test purpose, remove it afterwards
     return false;
   },
-  resultJsonEmpty(state) {
-    return state.resultJson === null;
+  resultJsonArrEmpty(state, getter) {
+    return getter.resultJsonArr.length === 0;
   },
-  resultJsonArr(state) {
-    if (state.resultJson === null) {
+  resultJsonArr(state, getter) {
+    if (getter.resultJson === null) {
       return [];
     }
-    return JSON.parse(state.resultJson);
+    return JSON.parse(getter.resultJson);
   },
   variableObjEmpty(state) {
     return state.variableObj === null;
@@ -285,6 +285,18 @@ const getters: GetterTree<TutorialState, RootState> = {
     });
 
     return arr;
+  },
+  resultJson(state) {
+    if (state.resultJsonList.length !== 0) {
+      const resultJsonObj = state.resultJsonList.find(
+        (r) => r.graphId === state.currentGraphId
+      );
+      if (resultJsonObj) {
+        return resultJsonObj.json;
+      }
+    }
+
+    return null;
   },
   getGraphById: (state) => (id: string) => {
     // TODO may return undefined
