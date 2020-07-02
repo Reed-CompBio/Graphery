@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import vuex from '../store/index';
 
 const PRO_BASE_URL = 'http://localhost:8082';

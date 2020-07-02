@@ -39,7 +39,9 @@
             >
               {{ category }}
             </q-chip>
-            <q-chip icon="mdi-calendar-month"> {{ modifiedTime }}</q-chip>
+            <q-chip icon="mdi-calendar-month">
+              {{ toLocalDateString($i18n.locale, modifiedTime) }}
+            </q-chip>
           </div>
         </section>
         <section class="article-abstract-section q-mx-md">
@@ -56,6 +58,8 @@
 </template>
 
 <script>
+  import { toLocalDateString } from '../../services/helpers';
+
   export default {
     props: [
       'title',
@@ -67,6 +71,9 @@
       'isTransPublished',
       'isTutorialAnchorPublished',
     ],
+    methods: {
+      toLocalDateString,
+    },
   };
 </script>
 

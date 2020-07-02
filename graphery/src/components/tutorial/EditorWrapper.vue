@@ -73,7 +73,7 @@
         <!-- TODO auto play maybe?  -->
       </q-btn-group>
       <!-- execution button group -->
-      <q-btn-group flat class="q-mr-md" v-touch-pan.prevent.mouse="null">
+      <q-btn-group flat class="q-mr-md">
         <q-btn dense>
           <q-icon name="mdi-cloud-upload" />
           <SwitchTooltip

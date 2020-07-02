@@ -193,14 +193,8 @@ const mutations: MutationTree<TutorialState> = {
 
 const actions: ActionTree<TutorialState, RootState> = {
   // TODO API calls go here
-  loadTutorial({ commit }, tutorialId) {
-    let article = null;
-    let graphIds = null;
-    article = pseudoContent;
-    graphIds = null;
-    // TODO promises
-    commit('LOAD_ARTICLE', article);
-    commit('LOAD_GRAPH_IDS', graphIds);
+  loadTutorial({ commit }, tutorialObj: object) {
+    console.debug('received tutorial detail obj', tutorialObj);
   },
   // loadGraphsByIds({ commit }, graphIds) {
   //   let graphs;

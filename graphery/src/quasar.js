@@ -59,7 +59,8 @@ import {
   // My plugins
   Notify,
   // My directive
-  TouchPan,
+  // TouchPan,
+  ClosePopup,
 } from 'quasar';
 
 Vue.use(Quasar, {
@@ -117,6 +118,6 @@ Vue.use(Quasar, {
     QFab,
     QFabAction,
   },
-  directives: { TouchPan },
+  directives: { ClosePopup },
   plugins: { Notify },
 });

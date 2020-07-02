@@ -131,6 +131,7 @@
     },
     props: {
       query: String,
+      variables: Object,
       title: String,
     },
     data() {

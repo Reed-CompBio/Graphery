@@ -38,7 +38,6 @@
       </div>
     </q-bar>
     <div id="cy-wrapper" :style="heightStyle">
-      <!--      <q-resize-observer @resize="" />-->
       <div id="cy" class="full-height" :style="graphStyle" ref="cy"></div>
     </div>
     <div>

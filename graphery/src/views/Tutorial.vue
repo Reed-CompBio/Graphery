@@ -1,5 +1,5 @@
 <template>
-  <!-- change list and app bar color -->
+  <!-- TODO change list and app bar color -->
   <div style="overflow: hidden;">
     <q-splitter
       v-if="notTortureSmallScreen"
@@ -64,6 +64,8 @@
 <script>
   import { headerSize } from '../store/states/meta';
   import { mapActions, mapState } from 'vuex';
+  import { apiCaller } from '../services/apis';
+  import { pullTutorialDetailQuery } from '../services/queries';
 
   export default {
     props: ['name'],
@@ -129,10 +131,22 @@
       },
     },
     methods: {
-      ...mapActions('tutorials', ['clearAll']),
+      ...mapActions('tutorials', ['clearAll', 'loadTutorial']),
       updateTutorialContent() {
-        console.log('API calls to get details of the tutorial');
-        // TODO
+        console.debug('API calls to get details of the tutorial');
+        apiCaller(pullTutorialDetailQuery, {
+          url: this.name,
+          translation: this.$i18n.locale,
+          default: 'en-us',
+        }).then(([data, errors]) => {
+          if (errors !== undefined) {
+            console.log(errors);
+          }
+
+          if (data) {
+            this.loadTutorial(data.tutorial);
+          }
+        });
         // 1. API calls to get page conentent
         // 2. Extract articles and graph info, turn off loading for the article section and load article
         // 3. API calls using graph info to get graphs
