@@ -60,6 +60,8 @@
             );
             console.debug('mounted monaco editor');
 
+            this.editor.setValue(this.codes);
+
             this.editor.layout();
             // TODO respond to splitter resize
           })

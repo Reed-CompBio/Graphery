@@ -258,6 +258,7 @@
       },
       reloadCyWithFullJson(json) {
         if (this.cyInstance && json) {
+          console.log('init with json', json);
           this.cyInstance.elements().remove();
           this.cyInstance.add(json.elements);
           this.cyInstance
@@ -295,14 +296,6 @@
           }
         }
       },
-      // clearHighlight() {
-      //   // TODO I don't need this because when the graph is clear out, the style is reset as well
-      //   if (this.lastVarObj) {
-      //     for (const [_, varValue] of Object.entries(this.lastVarObj)) {
-      //       this.unhighlightElement(varValue);
-      //     }
-      //   }
-      // },
       reloadGraph() {
         this.reloadCyWithFullJson(this.currentGraphJsonObj);
       },
@@ -428,7 +421,8 @@
           );
           console.debug('cy obj is mounted', this.cyInstance);
 
-          this.reloadCyWithFullJson(example);
+          this.graphChoice = this.getGraphList[0];
+          this.reloadGraph();
 
           // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph
           this.$nextTick(() => {

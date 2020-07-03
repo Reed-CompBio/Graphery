@@ -187,7 +187,10 @@
         }
       },
       sliderLength() {
-        return this.resultJsonArr.length;
+        if (this.resultJsonArr) {
+          return this.resultJsonArr.length;
+        }
+        return 0;
       },
       disableStepSlider() {
         return this.sliderLength < 1;
@@ -253,7 +256,7 @@
       },
       initWrapperState() {
         // called after the api call
-        if (!this.resultJsonArrEmpty) {
+        if (this.resultJsonArr && !this.resultJsonArrEmpty) {
           this.loadInfo(this.resultJsonArr[0]);
         }
       },
@@ -306,9 +309,6 @@
     },
     mounted() {
       // TODO fix this, load init state after the API call is made
-      setTimeout(() => {
-        this.initWrapperState();
-      }, 2000);
     },
   };
 </script>
