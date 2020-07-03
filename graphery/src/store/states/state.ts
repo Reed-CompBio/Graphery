@@ -25,11 +25,12 @@ export interface NotificationState {
 }
 
 export interface Graph {
-  id: string;
   name: string;
+  id: string;
+  isPublished: boolean;
+  graphInfo: string;
+  priority: number;
   cyjs: object | string;
-  layoutEngine: GraphLayoutEngines;
-  info: string;
 }
 
 export interface ResultJsonType {
@@ -37,24 +38,65 @@ export interface ResultJsonType {
   graphId: string;
 }
 
+export interface TutorialMetaState {
+  articleId: string | null;
+  isAnchorPublished: boolean;
+  isTransPublished: boolean;
+  authors: string[];
+  categories: string[];
+  modifiedTime: string;
+}
+
+export interface TutorialArticleContent {
+  title: string;
+  contentHtml: string;
+}
+
 export interface TutorialState {
-  articleUrl: string | null;
-  isPublished: boolean | null;
-  articleContent: {
-    title: string;
-    contentHtml: string;
-    // Meta data
-    authors: string[];
-    categories: string[];
-    modifiedTime: string;
-    isPublished: boolean;
-  } | null;
+  metaState: TutorialMetaState | null;
+  articleContent: TutorialArticleContent | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
   currentGraphId: string | null;
   graphs: Graph[] | null;
   codes: string | null;
-  resultJsonList: ResultJsonType[];
+  resultJsonList: ResultJsonType[] | null;
   variableObj: object | null;
+}
+
+export interface TutorialContent {
+  title: string;
+  authors: string[];
+  contentHtml: string;
+  isPublished: boolean;
+  modifiedTime: string;
+}
+
+export interface TutorialGraph {
+  name: string;
+  id: string;
+  isPublished: boolean;
+  graphInfo: string;
+  priority: number;
+  cyjs: string;
+}
+
+export interface TutorialExecResultJson {
+  json: string;
+  graph: { id: string };
+}
+
+export interface TutorialCode {
+  code: string;
+  execresultjsonSet: TutorialExecResultJson[];
+}
+
+export interface TutorialDetailResponse {
+  id: string;
+  isPublished: boolean;
+  categories: string[];
+  content: TutorialContent;
+  graphSet: TutorialGraph[];
+  code: TutorialCode;
 }
 
 export const enum GraphLayoutEngines {

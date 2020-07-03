@@ -19,6 +19,7 @@ query ($translation: String, $default: String) {
 export const pullTutorialDetailQuery = `
 query ($url: String, $translation: String, $default: String = "en-us") {
   tutorial(url: $url) {
+    id
     isPublished
     categories
     content(translation: $translation, default: $default) {

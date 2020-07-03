@@ -60,24 +60,6 @@
             );
             console.debug('mounted monaco editor');
 
-            // load text to editor
-            // this.editor.setValue(
-            //   'from supply import graph_obj as graph\n' +
-            //     'from bundle.seeker import tracer\n' +
-            //     '\n' +
-            //     '\n' +
-            //     "@tracer('edge', 'node', 'degree_dict')\n" +
-            //     'def graphery_count_degree_by_edges() -> None:\n' +
-            //     '    degree_dict = {}\n' +
-            //     '\n' +
-            //     '    for edge in graph.edges:\n' +
-            //     '        for node in edge:\n' +
-            //     '            if node in degree_dict:\n' +
-            //     '                degree_dict[node] += 1\n' +
-            //     '            else: \n' +
-            //     '                degree_dict[node] = 1\n'
-            // );
-
             this.editor.layout();
             // TODO respond to splitter resize
           })

@@ -122,7 +122,8 @@
         return this.moduleLoadedNum < this.moduleTargetNum;
       },
       currentGraphLayoutEngine() {
-        return this.currentGraph && this.currentGraph.layoutEngine;
+        // return this.currentGraph && this.currentGraph.layoutEngine;
+        return 'dagre';
       },
       graphStyle() {
         return {

@@ -68,7 +68,7 @@
   import { pullTutorialDetailQuery } from '../services/queries';
 
   export default {
-    props: ['name'],
+    props: ['url'],
     components: {
       CytoscapeWrapper: () =>
         import('@/components/tutorial/CytoscapeWrapper.vue'),
@@ -133,15 +133,20 @@
     methods: {
       ...mapActions('tutorials', ['clearAll', 'loadTutorial']),
       updateTutorialContent() {
-        console.debug('API calls to get details of the tutorial');
+        console.debug(
+          'API calls to get details of the tutorial with url',
+          this.url
+        );
         apiCaller(pullTutorialDetailQuery, {
-          url: this.name,
+          url: this.url,
           translation: this.$i18n.locale,
           default: 'en-us',
         })
           .then(([data, errors]) => {
             if (errors !== undefined || !data) {
-              console.log(errors);
+              throw Error(
+                'Invalid Data Received! Please Contact The Developer'
+              );
               // TODO throw error here
             }
 
@@ -149,6 +154,7 @@
           })
           .catch((err) => {
             // TODO in error
+            console.error(err);
           });
         // 1. API calls to get page conentent
         // 2. Extract articles and graph info, turn off loading for the article section and load article

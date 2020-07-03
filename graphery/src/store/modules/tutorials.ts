@@ -1,7 +1,12 @@
 import {
   Graph,
   GraphLayoutEngines,
+  ResultJsonType,
   RootState,
+  TutorialArticleContent,
+  TutorialDetailResponse,
+  TutorialGraph,
+  TutorialMetaState,
   TutorialRequestState,
   TutorialState,
 } from '@/store/states/state';
@@ -68,16 +73,18 @@ const pseudoGraphList: Graph[] = [
   {
     id: 'eiaofj',
     name: 'name',
+    isPublished: true,
     cyjs: '',
-    layoutEngine: GraphLayoutEngines.dagre,
-    info: 'this is a random graph',
+    graphInfo: 'this is a random graph',
+    priority: 60,
   },
   {
     id: 'dfijaowe',
     name: 'name2',
+    isPublished: true,
     cyjs: '',
-    layoutEngine: GraphLayoutEngines.dagre,
-    info: 'this is another random graph',
+    graphInfo: 'this is another random graph',
+    priority: 40,
   },
 ];
 
@@ -98,130 +105,119 @@ const pseudoVariableObj = {
 
 // TODO remove the pseudo content!
 const state: TutorialState = {
-  articleUrl: null,
-  articleContent: pseudoContent,
-  // graphIDs: null,
+  metaState: null,
+  articleContent: null,
   currentGraphId: null,
   graphs: null,
   codes: null,
-  resultJsonList: [],
+  resultJsonList: null,
   variableObj: null,
-  isPublished: false,
   // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 
 const mutations: MutationTree<TutorialState> = {
-  /**
-   *
-   * @param {state} state
-   * @param {TutorialRequestState} value
-   * @throws hasBeenInitialized
-   * @todo refine errors
-   */
-  LOAD_ARTICLE_ID(state, value: TutorialRequestState) {
-    // the start entry of a tutorial storage
-
-    if (!state.articleUrl) {
-      // the article id must be null to be intialized
-      // TODO hasBeenInitialized
-      throw Error;
-    }
-
-    if (!(value.articleUrl && value.articleUrl.trim())) {
-      // TODO wrong argument
-      throw Error;
-    }
-
-    state.articleUrl = value.articleUrl;
-
-    console.debug(`Loaded With New Article Id ${state.articleUrl} With Article Id 
-                 ${value.articleUrl}`);
+  LOAD_META_STATE(state, value: TutorialMetaState) {
+    state.metaState = value;
   },
-  CLEAR_ARTICLE_ID(state) {
-    state.articleUrl = null;
-  },
-  /**
-   * Load a new article.
-   * Make sure the article is trimmed
-   * @param {state} state: the state of the current store
-   * @param {TutorialRequestState} value: the pushed value for updating the article
-   * @throws RecordNotInitialized
-   * @todo refine errors
-   */
-  LOAD_ARTICLE(state, value: TutorialRequestState) {
-    if (!state.articleContent) {
-      // the article must not be null
-      // TODO hasBeenInitialized
-      throw Error;
-    }
-
-    if (!(value.articleContent && value.articleContent)) {
-      // TODO wrong argument
-      throw Error;
-    }
-
-    state.articleContent = value.articleContent;
-
-    console.debug(`Loaded Article`);
-  },
-  CLEAR_ARTICLE(state) {
-    state.articleContent = null;
+  LOAD_ARTICLE_CONTENT(state, value: TutorialArticleContent) {
+    state.articleContent = value;
   },
   LOAD_CURRENT_GRAPH_ID(state, value: string) {
     state.currentGraphId = value;
   },
-  CLEAR_CURRENT_GRAPH_ID(state) {
-    state.currentGraphId = null;
+  LOAD_GRAPHS(state, value: TutorialGraph[]) {
+    state.graphs = value;
   },
-  LOAD_GRAPHS(state, value) {
-    // state.graphs = value;
+  LOAD_CODES(state, value: string) {
+    state.codes = value;
   },
-  CLEAR_GRAPHS(state) {
-    state.graphs = null;
-  },
-  LOAD_CODES(state, value) {
-    // state.codes = value;
-  },
-  CLEAR_CODES(state, value) {
-    state.codes = null;
+  LOAD_RESULT_JSON_LIST(state, value: ResultJsonType[]) {
+    state.resultJsonList = value;
   },
   LOAD_VARIABLE_OBJ(state, obj) {
     state.variableObj = obj;
   },
-  // don't know how to write this
-  // MODIFY_GRAPH_BY_ID(state, info) {},
+
+  // clear states
+  CLEAR_META_STATE(state) {
+    state.metaState = null;
+  },
+  CLEAR_ARTICLE_CONTENT(state) {
+    state.articleContent = null;
+  },
+  CLEAR_CURRENT_GRAPH_ID(state) {
+    state.currentGraphId = null;
+  },
+  CLEAR_GRAPHS(state) {
+    state.graphs = null;
+  },
+  CLEAR_CODES(state) {
+    state.codes = null;
+  },
+  CLEAR_VARIABLE_OBJ(state) {
+    state.variableObj = null;
+  },
 };
 
 const actions: ActionTree<TutorialState, RootState> = {
   // TODO API calls go here
-  loadTutorial({ commit }, tutorialObj: object) {
-    console.debug('received tutorial detail obj', tutorialObj);
+  loadTutorialMetaState({ commit }, tutorialObj: TutorialDetailResponse) {
+    const metaState: TutorialMetaState = {
+      articleId: tutorialObj.id,
+      isAnchorPublished: tutorialObj.isPublished,
+      isTransPublished: tutorialObj.content.isPublished,
+      authors: tutorialObj.content.authors,
+      categories: tutorialObj.categories,
+      modifiedTime: tutorialObj.content.modifiedTime,
+    };
+    commit('LOAD_META_STATE', metaState);
   },
-  // loadGraphsByIds({ commit }, graphIds) {
-  //   let graphs;
-  //   // TODO promises
-  //   commit('LOAD_GRAPHS', graphs);
-  // },
-  loadCodes({ commit }, graphIds) {
-    let codes;
-    // TODO promises
-    commit('LOAD_CODES', codes);
+  loadTutorialArticleContent({ commit }, tutorialObj: TutorialDetailResponse) {
+    const articleContent: TutorialArticleContent = {
+      title: tutorialObj.content.title,
+      contentHtml: tutorialObj.content.contentHtml,
+    };
+    commit('LOAD_ARTICLE_CONTENT', articleContent);
+  },
+  loadTutorialGraphs({ commit }, tutorialObj: TutorialDetailResponse) {
+    const graphs: Graph[] = tutorialObj.graphSet;
+    commit('LOAD_GRAPHS', graphs);
+  },
+  loadTutorialCode({ commit }, tutorialObj: TutorialDetailResponse) {
+    const code: string = tutorialObj.code.code;
+    commit('LOAD_CODES', code);
+  },
+  loadTutorialResultJsonList({ commit }, tutorialObj: TutorialDetailResponse) {
+    const resultJsonList: ResultJsonType[] = [];
+    tutorialObj.code.execresultjsonSet.forEach((resultJsonObj) => {
+      resultJsonList.push({
+        json: resultJsonObj.json,
+        graphId: resultJsonObj.graph.id,
+      });
+    });
+    commit('LOAD_RESULT_JSON_LIST', resultJsonList);
+  },
+  loadTutorial({ dispatch }, tutorialObj: TutorialDetailResponse) {
+    console.debug('received tutorial detail obj', tutorialObj);
+
+    dispatch('loadTutorialMetaState', tutorialObj);
+    dispatch('loadTutorialArticleContent', tutorialObj);
+    dispatch('loadTutorialGraphs', tutorialObj);
+    dispatch('loadTutorialCode', tutorialObj);
+    dispatch('loadTutorialResultJsonList', tutorialObj);
   },
   loadVariableObj({ commit }, list) {
     commit('LOAD_VARIABLE_OBJ', list);
   },
   clearAll({ commit }) {
-    commit('CLEAR_ARTICLE_ID');
-    commit('CLEAR_ARTICLE');
+    commit('CLEAR_META_STATE');
+    commit('CLEAR_ARTICLE_CONTENT');
     commit('CLEAR_CURRENT_GRAPH_ID');
     commit('CLEAR_GRAPHS');
     commit('CLEAR_CODES');
-
-    commit('LOAD_VARIABLE_OBJ', null);
+    commit('CLEAR_RESULT_JSON_LIST');
+    commit('CLEAR_VARIABLE_OBJ');
   },
-
-  // don't know how to write this
-  // modifyGraphById({ commit, getters }, { graphId, delta }) {},
 };
 
 const getters: GetterTree<TutorialState, RootState> = {
@@ -234,22 +230,22 @@ const getters: GetterTree<TutorialState, RootState> = {
     // return state.articleContent ? state.articleContent.content : null;
   },
   authors(state) {
-    return state.articleContent && state.articleContent.authors;
+    return state.metaState && state.metaState.authors;
   },
   categories(state) {
-    return state.articleContent && state.articleContent.categories;
+    return state.metaState && state.metaState.categories;
   },
   articleModTime(state) {
-    return state.articleContent && state.articleContent.modifiedTime;
+    return state.metaState && state.metaState.modifiedTime;
   },
   articleEmpty(state) {
     return state.articleContent === null;
   },
   isAnchorPublished(state) {
-    return state.isPublished;
+    return state.metaState && state.metaState.isAnchorPublished;
   },
   isTransPublished(state) {
-    return state.articleContent && state.articleContent.isPublished;
+    return state.metaState && state.metaState.isTransPublished;
   },
   graphsEmpty(state) {
     return state.graphs === null;
@@ -287,7 +283,7 @@ const getters: GetterTree<TutorialState, RootState> = {
     return arr;
   },
   resultJson(state) {
-    if (state.resultJsonList.length !== 0) {
+    if (state.resultJsonList) {
       const resultJsonObj = state.resultJsonList.find(
         (r) => r.graphId === state.currentGraphId
       );

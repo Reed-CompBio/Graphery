@@ -253,7 +253,6 @@
       },
       initWrapperState() {
         // called after the api call
-        // TODO editor load line
         if (!this.resultJsonArrEmpty) {
           this.loadInfo(this.resultJsonArr[0]);
         }
@@ -302,6 +301,7 @@
     watch: {
       resultJsonArr: function() {
         this.reloadStepper();
+        this.initWrapperState();
       },
     },
     mounted() {

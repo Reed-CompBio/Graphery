@@ -16,7 +16,7 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "tutorials" */ '@/views/Tutorials.vue'),
   },
   {
-    path: '/tutorial/:name',
+    path: '/tutorial/:url',
     name: 'Tutorial',
     props: true,
     component: () =>
@@ -25,6 +25,11 @@ const routes: Array<RouteConfig> = [
       {
         path: '',
         components: {
+          default: () =>
+            import(
+              /* webpackChunkName: "editor" */
+              '@/components/tutorial/Editor.vue'
+            ),
           editor: () =>
             import(
               /* webpackChunkName: "editor" */
