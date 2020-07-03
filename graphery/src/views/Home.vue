@@ -29,6 +29,23 @@
             {{ $t('nav.Account') }}
           </q-btn>
         </div>
+        <div class="button-wrapper">
+          <q-btn-dropdown size="lg" label="Feedback">
+            <q-list>
+              <!-- TODO you may need to use a custom list of lang here -->
+              <q-item clickable v-close-popup :to="{ name: 'GitHubIssues' }">
+                <q-item-section>
+                  <q-item-label> GitHub Issues </q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup>
+                <q-item-section>
+                  <q-item-label> Email Me </q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+        </div>
       </div>
     </div>
     <div class="flex-center text-center text-body1">

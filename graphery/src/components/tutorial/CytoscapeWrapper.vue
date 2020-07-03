@@ -446,8 +446,8 @@
     display: flex
     flex-direction: row
     .graph-menu-wrapper
-      padding: 0px 5px
-      margin: 0px 15px
+      padding: 0 5px
+      margin: 0 15px
       min-width: 50%
       max-height: inherit
 

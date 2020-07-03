@@ -276,7 +276,7 @@ class Tracer:
     def _wrap_function(self, function):
         self.target_codes.add(function.__code__)
 
-        function.__name__ = 'graphery_{}'.format(function.__name__)
+        # function.__name__ = 'graphery_{}'.format(function.__name__)
 
         @functools.wraps(function)
         def simple_wrapper(*args, **kwargs):

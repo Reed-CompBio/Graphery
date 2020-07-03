@@ -74,6 +74,23 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/views/Settings.vue'),
   },
   {
+    path: '/github-issues',
+    name: 'GitHubIssues',
+    beforeEnter() {
+      // window.location.href = 'https://github.com/poppy-poppy/Graphery/issues';
+      window.open('https://github.com/poppy-poppy/Graphery/issues');
+    },
+  },
+  {
+    path: '/email-issues',
+    name: 'EmailIssues',
+    beforeEnter() {
+      window.alert(
+        'Not Supported Yet! Please Use GitHub Issues! Sorry about that!'
+      );
+    },
+  },
+  {
     path: '/*',
     name: '404',
     component: () =>
