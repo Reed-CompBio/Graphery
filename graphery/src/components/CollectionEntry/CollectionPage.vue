@@ -50,9 +50,9 @@
             <div style="flex: 1 1 auto">
               <q-select
                 filled
-                v-model="filterSelections"
+                v-model="categoryFilterSelections"
                 multiple
-                :options="filterOptions"
+                :options="categoryFilterOptions"
                 use-chips
                 stack-label
                 :label="$t('collectionPage.Categories')"
@@ -102,12 +102,12 @@
                 :key="info.url"
                 :url="info.url"
                 :categories="info.categories"
-                :isTutorialAnchorPublished="info.isPublished"
-                :title="info.content.title"
-                :authors="info.content.authors"
-                :modifiedTime="info.content.modifiedTime"
-                :abstract="info.content.abstract"
-                :isTransPublished="info.content.isPublished"
+                :isTutorialAnchorPublished="info.isAnchorPublished"
+                :title="info.title"
+                :authors="info.authors"
+                :modifiedTime="info.modifiedTime"
+                :abstract="info.abstract"
+                :isTransPublished="info.isTransPublished"
                 @category-filter="addToCategoryFilter"
                 @author-filter="addToAuthorFilter"
               ></ArticleCard>
@@ -122,7 +122,6 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { apiCaller } from '../../services/apis';
 
   export default {
     components: {
@@ -130,20 +129,18 @@
       ArticleCard: () => import('@/components/CollectionEntry/ArticleCard.vue'),
     },
     props: {
-      query: String,
-      variables: Object,
       title: String,
     },
     data() {
       return {
         searchText: '',
         searchLoading: false,
-        filterSelections: [],
-        filterOptions: [],
+        categoryFilterSelections: [],
+        categoryFilterOptions: [],
         // TODO page separation
         // TODO link it with api calls
         rawInfos: [],
-        infos: [], // Served as a filtered input
+        // infos: [], // Served as a filtered input
         // pageDisplayNum: 5,
         current: 1,
         currentPage: 1,
@@ -163,6 +160,9 @@
           this.displayIndexStart + this.pageDisplayNum
         );
       },
+      infos() {
+        return this.rawInfos;
+      },
     },
     methods: {
       toggleLoading() {
@@ -171,22 +171,9 @@
       finishLoading() {
         this.searchLoading = false;
       },
-      getInfoList() {
-        console.debug('api query: ', this.query);
-        // TODO API calls to get tutorial lists
-        console.debug('start getting tutorial infos');
-        this.toggleLoading();
-        apiCaller(this.query, this.variables).then(([data, errors]) => {
-          if (errors !== undefined) {
-            console.error(errors);
-          }
-          // TODO for now
-          if (data) {
-            this.infos = this.rawInfos = data.allTutorialInfo;
-          }
-
-          this.finishLoading();
-        });
+      loadInfo(info) {
+        // TODO for now,
+        this.rawInfos = info;
       },
       search() {
         if (this.searchLoading) {
@@ -207,9 +194,6 @@
       useTimeFilter(option) {
         console.debug(`using time filter with option ${option}.`);
       },
-    },
-    mounted() {
-      this.getInfoList();
     },
     // TODO maybe add a watch which emits an event once the info list is updated
   };

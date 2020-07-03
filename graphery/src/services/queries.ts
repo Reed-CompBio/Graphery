@@ -1,5 +1,5 @@
 export const allTutorialAbstractInfoQuery = `
-query ($translation: String, $default: String) {
+query ($translation: String, $default: String = "en-us") {
   allTutorialInfo {
     url
     isPublished
@@ -46,5 +46,12 @@ query ($url: String, $translation: String, $default: String = "en-us") {
         }
       }
     }
+  }
+}`;
+
+export const allCategoryQuery = `
+query {
+  allCategories {
+    category
   }
 }`;

@@ -1,15 +1,16 @@
 <template>
-  <CollectionPage
-    :title="$t('nav.Graphs')"
-    query="graphs-api-path"
-  ></CollectionPage>
+  <CollectionPage :title="$t('nav.Graphs')" ref="collection"></CollectionPage>
 </template>
 
 <script>
+  import CollectionPage from '@/components/CollectionEntry/CollectionPage.vue';
+
   export default {
     components: {
-      CollectionPage: () =>
-        import('@/components/CollectionEntry/CollectionPage.vue'),
+      CollectionPage: CollectionPage,
+    },
+    mounted() {
+      //TODO show pop up, coming soon
     },
   };
 </script>
