@@ -7,7 +7,7 @@
       style="overflow-y: auto; overflow-x: hidden;"
     >
       <div class="q-mt-xl">
-        <div id="tutorial-title" class="text-h2">{{ title }}</div>
+        <div id="tutorial-title" class="text-h2 q-mb-md">{{ title }}</div>
         <div id="tutorial-info" class="q-mb-lg">
           <div>
             <q-chip clickable v-if="!isAnchorPublished" icon="mdi-book-lock">

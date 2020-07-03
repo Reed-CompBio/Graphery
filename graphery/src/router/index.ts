@@ -56,9 +56,6 @@ const routes: Array<RouteConfig> = [
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ '@/views/About.vue'),
   },
@@ -72,23 +69,6 @@ const routes: Array<RouteConfig> = [
     path: '/settings',
     name: 'Settings',
     component: () => import('@/views/Settings.vue'),
-  },
-  {
-    path: '/github-issues',
-    name: 'GitHubIssues',
-    beforeEnter() {
-      // window.location.href = 'https://github.com/poppy-poppy/Graphery/issues';
-      window.open('https://github.com/poppy-poppy/Graphery/issues');
-    },
-  },
-  {
-    path: '/email-issues',
-    name: 'EmailIssues',
-    beforeEnter() {
-      window.alert(
-        'Not Supported Yet! Please Use GitHub Issues! Sorry about that!'
-      );
-    },
   },
   {
     path: '/*',
