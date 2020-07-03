@@ -60,6 +60,7 @@
             );
             console.debug('mounted monaco editor');
 
+            // init if it's not done yet
             this.editor.setValue(this.codes);
 
             this.editor.layout();
@@ -85,10 +86,12 @@
         };
       },
       changeDecoration(...decoration) {
-        this.decorations = this.editor.deltaDecorations(
-          this.decorations,
-          decoration
-        );
+        if (this.editor) {
+          this.decorations = this.editor.deltaDecorations(
+            this.decorations,
+            decoration
+          );
+        }
       },
       moveToLine(line, message = 'Executing this line') {
         // TODO scroll into view

@@ -154,6 +154,9 @@ const mutations: MutationTree<TutorialState> = {
   CLEAR_CODES(state) {
     state.codes = null;
   },
+  CLEAR_RESULT_JSON_LIST(state) {
+    state.resultJsonList = null;
+  },
   CLEAR_VARIABLE_OBJ(state) {
     state.variableObj = null;
   },

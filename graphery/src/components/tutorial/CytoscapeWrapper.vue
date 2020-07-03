@@ -68,8 +68,6 @@
     hierarchicalOptions,
   } from './config.js';
 
-  import example from './example';
-
   export default {
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
@@ -83,6 +81,7 @@
         testValue: 0,
         lastVarObj: {},
         choseGraphObj: null,
+        currentGraphLayoutEngine: 'dagre',
         // TODO remember to clear this out
       };
     },
@@ -109,8 +108,9 @@
           return this.choseGraphObj;
         },
         set(choseGraphObj) {
-          if (choseGraphObj !== this.choseGraphObj) {
+          if (choseGraphObj && choseGraphObj !== this.choseGraphObj) {
             this.choseGraphObj = choseGraphObj;
+            console.log('chosen obj', this.choseGraphObj);
             this.$store.commit(
               'tutorials/LOAD_CURRENT_GRAPH_ID',
               choseGraphObj.value
@@ -120,10 +120,6 @@
       },
       libLoading() {
         return this.moduleLoadedNum < this.moduleTargetNum;
-      },
-      currentGraphLayoutEngine() {
-        // return this.currentGraph && this.currentGraph.layoutEngine;
-        return 'dagre';
       },
       graphStyle() {
         return {
@@ -261,11 +257,13 @@
           console.log('init with json', json);
           this.cyInstance.elements().remove();
           this.cyInstance.add(json.elements);
-          this.cyInstance
-            .style()
-            .resetToDefault()
-            .fromJson(json.style)
-            .update();
+          if (json.style) {
+            this.cyInstance
+              .style()
+              .resetToDefault()
+              .fromJson(json.style)
+              .update();
+          }
         }
       },
       // highlight helper function
@@ -276,10 +274,7 @@
         });
       },
       unhighlightElement(id) {
-        this.cyInstance
-          .getElementById(id)
-          .removeStyle('overlay-opacity')
-          .update();
+        this.cyInstance.getElementById(id).removeStyle('overlay-opacity');
       },
       // highlight interface
       highlightVarObj(varObj) {
@@ -298,12 +293,13 @@
       },
       reloadGraph() {
         this.reloadCyWithFullJson(this.currentGraphJsonObj);
+        this.updateLayout();
       },
-      /**
-       * copied from
-       * @see {@link https://github.com/cylc/cylc-ui/blob/master/src/components/cylc/graph/Graph.vue}
-       */
       updateLayout() {
+        /**
+         * copied from
+         * @see {@link https://github.com/cylc/cylc-ui/blob/master/src/components/cylc/graph/Graph.vue}
+         */
         switch (this.currentGraphLayoutEngine) {
           case 'dagre':
             this.layoutOptions = dagreOptions;
@@ -334,15 +330,15 @@
             break;
         }
       },
-      /**
-       * Runs the current layout.
-       * @param {cytoscape} instance - the cytoscape instance
-       * @param {*} [layoutOptions=null] - the layout options
-       * @return {boolean} true if the layout ran successfully, false otherwise (e.g. manually stopped, temperature drop, etc)
-       * @see {@link https://js.cytoscape.org/#cy.layout}
-       * @see {@link https://github.com/cylc/cylc-ui/blob/master/src/components/cylc/graph/Graph.vue}
-       */
       runLayout(instance, layoutOptions = null) {
+        /**
+         * Runs the current layout.
+         * @param {cytoscape} instance - the cytoscape instance
+         * @param {*} [layoutOptions=null] - the layout options
+         * @return {boolean} true if the layout ran successfully, false otherwise (e.g. manually stopped, temperature drop, etc)
+         * @see {@link https://js.cytoscape.org/#cy.layout}
+         * @see {@link https://github.com/cylc/cylc-ui/blob/master/src/components/cylc/graph/Graph.vue}
+         */
         try {
           return instance
             .elements()
