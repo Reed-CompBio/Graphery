@@ -291,7 +291,6 @@ const getters: GetterTree<TutorialState, RootState> = {
         (r) => r.graphId === state.currentGraphId
       );
       if (resultJsonObj) {
-        console.log('result json obj', resultJsonObj);
         return resultJsonObj.json;
       }
     }

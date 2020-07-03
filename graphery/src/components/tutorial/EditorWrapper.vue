@@ -256,7 +256,6 @@
       },
       initWrapperState() {
         // called after the api call
-        console.log('init json', this.resultJsonArr, this.resultJsonArr[0]);
         if (this.resultJsonArr && !this.resultJsonArrEmpty) {
           this.loadInfo(this.resultJsonArr[0]);
         }

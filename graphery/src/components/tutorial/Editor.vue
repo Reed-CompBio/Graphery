@@ -58,13 +58,11 @@
                 glyphMargin: true,
               }
             );
-            console.debug('mounted monaco editor');
+            console.debug('mounted monaco editor', this.editor);
 
-            // init if it's not done yet
             this.editor.setValue(this.codes);
 
             this.editor.layout();
-            // TODO respond to splitter resize
           })
           .catch((err) => {
             // TODO setup popup
@@ -75,18 +73,21 @@
           });
       },
       generateDecoration(line, message) {
-        return {
-          range: new monacoEditor.Range(line, 1, line, 1),
-          options: {
-            isWholeLine: true,
-            className: 'exec-line-box',
-            glyphMarginClassName: 'exec-line-pointer',
-            glyphMarginHoverMessage: message,
-          },
-        };
+        if (monacoEditor) {
+          return {
+            range: new monacoEditor.Range(line, 1, line, 1),
+            options: {
+              isWholeLine: true,
+              className: 'exec-line-box',
+              glyphMarginClassName: 'exec-line-pointer',
+              glyphMarginHoverMessage: message,
+            },
+          };
+        }
+        return null;
       },
       changeDecoration(...decoration) {
-        if (this.editor) {
+        if (this.editor && decoration) {
           this.decorations = this.editor.deltaDecorations(
             this.decorations,
             decoration

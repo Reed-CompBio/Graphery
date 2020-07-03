@@ -126,9 +126,6 @@
       share() {
         // TODO copy to clipboard
       },
-      updatePosPercentage(info) {
-        console.log(info);
-      },
       scrollToTop() {
         document.getElementById('articleWrapper').scrollTo({
           top: 0,

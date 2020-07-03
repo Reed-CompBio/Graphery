@@ -110,7 +110,6 @@
         set(choseGraphObj) {
           if (choseGraphObj && choseGraphObj !== this.choseGraphObj) {
             this.choseGraphObj = choseGraphObj;
-            console.log('chosen obj', this.choseGraphObj);
             this.$store.commit(
               'tutorials/LOAD_CURRENT_GRAPH_ID',
               choseGraphObj.value
@@ -254,7 +253,6 @@
       },
       reloadCyWithFullJson(json) {
         if (this.cyInstance && json) {
-          console.log('init with json', json);
           this.cyInstance.elements().remove();
           this.cyInstance.add(json.elements);
           if (json.style) {
