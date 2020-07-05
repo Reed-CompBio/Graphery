@@ -9,7 +9,7 @@ from ..model.mixins import field_adder, time_date_mixin_field, published_mixin_f
 from ..model.translation_collection import add_trans_type, process_trans_name
 from ..models import User
 from ..models import Category, Tutorial, Graph, Code, ExecResultJson
-from ..models import ENUS, ZHCN
+from ..models import ENUS, ZHCN, ENUSGraph, ZHCNGraph
 from graphene_django.types import DjangoObjectType
 
 import graphene
@@ -77,10 +77,10 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
         return raw_results.values_list('category', flat=True)
 
     @show_published
-    def resolve_content(self, 
-                        info, 
+    def resolve_content(self,
+                        info,
                         is_published_only: bool,
-                        translation: str = 'en-us', 
+                        translation: str = 'en-us',
                         default: str = ''):
         content = self.get_translation(translation, default)
         if content:
@@ -111,18 +111,44 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
                       'associated codes etc.'
 
 
+class GraphContentInterface(graphene.Interface):
+    title = graphene.String()
+    abstract = graphene.String()
+    is_published = graphene.Boolean()
+
+
 class GraphType(PublishedFilterBase, DjangoObjectType):
     priority = graphene.Int(required=True)
+    authors = graphene.List(graphene.String)
+    content = graphene.Field(GraphContentInterface,
+                             translation=graphene.String(),
+                             default=graphene.String(),
+                             required=True)
 
     # Don't worried about tutorials and execresultjson_set since
     # they are convered under ManyToOneRel/ManyToManyRel/ManyToManyField
     # and will be automatically translated to DjangoListField
 
+    def resolve_authors(self, info):
+        return self.authors.all().values_list('username', flat=True)
+
+    @show_published
+    def resolve_content(self,
+                        info: ResolveInfo,
+                        is_published_only: bool,
+                        translation: str = 'en-us',
+                        default: str = ''):
+        content = self.get_translation(translation, default)
+        if content:
+            if content.is_published or not is_published_only:
+                return content
+        raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
+                           f'{f"No results come from {default} translation either" if default else ""}')
+
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
         model = Graph
-        fields = ('url', 'name',
-                  'graph_info', 'cyjs',
+        fields = ('url', 'name', 'cyjs',
                   'tutorials', 'execresultjson_set',
                   'priority')
         description = 'Graph type that contains info of a graph like ' \
@@ -166,24 +192,24 @@ class ExecResultJsonType(DjangoObjectType):
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
         model = ExecResultJson
-        fields = ('code', 'graph', 'json', )
+        fields = ('code', 'graph', 'json',)
         description = 'The execution result of a piece of code on ' \
                       'a graph. '
 
 
-TransBaseFields = ('tutorial_anchor', 'authors',
-                   'abstract', 'content_md', 'content_html',
-                   )
+TutorialTransBaseFields = ('tutorial_anchor', 'authors',
+                           'abstract', 'content_md', 'content_html',
+                           )
 
 
 @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
-class MetaBase:
+class TutorialTransMetaBase:
     interfaces = (TutorialInterface,)
-    fields = TransBaseFields
+    fields = TutorialTransBaseFields
 
 
-def model_class_constructor(attributes: Iterable[Tuple[str, Any]]):
-    meta_cls = copy(MetaBase)
+def model_class_constructor(base_meta: type, attributes: Iterable[Tuple[str, Any]]):
+    meta_cls = copy(base_meta)
     for attribute in attributes:
         setattr(meta_cls, attribute[0], attribute[1])
     return meta_cls
@@ -191,7 +217,7 @@ def model_class_constructor(attributes: Iterable[Tuple[str, Any]]):
 
 @add_trans_type
 class ENUSTransType(PublishedFilterBase, DjangoObjectType):
-    Meta = model_class_constructor((
+    Meta = model_class_constructor(TutorialTransMetaBase, (
         ('model', ENUS),
         ('description', 'The en-us translations of tutorials')
     ))
@@ -199,7 +225,30 @@ class ENUSTransType(PublishedFilterBase, DjangoObjectType):
 
 @add_trans_type
 class ZHCNTransType(PublishedFilterBase, DjangoObjectType):
-    Meta = model_class_constructor((
+    Meta = model_class_constructor(TutorialTransMetaBase, (
         ('model', ZHCN),
         ('description', 'The zh-cn translations of tutorials')
+    ))
+
+
+GraphTransBaseFields = ('name', 'abstract')
+
+
+@field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
+class GraphTransMetaBase:
+    interfaces = (GraphContentInterface,)
+    fields = GraphTransBaseFields
+
+
+class ENUSGraphTransType(PublishedFilterBase, DjangoObjectType):
+    Meta = model_class_constructor(GraphTransMetaBase, (
+        ('model', ENUSGraph),
+        ('description', 'The en-us translation of graphs')
+    ))
+
+
+class ZHCNGraphTransType(PublishedFilterBase, DjangoObjectType):
+    Meta = model_class_constructor(GraphTransMetaBase, (
+        ('model', ZHCNGraph),
+        ('description', 'The zh-cn translation of graphs')
     ))

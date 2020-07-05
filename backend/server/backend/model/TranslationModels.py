@@ -2,7 +2,7 @@ from django.db import models
 
 from .mixins import PublishedMixin, TimeDateMixin, UUIDMixin
 from .UserModel import User
-from .TutorialRelatedModel import Tutorial
+from .TutorialRelatedModel import Tutorial, Graph
 
 from .translation_collection import add_trans_table
 
@@ -28,4 +28,21 @@ class ENUS(TranslationBase):
 
 @add_trans_table
 class ZHCN(TranslationBase):
+    pass
+
+
+class GraphTranslationBase(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
+    title = models.CharField(max_length=100, unique=True, blank=False, null=False)
+    abstract = models.TextField()
+    graph_anchor = models.OneToOneField(Graph, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+
+class ENUSGraph(GraphTranslationBase):
+    pass
+
+
+class ZHCNGraph(GraphTranslationBase):
     pass

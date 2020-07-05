@@ -25,6 +25,10 @@ def process_trans_name(trans_code: str) -> str:
     return trans_code.replace('-', '').replace('_', '').lower()
 
 
+def process_graph_trans_name(trans_code: str) -> str:
+    return f"{process_trans_name(trans_code)}graph"
+
+
 def has_translation(trans_code: str) -> bool:
     return trans_code in translation_tables
 

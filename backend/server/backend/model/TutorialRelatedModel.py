@@ -2,8 +2,9 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from .UserModel import User
 from .mixins import TimeDateMixin, PublishedMixin, UUIDMixin
-from .translation_collection import process_trans_name
+from .translation_collection import process_trans_name, process_graph_trans_name
 
 
 class Category(UUIDMixin, PublishedMixin, models.Model):
@@ -33,12 +34,17 @@ class GraphPriority(models.IntegerChoices):
 class Graph(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
     url = models.CharField(max_length=100, unique=True, blank=False, null=False)
     name = models.CharField(max_length=100, unique=True, blank=False, null=False)
-    graph_info = models.TextField()
+    authors = models.ManyToManyField(User)
     priority = models.PositiveSmallIntegerField(choices=GraphPriority.choices, default=GraphPriority.MAIN)
     # json
     cyjs = JSONField()
     # belongs to
     tutorials = models.ManyToManyField(Tutorial)
+
+    def get_translation(self, translation: str, default: str):
+        return getattr(self,
+                       process_graph_trans_name(translation),
+                       getattr(self, process_graph_trans_name(default), None))
 
 
 class Code(UUIDMixin, TimeDateMixin, models.Model):

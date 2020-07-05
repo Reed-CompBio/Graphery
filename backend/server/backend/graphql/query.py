@@ -84,7 +84,6 @@ class Query(graphene.ObjectType):
                 raise GraphQLError('Category {} does not exist in database. The request cannot be completed'
                                    .format(category_name))
 
-        print(results.query)
         return results
 
     @show_published

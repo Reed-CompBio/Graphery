@@ -14,13 +14,6 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 
 CORS_ORIGIN_WHITELIST = ['http://localhost:8080']
 
-CORS_ALLOW_METHODS = [
-    'GET',
-    'POST',
-]
-
-CORS_ALLOW_CREDENTIALS = True
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 DATABASES = {
