@@ -15,11 +15,25 @@ query ($translation: String, $default: String = "en-us") {
 }`;
 // TODO look into the defaults
 
+export const allGraphAbstractInfoQuery = `
+query ($translation: String, $default: String = "en-us") {
+  allGraphInfo {
+    url
+    isPublished
+    modifiedTime
+    content(translation: $translation, default: $default) {
+      title
+      abstract
+      isPublished
+      authors
+    }
+  }
+}`;
+
 // TODo the graph id is pulled twice hmmm
 export const pullTutorialDetailQuery = `
 query ($url: String, $translation: String, $default: String = "en-us") {
   tutorial(url: $url) {
-    id
     isPublished
     categories
     content(translation: $translation, default: $default) {
@@ -33,7 +47,9 @@ query ($url: String, $translation: String, $default: String = "en-us") {
       name
       id
       isPublished
-      graphInfo
+      content(translation: $translation, default: $default) {
+        abstract
+      }
       priority
       cyjs
     }

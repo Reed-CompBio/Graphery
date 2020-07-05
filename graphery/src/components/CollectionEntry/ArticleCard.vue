@@ -9,12 +9,8 @@
         </section>
         <section>
           <div>
-            <q-chip
-              clickable
-              v-if="!isTutorialAnchorPublished"
-              icon="mdi-book-lock"
-            >
-              Tutorial Not Published
+            <q-chip clickable v-if="!isAnchorPublished" icon="mdi-book-lock">
+              Anchor Not Published
             </q-chip>
             <q-chip clickable v-if="!isTransPublished" icon="mdi-book-lock">
               Translation Not Published
@@ -69,7 +65,7 @@
       'abstract',
       'url',
       'isTransPublished',
-      'isTutorialAnchorPublished',
+      'isAnchorPublished',
     ],
     methods: {
       toLocalDateString,

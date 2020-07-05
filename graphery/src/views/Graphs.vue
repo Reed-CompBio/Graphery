@@ -1,16 +1,40 @@
 <template>
-  <CollectionPage :title="$t('nav.Graphs')" ref="collection"></CollectionPage>
+  <CollectionPage
+    :title="$t('nav.Graphs')"
+    ref="collection"
+    :query="query"
+    :variables="{ translation: $i18n.locale }"
+    :mappingFunction="
+      (data) => {
+        const input = data.allGraphInfo;
+        return input.map((ele) => {
+          return {
+            url: ele.url,
+            categories: [],
+            isAnchorPublished: ele.isPublished,
+            title: ele.content.title,
+            authors: ele.content.authors,
+            modifiedTime: ele.modifiedTime,
+            abstract: ele.content.abstract,
+            isTransPublished: ele.content.isPublished,
+          };
+        });
+      }
+    "
+  ></CollectionPage>
 </template>
 
 <script>
-  import CollectionPage from '@/components/CollectionEntry/CollectionPage.vue';
-
+  import { allGraphAbstractInfoQuery } from '../services/queries';
   export default {
     components: {
-      CollectionPage: CollectionPage,
+      CollectionPage: () =>
+        import('@/components/CollectionEntry/CollectionPage.vue'),
     },
-    mounted() {
-      //TODO show pop up, coming soon
+    data() {
+      return {
+        query: allGraphAbstractInfoQuery,
+      };
     },
   };
 </script>

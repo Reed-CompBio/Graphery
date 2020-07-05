@@ -9,7 +9,7 @@ export interface ArticleDisplayInfoType {
   isTransPublished: boolean;
 }
 
-export interface AllTutorialContentType {
+export interface TutorialAbstractContentType {
   title: string;
   authors: string[];
   abstract: string[];
@@ -17,13 +17,13 @@ export interface AllTutorialContentType {
   modifiedTime: string;
 }
 
-export interface AllTutorialInfoType {
+export interface AllTutorialsInfoType {
   url: string;
   isPublished: boolean;
   categories: string[];
-  content: AllTutorialContentType;
+  content: TutorialAbstractContentType;
 }
 
 export interface AllTutorialDataType {
-  allTutorialInfo: AllTutorialInfoType[];
+  allTutorialInfo: AllTutorialsInfoType[];
 }

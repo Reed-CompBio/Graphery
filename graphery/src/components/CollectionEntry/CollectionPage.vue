@@ -102,7 +102,7 @@
                 :key="info.url"
                 :url="info.url"
                 :categories="info.categories"
-                :isTutorialAnchorPublished="info.isAnchorPublished"
+                :isAnchorPublished="info.isAnchorPublished"
                 :title="info.title"
                 :authors="info.authors"
                 :modifiedTime="info.modifiedTime"
@@ -173,6 +173,7 @@
           .then(([data, errors]) => {
             if (errors !== undefined) {
               console.error(errors);
+              throw Error(errors[0].message);
               // TODO extract the messages and show popup windows
             }
 
@@ -182,7 +183,9 @@
           })
           .catch((err) => {
             // TODO handle errors
-            console.error(err);
+            this.finishLoading();
+            console.error('an error occurs in ' + this.title + ' page:', err);
+            // TODO translate errors
           });
       },
       search() {
