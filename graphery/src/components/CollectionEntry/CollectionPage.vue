@@ -122,26 +122,21 @@
 
 <script>
   import { mapState } from 'vuex';
+  import { apiCaller } from '../../services/apis';
 
   export default {
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       ArticleCard: () => import('@/components/CollectionEntry/ArticleCard.vue'),
     },
-    props: {
-      title: String,
-    },
+    props: ['title', 'query', 'variables', 'mappingFunction'],
     data() {
       return {
         searchText: '',
         searchLoading: false,
         categoryFilterSelections: [],
         categoryFilterOptions: [],
-        // TODO page separation
-        // TODO link it with api calls
-        rawInfos: [],
-        // infos: [], // Served as a filtered input
-        // pageDisplayNum: 5,
+        infos: [], // Served as a filtered input
         current: 1,
         currentPage: 1,
       };
@@ -160,9 +155,6 @@
           this.displayIndexStart + this.pageDisplayNum
         );
       },
-      infos() {
-        return this.rawInfos;
-      },
     },
     methods: {
       toggleLoading() {
@@ -171,9 +163,27 @@
       finishLoading() {
         this.searchLoading = false;
       },
-      loadInfo(info) {
+      loadInfo() {
         // TODO for now,
-        this.rawInfos = info;
+        console.debug('api query: ', this.query);
+
+        this.toggleLoading();
+
+        apiCaller(this.query, this.variables)
+          .then(([data, errors]) => {
+            if (errors !== undefined) {
+              console.error(errors);
+              // TODO extract the messages and show popup windows
+            }
+
+            this.infos = this.mappingFunction(data);
+
+            this.finishLoading();
+          })
+          .catch((err) => {
+            // TODO handle errors
+            console.error(err);
+          });
       },
       search() {
         if (this.searchLoading) {
@@ -191,9 +201,9 @@
         // TODO apply category filters
         console.debug(`add ${category} to category filter`);
       },
-      useTimeFilter(option) {
-        console.debug(`using time filter with option ${option}.`);
-      },
+    },
+    mounted() {
+      this.loadInfo();
     },
     // TODO maybe add a watch which emits an event once the info list is updated
   };

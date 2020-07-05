@@ -2,25 +2,11 @@
   <CollectionPage
     :title="$t('nav.Tutorials')"
     ref="collection"
-  ></CollectionPage>
-</template>
-
-<script>
-  import { allTutorialAbstractInfoQuery } from '../services/queries';
-  import { apiCaller } from '../services/apis';
-  import CollectionPage from '@/components/CollectionEntry/CollectionPage.vue';
-
-  export default {
-    components: {
-      CollectionPage: CollectionPage,
-    },
-    data() {
-      return {
-        query: allTutorialAbstractInfoQuery,
-      };
-    },
-    methods: {
-      mapToInterface(input) {
+    :query="query"
+    :variables="{ translation: $i18n.locale }"
+    :mappingFunction="
+      (data) => {
+        const input = data.allTutorialInfo;
         return input.map((ele) => {
           return {
             url: ele.url,
@@ -33,31 +19,23 @@
             isTransPublished: ele.content.isPublished,
           };
         });
-      },
-      getInfoList() {
-        console.debug('api query: ', this.query);
+      }
+    "
+  ></CollectionPage>
+</template>
 
-        const collectionPage = this.$refs.collection;
+<script>
+  import { allTutorialAbstractInfoQuery } from '../services/queries';
 
-        collectionPage.toggleLoading();
-
-        apiCaller(this.query, this.variables)
-          .then(([data, errors]) => {
-            if (errors !== undefined && !data) {
-              console.error(errors);
-            }
-            collectionPage.loadInfo(this.mapToInterface(data.allTutorialInfo));
-
-            collectionPage.finishLoading();
-          })
-          .catch((err) => {
-            // TODO show pop up here
-            console.error(err);
-          });
-      },
+  export default {
+    components: {
+      CollectionPage: () =>
+        import('@/components/CollectionEntry/CollectionPage.vue'),
     },
-    mounted() {
-      this.getInfoList();
+    data() {
+      return {
+        query: allTutorialAbstractInfoQuery,
+      };
     },
   };
 </script>
