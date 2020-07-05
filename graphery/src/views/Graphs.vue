@@ -13,7 +13,7 @@
             categories: [],
             isAnchorPublished: ele.isPublished,
             title: ele.content.title,
-            authors: ele.content.authors,
+            authors: ele.authors,
             modifiedTime: ele.modifiedTime,
             abstract: ele.content.abstract,
             isTransPublished: ele.content.isPublished,

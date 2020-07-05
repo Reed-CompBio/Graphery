@@ -19,13 +19,13 @@ export const allGraphAbstractInfoQuery = `
 query ($translation: String, $default: String = "en-us") {
   allGraphInfo {
     url
+    authors
     isPublished
     modifiedTime
     content(translation: $translation, default: $default) {
       title
       abstract
       isPublished
-      authors
     }
   }
 }`;
