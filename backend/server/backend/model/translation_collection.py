@@ -26,7 +26,8 @@ def process_trans_name(trans_code: str) -> str:
 
 
 def process_graph_trans_name(trans_code: str) -> str:
-    return f"{process_trans_name(trans_code)}graph"
+    # f*** me
+    return f"{process_trans_name(trans_code)}graphcontent"
 
 
 def has_translation(trans_code: str) -> bool:

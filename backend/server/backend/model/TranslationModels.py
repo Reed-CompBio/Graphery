@@ -40,9 +40,9 @@ class GraphTranslationBase(UUIDMixin, PublishedMixin, TimeDateMixin, models.Mode
         abstract = True
 
 
-class ENUSGraph(GraphTranslationBase):
+class ENUSGraphContent(GraphTranslationBase):
     pass
 
 
-class ZHCNGraph(GraphTranslationBase):
+class ZHCNGraphContent(GraphTranslationBase):
     pass

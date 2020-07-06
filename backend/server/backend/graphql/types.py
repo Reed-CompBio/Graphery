@@ -9,7 +9,7 @@ from ..model.mixins import field_adder, time_date_mixin_field, published_mixin_f
 from ..model.translation_collection import add_trans_type, process_trans_name
 from ..models import User
 from ..models import Category, Tutorial, Graph, Code, ExecResultJson
-from ..models import ENUS, ZHCN, ENUSGraph, ZHCNGraph
+from ..models import ENUS, ZHCN, ENUSGraph_Content, ZHCNGraphContent
 from graphene_django.types import DjangoObjectType
 
 import graphene
@@ -242,13 +242,13 @@ class GraphTransMetaBase:
 
 class ENUSGraphTransType(PublishedFilterBase, DjangoObjectType):
     Meta = model_class_constructor(GraphTransMetaBase, (
-        ('model', ENUSGraph),
+        ('model', ENUSGraph_Content),
         ('description', 'The en-us translation of graphs')
     ))
 
 
 class ZHCNGraphTransType(PublishedFilterBase, DjangoObjectType):
     Meta = model_class_constructor(GraphTransMetaBase, (
-        ('model', ZHCNGraph),
+        ('model', ZHCNGraphContent),
         ('description', 'The zh-cn translation of graphs')
     ))
