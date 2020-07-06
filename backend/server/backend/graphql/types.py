@@ -9,7 +9,7 @@ from ..model.mixins import field_adder, time_date_mixin_field, published_mixin_f
 from ..model.translation_collection import add_trans_type, process_trans_name
 from ..models import User
 from ..models import Category, Tutorial, Graph, Code, ExecResultJson
-from ..models import ENUS, ZHCN, ENUSGraph_Content, ZHCNGraphContent
+from ..models import ENUS, ZHCN, ENUSGraphContent, ZHCNGraphContent
 from graphene_django.types import DjangoObjectType
 
 import graphene
@@ -140,6 +140,7 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
                         default: str = ''):
         content = self.get_translation(translation, default)
         if content:
+            print(content)
             if content.is_published or not is_published_only:
                 return content
         raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
@@ -231,7 +232,7 @@ class ZHCNTransType(PublishedFilterBase, DjangoObjectType):
     ))
 
 
-GraphTransBaseFields = ('name', 'abstract')
+GraphTransBaseFields = ('title', 'abstract')
 
 
 @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
@@ -240,13 +241,15 @@ class GraphTransMetaBase:
     fields = GraphTransBaseFields
 
 
+@add_trans_type
 class ENUSGraphTransType(PublishedFilterBase, DjangoObjectType):
     Meta = model_class_constructor(GraphTransMetaBase, (
-        ('model', ENUSGraph_Content),
+        ('model', ENUSGraphContent),
         ('description', 'The en-us translation of graphs')
     ))
 
 
+@add_trans_type
 class ZHCNGraphTransType(PublishedFilterBase, DjangoObjectType):
     Meta = model_class_constructor(GraphTransMetaBase, (
         ('model', ZHCNGraphContent),

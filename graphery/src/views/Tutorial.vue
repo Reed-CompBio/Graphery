@@ -143,11 +143,11 @@
           default: 'en-us',
         })
           .then(([data, errors]) => {
-            if (errors !== undefined || !data) {
+            if (errors !== undefined) {
               throw Error(
-                'Invalid Data Received! Please Contact The Developer'
+                'Invalid Data Received! Please Contact The Developer:' +
+                  errors[0].message
               );
-              // TODO throw error here
             }
 
             this.loadTutorial(data.tutorial);

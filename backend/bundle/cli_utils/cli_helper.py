@@ -13,7 +13,8 @@ def load_data_test():
     sys.path.append(str(django_root))
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "graphery.settings.test")
     django_setup()
-    management.call_command(loaddata.Command(), 'test',
+    management.call_command(loaddata.Command(),
+                            'test',
                             app_label='backend')
 
 
