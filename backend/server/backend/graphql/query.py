@@ -7,7 +7,7 @@ from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
 from graphql import ResolveInfo
 
-from ..model.filters import show_published
+from ..model.filters import show_published_only
 from ..models import Category, Tutorial, Graph
 
 from .types import UserType, CategoryType, TutorialType, GraphType
@@ -51,17 +51,14 @@ class Query(graphene.ObjectType):
     def resolve_all_graph_info(self, info: ResolveInfo):
         return Graph.objects.all()
 
-    @show_published
+    @show_published_only
     def resolve_tutorial_count(self, info: ResolveInfo, is_published_only: bool, **kwargs):
-        if is_published_only:
-            return Tutorial.objects.filter(is_published=True).count()
-        return Tutorial.objects.all().count()
+        return Tutorial.objects.is_published_only_all(is_published_only=is_published_only).count()
 
-    @show_published
+    @show_published_only
     def resolve_tutorial(self, info: ResolveInfo, is_published_only: bool, url=None, id=None):
-        raw_result: QuerySet = Tutorial.objects.all()
-        if is_published_only:
-            raw_result = raw_result.filter(is_published=True)
+        raw_result: QuerySet = Tutorial.objects.is_published_only_all(is_published_only=is_published_only)
+
         try:
             if url:
                 return raw_result.get(url=url)
@@ -72,26 +69,15 @@ class Query(graphene.ObjectType):
 
         raise GraphQLError('In tutorial query, the url and id arguments can not both be empty.')
 
-    @show_published
-    def resolve_tutorials(self, info: ResolveInfo, is_published_only: bool, categoryies: Iterable = ()):
-        results = Tutorial.objects.none()
-        for category_name in categoryies:
-            try:
-                category = Category.objects.get(category=category_name)
-                if category.is_published or not is_published_only:
-                    results = results | category.tutorial_set.all()
-            except Category.DoesNotExist:
-                raise GraphQLError('Category {} does not exist in database. The request cannot be completed'
-                                   .format(category_name))
+    @show_published_only
+    def resolve_tutorials(self, info: ResolveInfo, is_published_only: bool, categories: Iterable = ()):
+        return Category.objects.is_published_only_all(is_published_only=is_published_only)\
+                               .filter(category_in=categories)
 
-        return results
-
-    @show_published
+    @show_published_only
     def resolve_graph(self, info: ResolveInfo, is_published_only: bool, url=None, id=None):
         print(info)
-        raw_result: QuerySet = Graph.objects.all()
-        if is_published_only:
-            raw_result = raw_result.filter(is_published=True)
+        raw_result: QuerySet = Graph.objects.is_published_only_all(is_published_only=is_published_only)
 
         if url:
             return raw_result.get(url=url)

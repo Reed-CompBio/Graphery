@@ -4,7 +4,7 @@ from django.db.models import QuerySet
 from graphql import GraphQLError, ResolveInfo
 
 from ..model.UserModel import ROLES
-from ..model.filters import show_published
+from ..model.filters import show_published_only
 from ..model.mixins import field_adder, time_date_mixin_field, published_mixin_field, uuid_mixin_field
 from ..model.translation_collection import add_trans_type, process_trans_name
 from ..models import User
@@ -69,28 +69,22 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
     content = graphene.Field(TutorialInterface, translation=graphene.String(), default=graphene.String(), required=True)
     categories = graphene.List(graphene.String)
 
-    @show_published
+    @show_published_only
     def resolve_categories(self, info, is_published_only: bool):
-        raw_results = self.categories.all()
-        if is_published_only:
-            raw_results = raw_results.filter(is_published=True)
+        raw_results = self.categories.is_published_only_all(is_published_only=is_published_only)
         return raw_results.values_list('category', flat=True)
 
-    @show_published
+    @show_published_only
     def resolve_content(self,
                         info,
                         is_published_only: bool,
                         translation: str = 'en-us',
                         default: str = ''):
-        content = self.get_translation(translation, default)
-        if content:
-            if content.is_published or not is_published_only:
-                return content
-        raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
-                           f'{f"No results come from {default} translation either" if default else ""}')
+        return self.get_translation(translation, default)
 
-    @show_published
+    @show_published_only
     def resolve_code(self, info, is_published_only: bool):
+        # TODO write a custom manager for this
         code = getattr(self, 'code', None)
         if code and (code.is_published or not is_published_only):
             return code
@@ -132,19 +126,13 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
     def resolve_authors(self, info):
         return self.authors.all().values_list('username', flat=True)
 
-    @show_published
+    @show_published_only
     def resolve_content(self,
                         info: ResolveInfo,
                         is_published_only: bool,
                         translation: str = 'en-us',
                         default: str = ''):
-        content = self.get_translation(translation, default)
-        if content:
-            print(content)
-            if content.is_published or not is_published_only:
-                return content
-        raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
-                           f'{f"No results come from {default} translation either" if default else ""}')
+        return self.get_translation(translation, default, is_published_only)
 
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
@@ -175,16 +163,7 @@ class CodeType(PublishedFilterBase, DjangoObjectType):
 
 
 class ExecResultJsonType(DjangoObjectType):
-    # TODO something's wrong here due to publishedFilterBase
-    #   my speculation is that when the query set is empty
-    #   django can't query a user-defined property
-    #   CodeType should fail too, but I did some processing
-    #   in the tutorialType.
-    #   one fix can be get the number of queries anb if it's
-    #   zero, just return an object.none()
-    #   But in a real world case, that should not happen since
-    #   there will at least be one graph and a piece of code
-    #   However, i still need to handle the edge case.
+    # TODO django can't query a user-defined property
     is_published = graphene.Boolean()
 
     def resolve_is_published(self, info):

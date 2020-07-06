@@ -12,9 +12,18 @@ class TimeDateMixin(models.Model):
         abstract = True
 
 
+class PublishedManager(models.Manager):
+    def is_published_only_all(self, is_published_only: bool = True):
+        if is_published_only:
+            return self.all().filter(is_published=True)
+        return self.all()
+
+
 class PublishedMixin(models.Model):
     # TODO make it true for now
     is_published = models.BooleanField(default=True)
+
+    objects = PublishedManager()
 
     class Meta:
         abstract = True

@@ -4,7 +4,7 @@ from backend.model.UserModel import ROLES
 
 
 # TODO a better name
-def show_published(func):
+def show_published_only(func):
     def wrapper(*args, **kwargs):
         # TODO ?
         info = args[1]

@@ -1,28 +1,36 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from graphql import GraphQLError
 
 from .UserModel import User
-from .mixins import TimeDateMixin, PublishedMixin, UUIDMixin
+from .mixins import PublishedMixin, TimeDateMixin, UUIDMixin
 from .translation_collection import process_trans_name, process_graph_trans_name
 
 
-class Category(UUIDMixin, PublishedMixin, models.Model):
+class Category(PublishedMixin, UUIDMixin, models.Model):
     category = models.CharField(max_length=50, unique=True,
                                 default=_('uncategorized'), blank=False, null=False)
 
 
-class Tutorial(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
+class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
     # meta data
     # TODO add a url verification
     url = models.CharField(max_length=100, unique=True, blank=False, null=False)
     name = models.CharField(max_length=100, unique=True, blank=False, null=False)
     categories = models.ManyToManyField(Category)
 
-    def get_translation(self, translation: str, default: str):
-        return getattr(self,
-                       process_trans_name(translation),
-                       getattr(self, process_trans_name(default), None))
+    def get_translation(self, translation: str, default: str, is_published_only: bool = True):
+        content = getattr(self,
+                          process_trans_name(translation),
+                          getattr(self, process_trans_name(default), None))
+        if content:
+            if content.is_published or not is_published_only:
+                return content
+        # TODO this is not dry enough
+
+        raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
+                           f'{f"No results come from {default} translation either" if default else ""}')
 
 
 class GraphPriority(models.IntegerChoices):
@@ -31,7 +39,7 @@ class GraphPriority(models.IntegerChoices):
     TRIV = 20, 'Trivial Graph'
 
 
-class Graph(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
+class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
     url = models.CharField(max_length=100, unique=True, blank=False, null=False)
     name = models.CharField(max_length=100, unique=True, blank=False, null=False)
     authors = models.ManyToManyField(User)
@@ -41,10 +49,16 @@ class Graph(UUIDMixin, PublishedMixin, TimeDateMixin, models.Model):
     # belongs to
     tutorials = models.ManyToManyField(Tutorial)
 
-    def get_translation(self, translation: str, default: str):
-        return getattr(self,
-                       process_graph_trans_name(translation),
-                       getattr(self, process_graph_trans_name(default), None))
+    def get_translation(self, translation: str, default: str, is_published_only: bool = True):
+        content = getattr(self,
+                          process_graph_trans_name(translation),
+                          getattr(self, process_graph_trans_name(default), None))
+        if content:
+            if content.is_published or not is_published_only:
+                return content
+
+        raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
+                           f'{f"No results come from {default} translation either" if default else ""}')
 
 
 class Code(UUIDMixin, TimeDateMixin, models.Model):

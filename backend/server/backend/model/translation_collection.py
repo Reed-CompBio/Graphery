@@ -31,6 +31,13 @@ def process_graph_trans_name(trans_code: str) -> str:
 
 
 def has_translation(trans_code: str) -> bool:
+    """
+    check whether the translation represented by the trans_code
+    is created. This does not mean a particular translation
+    exists in the translation table.
+    :param trans_code:
+    :return:
+    """
     return trans_code in translation_tables
 
 
