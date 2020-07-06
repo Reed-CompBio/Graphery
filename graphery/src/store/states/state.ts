@@ -25,10 +25,13 @@ export interface NotificationState {
 }
 
 export interface Graph {
-  name: string;
   id: string;
   isPublished: boolean;
-  graphInfo: string;
+  content: {
+    title: string;
+    abstract: string;
+    isPublished: boolean;
+  };
   priority: number;
   cyjs: object | string;
 }
@@ -72,10 +75,13 @@ export interface TutorialContent {
 }
 
 export interface TutorialGraph {
-  name: string;
   id: string;
   isPublished: boolean;
-  graphInfo: string;
+  content: {
+    title: string;
+    abstract: string;
+    isPublished: boolean;
+  };
   priority: number;
   cyjs: string;
 }

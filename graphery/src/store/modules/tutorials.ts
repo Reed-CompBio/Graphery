@@ -72,18 +72,24 @@ const pseudoResultJson =
 const pseudoGraphList: Graph[] = [
   {
     id: 'eiaofj',
-    name: 'name',
     isPublished: true,
     cyjs: '',
-    graphInfo: 'this is a random graph',
+    content: {
+      title: 'name2',
+      abstract: 'this is a random graph',
+      isPublished: true,
+    },
     priority: 60,
   },
   {
     id: 'dfijaowe',
-    name: 'name2',
     isPublished: true,
     cyjs: '',
-    graphInfo: 'this is another random graph',
+    content: {
+      title: 'name2',
+      abstract: 'this is another random graph',
+      isPublished: true,
+    },
     priority: 40,
   },
 ];
@@ -278,7 +284,7 @@ const getters: GetterTree<TutorialState, RootState> = {
 
     state.graphs.forEach((value) => {
       arr.push({
-        label: value.name,
+        label: value.content.title,
         value: value.id,
       });
     });

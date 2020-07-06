@@ -44,11 +44,12 @@ query ($url: String, $translation: String, $default: String = "en-us") {
       modifiedTime
     }
     graphSet {
-      name
       id
       isPublished
       content(translation: $translation, default: $default) {
+        title
         abstract
+        isPublished
       }
       priority
       cyjs
