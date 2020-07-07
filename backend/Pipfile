@@ -18,6 +18,8 @@ markdown = "*"
 django-filter = "*"
 django-cors-headers = "*"
 prompt-toolkit = "*"
+markdown-del-ins = "*"
+pymdown-extensions = "*"
 
 [requires]
 python_version = "3.8"
