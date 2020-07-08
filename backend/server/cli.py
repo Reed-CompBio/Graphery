@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-from django import setup as django_setup
+from cli_utils.cli_controller import Starter
 
 
 def main():
     # TODO add command line argument here
-    django_setup()
+    starter = Starter()
 
 
 if __name__ == '__main__':

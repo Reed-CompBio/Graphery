@@ -17,9 +17,9 @@ django-graphql-jwt = "*"
 markdown = "*"
 django-filter = "*"
 django-cors-headers = "*"
-prompt-toolkit = "*"
 markdown-del-ins = "*"
 pymdown-extensions = "*"
+inquirer = "*"
 
 [requires]
 python_version = "3.8"
