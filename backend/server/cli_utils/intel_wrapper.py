@@ -44,8 +44,9 @@ class ModelWrapperBase(ABC):
     def set_model_class(cls, model_class: Type[models.Model]) -> None:
         cls.model_class = model_class
 
-    def load_model(self, model: models.Model) -> None:
-        self.model = model
+    def load_model(self, loaded_model: models.Model) -> 'ModelWrapperBase':
+        self.model = loaded_model
+        return self
         # TODO load override and load all the info to fields
 
     @abstractmethod
@@ -94,7 +95,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
 
     def set_variables(self, **kwargs) -> 'AbstractWrapper':
         for field_name in self.validators.keys():
-            var = getattr(self, field_name, None)
+            var = kwargs.get(field_name, None)
             if var:
                 setattr(self, field_name, var)
 
@@ -136,7 +137,7 @@ class PublishedWrapper(AbstractWrapper, ABC):
 
 
 class UserWrapper(AbstractWrapper):
-    model_class: Optional[User] = None
+    model_class: Type[User] = User
 
     def __init__(self):
         self.username: Optional[str] = None
@@ -159,14 +160,19 @@ class UserWrapper(AbstractWrapper):
 
 
 class CategoryWrapper(PublishedWrapper):
-    model_class: Optional[Type[Category]] = None
+    model_class: Type[Category] = Category
 
     def __init__(self):
         self.category_name: Optional[str] = None
 
         PublishedWrapper.__init__(self, {
-            'category': dummy_validator
+            'category_name': dummy_validator
         })
+
+    def load_model(self, loaded_model: Category) -> 'CategoryWrapper':
+        super().load_model(loaded_model)
+        self.category_name = loaded_model.category
+        return self
 
     def retrieve_model(self) -> None:
         self.model: Category = self.model_class.objects.get(category=self.category_name)
@@ -174,9 +180,15 @@ class CategoryWrapper(PublishedWrapper):
     def make_new_model(self) -> None:
         self.model: Category = self.model_class(category=self.category_name, is_published=False)
 
+    def __str__(self):
+        return '<CategoryWrapper category_name={}>'.format(self.category_name)
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class TutorialAnchorWrapper(PublishedWrapper):
-    model_class: Optional[Type[Tutorial]] = None
+    model_class: Type[Tutorial] = Tutorial
 
     def __init__(self):
         self.url: Optional[str] = None
@@ -206,7 +218,7 @@ class TutorialAnchorWrapper(PublishedWrapper):
 
 
 class GraphWrapper(PublishedWrapper):
-    model_class: Optional[Type[Graph]] = None
+    model_class: Type[Graph] = Graph
 
     def __init__(self):
         self.url: Optional[str] = None
@@ -251,7 +263,7 @@ class GraphWrapper(PublishedWrapper):
 
 
 class CodeWrapper(AbstractWrapper):
-    model_class: Optional[Type[Code]] = None
+    model_class: Type[Code] = Code
 
     def __init__(self):
         self.tutorial: Optional[TutorialAnchorWrapper] = None
@@ -270,7 +282,7 @@ class CodeWrapper(AbstractWrapper):
 
 
 class ExecResultJsonWrapper(AbstractWrapper):
-    model_class: Optional[Type[ExecResultJson]] = None
+    model_class: Type[ExecResultJson] = ExecResultJson
 
     def __init__(self):
         self.code: Optional[CodeWrapper] = None
