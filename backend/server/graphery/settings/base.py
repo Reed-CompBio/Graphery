@@ -36,7 +36,7 @@ THIRD_PARTY_APPS = [
 ]
 
 MY_APPS = [
-    'backend',
+    'backend.apps.BackendConfig',
 ]
 
 # Application definition

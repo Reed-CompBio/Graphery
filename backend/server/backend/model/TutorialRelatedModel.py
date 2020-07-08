@@ -10,7 +10,7 @@ from .translation_collection import process_trans_name, process_graph_trans_name
 
 class Category(PublishedMixin, UUIDMixin, models.Model):
     category = models.CharField(max_length=50, unique=True,
-                                default=_('uncategorized'), blank=False, null=False)
+                                default='uncategorized', blank=False, null=False)
 
 
 class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
@@ -18,7 +18,7 @@ class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
     # TODO add a url verification
     url = models.CharField(max_length=100, unique=True, blank=False, null=False)
     name = models.CharField(max_length=100, unique=True, blank=False, null=False)
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, default='uncategorized')
 
     def get_translation(self, translation: str, default: str, is_published_only: bool = True):
         content = getattr(self,
@@ -42,6 +42,7 @@ class GraphPriority(models.IntegerChoices):
 class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
     url = models.CharField(max_length=100, unique=True, blank=False, null=False)
     name = models.CharField(max_length=100, unique=True, blank=False, null=False)
+    categories = models.ManyToManyField(Category, default='uncategorized')
     authors = models.ManyToManyField(User)
     priority = models.PositiveSmallIntegerField(choices=GraphPriority.choices, default=GraphPriority.MAIN)
     # json

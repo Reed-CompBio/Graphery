@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
+from django import setup as django_setup
+
 
 def main():
-    """
-    The main function of the CLI
-    @return: None
-    """
-    pass
+    # TODO add command line argument here
+    django_setup()
 
 
 if __name__ == '__main__':

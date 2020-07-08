@@ -80,7 +80,7 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
                         is_published_only: bool,
                         translation: str = 'en-us',
                         default: str = ''):
-        return self.get_translation(translation, default)
+        return self.get_translation(translation, default, is_published_only)
 
     @show_published_only
     def resolve_code(self, info, is_published_only: bool):

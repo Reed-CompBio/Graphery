@@ -2,14 +2,7 @@ from .model.UserModel import \
     UserNameValidator, ROLES, UserManager, User
 from .model.TutorialRelatedModel import \
     Category, Tutorial, Graph, Code, ExecResultJson
-from .model.TranslationModels import *
+from .model.TranslationModels import ENUS, ZHCN, ENUSGraphContent, ZHCNGraphContent
 
-import django_filters
-
-
-class CategoryFilter(django_filters.FilterSet):
-    categories = django_filters.ModelMultipleChoiceFilter()
-
-    class Meta:
-        model = Tutorial
-        fields = ['categories', ]
+model_list = ['User', 'Category', 'Tutorial', 'Graph', 'Code', 'ExecResultJson',
+              'ENUS', 'ZHCN', 'ENUSGraphContent', 'ZHCNGraphContent']
