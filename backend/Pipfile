@@ -19,7 +19,6 @@ django-filter = "*"
 django-cors-headers = "*"
 markdown-del-ins = "*"
 pymdown-extensions = "*"
-inquirer = "*"
 prompt-toolkit = "*"
 
 [requires]
