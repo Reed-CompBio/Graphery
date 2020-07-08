@@ -6,6 +6,7 @@ import sys
 from typing import Mapping, Optional
 
 from django import setup as django_setup
+from django.db.transaction import set_autocommit, rollback
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import PathCompleter
 from prompt_toolkit.document import Document
@@ -51,6 +52,7 @@ def init_server_settings(server_path: pathlib.Path) -> None:
     sys.path.append(str(server_path))
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "graphery.settings.test")
     django_setup()
+    set_autocommit(False)
 
 
 def main(command_mapping: Mapping[str, str]):
@@ -67,4 +69,8 @@ if __name__ == '__main__':
     server_folder_path: pathlib.Path = get_valid_server_path()
     init_server_settings(server_folder_path)
 
-    main(command_map)
+    try:
+        main(command_map)
+    finally:
+        print('Rollback any unsaved transactions.')
+        rollback()

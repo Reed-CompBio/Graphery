@@ -3,6 +3,7 @@ import re
 from typing import Tuple, List
 
 from django.db.models import QuerySet
+from django.db.transaction import commit
 
 from prompt_toolkit.completion import PathCompleter
 from prompt_toolkit.shortcuts import PromptSession
@@ -100,7 +101,7 @@ def get_tutorial_source_path() -> pathlib.Path:
                                completer=_path_completer))
 
 
-def get_name(validator: Validator = None, default: str = None) -> str:
+def get_name(validator: Validator = None, default: str = '') -> str:
     return prompt(message='Please enter the name of the tutorial: \n',
                   validator=validator,
                   default=default).strip()
@@ -146,6 +147,27 @@ def gather_tutorial_anchor_info() -> Tuple[str, str, List[CategoryWrapper]]:
     return url, name, categories
 
 
+def wrap_tutorial_anchor(tutorial_anchor_info: Tuple[str, str, List[CategoryWrapper]]) -> TutorialAnchorWrapper:
+    tutorial_anchor_wrapper = TutorialAnchorWrapper().set_variables(url=tutorial_anchor_info[0],
+                                                                    name=tutorial_anchor_info[1],
+                                                                    categories=tutorial_anchor_info[2])
+    return tutorial_anchor_wrapper
+
+
+def create_tutorial_anchor() -> None:
+    anchor_wrapper = wrap_tutorial_anchor(gather_tutorial_anchor_info())
+    print_formatted_text('Tutorial anchor created')
+    print_formatted_text('name: {}'.format(anchor_wrapper.name))
+    print_formatted_text('url: {}'.format(anchor_wrapper.url))
+    print_formatted_text('categories: {}'.format(anchor_wrapper.categories))
+    result = prompt('Proceed: Y/n: ', default='Y')
+
+    if result == 'Y':
+        anchor_wrapper.prepare_model()
+        anchor_wrapper.finalize_model()
+        commit()
+
+
 def get_tutorial_markdown_path(tutorial_source_folder: pathlib.Path) -> pathlib.Path:
     # By convention there should just be one markdown file.
     # but since there is a plugin which can connect markdown snippets
@@ -183,9 +205,10 @@ def save_to_local_json() -> None:
 
 
 class CommandWrapper:
+    # use instance instead of class, so that I can have a recent create list.
     @staticmethod
     def create():
-        print(gather_tutorial_anchor_info())
+        create_tutorial_anchor()
 
     @classmethod
     def run_command(cls, command: str) -> None:

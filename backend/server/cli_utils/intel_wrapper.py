@@ -180,6 +180,9 @@ class CategoryWrapper(PublishedWrapper):
     def make_new_model(self) -> None:
         self.model: Category = self.model_class(category=self.category_name, is_published=False)
 
+    def prepare_model(self) -> None:
+        self.get_model()
+
     def __str__(self):
         return '<CategoryWrapper category_name={}>'.format(self.category_name)
 
@@ -210,10 +213,12 @@ class TutorialAnchorWrapper(PublishedWrapper):
 
     def prepare_model(self) -> None:
         self.finalize_prerequisite_wrapper_iter(self.categories)
+        # TODO temp
+        self.get_model()
 
     def finalize_model(self) -> None:
         self.save_model()
-        self.model.categories.set(self.categories)
+        self.model.categories.set(cat.model for cat in self.categories)
         self.save_model()
 
 
