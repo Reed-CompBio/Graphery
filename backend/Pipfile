@@ -20,6 +20,7 @@ django-cors-headers = "*"
 markdown-del-ins = "*"
 pymdown-extensions = "*"
 inquirer = "*"
+prompt-toolkit = "*"
 
 [requires]
 python_version = "3.8"
