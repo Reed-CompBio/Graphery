@@ -1,6 +1,6 @@
 import pathlib
 import re
-from typing import Tuple, Iterable, List
+from typing import Tuple, List
 
 from django.db.models import QuerySet
 
@@ -12,7 +12,7 @@ from prompt_toolkit.document import Document
 
 import markdown
 
-from cli_utils.cli_ui import inline_checkbox_dialog
+from cli_utils.cli_ui import interruptable_checkbox_dialog
 
 from .intel_wrapper import *
 
@@ -100,6 +100,52 @@ def get_tutorial_source_path() -> pathlib.Path:
                                completer=_path_completer))
 
 
+def get_name(validator: Validator = None, default: str = None) -> str:
+    return prompt(message='Please enter the name of the tutorial: \n',
+                  validator=validator,
+                  default=default).strip()
+
+
+def get_url(validator: Validator = None, default: str = '') -> str:
+    return prompt(message='Please enter the url of the tutorial: \n',
+                  validator=validator,
+                  default=default.replace(' ', '-')).strip()
+
+
+def select_and_add_categories() -> List[CategoryWrapper]:
+    category_query_set = Category.objects.all()
+    category_selections: List[Tuple[Category, str]] = [(element, element.category) for element in category_query_set]
+
+    category_choices: List[Category] = interruptable_checkbox_dialog(
+        text='Please choose existing categories for this tutorial: ',
+        values=category_selections
+    )
+
+    new_categories: Iterable[str] = map(
+        lambda x: x.strip(),
+        prompt('Please enter new categories. Separate with ";"\n').split(';')
+    )
+
+    return [CategoryWrapper().load_model(category_model)
+            for category_model in category_choices if category_model] + \
+           [CategoryWrapper().set_variables(category_name=category_name)
+            for category_name in new_categories if category_name]
+
+
+def gather_tutorial_anchor_info() -> Tuple[str, str, List[CategoryWrapper]]:
+    tutorial_query_set: QuerySet = Tutorial.objects.all()
+
+    print_formatted_text('For naming convention, please visit https://poppy-poppy.github.io/Graphery/')
+
+    name: str = get_name(_tutorial_anchor_name_validator(tutorial_query_set))
+
+    url: str = get_url(_tutorial_anchor_url_validator(tutorial_query_set), name)
+
+    categories = select_and_add_categories()
+
+    return url, name, categories
+
+
 def get_tutorial_markdown_path(tutorial_source_folder: pathlib.Path) -> pathlib.Path:
     # By convention there should just be one markdown file.
     # but since there is a plugin which can connect markdown snippets
@@ -138,42 +184,8 @@ def save_to_local_json() -> None:
 
 class CommandWrapper:
     @staticmethod
-    def gather_tutorial_anchor_info() -> Tuple[str, str, List[CategoryWrapper]]:
-        tutorial_query_set = Tutorial.objects.all()
-
-        print_formatted_text('For naming convention, please visit https://poppy-poppy.github.io/Graphery/')
-        name: str = prompt(message='Please enter the name of the tutorial: \n',
-                           validator=_tutorial_anchor_name_validator(tutorial_query_set)).strip()
-        url: str = prompt(message='Please enter the url of the tutorial: \n',
-                          validator=_tutorial_anchor_url_validator(tutorial_query_set),
-                          default=name.replace(' ', '-')).strip()
-
-        category_query_set = Category.objects.all()
-        category_selections = [(element, element.category) for element in category_query_set]
-
-        category_choices: List[CategoryWrapper.model_class] = inline_checkbox_dialog(
-            text='Please choose existing categories for this tutorial: ',
-            values=category_selections
-        ).run()
-
-        if category_choices is None:
-            raise KeyboardInterrupt
-
-        new_categories: Iterable[str] = map(
-            lambda x: x.strip(),
-            prompt('Please enter new categories. Separate with ";"\n').split(';')
-        )
-
-        categories = [CategoryWrapper().load_model(category_model)
-                      for category_model in category_choices if category_model] + \
-                     [CategoryWrapper().set_variables(category_name=category_name)
-                      for category_name in new_categories if category_name]
-
-        return url, name, categories
-
-    @classmethod
-    def create(cls):
-        print(cls.gather_tutorial_anchor_info())
+    def create():
+        print(gather_tutorial_anchor_info())
 
     @classmethod
     def run_command(cls, command: str) -> None:

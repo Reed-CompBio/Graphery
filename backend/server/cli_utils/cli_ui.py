@@ -1,6 +1,7 @@
-from typing import Tuple, Sequence
+from typing import Tuple, Sequence, List, TypeVar
 
 from prompt_toolkit.application import Application
+from prompt_toolkit.formatted_text import AnyFormattedText
 from prompt_toolkit.key_binding.defaults import load_key_bindings
 from prompt_toolkit.key_binding.key_bindings import KeyBindings, merge_key_bindings
 from prompt_toolkit.key_binding.key_processor import KeyPressEvent
@@ -57,3 +58,22 @@ def inline_checkbox_dialog(text: str = '',
         full_screen=False)
 
     return application
+
+
+T = TypeVar("T")
+
+
+def interruptable_checkbox_dialog(text: str = '',
+                                  values: Sequence[Tuple[T, AnyFormattedText]] = (),
+                                  default_values: Sequence[Tuple] = (),
+                                  additional_helper_text: Sequence[Label] = (),
+                                  style=None) -> List[T]:
+    result = inline_checkbox_dialog(text=text,
+                                    values=values,
+                                    default_values=default_values,
+                                    additional_helper_text=additional_helper_text,
+                                    style=style).run()
+    if result is None:
+        raise KeyboardInterrupt
+
+    return result
