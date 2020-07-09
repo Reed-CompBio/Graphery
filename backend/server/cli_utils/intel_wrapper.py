@@ -150,6 +150,13 @@ class UserWrapper(AbstractWrapper):
             'password': dummy_validator,
         })
 
+    def load_model(self, loaded_model: User) -> 'UserWrapper':
+        super().load_model(loaded_model)
+        self.username = loaded_model.username
+        self.email = loaded_model.email
+        self.password = loaded_model.password
+        return self
+
     def retrieve_model(self) -> None:
         self.model = User.objects.get(username=self.username, email=self.email)
 
@@ -201,6 +208,13 @@ class TutorialAnchorWrapper(PublishedWrapper):
             'categories': dummy_validator,
         })
         SettableBase.__init__(self)
+
+    def load_model(self, loaded_model: Tutorial) -> 'TutorialAnchorWrapper':
+        super().load_model(loaded_model)
+        self.url = loaded_model.url
+        self.name = loaded_model.name
+        self.categories = [CategoryWrapper().load_model(cat) for cat in loaded_model.categories.all()]
+        return self
 
     def retrieve_model(self) -> None:
         self.model: Tutorial = self.model_class.objects.get(url=self.url, name=self.name)
@@ -262,6 +276,16 @@ class GraphWrapper(PublishedWrapper):
         self.model.authors.set(wrapper.model for wrapper in self.authors)
 
         self.save_model()
+
+    def __str__(self):
+        return f'<GraphWrapper url={self.url} \n' \
+               f'name={self.name}\n' \
+               f'categories={self.categories}\n' \
+               f'authors={self.authors}\n' \
+               f'priority={self.priority}\n' \
+               f'cyjs={self.cyjs}\n' \
+               f'tutorials={self.tutorials}\n' \
+               f'>'
 
 
 class CodeWrapper(AbstractWrapper):

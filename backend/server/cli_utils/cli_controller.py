@@ -1,19 +1,20 @@
+import json
 import pathlib
 import re
-from typing import Tuple, List
+from typing import Tuple, List, Union, Generator
 
 from django.db.models import QuerySet
 from django.db.transaction import commit, rollback
 
 from prompt_toolkit.completion import PathCompleter
-from prompt_toolkit.shortcuts import PromptSession
 from prompt_toolkit import print_formatted_text, prompt
 from prompt_toolkit.validation import Validator, ValidationError
 from prompt_toolkit.document import Document
 
 import markdown
 
-from cli_utils.cli_ui import interruptable_checkbox_dialog
+from cli_utils.cli_ui import interruptable_checkbox_dialog, new_session, inline_radio_dialog
+from .errors import InvalidGraphJson
 
 from .intel_wrapper import *
 
@@ -42,7 +43,7 @@ class TutorialSourceFolderValidator(Validator):
             raise ValidationError(message='The tutorial source file folder structure is not right')
 
 
-class TutorialAnchorNameValidator(Validator):
+class NameValidator(Validator):
     regex = re.compile(r'^[a-zA-Z0-9- ]+\Z')
 
     def __init__(self):
@@ -65,7 +66,7 @@ class TutorialAnchorNameValidator(Validator):
                                   cursor_position=len(name) - 1)
 
 
-class TutorialAnchorUrlValidator(Validator):
+class UrlValidator(Validator):
     regex = re.compile(r'^[a-zA-Z0-9-]+\Z')
 
     def __init__(self):
@@ -88,43 +89,63 @@ class TutorialAnchorUrlValidator(Validator):
                                   cursor_position=len(url) - 1)
 
 
-prompt_session = PromptSession[str]()
+class LocationValidator(Validator):
+    def validate(self, document: Document) -> None:
+        if not pathlib.Path(document.text).exists():
+            raise ValidationError(message='Please input a valid path!')
+
+
 _path_completer = PathCompleter()
 _tutorial_source_folder_validator = TutorialSourceFolderValidator()
-_tutorial_anchor_name_validator = TutorialAnchorNameValidator()
-_tutorial_anchor_url_validator = TutorialAnchorUrlValidator()
+_name_validator = NameValidator()
+_url_validator = UrlValidator()
+_location_validator = LocationValidator()
+
+
+def new_line_prompt(*args, **kwargs) -> str:
+    message = kwargs.pop('message', '\n') + '\n'
+    return prompt(message=message, *args, **kwargs)
 
 
 def get_tutorial_source_path() -> pathlib.Path:
-    return pathlib.Path(prompt(message='Please enter the tutorial source folder location: ',
-                               validator=_tutorial_source_folder_validator,
-                               completer=_path_completer))
+    return pathlib.Path(new_line_prompt(message='Please enter the tutorial source folder location: ',
+                                        validator=_tutorial_source_folder_validator,
+                                        completer=_path_completer))
 
 
-def get_name(validator: Validator = None, default: str = '') -> str:
-    return prompt(message='Please enter the name of the tutorial: \n',
-                  validator=validator,
-                  default=default).strip()
+def get_location(prompt_text: str = 'Please enter location') -> pathlib.Path:
+    return pathlib.Path(new_line_prompt(prompt_text,
+                                        validator=_location_validator,
+                                        completer=_path_completer, ))
 
 
-def get_url(validator: Validator = None, default: str = '') -> str:
-    return prompt(message='Please enter the url of the tutorial: \n',
-                  validator=validator,
-                  default=default.replace(' ', '-')).strip()
+@new_session('input name')
+def get_name(message: str = '', validator: Validator = None, default: str = '') -> str:
+    return new_line_prompt(message=message,
+                           validator=validator,
+                           default=default).strip()
 
 
+@new_session('input url')
+def get_url(message: str = '', validator: Validator = None, default: str = '') -> str:
+    return new_line_prompt(message=message,
+                           validator=validator,
+                           default=default.replace(' ', '-')).strip()
+
+
+@new_session('select and add categories')
 def select_and_add_categories() -> List[CategoryWrapper]:
-    category_query_set = Category.objects.all()
-    category_selections: List[Tuple[Category, str]] = [(element, element.category) for element in category_query_set]
+    category_query_set: QuerySet = Category.objects.all()
+    category_selections: List[Tuple[Category, str]] = [(model, model.category) for model in category_query_set]
 
     category_choices: List[Category] = interruptable_checkbox_dialog(
-        text='Please choose existing categories for this tutorial: ',
+        text='Please choose existing categories: ',
         values=category_selections
     )
 
     new_categories: Iterable[str] = map(
         lambda x: x.strip(),
-        prompt('Please enter new categories. Separate with ";"\n').split(';')
+        new_line_prompt('Please enter new categories. Separate with ";"').split(';')
     )
 
     return [CategoryWrapper().load_model(category_model)
@@ -133,14 +154,51 @@ def select_and_add_categories() -> List[CategoryWrapper]:
             for category_name in new_categories if category_name]
 
 
+@new_session('select authors')
+def select_authors() -> List[UserWrapper]:
+    user_query_set: QuerySet = User.objects.all()
+    user_selections: List[Tuple[User, str]] = [(model, f'{model.username}: {model.email}') for model in user_query_set]
+
+    user_choices: List[User] = interruptable_checkbox_dialog(
+        text='Please choose authors: ',
+        values=user_selections
+    )
+
+    return [UserWrapper().load_model(user_model) for user_model in user_choices if user_model]
+
+
+@new_session('select graph priority')
+def select_graph_priority() -> int:
+    return int(inline_radio_dialog(text='Please select the priority of this graph',
+                                   values=[(60, 'major graph',),
+                                           (40, 'minor graph',),
+                                           (20, 'trivial graph')]).run())
+
+
+@new_session('select matching tutorials')
+def select_tutorials() -> List[TutorialAnchorWrapper]:
+    tutorial_query_set = Tutorial.objects.all()
+    tutorial_selections = [(model, f'{model.url}: {model.name}') for model in tutorial_query_set]
+
+    tutorial_choices: List[Tutorial] = interruptable_checkbox_dialog(
+        text='Please select tutorials',
+        values=tutorial_selections
+    )
+
+    return [TutorialAnchorWrapper().load_model(tutorial_model) for tutorial_model in tutorial_choices if tutorial_model]
+
+
 def gather_tutorial_anchor_info() -> Tuple[str, str, List[CategoryWrapper]]:
     tutorial_query_set: QuerySet = Tutorial.objects.all()
 
     print_formatted_text('For naming convention, please visit https://poppy-poppy.github.io/Graphery/')
 
-    name: str = get_name(_tutorial_anchor_name_validator(tutorial_query_set))
+    name: str = get_name(message='Please enter the name of the tutorial: ',
+                         validator=_name_validator(tutorial_query_set))
 
-    url: str = get_url(_tutorial_anchor_url_validator(tutorial_query_set), name)
+    url: str = get_url(message='Please enter the url of the tutorial: \n',
+                       validator=_url_validator(tutorial_query_set),
+                       default=name)
 
     categories = select_and_add_categories()
 
@@ -160,15 +218,124 @@ def create_tutorial_anchor() -> None:
     print_formatted_text('name: {}'.format(anchor_wrapper.name))
     print_formatted_text('url: {}'.format(anchor_wrapper.url))
     print_formatted_text('categories: {}'.format(anchor_wrapper.categories))
-    result = prompt('Proceed: Y/n: ', default='Y')
+    result = prompt('Proceed: y/N: ')
 
-    if result == 'Y':
+    if result.lower() == 'Y':
         anchor_wrapper.prepare_model()
         anchor_wrapper.finalize_model()
         commit()
         print_formatted_text('Changes committed')
     else:
+        print_formatted_text('Changes not saved. Rolling back.')
         rollback()
+        print_formatted_text('Rolled back.')
+
+
+@new_session('Graph Json Location')
+def gather_graph_json() -> List[pathlib.Path]:
+    graphs: List[pathlib.Path] = []
+
+    graph_location = get_location('Please enter find your graphs: \n')
+    if graph_location.is_dir():
+        graphs.extend(graph_location.glob('*.json'))
+    elif graph_location.is_file() and graph_location.suffix == '.json':
+        graphs.append(graph_location)
+
+    if len(graphs) < 1:
+        raise
+
+    return graphs
+
+
+def validate_graph_json(graph_file_path: pathlib.Path) -> Mapping:
+    with graph_file_path.open(mode='r') as file:
+        js_string = file.read()
+
+    try:
+        js_obj = json.loads(js_string)
+        if js_obj.get('elements', None) is None:
+            raise InvalidGraphJson('The graph json (cyjs) must contain `element` object')
+    except TypeError as e:
+        raise InvalidGraphJson('The json input is not right: {}'.format(e))
+    except json.JSONDecodeError:
+        raise InvalidGraphJson("The json is malformatted. If you believe it's the program's fault, "
+                               "please contact the developer")
+
+    # TODO load the json into the custom graph object
+
+    return js_obj
+
+
+def gather_graph_info(graph_file_paths: List[pathlib.Path]) -> Generator[GraphWrapper]:
+    for graph_file_path in graph_file_paths:
+        try:
+            graph_json_obj: Mapping = validate_graph_json(graph_file_path)
+        except InvalidGraphJson:
+            raise
+
+        name: str = get_name(message='Please input the name of the graph in {}'.format(graph_file_path.name),
+                             validator=_name_validator,
+                             default=graph_file_path.stem)
+
+        url: str = get_url(message='Please input the url of the graph in {}'.format(graph_file_path.name),
+                           validator=_url_validator,
+                           default=name)
+
+        matching_tutorials = select_tutorials()
+        categories: List[CategoryWrapper] = select_and_add_categories()
+        authors: List[UserWrapper] = select_authors()
+
+        priority: int = select_graph_priority()
+
+        yield GraphWrapper().set_variables(
+            url=url,
+            name=name,
+            categories=categories,
+            authors=authors,
+            priority=priority,
+            cyjs=graph_json_obj,
+            tutorials=matching_tutorials
+        )
+
+
+def wrap_graph_jsons(graph_paths: List[pathlib.Path]) -> List[GraphWrapper]:
+    wrappers = []
+    for wrapper in gather_graph_info(graph_paths):
+        wrappers.append(wrapper)
+
+    return wrappers
+
+
+def create_graph() -> None:
+    graph_file_paths = gather_graph_json()
+    print_formatted_text('The graph json found: ')
+    for path in graph_file_paths:
+        print_formatted_text('  {}'.format(path.absolute()))
+
+    graph_selection_values = [(element, element.name) for element in graph_file_paths]
+
+    selected_graph_file_paths = interruptable_checkbox_dialog(
+        text='Please select the graphs you want to upload',
+        values=graph_selection_values,
+        default_values=graph_selection_values
+    )
+    graph_wrappers: List[GraphWrapper] = wrap_graph_jsons(selected_graph_file_paths)
+
+    print_formatted_text('The following graphs are created: ')
+    for wrapper in graph_wrappers:
+        print_formatted_text(f'{wrapper}')
+
+    proceed = prompt('Proceed: (y/N)')
+    if proceed.lower() == 'y':
+        for wrapper in graph_wrappers:
+            wrapper.prepare_model()
+            wrapper.finalize_model()
+        commit()
+        print_formatted_text('Changes committed.')
+    else:
+        print_formatted_text('Changes not saved. Rolling back.')
+        rollback()
+        print_formatted_text('Rolled back')
 
 
 def get_tutorial_markdown_path(tutorial_source_folder: pathlib.Path) -> pathlib.Path:
@@ -184,15 +351,6 @@ def parse_markdown(text: str) -> str:
                                                'pymdownx.arithmatex', 'pymdownx.details', 'pymdownx.inlinehilite',
                                                'pymdownx.superfences'])
     # TODO add arithmatex required js to the page
-
-
-def get_new_graph_jsons(resources_location: pathlib.Path) -> list:
-    graph_jsons = [file for file in resources_location.glob('*.json') if file.name != 'graph-info.json']
-    return graph_jsons
-
-
-def parse_new_graph_json() -> None:
-    pass
 
 
 def get_entry_module_intel(resources_location: pathlib.Path) -> Tuple:

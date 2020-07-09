@@ -115,12 +115,16 @@ class Graph:
         @param graph_json:
         @return: a graph instance built from the given json
         """
+        # TODO this is not try enough, cut the json loading
         try:
             graph_dict = json.loads(graph_json)
             # TODO do not support json5
+        except TypeError:
+            raise
         except json.JSONDecodeError as e:
             logging.exception(e)
-            raise NotImplementedError('The other json format is not supported for now')
+            raise ValueError('Please check the json format. '
+                                      'The other json format is not supported for now')
 
         if 'elements' in graph_dict:
             element_dict = graph_dict['elements']
