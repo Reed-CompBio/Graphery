@@ -213,6 +213,14 @@ class CommandWrapper:
     def create():
         create_tutorial_anchor()
 
+    @staticmethod
+    def add():
+        print_formatted_text('Coming soon!')
+
+    @staticmethod
+    def modify():
+        print_formatted_text('Coming soon!')
+
     @classmethod
     def run_command(cls, command: str) -> None:
         getattr(cls, command)()

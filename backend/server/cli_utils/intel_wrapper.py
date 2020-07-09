@@ -64,7 +64,7 @@ class ModelWrapperBase(ABC):
         # TODO use get_or_create (write it manually)
 
     def prepare_model(self) -> None:
-        pass
+        self.get_model()
 
     def finalize_model(self) -> None:
         self.save_model()
@@ -180,9 +180,6 @@ class CategoryWrapper(PublishedWrapper):
     def make_new_model(self) -> None:
         self.model: Category = self.model_class(category=self.category_name, is_published=False)
 
-    def prepare_model(self) -> None:
-        self.get_model()
-
     def __str__(self):
         return '<CategoryWrapper category_name={}>'.format(self.category_name)
 
@@ -212,13 +209,12 @@ class TutorialAnchorWrapper(PublishedWrapper):
         self.model: Tutorial = self.model_class(url=self.url, name=self.name, is_published=False)
 
     def prepare_model(self) -> None:
+        super().prepare_model()
         self.finalize_prerequisite_wrapper_iter(self.categories)
-        # TODO temp
-        self.get_model()
 
     def finalize_model(self) -> None:
         self.save_model()
-        self.model.categories.set(cat.model for cat in self.categories)
+        self.model.categories.set(wrapper.model for wrapper in self.categories)
         self.save_model()
 
 
@@ -253,6 +249,7 @@ class GraphWrapper(PublishedWrapper):
                                              is_published=False)
 
     def prepare_model(self) -> None:
+        super().prepare_model()
         self.finalize_prerequisite_wrapper_iter(self.categories)
         self.finalize_prerequisite_wrapper_iter(self.tutorials)
         self.finalize_prerequisite_wrapper_iter(self.authors)
@@ -341,6 +338,7 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
                                                        content_html=self.content_html)
 
     def prepare_model(self) -> None:
+        super().prepare_model()
         self.finalize_prerequisite_wrapper_iter(self.authors)
 
     def finalize_model(self) -> None:
