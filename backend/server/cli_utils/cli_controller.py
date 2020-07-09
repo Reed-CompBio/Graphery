@@ -3,7 +3,7 @@ import re
 from typing import Tuple, List
 
 from django.db.models import QuerySet
-from django.db.transaction import commit
+from django.db.transaction import commit, rollback
 
 from prompt_toolkit.completion import PathCompleter
 from prompt_toolkit.shortcuts import PromptSession
@@ -166,6 +166,9 @@ def create_tutorial_anchor() -> None:
         anchor_wrapper.prepare_model()
         anchor_wrapper.finalize_model()
         commit()
+        print_formatted_text('Changes committed')
+    else:
+        rollback()
 
 
 def get_tutorial_markdown_path(tutorial_source_folder: pathlib.Path) -> pathlib.Path:
@@ -188,7 +191,7 @@ def get_new_graph_jsons(resources_location: pathlib.Path) -> list:
     return graph_jsons
 
 
-def parse_new_graph_json(graph_jsons: Iterable[pathlib.Path]) -> None:
+def parse_new_graph_json() -> None:
     pass
 
 

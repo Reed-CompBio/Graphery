@@ -7,7 +7,7 @@ from typing import Mapping, Optional
 
 from django import setup as django_setup
 from django.db.transaction import set_autocommit, rollback
-from prompt_toolkit import prompt
+from prompt_toolkit import prompt, print_formatted_text
 from prompt_toolkit.completion import PathCompleter
 from prompt_toolkit.document import Document
 from prompt_toolkit.validation import Validator, ValidationError
@@ -71,6 +71,8 @@ if __name__ == '__main__':
 
     try:
         main(command_map)
+    except KeyboardInterrupt:
+        print_formatted_text('Keyboard interrupted')
     finally:
-        print('Rollback any unsaved transactions.')
+        print_formatted_text('Rollback any unsaved transactions.')
         rollback()
