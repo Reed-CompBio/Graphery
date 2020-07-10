@@ -170,6 +170,13 @@ class UserWrapper(AbstractWrapper):
         self.role = loaded_model.role
         return self
 
+    def overwrite_model(self) -> None:
+        field_list = [field for field in self.validators.keys() if field != 'password']
+        for field in field_list:
+            setattr(self.model, field, getattr(self, field))
+        if len(self.password) <= 20:
+            self.model.set_password(self.password)
+
     def retrieve_model(self) -> None:
         self.model = User.objects.get(username=self.username, email=self.email)
 

@@ -128,7 +128,10 @@ class UsernameValidator(Validator):
 class PasswordValidator(Validator):
     def validate(self, document: Document) -> None:
         # TODO write password validation
-        pass
+        if len(document.text) < 8:
+            raise ValidationError(message='The length of the password must be greater than 8')
+        if len(document.text) > 20:
+            raise ValidationError(message='The length of the password must be smaller than 20')
 
 
 _path_completer = PathCompleter()
