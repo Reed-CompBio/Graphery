@@ -367,7 +367,7 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
         super().set_variables(**kwargs)
         the_model_class = kwargs.get('model_class', None)
         if the_model_class and issubclass(the_model_class, TranslationBase):
-            self.model_class = the_model_class
+            self.set_model_class(the_model_class)
         return self
 
     def retrieve_model(self) -> None:
@@ -406,6 +406,13 @@ class GraphTranslationContentWrapper(PublishedWrapper):
 
     def set_model_class(self, model_class: Type[GraphTranslationBase]) -> None:
         self.model_class = model_class
+
+    def set_variables(self, **kwargs) -> 'GraphTranslationContentWrapper':
+        super().set_variables(**kwargs)
+        the_model_class = kwargs.get('model_class', None)
+        if the_model_class and issubclass(the_model_class, GraphTranslationBase):
+            self.set_model_class(the_model_class)
+        return self
 
     def retrieve_model(self) -> None:
         self.model: GraphTranslationBase = self.model_class.objects.get(graph_anchor=self.graph_anchor.model)

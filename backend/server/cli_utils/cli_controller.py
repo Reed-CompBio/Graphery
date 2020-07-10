@@ -17,7 +17,8 @@ from prompt_toolkit.document import Document
 
 import markdown
 
-from backend.model.translation_collection import translation_table_mapping, get_translation_table
+from backend.model.translation_collection import translation_table_mapping, get_translation_table, \
+    add_info_graph_trans_table
 from cli_utils.cli_ui import run_interruptable_checkbox_dialog, new_session, inline_radio_dialog
 from bundle.controller import controller
 from bundle.utils.cache_file_helpers import TempSysPathAdder
@@ -234,15 +235,44 @@ def select_tutorial() -> TutorialAnchorWrapper:
     return TutorialAnchorWrapper().load_model(tutorial_choice)
 
 
-@new_session('select language')
-def select_lang(default_lang: str = 'en-us') -> Type[TranslationBase]:
-    lang_selections = [(cls, f'{lang[:2]}-{lang[2:]}') for lang, cls in translation_table_mapping.items()]
+@new_session('select tutorial language')
+def select_tutorial_lang(default_lang: str = 'en-us') -> Type[TranslationBase]:
+    lang_selections: List[Tuple[Type, str]] = \
+        [(cls, f'{lang[:2]}-{lang[2:]}') for lang, cls in translation_table_mapping.items()]
 
-    lang_choice: Type[TranslationBase] = inline_radio_dialog(text='Please select the language',
-                                                             values=lang_selections,
-                                                             default_value=(get_translation_table(default_lang),
-                                                                            default_lang)).run()
+    lang_choice: Type[TranslationBase] = inline_radio_dialog(
+        text='Please select the language',
+        values=lang_selections,
+        default_value=(get_translation_table(default_lang), default_lang)
+    ).run()
     return lang_choice
+
+
+@new_session('select graph language')
+def select_graph_lang(default_lang: str = 'en-us') -> Type[GraphTranslationBase]:
+    lang_selections: List[Tuple[Type, str]] = \
+        [(cls, f'{lang[:2]}-{lang[2:4]}') for lang, cls in translation_table_mapping.items()]
+
+    lang_choice: Type[GraphTranslationBase] = inline_radio_dialog(
+        text='Please select language',
+        values=lang_selections,
+        default_value=(add_info_graph_trans_table(default_lang), default_lang)
+    ).run()
+    return lang_choice
+
+
+@new_session('select graph')
+def select_graph() -> Graph:
+    graph_query_set: QuerySet = Graph.objects.all()
+    graph_selections: List[Tuple[Graph, str]] = [(graph_model, f'{graph_model.url}: {graph_model.name}')
+                                                 for graph_model in graph_query_set]
+
+    graph_choices: Graph = inline_radio_dialog(
+        text='Please select the matching graph',
+        values=graph_selections,
+    ).run()
+
+    return graph_choices
 
 
 def proceed_prompt(actions: Callable) -> None:
@@ -428,7 +458,7 @@ def gather_locale_md_info(path: pathlib.Path) -> TutorialTranslationContentWrapp
         name, lang = path.stem.split('.')
         # TODO I don't think you can do much about it since you can't change the input source in the command line?
         title: str = get_name(message='Please edit the title of this tutorial', default=name)
-        lang_class: Type[TranslationBase] = select_lang(lang)
+        lang_class: Type[TranslationBase] = select_tutorial_lang(lang)
 
         content_md = path.read_text()
         content_html, abstract = parse_markdown(text=content_md)
@@ -493,7 +523,7 @@ def get_code_text_and_graph_req(source_folder_path: pathlib.Path) -> Tuple[str, 
 
 
 def code_executor(code_folder: pathlib.Path,
-                           graph_object_mappings: Mapping[Graph, CustomGraph]) -> Mapping[Graph, Mapping]:
+                  graph_object_mappings: Mapping[Graph, CustomGraph]) -> Mapping[Graph, Mapping]:
     exec_result = {}
 
     with controller as folder_creator, \
@@ -580,18 +610,64 @@ def create_code_obj() -> None:
     proceed_prompt(actions=actions)
 
 
-def get_graph_locale_jsons(parent_folder: pathlib.Path) -> Sequence[Mapping]:
-    for locale_json_file in parent_folder.glob('*.json'):
+def get_graph_locale_info_md(parent_folder: pathlib.Path) -> List[pathlib.Path]:
+    graph_locale_file_values = [(file, file.name) for file in parent_folder.glob('*.md')]
+
+    graph_locale_files: List[pathlib.Path] = run_interruptable_checkbox_dialog(
+        text="Please select the graphs' info you want to upload",
+        values=graph_locale_file_values,
+        default_values=graph_locale_file_values
+    )
+
+    return graph_locale_files
+
+
+def gather_graph_locale_info(info_files: List[pathlib.Path]) -> List[GraphTranslationContentWrapper]:
+    locale_infos: List[GraphTranslationContentWrapper] = []
+    for info_file in info_files:
         try:
-            file_name, lang = locale_json_file.name.split('.')
-            # oh **** it
+            file_name, lang = info_file.name.split('.')
+            title = get_name(message='Please input the title of this graph', default=file_name)
+
+            language_model: Type[GraphTranslationBase] = select_graph_lang(lang)
+
+            abstract, _ = parse_markdown(info_file.read_text())
+
+            abstract: str = get_abstract(message='Edit the abstract of this translation', default=abstract)
+
+            graph_anchor: Graph = select_graph()
+
+            locale_infos.append(GraphTranslationContentWrapper().set_variables(
+                model_class=language_model,
+                title=title,
+                abstract=abstract,
+                graph_anchor=graph_anchor
+            ))
         except ValueError:
             raise
+        except TypeError:
+            raise
+
+    return locale_infos
 
 
 def create_graph_content_trans() -> None:
-    graph_info = get_location()
+    graph_info_location: pathlib.Path = get_location()
+    graph_info_md_files: List[pathlib.Path] = get_graph_locale_info_md(graph_info_location)
+    if len(graph_info_md_files) < 1:
+        print_formatted_text('None is selected. Exited.')
+    graph_content_wrappers: List[GraphTranslationContentWrapper] = gather_graph_locale_info(graph_info_md_files)
 
+    print_formatted_text('Graph info translations: ')
+    for graph_content_wrapper in graph_content_wrappers:
+        print_formatted_text(f'{graph_content_wrapper}')
+
+    def actions():
+        for wrapper in graph_content_wrappers:
+            wrapper.prepare_model()
+            wrapper.finalize_model()
+
+    proceed_prompt(actions=actions)
 
 
 class CommandWrapper:

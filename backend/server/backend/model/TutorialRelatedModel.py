@@ -5,7 +5,7 @@ from graphql import GraphQLError
 
 from .UserModel import User
 from .mixins import PublishedMixin, TimeDateMixin, UUIDMixin
-from .translation_collection import process_trans_name, process_graph_trans_name
+from .translation_collection import process_trans_name, process_graph_info_trans_name
 
 
 class Category(PublishedMixin, UUIDMixin, models.Model):
@@ -52,8 +52,8 @@ class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
 
     def get_translation(self, translation: str, default: str, is_published_only: bool = True):
         content = getattr(self,
-                          process_graph_trans_name(translation),
-                          getattr(self, process_graph_trans_name(default), None))
+                          process_graph_info_trans_name(translation),
+                          getattr(self, process_graph_info_trans_name(default), None))
         if content:
             if content.is_published or not is_published_only:
                 return content
