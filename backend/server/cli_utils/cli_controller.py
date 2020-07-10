@@ -1,19 +1,16 @@
 import json
 import pathlib
-import re
 import time
 import shutil
 from importlib import import_module
 from typing import Tuple, List, MutableMapping, Sequence
-from html.parser import HTMLParser
 
 from django.db.models import QuerySet
 from django.db.transaction import commit, rollback
 
-from prompt_toolkit.completion import PathCompleter
 from prompt_toolkit import print_formatted_text, prompt
-from prompt_toolkit.validation import Validator, ValidationError
-from prompt_toolkit.document import Document
+from prompt_toolkit.completion import PathCompleter
+from prompt_toolkit.validation import Validator
 
 import markdown
 
@@ -24,114 +21,11 @@ from cli_utils.cli_ui import run_interruptable_checkbox_dialog, new_session, inl
 from bundle.controller import controller
 from bundle.utils.cache_file_helpers import TempSysPathAdder
 from bundle.GraphObjects.Graph import Graph as CustomGraph
+from .cli_helper import NameValidator, UrlValidator, LocationValidator, CodeSourceFolderValidator, \
+    EmailValidator, UsernameValidator, PasswordValidator, CustomHtmlParser
 from .errors import InvalidGraphJson
 
 from .intel_wrapper import *
-
-
-class CustomHtmlParser(HTMLParser):
-    def error(self, message):
-        raise ValueError(message)
-
-    def __init__(self):
-        super().__init__()
-        self.first: bool = True
-        self.recording: bool = False
-        self.data: List = []
-
-    def handle_starttag(self, tag, attrs):
-        if self.first and tag == 'p':
-            self.first = False
-            self.recording = True
-
-    def handle_endtag(self, tag):
-        if self.recording and tag == 'p':
-            self.recording = False
-
-    def handle_data(self, data):
-        if self.recording:
-            self.data.append(data)
-
-
-class CodeSourceFolderValidator(Validator):
-    def validate(self, document: Document) -> None:
-        code_path = pathlib.Path(document.text)
-        entry_py_module = code_path / 'entry.py'
-        graph_info = code_path / 'graph-info.json'
-        if not code_path.exists() or not entry_py_module.exists() or not graph_info.exists():
-            raise ValidationError(message='The code resources folder does not exist or does not contain'
-                                          ' an `entry.py` file and a `graph-info.json` file.')
-
-
-class NameValidator(Validator):
-    regex = re.compile(r'^[a-zA-Z0-9- ]+\Z')
-
-    def __init__(self):
-        super().__init__()
-        self.names: List[str] = []
-
-    def __call__(self, tutorials: QuerySet = ()) -> Validator:
-        for element in tutorials:
-            self.names.append(element.name)
-        return self
-
-    def validate(self, document: Document) -> None:
-        name = document.text.strip()
-        if not self.regex.match(name):
-            raise ValidationError(message='The name is not valid. '
-                                          'It should only contain letters, numbers, dashes, and spaces.',
-                                  cursor_position=len(name) - 1)
-        if name in self.names:
-            raise ValidationError(message='The name {} is taken. Please enter a new name!'.format(name),
-                                  cursor_position=len(name) - 1)
-
-
-class UrlValidator(Validator):
-    regex = re.compile(r'^[a-zA-Z0-9-]+\Z')
-
-    def __init__(self):
-        super().__init__()
-        self.urls: List[str] = []
-
-    def __call__(self, tutorials: QuerySet) -> Validator:
-        for element in tutorials:
-            self.urls.append(element.url)
-        return self
-
-    def validate(self, document: Document) -> None:
-        url = document.text.strip()
-        if not self.regex.match(url):
-            raise ValidationError(message='The url is not valid'
-                                          'It should only contain letters, numbers and dashes.',
-                                  cursor_position=len(url) - 1)
-        if url in self.urls:
-            raise ValidationError(message='The url {} is taken. Please enter a new url!'.format(url),
-                                  cursor_position=len(url) - 1)
-
-
-class LocationValidator(Validator):
-    def validate(self, document: Document) -> None:
-        if not pathlib.Path(document.text).exists():
-            raise ValidationError(message='Please input a valid path!')
-
-
-class UsernameValidator(Validator):
-    regex = re.compile(r'^[^0-9][\w-]{4,}[^-_]\Z')
-
-    def validate(self, document: Document) -> None:
-        if len(document.text) < 6:
-            raise ValidationError(message='Username must be at least 6 letters long')
-        if not self.regex.match(document.text):
-            raise ValidationError(message='Username only contains letters, numbers, and /-/_ characters.')
-
-
-class PasswordValidator(Validator):
-    def validate(self, document: Document) -> None:
-        # TODO write password validation
-        if len(document.text) < 8:
-            raise ValidationError(message='The length of the password must be greater than 8')
-        if len(document.text) > 20:
-            raise ValidationError(message='The length of the password must be smaller than 20')
 
 
 _path_completer = PathCompleter()
@@ -139,6 +33,7 @@ _name_validator = NameValidator()
 _url_validator = UrlValidator()
 _location_validator = LocationValidator()
 _code_source_folder_validator = CodeSourceFolderValidator()
+_email_validator = EmailValidator()
 _username_validator = UsernameValidator()
 _password_validator = PasswordValidator()
 
@@ -734,7 +629,7 @@ def enter_password() -> Optional[str]:
 
 
 def create_user() -> None:
-    email: str = get_email(message='Please input email: ')
+    email: str = get_email(message='Please input email: ', validator=_email_validator)
     username: str = get_name(message='Please input username: ', validator=_username_validator)
     role: int = select_role()
     while True:
