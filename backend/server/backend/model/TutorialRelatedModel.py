@@ -11,6 +11,9 @@ class Category(PublishedMixin, UUIDMixin, models.Model):
     category = models.CharField(max_length=50, unique=True,
                                 default='uncategorized', blank=False, null=False)
 
+    def __str__(self):
+        return f'<category>: {self.category}'
+
 
 class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
     # meta data
@@ -30,6 +33,9 @@ class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
 
         raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
                            f'{f"No results come from {default} translation either" if default else ""}')
+
+    def __str__(self):
+        return f'<tutorial>: {self.url} | {self.name}'
 
 
 class GraphPriority(models.IntegerChoices):
@@ -60,6 +66,9 @@ class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
         raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
                            f'{f"No results come from {default} translation either" if default else ""}')
 
+    def __str__(self):
+        return f'<graph>: {self.url} | {self.name} | {GraphPriority(self.priority).label}'
+
 
 class Code(UUIDMixin, TimeDateMixin, models.Model):
     # relations
@@ -72,6 +81,9 @@ class Code(UUIDMixin, TimeDateMixin, models.Model):
     @property
     def is_published(self) -> bool:
         return self.tutorial.is_published
+
+    def __str__(self):
+        return f'<code>: {self.tutorial} | {self.code[:30]}'
 
 
 class ExecResultJson(UUIDMixin, TimeDateMixin, models.Model):
@@ -95,3 +107,6 @@ class ExecResultJson(UUIDMixin, TimeDateMixin, models.Model):
         constraints = [
             models.UniqueConstraint(fields=['code', 'graph'], name='code exec result constraint')
         ]
+
+    def __str__(self):
+        return f'<exec result json>: {self.code} | {self.graph}'

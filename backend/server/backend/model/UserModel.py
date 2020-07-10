@@ -118,3 +118,6 @@ class User(UUIDMixin, AbstractUser):
     @property
     def is_authenticated(self) -> bool:
         return self.is_active
+
+    def __str__(self):
+        return f'<user>: {self.username} | {ROLES(self.role).label}'

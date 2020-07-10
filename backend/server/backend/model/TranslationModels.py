@@ -20,6 +20,9 @@ class TranslationBase(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
     class Meta:
         abstract = True
 
+    def __str__(self):
+        return f'<{type(self).__name__} translation>: {self.title}'
+
 
 @add_trans_table
 class ENUS(TranslationBase):
@@ -38,6 +41,9 @@ class GraphTranslationBase(PublishedMixin, TimeDateMixin, UUIDMixin, models.Mode
 
     class Meta:
         abstract = True
+
+    def __str__(self):
+        return f'<{type(self).__name__} graph content>: {self.title}'
 
 
 @add_graph_info_trans_table
