@@ -14,6 +14,9 @@ class Category(PublishedMixin, UUIDMixin, models.Model):
     def __str__(self):
         return f'<category {self.category}>'
 
+    class Meta:
+        verbose_name_plural = 'categories'
+
 
 class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
     # meta data

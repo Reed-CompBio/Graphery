@@ -53,8 +53,8 @@ class Controller:
         # TODO give a prompt that the current session is under this time stamp
         return self
 
-    # def __exit__(self, exc_type, exc_val, exc_tb):
-    #     self.generate_processed_record()
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
 
     def __del__(self):
         self.main_cache_folder.__exit__(None, None, None)
