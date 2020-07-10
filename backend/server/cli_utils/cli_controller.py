@@ -305,7 +305,7 @@ def select_role() -> int:
 
 @new_session('confirmation')
 def proceed_prompt(actions: Callable) -> None:
-    proceed = prompt('Proceed? (y/N) ')
+    proceed = prompt('Proceed Saving? (y/N) ')
     if proceed.lower() == 'y':
         actions()
         commit()
@@ -314,6 +314,18 @@ def proceed_prompt(actions: Callable) -> None:
         print_formatted_text('Changes not saved. Rolling back.')
         rollback()
         print_formatted_text('Rolled back')
+
+
+@new_session('publish confirmation')
+def proceed_publishing_content(published_model_wrapper: AbstractWrapper) -> None:
+    publish = prompt(f'Publish {published_model_wrapper}? (y/N) ')
+    if publish.lower() == 'y':
+        published_model_wrapper.model.is_published = True
+        published_model_wrapper.model.save()
+        commit()
+        print_formatted_text('Published Content')
+    else:
+        print_formatted_text(f'Content {published_model_wrapper} is saved but not published')
 
 
 def gather_tutorial_anchor_info() -> TutorialAnchorWrapper:
@@ -348,6 +360,7 @@ def create_tutorial_anchor() -> None:
         anchor_wrapper.finalize_model()
 
     proceed_prompt(actions=actions)
+    proceed_publishing_content(anchor_wrapper)
 
 
 @new_session('Graph Json Location')
@@ -452,6 +465,9 @@ def create_graph() -> None:
 
     proceed_prompt(actions=actions)
 
+    for wrapper in graph_wrappers:
+        proceed_publishing_content(wrapper)
+
 
 def get_locale_md_files() -> List[pathlib.Path]:
     source_folder: pathlib.Path = get_location(prompt_text='Please choose the tutorial translation folder')
@@ -535,6 +551,9 @@ def create_locale_md() -> None:
             md_file_wrapper.finalize_model()
 
     proceed_prompt(actions=actions)
+
+    for wrapper in md_file_wrappers:
+        proceed_publishing_content(wrapper)
 
 
 def get_code_source_folder() -> pathlib.Path:
@@ -687,17 +706,20 @@ def create_graph_content_trans() -> None:
         print_formatted_text('None is selected. Exited.')
     graph_content_wrappers: List[GraphTranslationContentWrapper] = gather_graph_locale_info(graph_info_md_files)
 
-    print_formatted_text('Graph info translations: ')
-    for graph_content_wrapper in graph_content_wrappers:
-        print_formatted_text(f'{graph_content_wrapper}')
-
     def actions():
-        for wrapper in graph_content_wrappers:
-            wrapper.get_model(overwrite=True)
-            wrapper.prepare_model()
-            wrapper.finalize_model()
+        for graph_content_wrapper in graph_content_wrappers:
+            graph_content_wrapper.get_model(overwrite=True)
+            graph_content_wrapper.prepare_model()
+            graph_content_wrapper.finalize_model()
+
+    print_formatted_text('Graph info translations: ')
+    for wrapper in graph_content_wrappers:
+        print_formatted_text(f'{wrapper}')
 
     proceed_prompt(actions=actions)
+
+    for wrapper in graph_content_wrappers:
+        proceed_publishing_content(wrapper)
 
 
 def enter_password() -> Optional[str]:
