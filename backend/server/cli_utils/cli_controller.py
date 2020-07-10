@@ -684,11 +684,11 @@ class CommandWrapper:
 
     @staticmethod
     def add():
-        print_formatted_text('Coming soon!')
+        print_formatted_text('Please use the admin site')
 
     @staticmethod
     def modify():
-        print_formatted_text('Coming soon!')
+        print_formatted_text('Please use the admin site')
 
     @classmethod
     def run_command(cls, command: str) -> None:
