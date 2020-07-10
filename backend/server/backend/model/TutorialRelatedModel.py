@@ -12,7 +12,7 @@ class Category(PublishedMixin, UUIDMixin, models.Model):
                                 default='uncategorized', blank=False, null=False)
 
     def __str__(self):
-        return f'<category>: {self.category}'
+        return f'<category {self.category}>'
 
 
 class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
@@ -35,7 +35,7 @@ class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
                            f'{f"No results come from {default} translation either" if default else ""}')
 
     def __str__(self):
-        return f'<tutorial>: {self.url} | {self.name}'
+        return f'<tutorial {self.url} | {self.name}>'
 
 
 class GraphPriority(models.IntegerChoices):
@@ -67,7 +67,7 @@ class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
                            f'{f"No results come from {default} translation either" if default else ""}')
 
     def __str__(self):
-        return f'<graph>: {self.url} | {self.name} | {GraphPriority(self.priority).label}'
+        return f'<graph {self.url} | {self.name} | {GraphPriority(self.priority).label}>'
 
 
 class Code(UUIDMixin, TimeDateMixin, models.Model):
@@ -83,7 +83,7 @@ class Code(UUIDMixin, TimeDateMixin, models.Model):
         return self.tutorial.is_published
 
     def __str__(self):
-        return f'<code>: {self.tutorial} | {self.code[:30]}'
+        return f'<code {self.tutorial} | {self.code[:100]}>'
 
 
 class ExecResultJson(UUIDMixin, TimeDateMixin, models.Model):
@@ -109,4 +109,4 @@ class ExecResultJson(UUIDMixin, TimeDateMixin, models.Model):
         ]
 
     def __str__(self):
-        return f'<exec result json>: {self.code} | {self.graph}'
+        return f'<exec result json {self.code} | {self.graph}>'

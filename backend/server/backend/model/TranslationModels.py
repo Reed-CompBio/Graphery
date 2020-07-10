@@ -21,7 +21,7 @@ class TranslationBase(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
         abstract = True
 
     def __str__(self):
-        return f'<{type(self).__name__} translation>: {self.title}'
+        return f'<{type(self).__name__}_translation {self.title} | {self.abstract[:100]}>'
 
 
 @add_trans_table
@@ -43,7 +43,7 @@ class GraphTranslationBase(PublishedMixin, TimeDateMixin, UUIDMixin, models.Mode
         abstract = True
 
     def __str__(self):
-        return f'<{type(self).__name__} graph content>: {self.title}'
+        return f'<{type(self).__name__}_graph_content {self.title} | {self.abstract[:100]}>'
 
 
 @add_graph_info_trans_table

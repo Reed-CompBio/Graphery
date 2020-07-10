@@ -120,4 +120,4 @@ class User(UUIDMixin, AbstractUser):
         return self.is_active
 
     def __str__(self):
-        return f'<user>: {self.username} | {ROLES(self.role).label}'
+        return f'<user {self.username} | {ROLES(self.role).label}>'
