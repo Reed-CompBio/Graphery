@@ -1,6 +1,6 @@
 # Graphery
 
-[![Build Status](https://travis-ci.com/poppy-poppy/Graphery.svg?token=iGoqjTdG7SFLHQyLfgoz&branch=master)](https://travis-ci.com/poppy-poppy/Graphery)
+https://travis-ci.com/poppy-poppy/Graphery.svg?token=iGoqjTdG7SFLHQyLfgoz&branch=dev
 
 Graph tutorial website 
 
