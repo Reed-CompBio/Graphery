@@ -57,14 +57,17 @@ class ModelWrapperBase(ABC):
     def make_new_model(self) -> None:
         raise NotImplementedError
 
-    def get_model(self) -> None:
+    def get_model(self, overwrite: bool = False) -> None:
         if not self.model_class:
             raise AssertionError
         # TODO use other error
         # TODO use get_or_create (write it manually)
 
+    def overwrite_model(self) -> None:
+        raise NotImplementedError
+
     def prepare_model(self) -> None:
-        self.get_model()
+        pass
 
     def finalize_model(self) -> None:
         self.save_model()
@@ -101,7 +104,11 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
 
         return self
 
-    def get_model(self) -> None:
+    def overwrite_model(self) -> None:
+        for field in self.validators.keys():
+            setattr(self.model, field, getattr(self, field))
+
+    def get_model(self, overwrite: bool = False) -> None:
         try:
             self.validate()
             super().get_model()
@@ -112,6 +119,8 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
 
         try:
             self.retrieve_model()
+            if overwrite:
+                self.overwrite_model()
         except self.model_class.DoesNotExist:
             self.make_new_model()
         except self.model_class.MultipleObjectsReturned as e:
@@ -122,6 +131,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
     @staticmethod
     def finalize_prerequisite_wrapper_iter(wrappers: Iterable['AbstractWrapper']):
         for wrapper in wrappers:
+            wrapper.get_model()
             wrapper.prepare_model()
             wrapper.finalize_model()
 
@@ -232,7 +242,6 @@ class TutorialAnchorWrapper(PublishedWrapper):
         self.model: Tutorial = self.model_class(url=self.url, name=self.name, is_published=False)
 
     def prepare_model(self) -> None:
-        super().prepare_model()
         self.finalize_prerequisite_wrapper_iter(self.categories)
 
     def finalize_model(self) -> None:
@@ -293,7 +302,6 @@ class GraphWrapper(PublishedWrapper):
                                              is_published=False)
 
     def prepare_model(self) -> None:
-        super().prepare_model()
         self.finalize_prerequisite_wrapper_iter(self.categories)
         self.finalize_prerequisite_wrapper_iter(self.tutorials)
         self.finalize_prerequisite_wrapper_iter(self.authors)
@@ -419,7 +427,6 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
                                                        content_html=self.content_html)
 
     def prepare_model(self) -> None:
-        super().prepare_model()
         self.finalize_prerequisite_wrapper_iter(self.authors)
 
     def finalize_model(self) -> None:

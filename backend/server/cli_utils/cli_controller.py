@@ -312,17 +312,13 @@ def create_tutorial_anchor() -> None:
     print_formatted_text('name: {}'.format(anchor_wrapper.name))
     print_formatted_text('url: {}'.format(anchor_wrapper.url))
     print_formatted_text('categories: {}'.format(anchor_wrapper.categories))
-    result = prompt('Proceed? (y/N) ')
 
-    if result.lower() == 'Y':
+    def actions():
+        anchor_wrapper.get_model(overwrite=True)
         anchor_wrapper.prepare_model()
         anchor_wrapper.finalize_model()
-        commit()
-        print_formatted_text('Changes committed')
-    else:
-        print_formatted_text('Changes not saved. Rolling back.')
-        rollback()
-        print_formatted_text('Rolled back.')
+
+    proceed_prompt(actions=actions)
 
 
 @new_session('Graph Json Location')
@@ -421,6 +417,7 @@ def create_graph() -> None:
 
     def actions():
         for graph_wrapper in graph_wrappers:
+            graph_wrapper.get_model(overwrite=True)
             graph_wrapper.prepare_model()
             graph_wrapper.finalize_model()
 
@@ -504,6 +501,7 @@ def create_locale_md() -> None:
 
     def actions():
         for md_file_wrapper in md_file_wrappers:
+            md_file_wrapper.get_model(overwrite=True)
             md_file_wrapper.prepare_model()
             md_file_wrapper.finalize_model()
 
@@ -601,9 +599,11 @@ def create_code_obj() -> None:
         print_formatted_text(f'{wrapper}')
 
     def actions():
+        code_wrapper.get_model(overwrite=True)
         code_wrapper.prepare_model()
         code_wrapper.finalize_model()
         for result_wrapper in exec_result_wrappers:
+            result_wrapper.get_model(overwrite=True)
             result_wrapper.prepare_model()
             result_wrapper.finalize_model()
 
@@ -664,6 +664,7 @@ def create_graph_content_trans() -> None:
 
     def actions():
         for wrapper in graph_content_wrappers:
+            wrapper.get_model(overwrite=True)
             wrapper.prepare_model()
             wrapper.finalize_model()
 
