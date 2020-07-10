@@ -9,8 +9,8 @@
         v-model="sliderPos"
         :min="1"
         label
-        :label-value="`${sliderPos}/${sliderLength + 1}`"
-        :max="sliderLength + 1"
+        :label-value="`${sliderPos}/${sliderLength}`"
+        :max="sliderLength"
         :step="1"
         snap
         dense
