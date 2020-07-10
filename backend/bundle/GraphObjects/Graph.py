@@ -85,7 +85,7 @@ class Graph:
         return False
 
     @staticmethod
-    def graph_generator(graph_json: str = '') -> 'Graph':
+    def graph_generator(graph_json: Union[str, Mapping] = '') -> 'Graph':
         """
         generate a graph instance from json
         template:
@@ -116,15 +116,20 @@ class Graph:
         @return: a graph instance built from the given json
         """
         # TODO this is not try enough, cut the json loading
-        try:
-            graph_dict = json.loads(graph_json)
-            # TODO do not support json5
-        except TypeError:
+        if isinstance(graph_json, str):
+            try:
+                graph_dict = json.loads(graph_json)
+                # TODO do not support json5
+            except TypeError:
+                raise
+            except json.JSONDecodeError as e:
+                logging.exception(e)
+                raise ValueError('Please check the json format. '
+                                          'The other json format is not supported for now')
+        elif isinstance(graph_json, Mapping):
+            graph_dict = graph_json
+        else:
             raise
-        except json.JSONDecodeError as e:
-            logging.exception(e)
-            raise ValueError('Please check the json format. '
-                                      'The other json format is not supported for now')
 
         if 'elements' in graph_dict:
             element_dict = graph_dict['elements']

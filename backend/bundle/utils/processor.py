@@ -23,12 +23,13 @@ class Processor:
     if some variables are not changed, I will record it's value. If it's empty, the corresponding
     value will be set to none.
     """
+
     def __init__(self, variable_number_limit: int = 10):
         self.variable_number_limit = variable_number_limit
         self._no_limit = False
         self.variable_color_map: dict = {}
-        self.result = []
-        self.result_json = None
+        self.result: List[MutableMapping] = []
+        self.result_json: Optional[str] = None
 
     def _no_limit_override(self, flag: bool) -> None:
         self._no_limit = flag
@@ -43,7 +44,7 @@ class Processor:
         for variable, color in zip(variables, self.COLOR_PALETTE):
             self.variable_color_map[variable] = color
 
-    def get_result_json(self) -> Mapping:
+    def get_result_json(self) -> str:
         return self.result_json
 
     def generate_result_json(self) -> None:
@@ -61,12 +62,13 @@ class Processor:
         # append it in the first item of the list?
 
         for mapping in change_list:
-            self.result.append(self.generate_record_template(
-                record_mapping=record_mapping,
-                line=mapping['line'],
-                variable_changes=mapping['variables'],
-                accessed_variables=mapping['accesses']
-            ))
+            self.result.append(
+                self.generate_record_template(
+                    record_mapping=record_mapping,
+                    line=mapping['line'],
+                    variable_changes=mapping['variables'],
+                    accessed_variables=mapping['accesses']
+                ))
 
         # insert
         if self.result and self.result[0]['variables'] is None:
@@ -78,7 +80,7 @@ class Processor:
                                  record_mapping: MutableMapping[str, Any],
                                  line: int,
                                  variable_changes: Mapping[Tuple[str, str], Any],
-                                 accessed_variables: List) -> Mapping:
+                                 accessed_variables: List) -> MutableMapping:
         """
         the result will be::
 
@@ -110,6 +112,7 @@ class Processor:
             for key, value in variable_changes.items():
                 representation = repr(value)
                 # TODO use graph elements' parent class
+                # TODO add `displayed` properties to var obj
                 if isinstance(value, (Node, Edge)):
                     variable_value = {
                         'id': value.identity,

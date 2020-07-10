@@ -254,6 +254,18 @@ class GraphWrapper(PublishedWrapper):
             'tutorials': dummy_validator
         })
 
+    def load_model(self, loaded_model: Graph) -> 'GraphWrapper':
+        super().load_model(loaded_model)
+        self.url = loaded_model.url
+        self.name = loaded_model.name
+        self.categories = [CategoryWrapper().load_model(cat) for cat in loaded_model.categories.all()]
+        self.authors = [UserWrapper().load_model(user) for user in loaded_model.authors.all()]
+        self.priority = loaded_model.priority
+        self.cyjs = loaded_model.cyjs
+        self.tutorials = [TutorialAnchorWrapper().load_model(tutorial_anchor)
+                          for tutorial_anchor in loaded_model.tutorials.all()]
+        return self
+
     def retrieve_model(self) -> None:
         self.model: Graph = self.model_class.objects.get(url=self.url, name=self.name)
 
@@ -313,7 +325,7 @@ class ExecResultJsonWrapper(AbstractWrapper):
     def __init__(self):
         self.code: Optional[CodeWrapper] = None
         self.graph: Optional[GraphWrapper] = None
-        self.json: Optional[dict] = None
+        self.json: Optional[Mapping] = None
 
         AbstractWrapper.__init__(self, {
             'code': dummy_validator,

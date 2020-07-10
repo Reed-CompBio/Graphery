@@ -1,7 +1,10 @@
 import json
 import pathlib
 import re
-from typing import Tuple, List
+import time
+import shutil
+from importlib import import_module
+from typing import Tuple, List, MutableMapping, Sequence
 from html.parser import HTMLParser
 
 from django.db.models import QuerySet
@@ -16,6 +19,9 @@ import markdown
 
 from backend.model.translation_collection import translation_table_mapping, get_translation_table
 from cli_utils.cli_ui import run_interruptable_checkbox_dialog, new_session, inline_radio_dialog
+from bundle.controller import controller
+from bundle.utils.cache_file_helpers import TempSysPathAdder
+from bundle.GraphObjects.Graph import Graph as CustomGraph
 from .errors import InvalidGraphJson
 
 from .intel_wrapper import *
@@ -133,15 +139,11 @@ def new_line_prompt(*args, **kwargs) -> str:
     return prompt(message=message, *args, **kwargs)
 
 
-def get_tutorial_source_path() -> pathlib.Path:
-    return pathlib.Path(new_line_prompt(message='Please enter the tutorial source folder location: ',
-                                        validator=_tutorial_source_folder_validator,
-                                        completer=_path_completer))
-
-
-def get_location(prompt_text: str = 'Please enter location') -> pathlib.Path:
+@new_session('input location')
+def get_location(prompt_text: str = 'Please enter location',
+                 validator: Validator = _location_validator) -> pathlib.Path:
     return pathlib.Path(new_line_prompt(message=prompt_text,
-                                        validator=_location_validator,
+                                        validator=validator,
                                         completer=_path_completer, ))
 
 
@@ -474,11 +476,108 @@ def create_locale_md() -> None:
         for md_file_wrapper in md_file_wrappers:
             md_file_wrapper.prepare_model()
             md_file_wrapper.finalize_model()
+
     proceed_prompt(actions=actions)
 
 
-def get_entry_module_intel(resources_location: pathlib.Path) -> Tuple:
-    return resources_location / 'entry.py', resources_location / 'graph-info.json'
+def get_code_source_folder() -> pathlib.Path:
+    return get_location(validator=_code_source_folder_validator)
+
+
+def get_code_text_and_graph_req(source_folder_path: pathlib.Path) -> Tuple[str, Sequence[str]]:
+    json_obj = json.loads((source_folder_path / 'graph-info.json').read_text())
+
+    if 'required_graphs' in json_obj:
+        return (source_folder_path / 'entry.py').read_text(), json_obj['required_graphs']
+    raise
+
+
+def code_executor(code_folder: pathlib.Path,
+                           graph_object_mappings: Mapping[Graph, CustomGraph]) -> Mapping[Graph, Mapping]:
+    exec_result = {}
+
+    with controller as folder_creator, \
+            folder_creator(f'temp_code_folder_{time.time()}') as cache_folder, \
+            TempSysPathAdder(cache_folder):
+        for any_file in code_folder.glob('*'):
+            # noinspection PyTypeChecker
+            shutil.copy(any_file, cache_folder / any_file.name)
+
+        try:
+            imported_module = import_module('entry')
+
+            # TODO a better maybe?
+            if not hasattr(imported_module, 'graph_object') or not hasattr(imported_module, 'main'):
+                raise
+
+            main_function = getattr(imported_module, 'main', None)
+
+            for graph_name, graph_obj in graph_object_mappings.items():
+                # I did not see this coming. I need to change the controller
+                controller.purge_records()
+
+                setattr(imported_module, 'graph_object', graph_obj)
+                main_function()
+
+                controller.generate_processed_record()
+
+                exec_result[graph_name] = controller.get_processed_result()
+        except ImportError:
+            raise
+        except Exception:
+            raise
+
+        return exec_result
+
+
+def gather_code_info(code_folder: pathlib.Path) -> Tuple[CodeWrapper, Sequence[ExecResultJsonWrapper]]:
+    code_text, required_graph_urls = get_code_text_and_graph_req(code_folder)
+    if len(required_graph_urls) < 1:
+        raise
+
+    tutorial_anchor = select_tutorial()
+
+    graph_id_obj_mapping: MutableMapping[Graph, CustomGraph] = {}
+
+    # change this part. May not using url is a better idea
+    for graph_url in required_graph_urls:
+        graph_model_obj: Graph = Graph.objects.get(url=graph_url)
+        graph_obj: CustomGraph = CustomGraph.graph_generator(graph_model_obj.cyjs)
+        graph_id_obj_mapping[graph_model_obj] = graph_obj
+
+    exec_result_mapping: Mapping[Graph, Mapping] = code_executor(code_folder, graph_id_obj_mapping)
+
+    code_wrapper: CodeWrapper = CodeWrapper().set_variables(
+        tutorial=tutorial_anchor,
+        code=code_text
+    )
+
+    exec_result_wrappers = [ExecResultJsonWrapper().set_variables(
+        code=code_wrapper,
+        graph=GraphWrapper().load_model(graph_obj),
+        json=exec_result_json_obj
+    ) for graph_obj, exec_result_json_obj in exec_result_mapping.items()]
+
+    return code_wrapper, exec_result_wrappers
+
+
+def create_code_obj() -> None:
+    code_source_folder = get_code_source_folder()
+    code_wrapper, exec_result_wrappers = gather_code_info(code_source_folder)
+
+    print_formatted_text('Code: {}'.format(code_wrapper))
+    print_formatted_text('Execution results: ')
+    for wrapper in exec_result_wrappers:
+        print_formatted_text(f'{wrapper}')
+
+    def actions():
+        code_wrapper.prepare_model()
+        code_wrapper.finalize_model()
+        for result_wrapper in exec_result_wrappers:
+            result_wrapper.prepare_model()
+            result_wrapper.finalize_model()
+
+    proceed_prompt(actions=actions)
 
 
 def parse_entry_module() -> None:
