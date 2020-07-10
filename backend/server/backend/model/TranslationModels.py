@@ -4,7 +4,7 @@ from .mixins import PublishedMixin, TimeDateMixin, UUIDMixin
 from .UserModel import User
 from .TutorialRelatedModel import Tutorial, Graph
 
-from .translation_collection import add_trans_table, add_info_graph_trans_table
+from .translation_collection import add_trans_table, add_graph_info_trans_table
 
 
 class TranslationBase(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
@@ -40,11 +40,11 @@ class GraphTranslationBase(PublishedMixin, TimeDateMixin, UUIDMixin, models.Mode
         abstract = True
 
 
-@add_info_graph_trans_table
+@add_graph_info_trans_table
 class ENUSGraphContent(GraphTranslationBase):
     pass
 
 
-@add_info_graph_trans_table
+@add_graph_info_trans_table
 class ZHCNGraphContent(GraphTranslationBase):
     pass

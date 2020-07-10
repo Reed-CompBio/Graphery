@@ -26,7 +26,7 @@ def add_trans_table(cls: Type):
     return cls
 
 
-def add_info_graph_trans_table(cls: Type):
+def add_graph_info_trans_table(cls: Type):
     cls_name: str = cls.__name__.lower()
     graph_info_translation_tables.append(cls_name)
     graph_info_translation_table_mapping[cls_name] = cls
@@ -61,6 +61,6 @@ def get_translation_table(trans_code: str) -> Optional[Model]:
     return translation_table_mapping.get(table_name, None)
 
 
-def add_info_graph_trans_table(trans_code: str) -> Optional[Model]:
+def get_graph_info_trans_table(trans_code: str) -> Optional[Model]:
     table_name = process_graph_info_trans_name(trans_code)
     return graph_info_translation_table_mapping.get(table_name, None)

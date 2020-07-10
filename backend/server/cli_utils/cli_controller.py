@@ -19,7 +19,7 @@ import markdown
 
 from backend.model.UserModel import ROLES
 from backend.model.translation_collection import translation_table_mapping, get_translation_table, \
-    add_info_graph_trans_table
+    get_graph_info_trans_table
 from cli_utils.cli_ui import run_interruptable_checkbox_dialog, new_session, inline_radio_dialog
 from bundle.controller import controller
 from bundle.utils.cache_file_helpers import TempSysPathAdder
@@ -271,7 +271,7 @@ def select_graph_lang(default_lang: str = 'en-us') -> Type[GraphTranslationBase]
     lang_choice: Type[GraphTranslationBase] = inline_radio_dialog(
         text='Please select language',
         values=lang_selections,
-        default_value=(add_info_graph_trans_table(default_lang), default_lang)
+        default_value=(get_graph_info_trans_table(default_lang), default_lang)
     ).run()
     return lang_choice
 
@@ -303,6 +303,7 @@ def select_role() -> int:
     return role_selection
 
 
+@new_session('confirmation')
 def proceed_prompt(actions: Callable) -> None:
     proceed = prompt('Proceed? (y/N) ')
     if proceed.lower() == 'y':
@@ -700,16 +701,16 @@ def create_graph_content_trans() -> None:
 
 
 def enter_password() -> Optional[str]:
-    password = get_password(message='Please enter the password', validator=_password_validator)
-    reenter_password = get_password(message='Please reenter the password', validator=_password_validator)
+    password = get_password(message='Please enter the password: ', validator=_password_validator)
+    reenter_password = get_password(message='Please reenter the password: ', validator=_password_validator)
     if password == reenter_password:
         return reenter_password
     return None
 
 
 def create_user() -> None:
-    email: str = get_email()
-    username: str = get_name(message='Please input username:', validator=_username_validator)
+    email: str = get_email(message='Please input email: ')
+    username: str = get_name(message='Please input username: ', validator=_username_validator)
     role: int = select_role()
     while True:
         password: Optional[str] = enter_password()
@@ -725,7 +726,7 @@ def create_user() -> None:
         role=role
     )
 
-    print_formatted_text('The following user will be created/overwritten:')
+    print_formatted_text('The following user will be created/overwritten: ')
     print_formatted_text(f'username: {username}')
     print_formatted_text(f'email: {email}')
     print_formatted_text(f'password: {password}')
@@ -740,10 +741,26 @@ def create_user() -> None:
 
 
 class CommandWrapper:
-    # use instance instead of class, so that I can have a recent create list.
-    @staticmethod
-    def create():
-        create_tutorial_anchor()
+    action_values = [
+        (create_user, 'Create User'),
+        (create_tutorial_anchor, 'Create Tutorial Anchor'),
+        (create_locale_md, 'Create Tutorial Content From Markdown Files'),
+        (create_graph, 'Create Graph From Jsons'),
+        (create_graph_content_trans, 'Create Graph Info Content From Markdown Files'),
+        (create_code_obj, 'Create Code and Execution Result Records')
+    ]
+
+    # TODO use instance instead of class, so that I can have a recent create list.
+    @classmethod
+    @new_session('create')
+    def create(cls):
+        action_choices: List[Callable] = run_interruptable_checkbox_dialog(
+            text='Please choose what you want to do',
+            values=cls.action_values
+        )
+
+        for action in action_choices:
+            action()
 
     @staticmethod
     def add():
