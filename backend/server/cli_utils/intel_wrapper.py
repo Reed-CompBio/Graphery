@@ -165,6 +165,15 @@ class UserWrapper(AbstractWrapper):
                                               email=self.email,
                                               password=self.password)
 
+    def __str__(self):
+        return f'<UserWrapper\n' \
+               f'email={self.email}\n' \
+               f'username={self.username}\n' \
+               f'password={self.password}>'
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class CategoryWrapper(PublishedWrapper):
     model_class: Type[Category] = Category
@@ -230,6 +239,15 @@ class TutorialAnchorWrapper(PublishedWrapper):
         self.save_model()
         self.model.categories.set(wrapper.model for wrapper in self.categories)
         self.save_model()
+
+    def __str__(self):
+        return f'<TutorialWrapper\n' \
+               f'url={self.url}\n' \
+               f'name={self.name}\n' \
+               f'categories={self.categories}>'
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class GraphWrapper(PublishedWrapper):
@@ -299,6 +317,9 @@ class GraphWrapper(PublishedWrapper):
                f'tutorials={self.tutorials}\n' \
                f'>'
 
+    def __repr__(self):
+        return self.__str__()
+
 
 class CodeWrapper(AbstractWrapper):
     model_class: Type[Code] = Code
@@ -317,6 +338,14 @@ class CodeWrapper(AbstractWrapper):
 
     def make_new_model(self) -> None:
         self.model: Code = self.model_class(tutorial=self.tutorial.model, code=self.code)
+
+    def __str__(self):
+        return f'<CodeWrapper\n' \
+               f'tutorial={self.tutorial}\n' \
+               f'code={self.code}>'
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class ExecResultJsonWrapper(AbstractWrapper):
@@ -338,6 +367,15 @@ class ExecResultJsonWrapper(AbstractWrapper):
 
     def make_new_model(self) -> None:
         self.model: ExecResultJson = self.model_class(code=self.code.model, graph=self.graph.model, json=self.json)
+
+    def __str__(self):
+        return f'<ExecResultWrapper\n' \
+               f'code={self.code}\n' \
+               f'graph={self.graph}\n' \
+               f'json={self.json}>'
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class TutorialTranslationContentWrapper(PublishedWrapper):
@@ -389,6 +427,19 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
         self.model.authors.set(wrapper.model for wrapper in self.authors)
         self.save_model()
 
+    def __str__(self):
+        return f'<TutorialContentWrapper\n' \
+               f'model_class={self.model_class}\n' \
+               f'model={self.model}\n' \
+               f'title={self.title}\n'\
+               f'tutorial_anchor={self.tutorial_anchor.model}\n'\
+               f'abstract={self.abstract}\n'\
+               f'content_md={self.content_md}\n'\
+               f'content_html={self.content_html}>'
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class GraphTranslationContentWrapper(PublishedWrapper):
     def __init__(self):
@@ -421,3 +472,14 @@ class GraphTranslationContentWrapper(PublishedWrapper):
         self.model: GraphTranslationBase = self.model_class(graph_anchor=self.graph_anchor,
                                                             title=self.title,
                                                             abstract=self.abstract)
+
+    def __str__(self):
+        return f'<GraphContentWrapper\n' \
+               f'model_class={self.model_class}\n' \
+               f'model={self.model}\n' \
+               f'title={self.title}\n' \
+               f'abstract={self.abstract}\n' \
+               f'graph_anchor={self.graph_anchor}>'
+
+    def __repr__(self):
+        return self.__str__()
