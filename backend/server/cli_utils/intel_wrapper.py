@@ -351,6 +351,13 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
     def set_model_class(self, model_class: Type[TranslationBase]) -> None:
         self.model_class = model_class
 
+    def set_variables(self, **kwargs) -> 'TutorialTranslationContentWrapper':
+        super().set_variables(**kwargs)
+        the_model_class = kwargs.get('model_class', None)
+        if the_model_class and issubclass(the_model_class, TranslationBase):
+            self.model_class = the_model_class
+        return self
+
     def retrieve_model(self) -> None:
         self.model: TranslationBase = self.model_class.objects.get(tutorial_anchor=self.tutorial_anchor.model)
 

@@ -112,11 +112,11 @@ def inline_radio_dialog(text: str = '',
 T = TypeVar("T")
 
 
-def interruptable_checkbox_dialog(text: str = '',
-                                  values: Sequence[Tuple[T, AnyFormattedText]] = (),
-                                  default_values: Sequence[Tuple] = (),
-                                  additional_helper_text: Sequence[str] = (),
-                                  style=None) -> List[T]:
+def run_interruptable_checkbox_dialog(text: str = '',
+                                      values: Sequence[Tuple[T, AnyFormattedText]] = (),
+                                      default_values: Sequence[Tuple] = (),
+                                      additional_helper_text: Sequence[str] = (),
+                                      style=None) -> List[T]:
     result = inline_checkbox_dialog(text=text,
                                     values=values,
                                     default_values=default_values,

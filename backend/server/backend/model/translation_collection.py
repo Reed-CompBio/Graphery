@@ -38,7 +38,7 @@ def has_translation(trans_code: str) -> bool:
     :param trans_code:
     :return:
     """
-    return trans_code in translation_tables
+    return process_trans_name(trans_code) in translation_tables
 
 
 def get_translation_table(table_name: str) -> Optional[Model]:
