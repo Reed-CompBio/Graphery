@@ -506,7 +506,7 @@ def code_executor(code_folder: pathlib.Path,
         try:
             imported_module = import_module('entry')
 
-            # TODO a better maybe?
+            # TODO a better name maybe?
             if not hasattr(imported_module, 'graph_object') or not hasattr(imported_module, 'main'):
                 raise
 
@@ -580,12 +580,18 @@ def create_code_obj() -> None:
     proceed_prompt(actions=actions)
 
 
-def parse_entry_module() -> None:
-    pass
+def get_graph_locale_jsons(parent_folder: pathlib.Path) -> Sequence[Mapping]:
+    for locale_json_file in parent_folder.glob('*.json'):
+        try:
+            file_name, lang = locale_json_file.name.split('.')
+            # oh **** it
+        except ValueError:
+            raise
 
 
-def save_to_local_json() -> None:
-    pass
+def create_graph_content_trans() -> None:
+    graph_info = get_location()
+
 
 
 class CommandWrapper:
