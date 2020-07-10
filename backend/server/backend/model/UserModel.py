@@ -10,7 +10,9 @@ from .validators import UserNameValidator
 
 # User Configurations
 class UserManager(BaseUserManager):
-    def _create_user(self, username, email, password, is_staff, is_superuser, role, **kwargs):
+    def _create_user(self, username: str, email: str,
+                     password: str, is_staff: bool,
+                     is_superuser: bool, role: int, **kwargs):
         """
         Creates and saves a User with the given username, email and password.
         """
@@ -36,9 +38,13 @@ class UserManager(BaseUserManager):
         @param kwargs:
         @return:
         """
-        is_staff = kwargs.pop('is_staff', False)
-        is_superuser = kwargs.pop('is_superuser', False)
         the_role = kwargs.pop('role', ROLES.VISITOR)
+        if the_role == ROLES.ADMINISTRATOR:
+            is_staff = True,
+            is_superuser = True
+        else:
+            is_staff = kwargs.pop('is_staff', False)
+            is_superuser = kwargs.pop('is_superuser', False)
         return self._create_user(username=username, email=email,
                                  password=password, is_staff=is_staff,
                                  is_superuser=is_superuser, role=the_role,

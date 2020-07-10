@@ -153,11 +153,13 @@ class UserWrapper(AbstractWrapper):
         self.username: Optional[str] = None
         self.email: Optional[str] = None
         self.password: Optional[str] = None
+        self.role: Optional[int] = None
 
         AbstractWrapper.__init__(self, {
             'email': dummy_validator,
             'username': dummy_validator,
             'password': dummy_validator,
+            'role': dummy_validator,
         })
 
     def load_model(self, loaded_model: User) -> 'UserWrapper':
@@ -165,6 +167,7 @@ class UserWrapper(AbstractWrapper):
         self.username = loaded_model.username
         self.email = loaded_model.email
         self.password = loaded_model.password
+        self.role = loaded_model.role
         return self
 
     def retrieve_model(self) -> None:
@@ -173,7 +176,8 @@ class UserWrapper(AbstractWrapper):
     def make_new_model(self) -> None:
         self.model = User.objects.create_user(username=self.username,
                                               email=self.email,
-                                              password=self.password)
+                                              password=self.password,
+                                              role=self.role)
 
     def __str__(self):
         return f'<UserWrapper\n' \

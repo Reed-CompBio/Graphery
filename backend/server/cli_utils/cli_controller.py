@@ -17,6 +17,7 @@ from prompt_toolkit.document import Document
 
 import markdown
 
+from backend.model.UserModel import ROLES
 from backend.model.translation_collection import translation_table_mapping, get_translation_table, \
     add_info_graph_trans_table
 from cli_utils.cli_ui import run_interruptable_checkbox_dialog, new_session, inline_radio_dialog
@@ -60,20 +61,6 @@ class CodeSourceFolderValidator(Validator):
         if not code_path.exists() or not entry_py_module.exists() or not graph_info.exists():
             raise ValidationError(message='The code resources folder does not exist or does not contain'
                                           ' an `entry.py` file and a `graph-info.json` file.')
-
-
-_code_source_folder_validator = CodeSourceFolderValidator()
-
-
-class TutorialSourceFolderValidator(Validator):
-    def validate(self, document: Document) -> None:
-        path = pathlib.Path(document.text)
-        graph_path = path / 'graphs'
-        locale_path = path / 'locale'
-        # ehhhhhh
-        _code_source_folder_validator.validate(Document(text=(path / 'codes').absolute()))
-        if not (path.exists() and graph_path.exists() and locale_path.exists()):
-            raise ValidationError(message='The tutorial source file folder structure is not right')
 
 
 class NameValidator(Validator):
@@ -128,11 +115,29 @@ class LocationValidator(Validator):
             raise ValidationError(message='Please input a valid path!')
 
 
+class UsernameValidator(Validator):
+    regex = re.compile(r'^[^0-9][\w-]{4,}[^-_]\Z')
+
+    def validate(self, document: Document) -> None:
+        if len(document.text) < 6:
+            raise ValidationError(message='Username must be at least 6 letters long')
+        if not self.regex.match(document.text):
+            raise ValidationError(message='Username only contains letters, numbers, and /-/_ characters.')
+
+
+class PasswordValidator(Validator):
+    def validate(self, document: Document) -> None:
+        # TODO write password validation
+        pass
+
+
 _path_completer = PathCompleter()
-_tutorial_source_folder_validator = TutorialSourceFolderValidator()
 _name_validator = NameValidator()
 _url_validator = UrlValidator()
 _location_validator = LocationValidator()
+_code_source_folder_validator = CodeSourceFolderValidator()
+_username_validator = UsernameValidator()
+_password_validator = PasswordValidator()
 
 
 def new_line_prompt(*args, **kwargs) -> str:
@@ -165,6 +170,16 @@ def get_url(message: str = '', validator: Validator = None, default: str = '') -
 @new_session('input abstract')
 def get_abstract(message: str = '', validator: Validator = None, default: str = '', multiline=True) -> str:
     return new_line_prompt(message=message, validator=validator, default=default, multiline=multiline)
+
+
+@new_session('input password')
+def get_password(message: str = '', validator: Validator = None):
+    return prompt(message=message, validator=validator, is_password=True)
+
+
+@new_session('input email')
+def get_email(message: str = '', validator: Validator = None):
+    return prompt(message=message, validator=validator)
 
 
 @new_session('select and add categories')
@@ -273,6 +288,19 @@ def select_graph() -> Graph:
     ).run()
 
     return graph_choices
+
+
+@new_session('select user role')
+def select_role() -> int:
+    role_selection: int = inline_radio_dialog(
+        text='Please select the role of this user',
+        values=[
+            (value, label) for value, label in ROLES.choices
+        ],
+        default_value=(ROLES.VISITOR, '')
+    ).run()
+
+    return role_selection
 
 
 def proceed_prompt(actions: Callable) -> None:
@@ -667,6 +695,46 @@ def create_graph_content_trans() -> None:
             wrapper.get_model(overwrite=True)
             wrapper.prepare_model()
             wrapper.finalize_model()
+
+    proceed_prompt(actions=actions)
+
+
+def enter_password() -> Optional[str]:
+    password = get_password(message='Please enter the password', validator=_password_validator)
+    reenter_password = get_password(message='Please reenter the password', validator=_password_validator)
+    if password == reenter_password:
+        return reenter_password
+    return None
+
+
+def create_user() -> None:
+    email: str = get_email()
+    username: str = get_name(message='Please input username:', validator=_username_validator)
+    role: int = select_role()
+    while True:
+        password: Optional[str] = enter_password()
+        if password is None:
+            print_formatted_text('The two do not match. Please reenter!')
+        else:
+            break
+
+    user_wrapper = UserWrapper().set_variables(
+        email=email,
+        username=username,
+        password=password,
+        role=role
+    )
+
+    print_formatted_text('The following user will be created/overwritten:')
+    print_formatted_text(f'username: {username}')
+    print_formatted_text(f'email: {email}')
+    print_formatted_text(f'password: {password}')
+    print_formatted_text(f'role: {role}')
+
+    def actions():
+        user_wrapper.get_model(overwrite=True)
+        user_wrapper.prepare_model()
+        user_wrapper.finalize_model()
 
     proceed_prompt(actions=actions)
 
