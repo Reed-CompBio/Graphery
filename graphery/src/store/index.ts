@@ -20,6 +20,7 @@ export default new Vuex.Store({
   state: {
     drawer: false,
     csrfToken: null,
+    loggedIn: false,
   } as BaseState,
   mutations: {
     CHANGE_DRAWER_STATE(state, value) {
@@ -32,6 +33,12 @@ export default new Vuex.Store({
   actions: {
     changeDrawerState({ commit }, value) {
       commit('CHANGE_DRAWER_STATE', value);
+    },
+    login({ commit, state }, value) {
+      if (state.loggedIn) {
+        // TODO try refresh token
+        //   if error, logout
+      }
     },
   },
 });

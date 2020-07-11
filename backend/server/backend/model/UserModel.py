@@ -98,6 +98,7 @@ class User(UUIDMixin, AbstractUser):
         'Show whether the account is verified'
     ))
     role = models.PositiveSmallIntegerField(choices=ROLES.choices, default=ROLES.VISITOR)
+    date_joined = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()
 

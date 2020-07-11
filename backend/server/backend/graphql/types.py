@@ -31,14 +31,16 @@ class PublishedFilterBase(DjangoObjectType):
 
 # TODO add fields explicitly using DjangoList, not graphene.List so that field works with get_queryset
 class UserType(DjangoObjectType):
-    role = graphene.Int(required=True)
+    role = graphene.String(required=True)
+
+    def resolve_role(self, info):
+        return ROLES(self.role).label
 
     @field_adder(uuid_mixin_field)
     class Meta:
         model = User
         fields = ('username', 'email', 'role',
-                  'is_verified', 'date_joined',
-                  )
+                  'is_verified', 'date_joined',)
         description = 'User type. Login required to get info an account. '
 
 

@@ -72,3 +72,30 @@ query {
     category
   }
 }`;
+
+export const loginMutation = `
+mutation ($username: String!, $password: String!) {
+  tokenAuth(username: $username, password: $password) {
+    user {
+      username
+      email
+      role
+    }
+  }
+}`;
+
+export const userInfoQuery = `
+query {
+  userInfo {
+    username
+    email
+    role
+  }
+}`;
+
+export const logoutMutation = `
+mutation {
+  deleteTokenCookie {
+    deleted
+  }
+}`;
