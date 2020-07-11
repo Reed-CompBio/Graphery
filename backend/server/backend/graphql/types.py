@@ -1,12 +1,13 @@
 from typing import Tuple, Any, Iterable
 
 from django.db.models import QuerySet
-from graphql import GraphQLError, ResolveInfo
+from graphql import ResolveInfo
 
+from ..model.TutorialRelatedModel import FAKE_UUID
 from ..model.UserModel import ROLES
 from ..model.filters import show_published_only
 from ..model.mixins import field_adder, time_date_mixin_field, published_mixin_field, uuid_mixin_field
-from ..model.translation_collection import add_trans_type, process_trans_name
+from ..model.translation_collection import add_trans_type
 from ..models import User
 from ..models import Category, Tutorial, Graph, Code, ExecResultJson
 from ..models import ENUS, ZHCN, ENUSGraphContent, ZHCNGraphContent
@@ -90,7 +91,7 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
         code = getattr(self, 'code', None)
         if code and (code.is_published or not is_published_only):
             return code
-        return Code(id='00000000-0000-0000-0000-000000000000', code='# Empty \n', tutorial=Tutorial())
+        return Code(id=FAKE_UUID, code='# Empty \n', tutorial=Tutorial())
 
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:

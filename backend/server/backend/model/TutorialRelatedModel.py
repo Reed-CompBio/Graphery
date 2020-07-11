@@ -1,10 +1,14 @@
+from typing import Type, Callable
+
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from graphql import GraphQLError
 
 from .UserModel import User
 from .mixins import PublishedMixin, TimeDateMixin, UUIDMixin
 from .translation_collection import process_trans_name, process_graph_info_trans_name
+
+
+FAKE_UUID = '00000000-0000-0000-0000-000000000000'
 
 
 class Category(PublishedMixin, UUIDMixin, models.Model):
@@ -25,6 +29,15 @@ class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
     name = models.CharField(max_length=100, unique=True, blank=False, null=False)
     categories = models.ManyToManyField(Category, default='uncategorized')
 
+    dummy_content_gen: Callable[[], models.Model] = None
+
+    @classmethod
+    def default_dummy_content(cls) -> models.Model:
+        if cls.dummy_content_gen is None:
+            from .TranslationModels import make_dummy_tutorial_content
+            cls.dummy_content_gen = make_dummy_tutorial_content
+        return cls.dummy_content_gen()
+
     def get_translation(self, translation: str, default: str, is_published_only: bool = True):
         content = getattr(self,
                           process_trans_name(translation),
@@ -34,8 +47,7 @@ class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
                 return content
         # TODO this is not dry enough
 
-        raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
-                           f'{f"No results come from {default} translation either" if default else ""}')
+        return Tutorial.default_dummy_content()
 
     def __str__(self):
         return f'<tutorial {self.url} | {self.name}>'
@@ -58,6 +70,15 @@ class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
     # belongs to
     tutorials = models.ManyToManyField(Tutorial)
 
+    dummy_content_model: Type[models.Model] = None
+
+    @classmethod
+    def default_dummy_content(cls) -> Type[models.Model]:
+        if cls.dummy_content_model is None:
+            from .TranslationModels import ENUSGraphContent
+            cls.dummy_content_model = ENUSGraphContent
+        return cls.dummy_content_model
+
     def get_translation(self, translation: str, default: str, is_published_only: bool = True):
         content = getattr(self,
                           process_graph_info_trans_name(translation),
@@ -66,8 +87,7 @@ class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
             if content.is_published or not is_published_only:
                 return content
 
-        raise GraphQLError(f'This tutorial does not provide {translation} translation for now. ' +
-                           f'{f"No results come from {default} translation either" if default else ""}')
+        return Graph.default_dummy_content()
 
     def __str__(self):
         return f'<graph {self.url} | {self.name} | {GraphPriority(self.priority).label}>'
