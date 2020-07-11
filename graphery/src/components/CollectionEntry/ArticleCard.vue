@@ -17,6 +17,9 @@
             </q-chip>
           </div>
           <div>
+            <q-chip v-if="noContentNoClick" icon="link">
+              {{ url }}
+            </q-chip>
             <q-chip
               clickable
               v-for="author in authors"
@@ -46,7 +49,9 @@
           </p>
         </section>
         <q-card-actions>
-          <q-btn :to="`/tutorial/${url}`"> Read More </q-btn>
+          <q-btn :to="`/tutorial/${url}`" :disable="noContentNoClick">
+            Read More
+          </q-btn>
         </q-card-actions>
       </q-card>
     </q-intersection>
@@ -55,6 +60,7 @@
 
 <script>
   import { toLocalDateString } from '../../services/helpers';
+  const noContentTitle = '<None>';
 
   export default {
     props: [
@@ -69,6 +75,11 @@
     ],
     methods: {
       toLocalDateString,
+    },
+    computed: {
+      noContentNoClick() {
+        return this.title === noContentTitle;
+      },
     },
   };
 </script>
