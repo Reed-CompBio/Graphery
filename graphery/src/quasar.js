@@ -20,8 +20,6 @@ import {
   QItemLabel,
   // My extensions
   QBar,
-  // QBreadcrumbs,
-  // QBreadcrumbsEl,
   QIntersection,
   QCard,
   QCardSection,
@@ -38,10 +36,6 @@ import {
   QSelect,
   QInnerLoading,
   QSpinnerPie,
-  // QTabs,
-  // QTab,
-  // QTabPanels,
-  // QTabPanel,
   QPageSticky,
   QCircularProgress,
   QImg,
@@ -56,10 +50,10 @@ import {
   QVirtualScroll,
   QFab,
   QFabAction,
+  QAjaxBar,
   // My plugins
   Notify,
   // My directive
-  // TouchPan,
   ClosePopup,
 } from 'quasar';
 
@@ -81,8 +75,6 @@ Vue.use(Quasar, {
     QItemLabel,
     // my addons
     QBar,
-    // QBreadcrumbs,
-    // QBreadcrumbsEl,
     QIntersection,
     QCard,
     QCardSection,
@@ -99,10 +91,6 @@ Vue.use(Quasar, {
     QSelect,
     QInnerLoading,
     QSpinnerPie,
-    // QTabs,
-    // QTab,
-    // QTabPanels,
-    // QTabPanel,
     QPageSticky,
     QCircularProgress,
     QImg,
@@ -117,6 +105,7 @@ Vue.use(Quasar, {
     QVirtualScroll,
     QFab,
     QFabAction,
+    QAjaxBar,
   },
   directives: { ClosePopup },
   plugins: { Notify },
