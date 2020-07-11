@@ -44,10 +44,10 @@
               </div>
               <div
                 id="login-actions"
-                style="display: flex; flex-direction: row-reverse;"
-                class="q-my-lg"
+                style="display: flex; flex-direction: row-reverse; flex-wrap: wrap;"
+                class="q-my-md"
               >
-                <div class="q-mx-sm">
+                <div class="q-ma-sm">
                   <q-btn
                     :label="$t('account.Login')"
                     type="submit"
@@ -55,7 +55,7 @@
                     :disable="loading"
                   ></q-btn>
                 </div>
-                <div class="q-mx-sm">
+                <div class="q-ma-sm">
                   <q-btn :label="$t('account.Register')" disable></q-btn>
                 </div>
               </div>

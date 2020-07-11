@@ -2,14 +2,23 @@
   <div class="q-pa-xs">
     <q-card>
       <q-card-section>
-        <UserInfoItem title="Username" :content="username"></UserInfoItem>
-        <UserInfoItem title="Email" :content="userEmail"></UserInfoItem>
-        <UserInfoItem title="Role" :content="userRole"></UserInfoItem>
+        <UserInfoItem
+          :title="$t('account.Username')"
+          :content="username"
+        ></UserInfoItem>
+        <UserInfoItem
+          :title="$t('account.Email')"
+          :content="userEmail"
+        ></UserInfoItem>
+        <UserInfoItem
+          :title="$t('account.Role')"
+          :content="userRole"
+        ></UserInfoItem>
       </q-card-section>
       <q-card-actions align="center">
-        <q-btn label="Admin Page" v-if="isAdmin" />
-        <q-btn label="Home" :to="{ name: 'Home' }" />
-        <q-btn label="Log Out" @click="$emit('logout')" />
+        <q-btn :label="$t('account.AdminPage')" v-if="isAdmin" />
+        <q-btn :label="$t('nav.Home')" :to="{ name: 'Home' }" />
+        <q-btn :label="$t('account.LogOut')" @click="$emit('logout')" />
       </q-card-actions>
     </q-card>
   </div>

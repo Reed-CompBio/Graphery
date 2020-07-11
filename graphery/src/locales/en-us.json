@@ -59,9 +59,13 @@
   },
   "account": {
     "Username": "Username",
+    "Email": "Email",
     "Password": "Password",
+    "Role": "Role",
     "Login": "Login",
+    "LogOut": "Log out",
     "Register": "Register",
+    "AdminPage": "Admin Page",
     "noNewAccount": "We don't accept new accounts for now.",
     "notEmpty": "It cannot be empty"
   }
