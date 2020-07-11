@@ -225,6 +225,11 @@
           appendTo: document.body, // or append dummyDomEle to document.body
         });
       },
+      closeTippy() {
+        if (this.tippy !== null) {
+          this.tippy.hide();
+        }
+      },
       setupTooltips(instance) {
         // show node tooltips
         instance.on('mouseover', 'node', (event) => {
@@ -233,9 +238,7 @@
           this.tippy.show();
         });
         instance.on('mouseout', 'node', (_) => {
-          if (this.tippy !== null) {
-            this.tippy.hide();
-          }
+          this.closeTippy();
         });
 
         // show edge tooltips
@@ -246,9 +249,7 @@
         });
 
         instance.on('mouseout', 'edge', (_) => {
-          if (this.tippy !== null) {
-            this.tippy.hide();
-          }
+          this.closeTippy();
         });
       },
       reloadCyWithFullJson(json) {
@@ -290,6 +291,7 @@
         }
       },
       reloadGraph() {
+        this.cyInstance.style().resetToDefault();
         this.reloadCyWithFullJson(this.currentGraphJsonObj);
         this.updateLayout();
       },
@@ -432,6 +434,9 @@
           // TODO load up popup
           console.error('error occur', error);
         });
+    },
+    beforeDestroy() {
+      this.closeTippy();
     },
   };
 </script>

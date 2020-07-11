@@ -99,7 +99,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# CSRF_COOKIE_SAMESITE = 'strict'
+CSRF_COOKIE_SAMESITE = 'strict'
 
 # GraphQL settings
 GRAPHENE = {
