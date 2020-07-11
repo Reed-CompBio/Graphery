@@ -160,5 +160,4 @@ export interface SettingState extends SettingInfos {
 export interface BaseState {
   drawer: boolean;
   csrfToken: string | null;
-  loggedIn: boolean;
 }

@@ -56,5 +56,13 @@
   "license": {
     "licenseInfo1": "所有文章在没有特殊说明的情况下都遵循",
     "licenseInfo2": "署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)"
+  },
+  "account": {
+    "Username": "用户名",
+    "Password": "密码",
+    "Login": "登陆",
+    "Register": "注册",
+    "noNewAccount": "我们暂时不支持注册新用户",
+    "notEmpty": "它不能为空"
   }
 }

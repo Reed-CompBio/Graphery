@@ -56,5 +56,13 @@
   "license": {
     "licenseInfo1": "All the articles without special specification are licensed under a",
     "licenseInfo2": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License"
+  },
+  "account": {
+    "Username": "Username",
+    "Password": "Password",
+    "Login": "Login",
+    "Register": "Register",
+    "noNewAccount": "We don't accept new accounts for now.",
+    "notEmpty": "It cannot be empty"
   }
 }

@@ -14,9 +14,10 @@
                 <q-input
                   outlined
                   v-model="account"
-                  label="Username"
+                  :label="$t('account.Username')"
                   type="text"
-                  :rules="[account || 'it cannot be empty']"
+                  :rules="[(val) => val || $t('account.notEmpty')]"
+                  :lazy-rules="true"
                   :loading="loading"
                   :disable="loading"
                 />
@@ -25,9 +26,10 @@
                 <q-input
                   outlined
                   v-model="password"
-                  label="Password"
+                  :label="$t('account.Password')"
                   :type="showPwd ? 'text' : 'password'"
-                  :rules="[Boolean(password) || 'it cannot be empty']"
+                  :rules="[(val) => val || $t('account.notEmpty')]"
+                  :lazy-rules="true"
                   :loading="loading"
                   :disable="loading"
                 >
@@ -47,14 +49,14 @@
               >
                 <div class="q-mx-sm">
                   <q-btn
-                    label="Login"
+                    :label="$t('account.Login')"
                     type="submit"
                     :loading="loading"
                     :disable="loading"
                   ></q-btn>
                 </div>
                 <div class="q-mx-sm">
-                  <q-btn label="Register" disable></q-btn>
+                  <q-btn :label="$t('account.Register')" disable></q-btn>
                 </div>
               </div>
             </q-form>
@@ -65,7 +67,7 @@
             <q-card>
               <q-card-section>
                 <!-- TODO database pull -->
-                <p style="margin: 0;">We don't accept new accounts for now.</p>
+                <p style="margin: 0;">{{ $t('account.noNewAccount') }}</p>
               </q-card-section>
             </q-card>
           </div>
@@ -128,6 +130,7 @@
             if (data) {
               this.userObj = data['tokenAuth']['user'];
               this.loading = false;
+              this.resetForm();
             }
           })
           .catch((err) => {
@@ -163,11 +166,7 @@
     mounted() {
       apiCaller(userInfoQuery)
         .then(([data, errors]) => {
-          if (errors) {
-            console.error(errors);
-          }
-
-          if (data) {
+          if (!errors && data) {
             this.userObj = data['userInfo'];
           }
 
