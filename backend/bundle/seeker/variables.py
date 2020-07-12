@@ -1,5 +1,6 @@
 import itertools
 import abc
+import logging
 from types import FrameType
 from typing import Tuple, List, Any
 
@@ -89,8 +90,11 @@ class CommonVariable(BaseVariable):
                 if key in self.exclude:
                     continue
                 value = self._get_value(main_value, key)
-            except Exception:
-                continue
+            except Exception as e:
+                value = None
+                logging.error(f'Unknown exception occurs during evaluating _values of '
+                                f'key={key}, main_value={main_value}. '
+                                f'Errors: {e}')
             result.append(('{}{}'.format(self.unambiguous_source, self._format_key(key)), value))
         return result
 
@@ -98,8 +102,9 @@ class CommonVariable(BaseVariable):
         try:
             for key in self._keys(main_value):
                 yield key
-        except Exception:
-            pass
+        except Exception as e:
+            logging.error(f'Unknown exception occurs during acquiring _safe_keys. '
+                            f'Errors: {e}')
 
     def _keys(self, main_value):
         return ()
@@ -153,7 +158,8 @@ class Indices(Keys):
         return range(len(main_value))[self._slice]
 
     def __getitem__(self, item):
-        assert isinstance(item, slice)
+        if not isinstance(item, slice):
+            raise AssertionError(f'item {item} must be a slice instance')
         result = deepcopy(self)
         result._slice = item
         return result

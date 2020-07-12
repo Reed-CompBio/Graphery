@@ -6,11 +6,10 @@ import json
 from importlib import import_module
 from typing import Union, Mapping, Callable, List
 from wsgiref.simple_server import make_server
-import hashlib
 from multiprocessing import Pool, TimeoutError
 
 from GraphObjects.Graph import Graph
-from utils.cache_file_helpers import TempSysPathAdder
+from utils.cache_file_helpers import TempSysPathAdder, get_md5_of_a_string
 from controller import controller
 
 
@@ -63,7 +62,7 @@ def main(port: int):
 
 
 def get_folder_name(content: str) -> str:
-    return hashlib.md5(content.encode()).hexdigest()
+    return get_md5_of_a_string(content)
 
 
 def execute(code: str, graph_json: Union[str, Mapping]) -> List[Mapping]:

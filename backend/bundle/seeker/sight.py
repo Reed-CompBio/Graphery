@@ -10,6 +10,7 @@ import datetime as datetime_module
 import itertools
 import threading
 import traceback
+import logging
 from copy import copy
 from types import FrameType, FunctionType
 from typing import Iterable, Tuple, Any, Mapping, Optional, List, Callable, Union
@@ -45,7 +46,7 @@ def get_local_values(frame: FrameType,
 
     for variable in watch:
         result.update((key, (value, utils.get_shortish_repr(value, custom_repr, max_length)))
-                       for key, value in sorted(variable.values(frame)))
+                      for key, value in sorted(variable.values(frame)))
 
     return result
 
@@ -80,21 +81,13 @@ def get_path_and_source_from_frame(frame):
     if source is None:
         ipython_filename_match = ipython_filename_pattern.match(file_name)
         if ipython_filename_match:
-            entry_number = int(ipython_filename_match.group(1))
-            try:
-                import IPython
-                ipython_shell = IPython.get_ipython()
-                ((_, _, source_chunk),) = ipython_shell.history_manager. \
-                    get_range(0, entry_number, entry_number + 1)
-                source = source_chunk.splitlines()
-            except Exception:
-                pass
+            raise ValueError('Ipython is not supported yet.')
         else:
             try:
                 with open(file_name, 'rb') as fp:
                     source = fp.read().splitlines()
-            except utils.file_reading_errors:
-                pass
+            except utils.file_reading_errors as e:
+                logging.warning(f'Cannot Read Files And Determine Source. Error: {e}')
     if not source:
         # We used to check `if source is None` but I found a rare bug where it
         # was empty, but not `None`, so now we check `if not source`.
@@ -163,7 +156,6 @@ DISABLED = bool(os.getenv('SEEKER_DISABLED', ''))
 
 
 class Tracer:
-
     _recorder: Recorder = None
     _log_file_name: Optional[pathlib.Path] = None
     _log_file_dir: Optional[str] = None
@@ -255,11 +247,13 @@ class Tracer:
         @param func: wrapped function
         @return: wrapper function
         """
+
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             # cls._recorder.add_ac_to_last_record('get value %s' % result)
             cls._recorder.add_ac_to_last_record(result)
             return result
+
         return wrapper
 
     def _wrap_class(self, cls):
@@ -335,7 +329,7 @@ class Tracer:
         self.target_frames.discard(calling_frame)
         self.frame_to_local_reprs.pop(calling_frame, None)
 
-        ### Writing elapsed time: #############################################
+        # Writing elapsed time: ###############################################
         #                                                                     #
         start_time = self.start_times.pop(calling_frame)
         duration = datetime_module.datetime.now() - start_time
@@ -345,9 +339,10 @@ class Tracer:
             '{indent}Elapsed time: {elapsed_time_string}'.format(**locals())
         )
         #                                                                     #
-        ### Finished writing elapsed time. ####################################
+        # Finished writing elapsed time. ######################################
 
-    def _is_internal_frame(self, frame):
+    @staticmethod
+    def _is_internal_frame(frame):
         return frame.f_code.co_filename == Tracer.__enter__.__code__.co_filename
 
     def set_thread_info_padding(self, thread_info):
@@ -358,7 +353,7 @@ class Tracer:
 
     def trace(self, frame, event, arg):
 
-        ### Checking whether we should trace this line: #######################
+        # Checking whether we should trace this line: #########################
         #                                                                     #
         # We should trace this line either if it's in the decorated function,
         # or the user asked to go a few levels deeper and we're within that
@@ -389,7 +384,7 @@ class Tracer:
         indent = ' ' * 4 * thread_global.depth
 
         #                                                                     #
-        ### Finished checking whether we should trace this line. ##############
+        # Finished checking whether we should trace this line. ################
 
         # simplified time stamp
         timestamp = ' ' * 16
@@ -409,7 +404,7 @@ class Tracer:
                 ident=current_thread.ident, name=current_thread.getName())
         thread_info = self.set_thread_info_padding(thread_info)
 
-        ### Dealing with misplaced function definition: #######################
+        # Dealing with misplaced function definition: #########################
         #                                                                     #
         if event == 'call' and source_line.lstrip().startswith('@'):
             # If a function decorator is found, skip lines until an actual
@@ -428,12 +423,12 @@ class Tracer:
                     source_line = candidate_source_line
                     break
         #                                                                     #
-        ### Finished dealing with misplaced function definition. ##############
+        # Finished dealing with misplaced function definition. ################
 
         if event != 'return':
             self.recorder.add_record(line_no)
 
-        ### Reporting newish and modified variables: ##########################
+        # Reporting newish and modified variables: ############################
         #                                                                     #
 
         old_local_reprs = self.frame_to_local_reprs.get(frame, {})
@@ -466,7 +461,7 @@ class Tracer:
                     **locals()))
 
         #                                                                     #
-        ### Finished newish and modified variables. ###########################
+        # Finished newish and modified variables. #############################
 
         # If a call ends due to an exception, we still get a 'return' event
         # with arg = None. This seems to be the only way to tell the difference
