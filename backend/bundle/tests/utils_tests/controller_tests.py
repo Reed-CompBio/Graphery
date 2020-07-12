@@ -21,6 +21,8 @@ def test_dump_result(zip_file_dir, unzip_dir):
         load_zip_file(zip_file_path, cache_folder.cache_folder_path)
         assert verify_unloaded_files(cache_folder.cache_folder_path)
 
+        controller.purge_records()
+
         imported_module = import_module('entry')
 
         graphery_functions = [getattr(imported_module, attr_name)
@@ -38,6 +40,8 @@ def test_dump_result(zip_file_dir, unzip_dir):
 
         del sys.modules['entry']
         del imported_module
+
+        controller.generate_processed_record()
 
     print(controller.processor.result)
     print(controller.processor.result_json)

@@ -1,19 +1,24 @@
 #!/usr/bin/env python3
-
+import argparse
+import pathlib
 import sys
-import os
 import json
-import subprocess
-import tempfile
-from urllib import parse
+from importlib import import_module
+from typing import Union, Mapping, Callable, List
 from wsgiref.simple_server import make_server
+import hashlib
+from multiprocessing import Pool, TimeoutError
+
+from GraphObjects.Graph import Graph
+from utils.cache_file_helpers import TempSysPathAdder
+from controller import controller
 
 
 def valid_version():
     v = sys.version_info
-    if v.major == 3 and v.minor >= 4:
+    if v.major == 3 and v.minor >= 8:
         return True
-    print('Your current python is %d.%d. Please use Python 3.4.' % (v.major, v.minor))
+    print('Your current python is %d.%d. Please use Python 3.8.' % (v.major, v.minor))
     return False
 
 
@@ -21,92 +26,146 @@ if not valid_version():
     exit(1)
 
 
-EXEC = sys.executable
-PORT = 39093
-HOST = 'localhost:%d' % PORT
-# TODO 牛逼！
-TEMP = tempfile.mkdtemp(suffix='_py', prefix='learn_python_')
-INDEX = 0
+class ExecutionException(Exception):
+    pass
 
 
-def main():
-    httpd = make_server('127.0.0.1', PORT, application)
-    print('Ready for Python code on port %d...' % PORT)
+DEFAULT_PORT: int = 7590
+ONLY_ACCEPTED_ORIGIN: bool = False
+ACCEPTED_ORIGIN: str = ''
+TIMEOUT_SECONDS: int = 10
+
+ENTRY_PY_MODULE_NAME: str = 'entry'
+ENTRY_PY_FILE_NAME: str = f'{ENTRY_PY_MODULE_NAME}.py'
+MAIN_FUNCTION_NAME: str = 'main'
+GRAPH_OBJ_ANCHOR_NAME: str = 'graph_object'
+
+REQUEST_CODE_NAME: str = 'code'
+REQUEST_GRAPH_NAME: str = 'graph'
+
+
+def arg_parser() -> Mapping[str, int]:
+    parser = argparse.ArgumentParser(description='Graphery Local Server')
+    parser.add_argument('-p', '--port',
+                        default=DEFAULT_PORT,
+                        type=int,
+                        help='The port the local server will run on')
+
+    args: argparse.Namespace = parser.parse_args()
+    return vars(args)
+
+
+def main(port: int):
+    httpd = make_server('127.0.0.1', port, application)
+    print('Press <ctrl+c> to stop the server. ')
+    print(f'Ready for Python code on port {port} ...')
     httpd.serve_forever()
 
 
-def get_name():
-    global INDEX
-    INDEX = INDEX + 1
-    return 'test_%d' % INDEX
+def get_folder_name(content: str) -> str:
+    return hashlib.md5(content.encode()).hexdigest()
 
 
-def write_py(name, code):
-    fpath = os.path.join(TEMP, '%s.py' % name)
-    with open(fpath, 'w', encoding='utf-8') as f:
-        f.write(code)
-    print('Code wrote to: %s' % fpath)
-    return fpath
+def execute(code: str, graph_json: Union[str, Mapping]) -> List[Mapping]:
+    folder_hash = get_folder_name(code)
+
+    graph_json_obj = json.loads(graph_json) if isinstance(graph_json, str) else graph_json
+
+    graph_object = Graph.graph_generator(graph_json_obj)
+
+    with controller as folder_creator, \
+            folder_creator(folder_hash) as cache_folder, \
+            TempSysPathAdder(cache_folder):
+        entry_file: pathlib.Path = cache_folder / ENTRY_PY_FILE_NAME
+
+        if not entry_file.exists():
+            entry_file.touch()
+            entry_file.write_text(code)
+
+        try:
+            imported_module = import_module(ENTRY_PY_MODULE_NAME)
+
+            main_function = getattr(imported_module, MAIN_FUNCTION_NAME, None)
+
+            if not main_function or not isinstance(main_function, Callable):
+                raise ValueError('There is not main function or it is not valid')
+
+            if not hasattr(imported_module, GRAPH_OBJ_ANCHOR_NAME):
+                raise ValueError('There is not graph object, which violates the naming convention')
+
+            setattr(imported_module, GRAPH_OBJ_ANCHOR_NAME, graph_object)
+
+            controller.purge_records()
+            main_function()
+            controller.generate_processed_record()
+        except Exception as e:
+            raise ExecutionException(e)
+        finally:
+            del sys.modules[ENTRY_PY_MODULE_NAME]
+            del imported_module
+
+    return controller.get_processed_result()
 
 
-def decode(s):
-    try:
-        return s.decode('utf-8')
-    except UnicodeDecodeError:
-        # TODO utf-8 should be the only valid encoding. Pass error to the frontend when
-        #  the encoding error is encountered
-        return s.decode('gbk')
+def time_out_execute(*args, **kwargs):
+    response_dict = {}
+    with Pool(processes=1) as pool:
+        result = pool.apply_async(func=execute, args=args, kwds=kwargs)
+        try:
+            response_dict['data'] = result.get(timeout=TIMEOUT_SECONDS)
+        except TimeoutError:
+            response_dict['errors'] = dict(type='Timeout', message=f'Code running timed out after {TIMEOUT_SECONDS} s.')
+        except ExecutionException as e:
+            response_dict['errors'] = dict(type='Exception', message=str(e))
+        except Exception as e:
+            response_dict['errors'] = dict(type='Unknown Exception', message=str(e))
+
+        print('Execution done.')
+    return response_dict
 
 
 def application(environ, start_response):
-    host = environ.get('HTTP_HOST')
     method = environ.get('REQUEST_METHOD')
     path = environ.get('PATH_INFO')
-    if method == 'GET' and path == '/':
-        start_response('200 OK', [('Content-Type', 'text/html')])
-        return [
-            b'<html><head><title>Learning Python</title></head><body><form method="post" action="/run"><textarea name="code" style="width:90%;height: 600px"></textarea><p><button type="submit">Run</button></p></form></body></html>']
+
+    # info page
     if method == 'GET' and path == '/env':
         start_response('200 OK', [('Content-Type', 'text/html')])
-        L = [b'<html><head><title>ENV</title></head><body>']
+        rep = [b'<html><head><title>ENV</title></head><body>']
         for k, v in environ.items():
             p = '<p>%s = %s' % (k, str(v))
-            L.append(p.encode('utf-8'))
-        L.append(b'</html>')
-        return L
-    if host != HOST or method != 'POST' or path != '/run' or not environ.get('CONTENT_TYPE', '').lower().startswith(
-            'application/x-www-form-urlencoded'):
+            rep.append(p.encode('utf-8'))
+        rep.append(b'</html>')
+        return rep
+
+    # entry point check
+    if method != 'POST' or path != '/run':
         start_response('400 Bad Request', [('Content-Type', 'application/json')])
         return [b'{"error":"bad_request","res":"wrong_method"}']
-    s = environ['wsgi.input'].read(int(environ['CONTENT_LENGTH']))
-    qs = parse.parse_qs(s.decode('utf-8'))
-    if not 'code' in qs:
-        start_response('400 Bad Request', [('Content-Type', 'application/json')])
-        return [b'{"error":"invalid_params","res":"no_code_embedded"}']
-    name = qs['name'][0] if 'name' in qs else get_name()
-    code = qs['code'][0]
+
+    # origin check
     headers = [('Content-Type', 'application/json')]
     origin = environ.get('HTTP_ORIGIN', '')
-    # if origin.find('.liaoxuefeng.com') == -1:
-    # start_response('400 Bad Request', [('Content-Type', 'application/json')])
-    # return [b'{"error":"invalid_origin"}']
+    if ONLY_ACCEPTED_ORIGIN and origin.find(ACCEPTED_ORIGIN) == -1:
+        start_response('400 Bad Request', [('Content-Type', 'application/json')])
+        return [b'{"error":"invalid_origin"}']
+
+    # get request content
+    request_body = environ['wsgi.input'].read(int(environ['CONTENT_LENGTH']))
+    request_json_object = json.loads(request_body)
+    if REQUEST_CODE_NAME not in request_json_object or REQUEST_GRAPH_NAME not in request_json_object:
+        start_response('400 Bad Request', [('Content-Type', 'application/json')])
+        return [b'{"error":"invalid_params","res":"no_code_embedded"}']
+
     headers.append(('Access-Control-Allow-Origin', origin))
     start_response('200 OK', headers)
-    r = dict()
-    try:
-        fpath = write_py(name, code)
-        print('Execute: %s %s' % (EXEC, fpath))
-        r['output'] = decode(subprocess.check_output([EXEC, fpath], stderr=subprocess.STDOUT, timeout=5))
-    except subprocess.CalledProcessError as e:
-        r = dict(error='Exception', output=decode(e.output))
-    except subprocess.TimeoutExpired as e:
-        r = dict(error='Timeout', output='执行超时')
-    except subprocess.CalledProcessError as e:
-        r = dict(error='Error', output='执行错误')
-    print('Execute done.')
-    return [json.dumps(r).encode('utf-8')]
+
+    # execute program with timed out
+    result_dict = time_out_execute(code=request_json_object[REQUEST_CODE_NAME],
+                                   graph_json=request_json_object[REQUEST_GRAPH_NAME])
+
+    return [json.dumps(result_dict).encode('utf-8')]
 
 
 if __name__ == '__main__':
-    main()
-
+    main(arg_parser()['port'])
