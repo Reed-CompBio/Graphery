@@ -128,7 +128,7 @@
             }
 
             if (data) {
-              this.userObj = data['tokenAuth']['user'];
+              this.userObj = data['login']['user'];
               this.loading = false;
               this.resetForm();
             }
@@ -145,7 +145,7 @@
               console.error(errors);
             }
 
-            if (data && data['deleteTokenCookie']['deleted']) {
+            if (data && data['logout']['success']) {
               this.userObj = null;
             } else {
               throw Error('Cannot logout at this time');

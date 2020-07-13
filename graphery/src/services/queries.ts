@@ -75,7 +75,8 @@ query {
 
 export const loginMutation = `
 mutation ($username: String!, $password: String!) {
-  tokenAuth(username: $username, password: $password) {
+  login(username: $username, password: $password) {
+    success
     user {
       username
       email
@@ -95,7 +96,7 @@ query {
 
 export const logoutMutation = `
 mutation {
-  deleteTokenCookie {
-    deleted
+  logout {
+    success
   }
 }`;

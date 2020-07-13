@@ -33,4 +33,4 @@ DATABASES = {
 #       rawSql
 #     }
 #   }
-GRAPHENE.get('MIDDLEWARE').append('graphene_django.debug.DjangoDebugMiddleware')
+GRAPHENE.get('MIDDLEWARE', []).append('graphene_django.debug.DjangoDebugMiddleware')

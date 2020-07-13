@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
-from datetime import timedelta
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -93,9 +91,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# JWT settings
 AUTHENTICATION_BACKENDS = [
-    'graphql_jwt.backends.JSONWebTokenBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -104,17 +100,6 @@ CSRF_COOKIE_SAMESITE = 'strict'
 # GraphQL settings
 GRAPHENE = {
     'SCHEMA': 'graphery.schema.schema',
-    'MIDDLEWARE': [
-        'graphql_jwt.middleware.JSONWebTokenMiddleware',
-    ],
-}
-
-# graphql jwt settings
-GRAPHQL_JWT = {
-    'JWT_VERIFY_EXPIRATION': True,
-    'JWT_EXPIRATION_DELTA': timedelta(days=7),
-    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
-    'JWT_HIDE_TOKEN_FIELDS': True,
 }
 
 

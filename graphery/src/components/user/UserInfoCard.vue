@@ -16,6 +16,7 @@
         ></UserInfoItem>
       </q-card-section>
       <q-card-actions align="center">
+        <!-- TODO add a link to admin page -->
         <q-btn :label="$t('account.AdminPage')" v-if="isAdmin" />
         <q-btn :label="$t('nav.Home')" :to="{ name: 'Home' }" />
         <q-btn :label="$t('account.LogOut')" @click="$emit('logout')" />
