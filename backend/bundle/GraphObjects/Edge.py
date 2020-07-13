@@ -114,7 +114,7 @@ class EdgeSet(ElementSet):
         """
         stored_edges = []
         for edge in edges:
-            if not (isinstance(edge, Mapping) and 'data' in edge and 'id' in edge['data']):
+            if not (isinstance(edge, Mapping) and 'data' in edge):
                 raise GraphJsonFormatError(f'invalid format for Edge {edge}')
 
             data_field = edge['data']

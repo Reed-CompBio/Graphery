@@ -8,9 +8,9 @@ from typing import Union, Mapping, Callable, List
 from wsgiref.simple_server import make_server
 from multiprocessing import Pool, TimeoutError
 
-from GraphObjects.Graph import Graph
-from utils.cache_file_helpers import TempSysPathAdder, get_md5_of_a_string
-from controller import controller
+from bundle.GraphObjects.Graph import Graph
+from bundle.utils.cache_file_helpers import TempSysPathAdder, get_md5_of_a_string
+from bundle.controller import controller
 
 
 def valid_version():
@@ -167,4 +167,11 @@ def application(environ, start_response):
 
 
 if __name__ == '__main__':
-    main(arg_parser()['port'])
+    try:
+        main(arg_parser()['port'])
+    except KeyboardInterrupt:
+        print('Interrupted by keyboard.')
+    except Exception as e:
+        print(f'Exception occurred. Error: {e}')
+    finally:
+        print('Stopped the server.')

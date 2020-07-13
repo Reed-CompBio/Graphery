@@ -38,7 +38,7 @@ class NodeSet(ElementSet):
     def generate_node_set(nodes: Iterable[Mapping]) -> 'NodeSet':
         stored_nodes = []
         for node in nodes:
-            if not (isinstance(node, Mapping) and 'data' in node and 'id' in node['data']):
+            if not (isinstance(node, Mapping) and 'data' in node):
                 raise GraphJsonFormatError(f'invalid format for Node {node}')
 
             data_field = node['data']

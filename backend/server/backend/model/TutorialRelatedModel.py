@@ -1,4 +1,4 @@
-from typing import Type, Callable, Optional
+from typing import Callable, Optional
 
 from django.contrib.postgres.fields import JSONField
 from django.db import models

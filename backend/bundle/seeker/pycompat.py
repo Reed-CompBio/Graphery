@@ -58,11 +58,6 @@ if PY3:
 else:
     raise EnvironmentError('You must use python3')
 
-try:
-    from collections import abc as collections_abc
-except ImportError:  # Python 2.7
-    raise EnvironmentError('Cannot import abc from collection. You must use python3.')
-
 if sys.version_info[:2] >= (3, 6):
     time_isoformat = datetime_module.time.isoformat
 else:
