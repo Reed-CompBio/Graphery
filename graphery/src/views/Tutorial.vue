@@ -49,6 +49,7 @@
               :isPublished="isGraphPublished"
               :abstract="graphAbstract"
             ></GraphInfo>
+            <HowToHelper v-show="currentTab === 'how-to'"></HowToHelper>
             <!-- page sticky -->
             <q-page-sticky
               v-if="$q.screen.gt.xs"
@@ -141,6 +142,7 @@
         import('@/components/tutorial/TutorialArticle.vue'),
       EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
       GraphInfo: () => import('@/components/tutorial/GraphInfo.vue'),
+      HowToHelper: () => import('@/components/tutorial/HowToHelper.vue'),
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
     },
     data() {
