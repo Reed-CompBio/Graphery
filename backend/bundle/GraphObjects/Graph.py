@@ -1,5 +1,6 @@
 import logging
 
+from .Errors import GraphJsonFormatError
 from .Node import Node, NodeSet
 from .Edge import Edge, EdgeSet
 import json
@@ -10,9 +11,10 @@ class Graph:
     """
     The graph object
     """
+
     def __init__(self, nodes: Iterable[Node],
-                       edges: Iterable[Edge],
-                       prefix: bool = False):
+                 edges: Iterable[Edge],
+                 prefix: bool = False):
         """
         graph constructor.
         @param nodes:
@@ -120,16 +122,15 @@ class Graph:
             try:
                 graph_dict = json.loads(graph_json)
                 # TODO do not support json5
-            except TypeError:
-                raise
+            except TypeError as e:
+                raise GraphJsonFormatError(e)
             except json.JSONDecodeError as e:
-                logging.exception(e)
-                raise ValueError('Please check the json format. '
-                                          'The other json format is not supported for now')
+                raise GraphJsonFormatError('Please check the json format. '
+                                           'The other json format is not supported for now')
         elif isinstance(graph_json, Mapping):
             graph_dict = graph_json
         else:
-            raise
+            raise GraphJsonFormatError('The graph json must be a json string or a json object')
 
         if 'elements' in graph_dict:
             element_dict = graph_dict['elements']
@@ -143,4 +144,4 @@ class Graph:
 
                 return Graph(parsed_node_set, parsed_edge_set)
         else:
-            raise ValueError('malformed json file')
+            raise GraphJsonFormatError('malformed json file')

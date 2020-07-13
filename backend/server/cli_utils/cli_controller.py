@@ -481,10 +481,13 @@ def code_executor(code_folder: pathlib.Path,
             imported_module = import_module('entry')
 
             # TODO a better name maybe?
-            if not hasattr(imported_module, 'graph_object') or not hasattr(imported_module, 'main'):
-                raise
+            if not hasattr(imported_module, 'graph_object'):
+                raise ValueError('The `graph_object` is not used, which violates the naming convention')
 
             main_function = getattr(imported_module, 'main', None)
+
+            if not main_function or not isinstance(main_function, Callable):
+                raise ValueError('There is not main function or it is not valid')
 
             for graph_name, graph_obj in graph_object_mappings.items():
                 # I did not see this coming. I need to change the controller
@@ -496,9 +499,11 @@ def code_executor(code_folder: pathlib.Path,
                 controller.generate_processed_record()
 
                 exec_result[graph_name] = controller.get_processed_result()
-        except ImportError:
+        except ImportError as e:
+            e.args = (f'Cannot import `entry` moduel. Error: {e}', )
             raise
-        except Exception:
+        except Exception as e:
+            e.args = (f'Unknown exception occurs in executing the code. Error: {e}',)
             raise
 
         return exec_result
@@ -507,13 +512,13 @@ def code_executor(code_folder: pathlib.Path,
 def gather_code_info(code_folder: pathlib.Path) -> Tuple[CodeWrapper, Sequence[ExecResultJsonWrapper]]:
     code_text, required_graph_urls = get_code_text_and_graph_req(code_folder)
     if len(required_graph_urls) < 1:
-        raise
+        raise ValueError('The graph-info.json must contain at least one graph url')
 
     tutorial_anchor = select_tutorial()
 
     graph_id_obj_mapping: MutableMapping[Graph, CustomGraph] = {}
 
-    # change this part. May not using url is a better idea
+    # TODO maybe change this part. Not using url may be a better idea
     for graph_url in required_graph_urls:
         graph_model_obj: Graph = Graph.objects.get(url=graph_url)
         graph_obj: CustomGraph = CustomGraph.graph_generator(graph_model_obj.cyjs)

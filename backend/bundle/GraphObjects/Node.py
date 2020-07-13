@@ -1,10 +1,10 @@
-import logging
-
-from .Base import Highlightable, Comparable, HasProperty, Stylable, ElementSet
+from .Base import Comparable, HasProperty, Stylable, ElementSet
 from typing import Iterable, Mapping
 
+from .Errors import GraphJsonFormatError
 
-class Node(Highlightable, Comparable, HasProperty, Stylable):
+
+class Node(Comparable, HasProperty, Stylable):
     _PREFIX = 'v'
 
     def __init__(self, identity, name=None, styles=None, classes=None):
@@ -18,14 +18,6 @@ class Node(Highlightable, Comparable, HasProperty, Stylable):
         Comparable.__init__(self, identity, name)
         HasProperty.__init__(self)
         Stylable.__init__(self, styles, classes)
-
-    def highlight(self, cls):
-        # TODO
-        raise NotImplementedError
-
-    def unhighlight(self, cls):
-        # TODO
-        raise NotImplementedError
 
     def __str__(self):
         return 'Node(id: %s)' % self.identity
@@ -46,13 +38,16 @@ class NodeSet(ElementSet):
     def generate_node_set(nodes: Iterable[Mapping]) -> 'NodeSet':
         stored_nodes = []
         for node in nodes:
-            if isinstance(node, Mapping) and 'data' in node and 'id' in node['data']:
-                data_field = node['data']
-                stored_node = Node(data_field['id'])
-                if 'displayed' in data_field:
-                    stored_node.update_properties(data_field['displayed'])
-                stored_nodes.append(stored_node)
-            else:
-                raise ValueError('invalid format for Node')
+            if not (isinstance(node, Mapping) and 'data' in node and 'id' in node['data']):
+                raise GraphJsonFormatError(f'invalid format for Node {node}')
+
+            data_field = node['data']
+            if not ('id' in data_field):
+                raise GraphJsonFormatError(f'The node {node} entry must contain a `id` field')
+
+            stored_node = Node(data_field['id'])
+            if 'displayed' in data_field:
+                stored_node.update_properties(data_field['displayed'])
+            stored_nodes.append(stored_node)
 
         return NodeSet(stored_nodes)

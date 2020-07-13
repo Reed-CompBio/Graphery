@@ -1,9 +1,10 @@
-from .Base import Highlightable, Comparable, HasProperty, Stylable, ElementSet
+from .Base import Comparable, HasProperty, Stylable, ElementSet
+from .Errors import GraphJsonFormatError
 from .Node import Node, NodeSet
 from typing import Iterable, Tuple, Mapping
 
 
-class Edge(Highlightable, Comparable, HasProperty, Stylable):
+class Edge(Comparable, HasProperty, Stylable):
     _PREFIX = 'e'
 
     def __init__(self, identity, node_pair: Tuple[Node, Node], name=None, styles=None, classes=None, directed=False):
@@ -17,7 +18,6 @@ class Edge(Highlightable, Comparable, HasProperty, Stylable):
         @param directed: whether this edge is directed
         @raise KeyError: if there is some problem with the node pair
         """
-        Highlightable.__init__(self)
         Comparable.__init__(self, identity, name)
         HasProperty.__init__(self)
         Stylable.__init__(self, styles, classes)
@@ -62,12 +62,6 @@ class Edge(Highlightable, Comparable, HasProperty, Stylable):
         """
         if self.is_directed():
             self.node_pair = self.node_pair[::-1]
-
-    def highlight(self, cls: str):
-        raise NotImplementedError
-
-    def unhighlight(self, cls: str):
-        raise NotImplementedError
 
     def __contains__(self, node):
         """
@@ -120,13 +114,17 @@ class EdgeSet(ElementSet):
         """
         stored_edges = []
         for edge in edges:
-            if isinstance(edge, Mapping) and 'data' in edge and 'id' in edge['data']:
-                data_field = edge['data']
-                stored_edge = Edge(data_field['id'], (nodes[data_field['source']], nodes[data_field['target']]))
-                if 'displayed' in data_field:
-                    stored_edge.update_properties(data_field['displayed'])
-                stored_edges.append(stored_edge)
-            else:
-                raise ValueError('invalid format for Edge')
+            if not (isinstance(edge, Mapping) and 'data' in edge and 'id' in edge['data']):
+                raise GraphJsonFormatError(f'invalid format for Edge {edge}')
+
+            data_field = edge['data']
+
+            if not ('id' in data_field and 'source' in data_field and 'target' in data_field):
+                raise GraphJsonFormatError(f'The edge {edge} entry must contain `id`, `source` and `target` fields')
+
+            stored_edge = Edge(data_field['id'], (nodes[data_field['source']], nodes[data_field['target']]))
+            if 'displayed' in data_field:
+                stored_edge.update_properties(data_field['displayed'])
+            stored_edges.append(stored_edge)
 
         return EdgeSet(stored_edges)

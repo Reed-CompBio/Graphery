@@ -196,7 +196,7 @@ class Tracer:
         self.target_frames = set()
         self.thread_local = threading.local()
         if len(custom_repr) == 2 and \
-                not all(isinstance(x, pycompat.collections_abc.Iterable) for x in custom_repr):
+                not all(isinstance(x, Iterable) for x in custom_repr):
             custom_repr = (custom_repr,)
         self.custom_repr = custom_repr
         self.last_source_path = None
@@ -336,7 +336,7 @@ class Tracer:
         elapsed_time_string = pycompat.timedelta_format(duration)
         indent = ' ' * 4 * (thread_global.depth + 1)
         self.write(
-            '{indent}Elapsed time: {elapsed_time_string}'.format(**locals())
+            f'{indent}Elapsed time: {elapsed_time_string}'
         )
         #                                                                     #
         # Finished writing elapsed time. ######################################

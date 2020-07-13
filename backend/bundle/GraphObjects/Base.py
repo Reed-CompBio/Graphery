@@ -1,30 +1,7 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 from typing import Union, Iterable, Mapping, Type
 import json
 import logging
-
-
-class Highlightable(metaclass=ABCMeta):
-    """
-    Highlight interface
-    """
-    @abstractmethod
-    def highlight(self, cls: str):
-        """
-        make this object highlighted
-        @param cls: the color of which this object should be highlighted
-        @raise: NotImplementedError
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def unhighlight(self, cls: str):
-        """
-        unhighlight this object
-        @param cls: the color of which this object should be highlighted
-        @raise: NotImplementedError
-        """
-        raise NotImplementedError
 
 
 class Comparable(metaclass=ABCMeta):
@@ -195,7 +172,7 @@ class ElementSet:
         @param value:
         @return:
         """
-        raise NotImplementedError('You cannot set elements in a immutable object')
+        raise AttributeError('You cannot set elements in a immutable object')
 
     def __iter__(self):
         """

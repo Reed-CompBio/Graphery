@@ -1,4 +1,4 @@
-from typing import Type, Callable
+from typing import Type, Callable, Optional
 
 from django.contrib.postgres.fields import JSONField
 from django.db import models
@@ -29,7 +29,7 @@ class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
     name = models.CharField(max_length=100, unique=True, blank=False, null=False)
     categories = models.ManyToManyField(Category, default='uncategorized')
 
-    dummy_content_gen: Callable[[], models.Model] = None
+    dummy_content_gen: Optional[Callable[[], models.Model]] = None
 
     @classmethod
     def default_dummy_content(cls) -> models.Model:
@@ -70,14 +70,14 @@ class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
     # belongs to
     tutorials = models.ManyToManyField(Tutorial)
 
-    dummy_content_model: Type[models.Model] = None
+    dummy_content_gen: Optional[Callable[[], models.Model]] = None
 
     @classmethod
-    def default_dummy_content(cls) -> Type[models.Model]:
-        if cls.dummy_content_model is None:
-            from .TranslationModels import ENUSGraphContent
-            cls.dummy_content_model = ENUSGraphContent
-        return cls.dummy_content_model
+    def default_dummy_content(cls) -> models.Model:
+        if cls.dummy_content_gen is None:
+            from .TranslationModels import make_dummy_graph_content
+            cls.dummy_content_gen = make_dummy_graph_content
+        return cls.dummy_content_gen()
 
     def get_translation(self, translation: str, default: str, is_published_only: bool = True):
         content = getattr(self,
