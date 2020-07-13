@@ -43,6 +43,70 @@
               class="full-height"
               @updateCyWithVarObj="updateCytoscapeWithVarObj"
             ></EditorWrapper>
+            <GraphInfo
+              v-show="currentTab === 'graph-info'"
+              :graphName="graphTitle"
+              :isPublished="isGraphPublished"
+              :abstract="graphAbstract"
+            ></GraphInfo>
+            <!-- page sticky -->
+            <q-page-sticky
+              v-if="$q.screen.gt.xs"
+              position="bottom-left"
+              :offset="[30, 30]"
+            >
+              <q-fab
+                direction="up"
+                color="primary"
+                icon="more_horiz"
+                padding="10px"
+              >
+                <q-fab-action
+                  color="accent"
+                  icon="mdi-code-json"
+                  padding="10px"
+                  @click.prevent="switchTabView('editor')"
+                >
+                  <SwitchTooltip
+                    :text="$t('tooltips.editor')"
+                    self="center left"
+                    anchor="center right"
+                  />
+                </q-fab-action>
+                <q-fab-action
+                  color="positive"
+                  icon="info"
+                  padding="10px"
+                  @click.prevent="switchTabView('graph-info')"
+                >
+                  <SwitchTooltip
+                    :text="$t('tooltips.graphInfo')"
+                    self="center left"
+                    anchor="center right"
+                  />
+                </q-fab-action>
+                <q-fab-action
+                  color="orange"
+                  icon="help"
+                  padding="10px"
+                  @click.prevent="switchTabView('how-to')"
+                >
+                  <SwitchTooltip
+                    :text="$t('tooltips.howTo')"
+                    self="center left"
+                    anchor="center right"
+                  />
+                </q-fab-action>
+                <!-- TODO added graph info and how to use editor here -->
+                <template v-slot:tooltip>
+                  <SwitchTooltip
+                    :text="$t('tooltips.showEditorAndMore')"
+                    self="center left"
+                    anchor="center right"
+                  ></SwitchTooltip>
+                </template>
+              </q-fab>
+            </q-page-sticky>
           </template>
         </q-splitter>
       </template>
@@ -56,30 +120,6 @@
       <template v-slot:after>
         <TutorialArticle class="full-height"></TutorialArticle>
       </template>
-      <!-- page sticky -->
-      <q-page-sticky
-        v-if="$q.screen.gt.xs"
-        position="bottom-left"
-        :offset="[30, 30]"
-      >
-        <q-fab direction="up" color="primary" icon="more_horiz" padding="10px">
-          <q-fab-action
-            color="secondary"
-            icon="mdi-code-json"
-            padding="10px"
-            @click.prevent="switchTabView('editor')"
-          />
-          <!-- TODO added graph info and how to use editor here -->
-          <template v-slot:tooltip>
-            <SwitchTooltip
-              :text="$t('tooltips.showEditorAndMore')"
-              self="center left"
-              anchor="center right"
-              hideDelay="200"
-            ></SwitchTooltip>
-          </template>
-        </q-fab>
-      </q-page-sticky>
     </q-splitter>
     <!-- view for small screen -->
     <TutorialArticle v-else></TutorialArticle>
@@ -88,7 +128,7 @@
 
 <script>
   import { headerSize } from '../store/states/meta';
-  import { mapActions, mapState } from 'vuex';
+  import { mapState, mapActions, mapGetters } from 'vuex';
   import { apiCaller } from '../services/apis';
   import { pullTutorialDetailQuery } from '../services/queries';
 
@@ -100,6 +140,7 @@
       TutorialArticle: () =>
         import('@/components/tutorial/TutorialArticle.vue'),
       EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
+      GraphInfo: () => import('@/components/tutorial/GraphInfo.vue'),
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
     },
     data() {
@@ -113,6 +154,7 @@
     },
     computed: {
       ...mapState('settings', ['graphSplitPos']),
+      ...mapGetters('tutorials', ['currentGraphContent']),
       splitPos: {
         set(d) {
           this.$store.dispatch(
@@ -156,6 +198,24 @@
       notTortureSmallScreen() {
         return this.$q.screen.gt.xs;
       },
+      graphTitle() {
+        if (this.currentGraphContent) {
+          return this.currentGraphContent.title;
+        }
+        return '';
+      },
+      isGraphPublished() {
+        if (this.currentGraphContent) {
+          return this.currentGraphContent.isPublished;
+        }
+        return false;
+      },
+      graphAbstract() {
+        if (this.currentGraphContent) {
+          return this.currentGraphContent.abstract;
+        }
+        return '';
+      },
     },
     methods: {
       ...mapActions('tutorials', ['clearAll', 'loadTutorial']),
@@ -183,25 +243,12 @@
             // TODO in error
             console.error(err);
           });
-        // 1. API calls to get page conentent
-        // 2. Extract articles and graph info, turn off loading for the article section and load article
-        // 3. API calls using graph info to get graphs
-        // 4. Extract graphs details , turn off loading for the graph section and load graphs
-        // 5. (think about mini editor, how to manage the data in the backend)
       },
       updateCytoscapeWithVarObj(varObj) {
         this.$refs.cytoscapeWrapper.highlightVarObj(varObj);
       },
       switchTabView(tab) {
         this.currentTab = tab;
-      },
-    },
-    watch: {
-      name: function(newVal, oldVal) {
-        // ensures page updating when the url is changed
-        // TODO I don't think I need this
-        console.log(`route change from ${oldVal} to ${newVal}`);
-        this.updateTutorialContent();
       },
     },
     mounted() {

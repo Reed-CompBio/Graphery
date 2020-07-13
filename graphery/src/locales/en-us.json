@@ -13,7 +13,9 @@
     "fiveStepsForward": "Five Steps Forward",
     "autoRun": "Auto Run",
     "showLabelAlways": "Show Slider Always",
-    "notShowLabelAlways": "Not Always Show Slider Label"
+    "notShowLabelAlways": "Not Always Show Slider Label",
+    "editor": "Editor",
+    "howTo": "How To"
   },
   "nav": {
     "Home": "Home",

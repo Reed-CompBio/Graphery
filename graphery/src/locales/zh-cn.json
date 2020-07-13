@@ -13,7 +13,9 @@
     "fiveStepsForward": "前进五步",
     "autoRun": "自动执行",
     "showLabelAlways": "始终展示滑块标签",
-    "notShowLabelAlways": "不始终展示滑块标签"
+    "notShowLabelAlways": "不始终展示滑块标签",
+    "editor": "编辑器",
+    "howTo": "使用帮助"
   },
   "nav": {
     "Home": "首页",

@@ -2,7 +2,7 @@
   <MaterialPage>
     <article>
       <header class="">
-        <h3 class="shorter-h">
+        <h3 class="material-page-shorter-h3">
           {{ $t('nav.About') }}
         </h3>
       </header>

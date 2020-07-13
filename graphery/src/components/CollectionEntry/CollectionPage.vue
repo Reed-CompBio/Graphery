@@ -2,7 +2,7 @@
   <MaterialPage>
     <div>
       <div id="title-section">
-        <h3 class="shorter-h">
+        <h3 class="material-page-shorter-h3">
           {{ title }}
         </h3>
       </div>
@@ -213,7 +213,7 @@
 </script>
 
 <style lang="sass">
-  .shorter-h
+  .material-page-shorter-h3
     margin-bottom: 20px
   #inner-loader
     min-height: 100px

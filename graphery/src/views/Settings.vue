@@ -3,7 +3,7 @@
   <MaterialPage>
     <div>
       <div id="header-section">
-        <h3 class="shorter-h">
+        <h3 class="material-page-shorter-h3">
           {{ $t('nav.Settings') }}
         </h3>
       </div>

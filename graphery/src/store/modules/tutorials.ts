@@ -321,6 +321,12 @@ const getters: GetterTree<TutorialState, RootState> = {
     }
     return null;
   },
+  currentGraphContent(state, getter) {
+    if (getter.currentGraph && getter.currentGraph.content) {
+      return getter.currentGraph.content;
+    }
+    return null;
+  },
 };
 
 export default {

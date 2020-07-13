@@ -1,7 +1,7 @@
 <template>
   <MaterialPage>
     <div>
-      <h3 class="shorter-h">
+      <h3 class="material-page-shorter-h3">
         {{ $t('nav.Account') }}
       </h3>
     </div>
