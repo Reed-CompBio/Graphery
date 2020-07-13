@@ -308,16 +308,16 @@
         if (varObj) {
           for (const [varName, varValue] of Object.entries(varObj)) {
             if (typeof varValue === 'object') {
-              if (!varValue) {
-                this.unhighlightElement(this.lastVarObj[varName]);
-                this.lastVarObj[varName] = varValue;
-              } else {
+              if (varValue) {
                 if (this.lastVarObj[varName] !== varValue['id']) {
                   this.unhighlightElement(this.lastVarObj[varName]);
                   this.lastVarObj[varName] = varValue['id'];
                 }
 
                 this.highlightElement(varValue['id'], varValue['color']);
+              } else {
+                this.unhighlightElement(this.lastVarObj[varName]);
+                this.lastVarObj[varName] = varValue;
               }
             }
           }
