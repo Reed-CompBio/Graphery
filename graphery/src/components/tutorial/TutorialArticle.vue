@@ -124,7 +124,7 @@
       ...mapActions('tutorials', ['loadTutorial']),
       toLocalDateString,
       share() {
-        // TODO copy to clipboard
+        alert('Coming soon!');
       },
       scrollToTop() {
         document.getElementById('articleWrapper').scrollTo({
@@ -133,12 +133,6 @@
           behavior: 'smooth',
         });
       },
-    },
-    mounted() {
-      // this.loadTutorial();
-      // TODO when you access the page from tutorials or graphs, the article is not shown.
-      //    SINCE there is not real api call!!!
-      // TODO when should I load the text hmmmmm
     },
   };
 </script>

@@ -289,25 +289,36 @@
       },
       // highlight helper function
       highlightElement(id, color) {
+        if (!this.cyInstance) {
+          return;
+        }
         this.cyInstance.getElementById(id).style({
           'overlay-color': color,
           'overlay-opacity': 0.5,
         });
       },
       unhighlightElement(id) {
+        if (!this.cyInstance) {
+          return;
+        }
         this.cyInstance.getElementById(id).removeStyle('overlay-opacity');
       },
       // highlight interface
       highlightVarObj(varObj) {
         if (varObj) {
           for (const [varName, varValue] of Object.entries(varObj)) {
-            if (varValue && typeof varValue === 'object') {
-              if (this.lastVarObj[varName] !== varValue['id']) {
+            if (typeof varValue === 'object') {
+              if (!varValue) {
                 this.unhighlightElement(this.lastVarObj[varName]);
-                this.lastVarObj[varName] = varValue['id'];
-              }
+                this.lastVarObj[varName] = varValue;
+              } else {
+                if (this.lastVarObj[varName] !== varValue['id']) {
+                  this.unhighlightElement(this.lastVarObj[varName]);
+                  this.lastVarObj[varName] = varValue['id'];
+                }
 
-              this.highlightElement(varValue['id'], varValue['color']);
+                this.highlightElement(varValue['id'], varValue['color']);
+              }
             }
           }
         }

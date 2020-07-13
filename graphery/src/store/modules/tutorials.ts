@@ -1,13 +1,11 @@
 import {
   Graph,
-  GraphLayoutEngines,
   ResultJsonType,
   RootState,
   TutorialArticleContent,
   TutorialDetailResponse,
   TutorialGraph,
   TutorialMetaState,
-  TutorialRequestState,
   TutorialState,
 } from '@/store/states/state';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
