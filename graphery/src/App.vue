@@ -1,7 +1,7 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <Header></Header>
-    <q-ajax-bar></q-ajax-bar>
+    <q-ajax-bar size="5px"></q-ajax-bar>
     <q-page-container>
       <router-view></router-view>
     </q-page-container>
@@ -44,10 +44,11 @@
         'color: #A70E16'
       );
       console.log('Welcome to Graphery, a graph tutorial website');
-      console.log('GitHub: https://github.com/FlickerSoul/Graphery');
+      console.log('GitHub: https://github.com/poppy-poppy/Graphery');
 
       // load $q.dark.set is in Header.vue
       // Load language
+      // TODO add a preferred language
       this.$i18n.locale = this.$store.state.settings.language;
     },
   });

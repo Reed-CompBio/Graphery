@@ -38,6 +38,7 @@
           </template>
           <template v-slot:after>
             <EditorWrapper
+              v-show="currentTab === 'editor'"
               ref="editorWrapper"
               class="full-height"
               @updateCyWithVarObj="updateCytoscapeWithVarObj"
@@ -45,7 +46,6 @@
           </template>
         </q-splitter>
       </template>
-      <!-- TODO 放大缩小 -->
       <template v-slot:separator>
         <div
           :style="tutorialHorizontalSeparatorIconStyle"
@@ -56,7 +56,32 @@
       <template v-slot:after>
         <TutorialArticle class="full-height"></TutorialArticle>
       </template>
+      <!-- page sticky -->
+      <q-page-sticky
+        v-if="$q.screen.gt.xs"
+        position="bottom-left"
+        :offset="[30, 30]"
+      >
+        <q-fab direction="up" color="primary" icon="more_horiz" padding="10px">
+          <q-fab-action
+            color="secondary"
+            icon="mdi-code-json"
+            padding="10px"
+            @click.prevent="switchTabView('editor')"
+          />
+          <!-- TODO added graph info and how to use editor here -->
+          <template v-slot:tooltip>
+            <SwitchTooltip
+              :text="$t('tooltips.showEditorAndMore')"
+              self="center left"
+              anchor="center right"
+              hideDelay="200"
+            ></SwitchTooltip>
+          </template>
+        </q-fab>
+      </q-page-sticky>
     </q-splitter>
+    <!-- view for small screen -->
     <TutorialArticle v-else></TutorialArticle>
   </div>
 </template>
@@ -75,6 +100,7 @@
       TutorialArticle: () =>
         import('@/components/tutorial/TutorialArticle.vue'),
       EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
+      SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
     },
     data() {
       return {
@@ -82,6 +108,7 @@
         tutorialSeparatorWidth: 8, // px
         tutorialSeparatorIconSize: 4, // px
         tutorialSeparatorIconLength: 10, // %
+        currentTab: 'editor',
       };
     },
     computed: {
@@ -164,6 +191,9 @@
       },
       updateCytoscapeWithVarObj(varObj) {
         this.$refs.cytoscapeWrapper.highlightVarObj(varObj);
+      },
+      switchTabView(tab) {
+        this.currentTab = tab;
       },
     },
     watch: {

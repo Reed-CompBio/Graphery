@@ -120,28 +120,6 @@
         </template>
       </q-splitter>
     </div>
-    <!-- page sticky button -->
-    <!--    <q-page-sticky-->
-    <!--      v-if="$q.screen.gt.xs"-->
-    <!--      position="bottom-left"-->
-    <!--      :offset="[30, 30]"-->
-    <!--    >-->
-    <!--      <q-fab direction="up" color="primary" icon="more_horiz">-->
-    <!--        <q-fab-action-->
-    <!--          color="secondary"-->
-    <!--          icon="mdi-code-json"-->
-    <!--          @click.prevent="switchTabView('editor')"-->
-    <!--        />-->
-    <!--        <q-fab-action-->
-    <!--          color="skyblue"-->
-    <!--          icon="block"-->
-    <!--          @click.prevent="switchTabView('block')"-->
-    <!--        />-->
-    <!--      </q-fab>-->
-    <!--      &lt;!&ndash; TODO change the translation &ndash;&gt;-->
-    <!--      <SwitchTooltip :text="$t('tooltips.showEditorAndMore')"></SwitchTooltip>-->
-    <!--      &lt;!&ndash;      <q-btn round color="primary" icon="mdi-code-json" @click="toggleEditor" />&ndash;&gt;-->
-    <!--    </q-page-sticky>-->
   </div>
 </template>
 
