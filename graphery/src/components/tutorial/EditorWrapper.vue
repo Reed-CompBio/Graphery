@@ -87,10 +87,14 @@
       </q-btn-group>
       <!-- copy paste button group -->
       <q-btn-group flat class="q-mr-md">
-        <q-btn dense icon="mdi-content-copy">
+        <q-btn dense icon="mdi-content-copy" @click="copyCurrentCode">
           <SwitchTooltip :text="$t('tooltips.copyCodes')"></SwitchTooltip>
         </q-btn>
-        <q-btn dense icon="mdi-content-paste">
+        <q-btn
+          dense
+          icon="mdi-content-paste"
+          @click="setCurrentCodeFromClipboard"
+        >
           <SwitchTooltip :text="$t('tooltips.pasteCodes')"></SwitchTooltip>
         </q-btn>
       </q-btn-group>
@@ -113,9 +117,6 @@
         <template v-slot:before>
           <q-card class="popup-wrapper full-height" style="overflow-y: hidden;">
             <Editor ref="editorComponent" class="full-height"></Editor>
-            <!--          <router-view class="full-height" :name="routerViewName"></router-view>-->
-            <!-- TODO use child router link instead of tab panel -->
-            <!-- TODO use q-fab instead of sticky -->
           </q-card>
         </template>
         <template v-slot:separator>
@@ -133,6 +134,7 @@
 
 <script>
   import { mapActions, mapGetters, mapState } from 'vuex';
+  import { saveTextToClipboard } from '../../services/helpers.ts';
 
   export default {
     components: {
@@ -285,6 +287,23 @@
       reloadStepper() {
         this.sliderPos = 1;
         this.loadVariableObj(null);
+      },
+      copyCurrentCode() {
+        if (this.$refs.editorComponent) {
+          saveTextToClipboard(this.$refs.editorComponent.content);
+        }
+      },
+      setCurrentCodeFromClipboard() {
+        navigator.clipboard
+          .readText()
+          .then((text) => {
+            if (this.$refs.editorComponent) {
+              this.$refs.editorComponent.setCodeContent(text);
+            }
+          })
+          .catch((err) => {
+            console.error('Failed to read clipboard contents: ', err);
+          });
       },
     },
     watch: {

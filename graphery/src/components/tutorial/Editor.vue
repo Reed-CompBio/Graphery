@@ -59,6 +59,9 @@
                 glyphMargin: true,
               }
             );
+            this.editor.getModel().onDidChangeContent((_) => {
+              this.content = this.editor.getValue();
+            });
             console.debug('mounted monaco editor', this.editor);
 
             this.editor.setValue(this.codes);
@@ -110,12 +113,33 @@
           this.editor.layout();
         }
       },
+      setCodeContent(content) {
+        if (this.enableEditing) {
+          this.editor.setValue(content);
+        }
+      },
     },
     watch: {
       codes: function() {
         if (this.editor && this.codes) {
           this.editor.setValue(this.codes);
         }
+
+        console.error('Cannot paste to a read-only editor.');
+        // TODO the setValue action is not undoable.
+        /*
+            // remove breakpoints
+            oldDecorations = activeEditor.deltaDecorations(oldDecorations, []);
+
+            activeEditor.executeEdits('beautifier', [{ identifier: 'delete' as any, range: new monaco.Range(1, 1, 10000, 1), text: '', forceMoveMarkers: true }]);
+            activeEditor.executeEdits('beautifier', [{ identifier: 'insert' as any, range: new monaco.Range(1, 1, 1, 1), text: text, forceMoveMarkers: true }]);
+            activeEditor.setSelection(new monaco.Range(0, 0, 0, 0));
+            activeEditor.setPosition(currentPosition);
+
+            // add breakpoints
+            oldDecorations = activeEditor.deltaDecorations(oldDecorations, breakPoints);
+            https://github.com/microsoft/monaco-editor/issues/299
+         */
       },
     },
     mounted() {
