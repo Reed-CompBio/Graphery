@@ -17,7 +17,11 @@
       </q-card-section>
       <q-card-actions align="center">
         <!-- TODO add a link to admin page -->
-        <q-btn :label="$t('account.AdminPage')" v-if="isAdmin" />
+        <q-btn
+          :label="$t('account.AdminPage')"
+          v-if="isAdmin"
+          @click="openAdminSite"
+        />
         <q-btn :label="$t('nav.Home')" :to="{ name: 'Home' }" />
         <q-btn :label="$t('account.LogOut')" @click="$emit('logout')" />
       </q-card-actions>
@@ -26,12 +30,21 @@
 </template>
 
 <script>
+  import { BASE_URL } from '../../services/apis';
   export default {
     props: ['userObj'],
     components: {
       UserInfoItem: () => import('@/components/user/UserInfoItem.vue'),
     },
+    methods: {
+      openAdminSite() {
+        window.open(this.adminSite);
+      },
+    },
     computed: {
+      adminSite() {
+        return BASE_URL + '/admin';
+      },
       username() {
         if (this.userObj) {
           return this.userObj['username'];

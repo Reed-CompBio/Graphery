@@ -3,6 +3,7 @@ from functools import wraps
 from graphql import ResolveInfo, GraphQLError
 
 
+# Copied from django-graphql-jwt
 def context(f):
     def decorator(func):
         def wrapper(*args, **kwargs):

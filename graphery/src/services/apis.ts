@@ -3,7 +3,7 @@ import vuex from '../store/index';
 
 const PRO_BASE_URL = 'http://localhost:8082';
 const DEV_BASE_URL = 'http://localhost:8082';
-const BASE_URL =
+export const BASE_URL =
   process.env.NODE_ENV === 'production' ? PRO_BASE_URL : DEV_BASE_URL;
 
 export const apiClient: AxiosInstance = axios.create({
