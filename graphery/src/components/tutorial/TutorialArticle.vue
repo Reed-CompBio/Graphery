@@ -1,12 +1,12 @@
 <template>
-  <div id="articleWrapper">
+  <div id="articleWrapper" style="overflow-y: auto;">
     <div
+      id="tutorial-container"
       ref="tc"
       v-show="!articleEmpty"
-      class="full-height q-px-lg"
-      style="overflow-y: auto; overflow-x: hidden;"
+      class="q-px-lg q-pb-xl"
     >
-      <div class="q-mt-xl">
+      <div id="tutorial-wrapper" class="q-mt-xl">
         <div id="tutorial-title" class="text-h2 q-mb-md">{{ title }}</div>
         <div id="tutorial-info" class="q-mb-lg">
           <div>
@@ -44,16 +44,21 @@
             <q-icon name="mdi-share-variant"></q-icon>
           </q-btn>
         </div>
+
+        <!-- actual contents goes into here -->
+        <div id="tutorial-content" v-html="htmlContent"></div>
+
+        <LicenseCard></LicenseCard>
       </div>
-
-      <!-- actual contents goes into here -->
-      <div id="tutorial-content" v-html="htmlContent"></div>
-
-      <LicenseCard></LicenseCard>
-
-      <div class="q-mb-xl"></div>
     </div>
-    <!-- add a protocol info section -->
+
+    <q-inner-loading
+      :showing="articleEmpty"
+      transition-show="fade"
+      transition-hide="fade"
+    >
+      <q-spinner-pie size="64px" color="primary"></q-spinner-pie>
+    </q-inner-loading>
 
     <!-- TODO fix this -->
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
@@ -64,9 +69,8 @@
       >
         <!-- TODO fix this? -->
         <q-circular-progress
-          v-show="articleViewPercentage !== 0"
           size="42px"
-          :value="articleViewPercentage"
+          :value="1"
           :max="1"
           color="primary"
           :thickness="0.1"
@@ -84,13 +88,6 @@
         </q-circular-progress>
       </transition>
     </q-page-sticky>
-    <q-inner-loading
-      :showing="articleEmpty"
-      transition-show="fade"
-      transition-hide="fade"
-    >
-      <q-spinner-pie size="64px" color="primary"></q-spinner-pie>
-    </q-inner-loading>
   </div>
 </template>
 
@@ -105,7 +102,7 @@
     },
     data() {
       return {
-        articleViewPercentage: 0,
+        // articleViewPercentage: 0,
       };
     },
     computed: {
@@ -129,7 +126,6 @@
       scrollToTop() {
         document.getElementById('articleWrapper').scrollTo({
           top: 0,
-          left: 0,
           behavior: 'smooth',
         });
       },

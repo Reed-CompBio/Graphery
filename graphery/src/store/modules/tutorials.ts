@@ -110,7 +110,7 @@ const pseudoVariableObj = {
 // TODO remove the pseudo content!
 const state: TutorialState = {
   metaState: null,
-  articleContent: null,
+  articleContent: pseudoContent,
   currentGraphId: null,
   graphs: null,
   codes: null,
