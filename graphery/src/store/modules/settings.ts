@@ -15,6 +15,7 @@ const state: SettingState = {
   graphSplitPos: 50,
 
   // editor settings
+  enableEditing: false,
   tabNum: 4,
   softTab: false,
   fontSize: 14,
@@ -47,6 +48,9 @@ const mutations: MutationTree<SettingState> = {
   },
   CHANGE_GRAPH_SPLIT_POS(state, value: number) {
     state.graphSplitPos = value;
+  },
+  CHANGE_ENABLE_EDITING(state, value: boolean) {
+    state.enableEditing = value;
   },
   CHANGE_TAB_NUM(state, value: number) {
     state.tabNum = value;
@@ -92,6 +96,9 @@ const actions: ActionTree<SettingState, RootState> = {
   },
   changeGraphSplitPos({ commit }, value: number) {
     commit('CHANGE_GRAPH_SPLIT_POS', value);
+  },
+  changeEnableEditing({ commit }, value: boolean) {
+    commit('CHANGE_ENABLE_EDITING', value);
   },
   changeTabNum({ commit }, value: number) {
     commit('CHANGE_TAB_NUM', value);

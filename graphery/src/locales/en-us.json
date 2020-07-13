@@ -16,7 +16,8 @@
     "notShowLabelAlways": "Not Always Show Slider Label",
     "editor": "Editor",
     "howTo": "How To",
-    "notAvailableCurrently": "暂时无法使用"
+    "notAvailableCurrently": "Not Available Currently",
+    "goToSettingsToChangeEditingPermission": "Please Go To Settings To Change Editing Permission"
   },
   "nav": {
     "Home": "Home",
@@ -49,7 +50,8 @@
     "tabNum": "Tab Space Number",
     "fontSize": "Font Size",
     "showTooltips": "Show Tooltips",
-    "cardsDisplayedNum": "Number of Search Results in Each Page"
+    "cardsDisplayedNum": "Number of Search Results in Each Page",
+    "enableEditing": "Enable Editing"
   },
   "notify": {
     "editorEntry": "Open code editor using {...} button",

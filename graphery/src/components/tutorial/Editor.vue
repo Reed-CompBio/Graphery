@@ -25,6 +25,7 @@
     computed: {
       ...mapState('settings', [
         'dark',
+        'enableEditing',
         'tabNum',
         'softTab',
         'fontSize',
@@ -49,7 +50,7 @@
                 automaticLayout: true, // auto resize
                 overviewRulerBorder: false, // scroll bar no boarder
                 scrollBeyondLastLine: false, // remove blank space at the end of the editor
-                readOnly: false,
+                readOnly: !this.enableEditing,
                 theme: this.dark ? 'vs-dark' : 'vs',
                 language: 'python',
                 minimap: {

@@ -30,7 +30,6 @@
           ></q-icon>
           <SwitchTooltip :text="$t('tooltips.showLabelAlways')"></SwitchTooltip>
         </q-btn>
-        <!--        <div>-->
         <q-btn
           dense
           icon="mdi-skip-backward"
@@ -95,6 +94,14 @@
           <SwitchTooltip :text="$t('tooltips.pasteCodes')"></SwitchTooltip>
         </q-btn>
       </q-btn-group>
+
+      <q-btn-group flat class="q-mr-md">
+        <q-btn dense disable :icon="enableEditing ? 'lock_open' : 'lock'">
+        </q-btn>
+        <SwitchTooltip
+          :text="$t('tooltips.goToSettingsToChangeEditingPermission')"
+        ></SwitchTooltip>
+      </q-btn-group>
     </q-bar>
     <div class="row" style="height: calc(100% - 32px); overflow: hidden;">
       <q-splitter
@@ -125,7 +132,7 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex';
+  import { mapActions, mapGetters, mapState } from 'vuex';
 
   export default {
     components: {
@@ -157,7 +164,7 @@
         'variableObjEmpty',
         'resultJsonArr',
       ]),
-
+      ...mapState('settings', ['enableEditing']),
       playPauseButton() {
         if (this.isPlaying) {
           return 'mdi-pause';

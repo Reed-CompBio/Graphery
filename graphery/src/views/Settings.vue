@@ -123,6 +123,16 @@
 
         <SettingDisplayCard :title="$t('settings.editorSettings')">
           <template v-slot:toggles>
+            <SettingUnit :name="$t('settings.enableEditing')">
+              <q-toggle
+                left-label
+                size="xl"
+                v-model="setEnableEditing"
+                color="accent"
+                checked-icon="lock_open"
+                unchecked-icon="lock"
+              ></q-toggle>
+            </SettingUnit>
             <SettingUnit :name="$t('settings.softTab')">
               <q-toggle
                 left-label
@@ -196,6 +206,7 @@
         'renderViewportOnly',
         'motionBlurEnabled',
         'motionSensitivityLevel',
+        'enableEditing',
         'tabNum',
         'softTab',
         'fontSize',
@@ -259,6 +270,14 @@
           return this.graphSplitPos;
         },
       },
+      setEnableEditing: {
+        set(d) {
+          this.changeEnableEditing(d);
+        },
+        get() {
+          return this.enableEditing;
+        },
+      },
       setTabNum: {
         set(d) {
           this.changeTabNum(d);
@@ -317,6 +336,7 @@
         'changeMotionBlurEnabled',
         'changeMotionSensitivityLevel',
         'changeGraphSplitPos',
+        'changeEnableEditing',
         'changeTabNum',
         'changeSoftTab',
         'changeFontSize',

@@ -16,7 +16,8 @@
     "notShowLabelAlways": "不始终展示滑块标签",
     "editor": "编辑器",
     "howTo": "使用帮助",
-    "notAvailableCurrently": "暂时无法使用"
+    "notAvailableCurrently": "暂时无法使用",
+    "goToSettingsToChangeEditingPermission": "请前往设置开关编辑权限"
   },
   "nav": {
     "Home": "首页",
@@ -49,7 +50,8 @@
     "tabNum": "Tab 大小",
     "fontSize": "字体大小",
     "showTooltips": "显示提示",
-    "cardsDisplayedNum": "每页展示的搜索结果"
+    "cardsDisplayedNum": "每页展示的搜索结果",
+    "enableEditing": "开启编辑"
   },
   "notify": {
     "editorEntry": "按下 {...} 按钮打开编辑器",

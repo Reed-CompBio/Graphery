@@ -142,6 +142,7 @@ export interface SettingInfos {
   // TODO maybe add a motion sensitivity?
 
   // editor settings
+  enableEditing: boolean;
   tabNum: number;
   softTab: boolean;
   fontSize: number;
