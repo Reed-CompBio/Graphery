@@ -90,6 +90,8 @@
     hierarchicalOptions,
   } from './config.js';
 
+  import { saveToPngFile } from '../../services/helpers';
+
   export default {
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
@@ -401,7 +403,11 @@
         alert('Coming soon!');
       },
       shareGraphScreenshot() {
-        alert('Coming soon!');
+        if (this.cyInstance) {
+          saveToPngFile('graph.png', this.cyInstance.png());
+        }
+
+        console.log('The cytoscape instance is not ready. Nothing is saved.');
       },
     },
     watch: {
