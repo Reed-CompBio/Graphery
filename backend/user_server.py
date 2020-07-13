@@ -106,6 +106,10 @@ def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool 
         try:
             imported_module = import_module(ENTRY_PY_MODULE_NAME)
 
+        except Exception as e:
+            raise ExecutionException(f'Cannot import module. Error: {e}')
+
+        try:
             main_function = getattr(imported_module, MAIN_FUNCTION_NAME, None)
 
             if not main_function or not isinstance(main_function, Callable):
@@ -198,6 +202,6 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Interrupted by keyboard.')
     except Exception as exc:
-        print(f'Exception occurred. Error: {exc}')
+        print(f'Unknown exception occurred. Error: {exc}')
     finally:
         print('Stopped the server.')

@@ -3,7 +3,7 @@ from typing import Tuple, Any, Iterable
 from django.db.models import QuerySet
 from graphql import ResolveInfo
 
-from ..model.TutorialRelatedModel import FAKE_UUID
+from ..model.TutorialRelatedModel import FAKE_UUID, GraphPriority
 from ..model.UserModel import ROLES
 from ..model.filters import show_published_only
 from ..model.mixins import field_adder, time_date_mixin_field, published_mixin_field, uuid_mixin_field
@@ -115,7 +115,7 @@ class GraphContentInterface(graphene.Interface):
 
 
 class GraphType(PublishedFilterBase, DjangoObjectType):
-    priority = graphene.Int(required=True)
+    priority = graphene.String(required=True)
     authors = graphene.List(graphene.String)
     content = graphene.Field(GraphContentInterface,
                              translation=graphene.String(),
@@ -125,6 +125,9 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
     # Don't worried about tutorials and execresultjson_set since
     # they are convered under ManyToOneRel/ManyToManyRel/ManyToManyField
     # and will be automatically translated to DjangoListField
+
+    def resolve_priority(self, info):
+        return GraphPriority(self.priority).label
 
     def resolve_authors(self, info):
         return self.authors.all().values_list('username', flat=True)

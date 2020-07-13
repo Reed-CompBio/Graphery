@@ -1,7 +1,7 @@
 """
 cache file helpers
 """
-
+import logging
 import sys
 import shutil
 import contextlib
@@ -99,11 +99,11 @@ class CacheFolder(contextlib.AbstractContextManager):
     def __enter__(self) -> 'CacheFolder':
         try:
             pathlib.Path.mkdir(self.cache_folder_path, mode=self.folder_mode, parents=True, exist_ok=True)
-        except FileExistsError:
+        except FileExistsError as e:
             # this should not be called
             # but hmmm if the last path component is not an existing non-directory file,
-            # there still will be an error, TODO I will add a logger/notification
-            pass
+            # there still will be an error
+            logging.error(f'The folder cannot be created. Error: {e}')
         except FileNotFoundError:
             # every cache folder must have an parent.
             raise AssertionError('Parent Folder Does NOT Exists')
