@@ -4,7 +4,7 @@ import pathlib
 import sys
 import json
 from importlib import import_module
-from typing import Union, Mapping, Callable, List
+from typing import Union, Mapping, Callable, List, Optional
 from wsgiref.simple_server import make_server
 from multiprocessing import Pool, TimeoutError
 
@@ -61,25 +61,47 @@ def main(port: int):
     httpd.serve_forever()
 
 
-def get_folder_name(content: str) -> str:
-    return get_md5_of_a_string(content)
+def store_exec_cache(cache_folder: pathlib.Path, graph_hash: str, exec_result: List) -> None:
+    cache_file: pathlib.Path = cache_folder / 'exec_cache.json'
+    if cache_file.exists():
+        json_obj = json.loads(cache_file.read_text())
+    else:
+        json_obj = {}
+
+    json_obj[graph_hash] = exec_result
+    cache_file.write_text(json.dumps(json_obj))
 
 
-def execute(code: str, graph_json: Union[str, Mapping]) -> List[Mapping]:
-    folder_hash = get_folder_name(code)
+def get_exec_cache(cache_folder: pathlib.Path, graph_hash: str) -> Optional[List]:
+    cache_file: pathlib.Path = cache_folder / 'exec_cache.json'
+    if not cache_file.exists():
+        return None
+
+    json_obj: Mapping = json.loads(cache_file.read_text())
+
+    return json_obj.get(graph_hash, None)
+
+
+def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool = False) -> List[Mapping]:
+    folder_hash = get_md5_of_a_string(code)
+    graph_hash = get_md5_of_a_string(graph_json)
 
     graph_json_obj = json.loads(graph_json) if isinstance(graph_json, str) else graph_json
 
     graph_object = Graph.graph_generator(graph_json_obj)
 
     with controller as folder_creator, \
-            folder_creator(folder_hash) as cache_folder, \
+            folder_creator(folder_hash, auto_delete=auto_delete_cache) as cache_folder, \
             TempSysPathAdder(cache_folder):
         entry_file: pathlib.Path = cache_folder / ENTRY_PY_FILE_NAME
 
         if not entry_file.exists():
             entry_file.touch()
             entry_file.write_text(code)
+        else:
+            cache_result = get_exec_cache(cache_folder=cache_folder, graph_hash=graph_hash)
+            if cache_result:
+                return cache_result
 
         try:
             imported_module = import_module(ENTRY_PY_MODULE_NAME)
@@ -102,6 +124,10 @@ def execute(code: str, graph_json: Union[str, Mapping]) -> List[Mapping]:
         finally:
             del sys.modules[ENTRY_PY_MODULE_NAME]
             del imported_module
+
+    exec_result = controller.get_processed_result()
+    if not auto_delete_cache:
+        store_exec_cache(cache_folder, graph_hash, exec_result)
 
     return controller.get_processed_result()
 
@@ -171,7 +197,7 @@ if __name__ == '__main__':
         main(arg_parser()['port'])
     except KeyboardInterrupt:
         print('Interrupted by keyboard.')
-    except Exception as e:
-        print(f'Exception occurred. Error: {e}')
+    except Exception as exc:
+        print(f'Exception occurred. Error: {exc}')
     finally:
         print('Stopped the server.')

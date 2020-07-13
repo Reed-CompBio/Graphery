@@ -10,9 +10,9 @@ from time import time
 
 
 class Controller:
-    def __init__(self, cache_path=USER_DOCS_PATH):
-        self.main_cache_folder = CacheFolder(cache_path, auto_delete=False)
-        self.log_folder = CacheFolder(cache_path, auto_delete=False)
+    def __init__(self, cache_path=USER_DOCS_PATH, auto_delete: bool = False):
+        self.main_cache_folder = CacheFolder(cache_path, auto_delete=auto_delete)
+        self.log_folder = CacheFolder(cache_path, auto_delete=auto_delete)
         self.tracer_cls = tracer
         self.recorder = Recorder()
         self.processor = Processor()
@@ -41,7 +41,7 @@ class Controller:
 
     def __call__(self, dir_name: Union[str, pathlib.Path] = None,
                        mode: int = 0o777,
-                       auto_delete: bool = True,
+                       auto_delete: bool = False,
                        *args, **kwargs) -> CacheFolder:
         if dir_name:
             return self.main_cache_folder.add_cache_folder(dir_name, mode, auto_delete)
