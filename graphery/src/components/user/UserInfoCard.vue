@@ -21,7 +21,9 @@
         <q-btn
           :label="$t('account.AdminPage')"
           v-if="isAdmin"
-          @click="openAdminSite"
+          type="a"
+          :href="adminUrl"
+          target="_blank"
         />
         <q-btn :label="$t('nav.Home')" :to="{ name: 'Home' }" />
         <q-btn :label="$t('account.LogOut')" @click="$emit('logout')" />
@@ -37,10 +39,10 @@
     components: {
       UserInfoItem: () => import('@/components/user/UserInfoItem.vue'),
     },
-    methods: {
-      openAdminSite() {
-        window.open(this.adminSite);
-      },
+    data() {
+      return {
+        adminUrl: BASE_URL + '/admin',
+      };
     },
     computed: {
       adminSite() {

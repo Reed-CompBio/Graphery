@@ -15,7 +15,8 @@
     "showLabelAlways": "Show Slider Always",
     "notShowLabelAlways": "Not Always Show Slider Label",
     "editor": "Editor",
-    "howTo": "How To"
+    "howTo": "How To",
+    "notAvailableCurrently": "暂时无法使用"
   },
   "nav": {
     "Home": "Home",

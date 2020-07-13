@@ -33,25 +33,18 @@
           <q-btn-dropdown size="lg" label="Feedback">
             <q-list>
               <!-- TODO you may need to use a custom list of lang here -->
-              <a
+
+              <q-btn
+                type="a"
                 href="https://github.com/poppy-poppy/Graphery/issues"
                 target="_blank"
-              >
-                <q-item clickable v-close-popup>
-                  <q-item-section>
-                    <q-item-label> GitHub Issues </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </a>
-              <a
+                label="GitHub Issues"
+              ></q-btn>
+              <q-btn
+                type="a"
                 href="mailto:zengl@reed.edu?subject=Graphery%20Feedback&body=Please%20describe%20in%20detail%3A%0D%0A1.%20if%20something%20looks%20wrong%2C%20please%20tell%20us%20what%20it%20should%20be%20like%20and%20how%20we%20can%20reproduce%20the%20problem%0D%0A2.%20if%20something%20can%20be%20better%2C%20please%20tell%20us%20how%20we%20can%20improve%20and%20the%20reasons%0D%0A%0D%0AThank%20you%20so%20much!"
-              >
-                <q-item clickable v-close-popup>
-                  <q-item-section>
-                    <q-item-label> Email Me </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </a>
+                label="Email Me"
+              ></q-btn>
             </q-list>
           </q-btn-dropdown>
         </div>

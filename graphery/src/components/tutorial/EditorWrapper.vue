@@ -47,11 +47,12 @@
         >
           <SwitchTooltip :text="$t('tooltips.oneStepBack')"></SwitchTooltip>
         </q-btn>
-        <!--        </div>-->
-        <q-btn dense :icon="playPauseButton" :disable="isNextButtonDisable">
-          <SwitchTooltip :text="$t('tooltips.autoRun')"></SwitchTooltip>
+        <q-btn dense :icon="playPauseButton">
+          <!--          <SwitchTooltip :text="$t('tooltips.autoRun')"></SwitchTooltip>-->
+          <SwitchTooltip
+            :text="$t('tooltips.notAvailableCurrently')"
+          ></SwitchTooltip>
         </q-btn>
-        <!--        <div>-->
         <q-btn
           dense
           icon="mdi-skip-next"

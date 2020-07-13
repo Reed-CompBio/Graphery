@@ -94,10 +94,15 @@
           );
         }
       },
+      focusToLine(line) {
+        if (this.editor) {
+          this.editor.revealLine(line);
+        }
+      },
       moveToLine(line, message = 'Executing this line') {
         // TODO scroll into view
         this.changeDecoration(this.generateDecoration(line, message));
-        this.editor.revealLine(line);
+        this.focusToLine(line);
       },
       resizeAction() {
         if (this.editor) {
