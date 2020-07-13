@@ -93,7 +93,10 @@
 
 <script>
   import { mapGetters, mapActions } from 'vuex';
-  import { toLocalDateString } from '../../services/helpers';
+  import {
+    toLocalDateString,
+    saveTextToClipboard,
+  } from '../../services/helpers';
 
   export default {
     components: {
@@ -121,7 +124,9 @@
       ...mapActions('tutorials', ['loadTutorial']),
       toLocalDateString,
       share() {
-        alert('Coming soon!');
+        saveTextToClipboard(window.location.href);
+        // TODO use uniform notify
+        alert('The URL of this tutorial is copied.');
       },
       scrollToTop() {
         document.getElementById('articleWrapper').scrollTo({

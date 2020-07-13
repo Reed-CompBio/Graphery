@@ -90,7 +90,11 @@
     hierarchicalOptions,
   } from './config.js';
 
-  import { saveToPngFile } from '../../services/helpers';
+  import {
+    saveToFile,
+    jpegMIMEType,
+    jsonMIMEType,
+  } from '../../services/helpers';
 
   export default {
     components: {
@@ -400,11 +404,23 @@
         }
       },
       shareGraphJson() {
-        alert('Coming soon!');
+        if (this.cyInstance) {
+          saveToFile(
+            'graph.json',
+            JSON.stringify(this.cyInstance.json(), null, 2),
+            jsonMIMEType
+          );
+        }
+
+        console.log('The cytoscape instance is not ready. Nothing is saved.');
       },
       shareGraphScreenshot() {
         if (this.cyInstance) {
-          saveToPngFile('graph.png', this.cyInstance.png());
+          saveToFile(
+            'graph.jpg',
+            this.cyInstance.jpg({ output: 'blob' }),
+            jpegMIMEType
+          );
         }
 
         console.log('The cytoscape instance is not ready. Nothing is saved.');

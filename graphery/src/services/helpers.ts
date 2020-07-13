@@ -5,7 +5,8 @@ export function toLocalDateString(locale: string, dateString: string) {
   return new Intl.DateTimeFormat(locale).format(new Date(dateString));
 }
 
-export const pngMIMEType = 'image/png';
+export const jpegMIMEType = 'image/jpeg';
+export const jsonMIMEType = 'application/json';
 
 export function saveTextToClipboard(text: string) {
   copyToClipboard(text)
@@ -17,14 +18,10 @@ export function saveTextToClipboard(text: string) {
     });
 }
 
-export function saveToPngFile(fileName: string, rawData: string) {
-  const byteCharacters = atob(rawData.split(',')[1]);
-
-  const byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  }
-
-  const byteArray = new Uint8Array(byteNumbers);
-  return exportFile(fileName, byteArray, pngMIMEType);
+export function saveToFile(
+  fileName: string,
+  rawData: string,
+  mimeType: string
+) {
+  return exportFile(fileName, rawData, mimeType);
 }
