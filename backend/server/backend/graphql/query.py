@@ -4,9 +4,9 @@ import graphene
 from django.db.models import QuerySet
 from graphene_django import DjangoListField
 from graphql import GraphQLError
-from graphql_jwt.decorators import login_required
 from graphql import ResolveInfo
 
+from .decorators import login_required
 from ..model.filters import show_published_only
 from ..models import Category, Tutorial, Graph
 

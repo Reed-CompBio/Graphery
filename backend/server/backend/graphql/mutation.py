@@ -1,12 +1,8 @@
 import graphene
 from graphql import GraphQLError
-from graphql_jwt.decorators import user_passes_test
 from django.contrib.auth import authenticate, login, logout
 
 from backend.graphql.types import UserType
-from backend.models import ROLES
-
-require_admin = user_passes_test(lambda u: u.is_authenticated and u.role >= ROLES.AUTHOR)
 
 
 class Login(graphene.Mutation):
