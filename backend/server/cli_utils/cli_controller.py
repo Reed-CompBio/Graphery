@@ -17,7 +17,8 @@ import markdown
 from backend.model.UserModel import ROLES
 from backend.model.translation_collection import translation_table_mapping, get_translation_table, \
     get_graph_info_trans_table
-from cli_utils.cli_ui import run_interruptable_checkbox_dialog, new_session, inline_radio_dialog
+from cli_utils.cli_ui import run_interruptable_checkbox_dialog, new_session, inline_radio_dialog, \
+    info_session
 from bundle.controller import controller
 from bundle.utils.cache_file_helpers import TempSysPathAdder
 from bundle.GraphObjects.Graph import Graph as CustomGraph
@@ -92,7 +93,7 @@ def select_and_add_categories() -> List[CategoryWrapper]:
 
     new_categories: Iterable[str] = map(
         lambda x: x.strip(),
-        new_line_prompt('Please enter new categories. Separate with ";"').split(';')
+        new_line_prompt(message='Please enter new categories. Separate with ";"').split(';')
     )
 
     return [CategoryWrapper().load_model(category_model)
@@ -247,6 +248,8 @@ def gather_tutorial_anchor_info() -> TutorialAnchorWrapper:
 
 def create_tutorial_anchor() -> None:
     anchor_wrapper = gather_tutorial_anchor_info()
+
+    info_session()
     print_formatted_text('Tutorial anchor created')
     print_formatted_text('name: {}'.format(anchor_wrapper.name))
     print_formatted_text('url: {}'.format(anchor_wrapper.url))
@@ -256,9 +259,9 @@ def create_tutorial_anchor() -> None:
         anchor_wrapper.get_model(overwrite=True)
         anchor_wrapper.prepare_model()
         anchor_wrapper.finalize_model()
+        proceed_publishing_content(anchor_wrapper)
 
     proceed_prompt(actions=actions)
-    proceed_publishing_content(anchor_wrapper)
 
 
 @new_session('Graph Json Location')
@@ -346,6 +349,7 @@ def create_graph() -> None:
 
     graph_wrappers: List[GraphWrapper] = wrap_graph_jsons(graph_file_paths)
 
+    info_session()
     print_formatted_text('The following graphs are created: ')
     if graph_wrappers:
         for wrapper in graph_wrappers:
@@ -361,10 +365,10 @@ def create_graph() -> None:
             graph_wrapper.prepare_model()
             graph_wrapper.finalize_model()
 
-    proceed_prompt(actions=actions)
+        for graph_wrapper in graph_wrappers:
+            proceed_publishing_content(graph_wrapper)
 
-    for wrapper in graph_wrappers:
-        proceed_publishing_content(wrapper)
+    proceed_prompt(actions=actions)
 
 
 def get_locale_md_files() -> List[pathlib.Path]:
@@ -374,7 +378,7 @@ def get_locale_md_files() -> List[pathlib.Path]:
     md_selection_values = [(element, element.name) for element in md_file_paths]
 
     selected_graph_file_paths = run_interruptable_checkbox_dialog(
-        text='Please select the graphs you want to upload',
+        text='Please select the translations you want to upload',
         values=md_selection_values,
         default_values=md_selection_values
     )
@@ -438,6 +442,7 @@ def create_locale_md() -> None:
     #  if it's already in there and does basically nothing to it. You should show a warning for now and
     #  and a edit option to it later. Same as for graphs.
 
+    info_session()
     print_formatted_text('The following translations are created: ')
     for wrapper in md_file_wrappers:
         print_formatted_text(f'{wrapper}')
@@ -447,11 +452,10 @@ def create_locale_md() -> None:
             md_file_wrapper.get_model(overwrite=True)
             md_file_wrapper.prepare_model()
             md_file_wrapper.finalize_model()
+        for md_file_wrapper in md_file_wrappers:
+            proceed_publishing_content(md_file_wrapper)
 
     proceed_prompt(actions=actions)
-
-    for wrapper in md_file_wrappers:
-        proceed_publishing_content(wrapper)
 
 
 def get_code_source_folder() -> pathlib.Path:
@@ -544,6 +548,7 @@ def create_code_obj() -> None:
     code_source_folder = get_code_source_folder()
     code_wrapper, exec_result_wrappers = gather_code_info(code_source_folder)
 
+    info_session()
     print_formatted_text('Code: {}'.format(code_wrapper))
     print_formatted_text('Execution results: ')
     for wrapper in exec_result_wrappers:
@@ -615,14 +620,15 @@ def create_graph_content_trans() -> None:
             graph_content_wrapper.prepare_model()
             graph_content_wrapper.finalize_model()
 
+        for graph_content_wrapper in graph_content_wrappers:
+            proceed_publishing_content(wrapper)
+
+    info_session()
     print_formatted_text('Graph info translations: ')
     for wrapper in graph_content_wrappers:
         print_formatted_text(f'{wrapper}')
 
     proceed_prompt(actions=actions)
-
-    for wrapper in graph_content_wrappers:
-        proceed_publishing_content(wrapper)
 
 
 def enter_password() -> Optional[str]:
@@ -651,11 +657,12 @@ def create_user() -> None:
         role=role
     )
 
+    info_session()
     print_formatted_text('The following user will be created/overwritten: ')
     print_formatted_text(f'username: {username}')
     print_formatted_text(f'email: {email}')
     print_formatted_text(f'password: {password}')
-    print_formatted_text(f'role: {role}')
+    print_formatted_text(f'role: {ROLES(role).label}')
 
     def actions():
         user_wrapper.get_model(overwrite=True)
@@ -683,6 +690,8 @@ class CommandWrapper:
             text='Please choose what you want to do',
             values=cls.action_values
         )
+
+        print(action_choices)
 
         for action in action_choices:
             action()

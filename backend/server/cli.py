@@ -13,6 +13,7 @@ from prompt_toolkit.document import Document
 from prompt_toolkit.validation import Validator, ValidationError
 
 from cli_utils.cli_helper import arg_parser
+from cli_utils.cli_ui import make_separation
 
 
 class ServerPathValidator(Validator):
@@ -106,8 +107,10 @@ if __name__ == '__main__':
     try:
         main(command_map)
     except KeyboardInterrupt:
+        make_separation('Interrupted')
         print_formatted_text('Keyboard interrupted')
     finally:
+        make_separation('end')
         print_formatted_text('Rolling back any unsaved transactions.')
         rollback()
         print_formatted_text('Rolled back. ')

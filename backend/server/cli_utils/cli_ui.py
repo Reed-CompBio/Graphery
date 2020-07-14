@@ -20,6 +20,14 @@ def new_session(session_text: str = '') -> Callable:
     return wrapper_gen
 
 
+def make_separation(session_text: str) -> None:
+    new_session(session_text)(lambda: None)()
+
+
+def info_session() -> None:
+    make_separation('info')
+
+
 def gen_application(text: str,
                     additional_helper_text: Sequence[str] = (),
                     body=None,
