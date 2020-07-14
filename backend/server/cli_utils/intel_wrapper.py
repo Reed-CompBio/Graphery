@@ -20,8 +20,8 @@ class IntelWrapperBase(ABC):
         for field_name, validator in self.validators.items():
             # TODO change error class
             field = getattr(self, field_name, None)
-            if not field:
-                raise AssertionError('Cannot file the field {} during validation'
+            if field is None:
+                raise AssertionError('Cannot find the field {} during validation'
                                      .format(field_name))
             try:
                 validator(field_name)
@@ -99,7 +99,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
     def set_variables(self, **kwargs) -> 'AbstractWrapper':
         for field_name in self.validators.keys():
             var = kwargs.get(field_name, None)
-            if var:
+            if var is not None:
                 setattr(self, field_name, var)
 
         return self
@@ -423,7 +423,7 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
     def set_variables(self, **kwargs) -> 'TutorialTranslationContentWrapper':
         super().set_variables(**kwargs)
         the_model_class = kwargs.get('model_class', None)
-        if the_model_class and issubclass(the_model_class, TranslationBase):
+        if the_model_class is not None and issubclass(the_model_class, TranslationBase):
             self.set_model_class(the_model_class)
         return self
 
@@ -479,7 +479,7 @@ class GraphTranslationContentWrapper(PublishedWrapper):
     def set_variables(self, **kwargs) -> 'GraphTranslationContentWrapper':
         super().set_variables(**kwargs)
         the_model_class = kwargs.get('model_class', None)
-        if the_model_class and issubclass(the_model_class, GraphTranslationBase):
+        if the_model_class is not None and issubclass(the_model_class, GraphTranslationBase):
             self.set_model_class(the_model_class)
         return self
 

@@ -67,7 +67,8 @@ def get_url(message: str = '', validator: Validator = None, default: str = '') -
 
 
 @new_session('input abstract')
-def get_abstract(message: str = '', validator: Validator = None, default: str = '', multiline=True) -> str:
+def \
+        get_abstract(message: str = '', validator: Validator = None, default: str = '', multiline=True) -> str:
     return new_line_prompt(message=message, validator=validator, default=default, multiline=multiline)
 
 
@@ -401,14 +402,14 @@ def gather_locale_md_info(path: pathlib.Path) -> TutorialTranslationContentWrapp
     try:
         name, lang = path.stem.split('.')
         # TODO I don't think you can do much about it since you can't change the input source in the command line?
-        title: str = get_name(message='Please edit the title of this tutorial', default=name)
+        title: str = get_name(message='Please edit the title of this tutorial:', default=name)
         lang_class: Type[TranslationBase] = select_tutorial_lang(lang)
 
         content_md = path.read_text()
         content_html, abstract = parse_markdown(text=content_md)
 
         # TODO again, you can't do much in a command line I guess?
-        abstract: str = get_abstract(message='Edit the abstract of this translation', default=abstract)
+        abstract: str = get_abstract(message='Edit the abstract of this translation:', default=abstract)
 
         authors = select_authors()
         tutorial_anchor = select_tutorial()
@@ -621,7 +622,7 @@ def create_graph_content_trans() -> None:
             graph_content_wrapper.finalize_model()
 
         for graph_content_wrapper in graph_content_wrappers:
-            proceed_publishing_content(wrapper)
+            proceed_publishing_content(graph_content_wrapper)
 
     info_session()
     print_formatted_text('Graph info translations: ')
