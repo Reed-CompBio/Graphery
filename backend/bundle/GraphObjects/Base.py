@@ -1,5 +1,5 @@
 from abc import ABCMeta
-from typing import Union, Iterable, Mapping, Type
+from typing import Union, Iterable, Mapping, Type, MutableMapping
 import json
 import logging
 
@@ -109,7 +109,7 @@ class Stylable(metaclass=ABCMeta):
         @param classes:
         """
         # TODO I don't think I need styles
-        self.styles = {}
+        self.styles: MutableMapping[str, str] = {}
         self.classes = []
 
         if isinstance(style, str):
@@ -164,15 +164,6 @@ class ElementSet:
                 return element
 
         return None
-
-    def __setitem__(self, key, value):
-        """
-        prevent changes through subscripts
-        @param key:
-        @param value:
-        @return:
-        """
-        raise AttributeError('You cannot set elements in a immutable object')
 
     def __iter__(self):
         """

@@ -1,27 +1,24 @@
-import logging
-
+from .Base import Stylable
 from .Errors import GraphJsonFormatError
-from .Node import Node, NodeSet
-from .Edge import Edge, EdgeSet
+from .Node import Node, NodeSet, MutableNodeSet
+from .Edge import Edge, EdgeSet, MutableEdgeSet, NodeTuple, EdgeIDTuple
 import json
 from typing import Iterable, Union, Optional, Mapping
 
 
-class Graph:
+class Graph(Stylable):
     """
     The graph object
     """
 
-    def __init__(self, nodes: Iterable[Node],
-                 edges: Iterable[Edge],
-                 prefix: bool = False):
+    def __init__(self, nodes: Iterable[Node], edges: Iterable[Edge], styles=None, classes=None):
         """
         graph constructor.
         @param nodes:
         @param edges:
-        @param prefix:
         @raise ValueError: if nodes and edges are not iterable
         """
+        super(Graph, self).__init__(styles, classes)
         if isinstance(nodes, Iterable) and isinstance(edges, Iterable):
             if isinstance(nodes, NodeSet):
                 self.nodes = nodes
@@ -126,7 +123,8 @@ class Graph:
                 raise GraphJsonFormatError(e)
             except json.JSONDecodeError as e:
                 raise GraphJsonFormatError('Please check the json format. '
-                                           'The other json format is not supported for now')
+                                           'The other json format is not supported for now. '
+                                           f'Error: {e}')
         elif isinstance(graph_json, Mapping):
             graph_dict = graph_json
         else:
@@ -145,3 +143,55 @@ class Graph:
                 return Graph(parsed_node_set, parsed_edge_set)
         else:
             raise GraphJsonFormatError('malformed json file')
+
+
+class MutableGraph(Graph):
+    from .helpers import GraphObjectEncoder
+
+    def __init__(self, nodes: Iterable[Node] = (), edges: Iterable[Edge] = ()):
+        super().__init__(nodes, edges)
+        self.nodes: MutableNodeSet = MutableNodeSet(self.nodes)
+        self.edges: MutableEdgeSet = MutableEdgeSet(self.edges)
+
+        self.V = self.nodes
+        self.E = self.edges
+
+    def add_node(self, identity: Union[str, Node] = None,
+                 styles: Union[str, Mapping] = None, classes: Iterable = None) -> Node:
+        node = Node.return_node(identity=identity, styles=styles, classes=classes)
+        self.nodes.add_node(node)
+        return node
+
+    def add_edge(self,
+                 identity: Union[str, Edge] = None,
+                 edge: Union[Edge, NodeTuple, EdgeIDTuple] = (),
+                 styles=None, classes=None) -> Edge:
+        edge = Edge.return_edge(identity, edge, styles, classes)
+        self.edges.add_edge(edge)
+        return edge
+
+    def remove_node(self, identity: Union[str, Node], with_edge: bool = False) -> bool:
+        node = Node.return_node(identity)
+        related_edges = [edge for edge in self.edges if node in edge]
+        if related_edges:
+            if not with_edge:
+                return False
+            self.edges.remove_edges(related_edges)
+
+        self.nodes.remove_node(node)
+        return True
+
+    def remove_edge(self, identity: Union[str, Edge]) -> bool:
+        if isinstance(identity, Edge):
+            edge = Edge.return_edge(edge=identity)
+        else:
+            edge = Edge.return_edge(identity=identity)
+
+        self.edges.remove_edges(edge)
+        return True
+
+    def generate_json(self, indent: int = None) -> str:
+        return json.dumps(self, indent=indent, cls=MutableGraph.GraphObjectEncoder)
+
+    def generate_json_object(self) -> dict:
+        return json.loads(self.generate_json())

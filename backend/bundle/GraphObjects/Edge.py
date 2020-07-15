@@ -1,13 +1,17 @@
 from .Base import Comparable, HasProperty, Stylable, ElementSet
 from .Errors import GraphJsonFormatError
 from .Node import Node, NodeSet
-from typing import Iterable, Tuple, Mapping
+from typing import Iterable, Tuple, Mapping, Union
+from collections import namedtuple
+
+NodeTuple = namedtuple('edge', ('incident_edge', 'final_edge'))
+EdgeIDTuple = namedtuple('edge_identities', ('incident_edge_identity', 'final_edge_identity'))
 
 
 class Edge(Comparable, HasProperty, Stylable):
     _PREFIX = 'e'
 
-    def __init__(self, identity, node_pair: Tuple[Node, Node], name=None, styles=None, classes=None, directed=False):
+    def __init__(self, identity, node_pair: NodeTuple, name=None, styles=None, classes=None, directed=False):
         """
         create an edge with an identity and a pair of nodes
         @param identity:
@@ -22,7 +26,7 @@ class Edge(Comparable, HasProperty, Stylable):
         HasProperty.__init__(self)
         Stylable.__init__(self, styles, classes)
         if isinstance(node_pair, Tuple) and all(isinstance(node, Node) for node in node_pair):
-            self.node_pair: Tuple[Node, Node] = node_pair
+            self.node_pair: NodeTuple = node_pair
         else:
             raise KeyError('%s is not a tuple or contains non-node element' % str(node_pair))
         self.directed: bool = directed
@@ -94,6 +98,24 @@ class Edge(Comparable, HasProperty, Stylable):
     def __repr__(self):
         return self.__str__()
 
+    @staticmethod
+    def return_edge(identity: str = None, edge: Union['Edge', NodeTuple, Tuple[str, str]] = (),
+                    styles=None, classes=None) -> 'Edge':
+
+        if isinstance(identity, str):
+            if isinstance(edge, NodeTuple):
+                incident_node, final_node = edge
+            elif isinstance(edge, Tuple) and all(isinstance(ele, (str, Node)) for ele in edge):
+                incident_node, final_node = Node.return_node(edge[0]), Node.return_node(edge[1])
+            else:
+                incident_node, final_node = None, None
+            return Edge(identity, NodeTuple(incident_node, final_node), styles, classes)
+        else:
+            if isinstance(edge, Edge):
+                return edge
+            else:
+                raise TypeError('The edge must be a edge if the identity is not a string')
+
 
 class EdgeSet(ElementSet):
     def __init__(self, edges: Iterable[Edge]):
@@ -122,9 +144,32 @@ class EdgeSet(ElementSet):
             if not ('id' in data_field and 'source' in data_field and 'target' in data_field):
                 raise GraphJsonFormatError(f'The edge {edge} entry must contain `id`, `source` and `target` fields')
 
-            stored_edge = Edge(data_field['id'], (nodes[data_field['source']], nodes[data_field['target']]))
+            stored_edge = Edge(data_field['id'], NodeTuple(nodes[data_field['source']], nodes[data_field['target']]))
             if 'displayed' in data_field:
                 stored_edge.update_properties(data_field['displayed'])
             stored_edges.append(stored_edge)
 
         return EdgeSet(stored_edges)
+
+
+class MutableEdgeSet(EdgeSet):
+    def __init__(self, edges: Iterable[Edge] = ()):
+        super(MutableEdgeSet, self).__init__(edges)
+
+    def add_edge(self, edge: Edge) -> None:
+        if not isinstance(edge, self.element_type):
+            raise TypeError(f'Mutable Edge Set only accepts {self.element_type}')
+        self.elements.append(edge)
+
+    def remove_edge(self, edge: Edge) -> None:
+        if not isinstance(edge, self.element_type):
+            raise TypeError(f'Why do you want to remove {type(edge)} from Edges')
+        self.elements.remove(edge)
+
+    def add_edges(self, edges: Iterable[Edge]) -> None:
+        for element in edges:
+            self.add_edge(element)
+
+    def remove_edges(self, edges: Iterable[Edge]) -> None:
+        for element in edges:
+            self.remove_edge(element)
