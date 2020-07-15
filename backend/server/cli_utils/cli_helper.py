@@ -2,7 +2,6 @@ import argparse
 import re
 import pathlib
 from typing import Mapping, List
-from html.parser import HTMLParser
 
 from django.db.models import QuerySet
 
@@ -35,30 +34,6 @@ def arg_parser() -> Mapping[str, str]:
 
     args: argparse.Namespace = parser.parse_args()
     return vars(args)
-
-
-class CustomHtmlParser(HTMLParser):
-    def error(self, message):
-        raise ValueError(message)
-
-    def __init__(self):
-        super().__init__()
-        self.first: bool = True
-        self.recording: bool = False
-        self.data: List = []
-
-    def handle_starttag(self, tag, attrs):
-        if self.first and tag == 'p':
-            self.first = False
-            self.recording = True
-
-    def handle_endtag(self, tag):
-        if self.recording and tag == 'p':
-            self.recording = False
-
-    def handle_data(self, data):
-        if self.recording:
-            self.data.append(data)
 
 
 class CodeSourceFolderValidator(Validator):

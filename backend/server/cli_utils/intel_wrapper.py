@@ -106,6 +106,9 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
 
     def overwrite_model(self) -> None:
         for field in self.validators.keys():
+            # TODO directly setting values will cause problems since in many to many / one to many fieds
+            #   you can only use model.add/set methods to overwrite values
+            #   Use the method in graphene which determines which field should be DjangoListField
             setattr(self.model, field, getattr(self, field))
 
     def get_model(self, overwrite: bool = False) -> None:

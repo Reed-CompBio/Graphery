@@ -5,6 +5,7 @@ import shutil
 from importlib import import_module
 from typing import Tuple, List, MutableMapping, Sequence
 
+from bs4 import BeautifulSoup
 from django.db.models import QuerySet
 from django.db.transaction import commit, rollback
 
@@ -23,7 +24,7 @@ from bundle.controller import controller
 from bundle.utils.cache_file_helpers import TempSysPathAdder
 from bundle.GraphObjects.Graph import Graph as CustomGraph
 from .cli_helper import NameValidator, UrlValidator, LocationValidator, CodeSourceFolderValidator, \
-    EmailValidator, UsernameValidator, PasswordValidator, CustomHtmlParser
+    EmailValidator, UsernameValidator, PasswordValidator
 from .errors import InvalidGraphJson
 
 from .intel_wrapper import *
@@ -67,8 +68,7 @@ def get_url(message: str = '', validator: Validator = None, default: str = '') -
 
 
 @new_session('input abstract')
-def \
-        get_abstract(message: str = '', validator: Validator = None, default: str = '', multiline=True) -> str:
+def get_abstract(message: str = '', validator: Validator = None, default: str = '', multiline=False) -> str:
     return new_line_prompt(message=message, validator=validator, default=default, multiline=multiline)
 
 
@@ -386,15 +386,17 @@ def get_locale_md_files() -> List[pathlib.Path]:
     return selected_graph_file_paths
 
 
-def parse_markdown(text: str) -> Tuple[str, str]:
+def get_html_soup_from_string(html_string: str) -> BeautifulSoup:
+    return BeautifulSoup(html_string, 'html.parser')
+
+
+def parse_markdown(text: str) -> Tuple[str, str, str]:
     result: str = markdown.markdown(text, extensions=['codehilite', 'md_in_html', 'markdown_del_ins',
                                                       'pymdownx.arithmatex', 'pymdownx.details',
                                                       'pymdownx.inlinehilite', 'pymdownx.superfences'])
-    parser = CustomHtmlParser()
-    parser.feed(result)
-    abstract: str = ''.join(parser.data)
+    soup = get_html_soup_from_string(result)
 
-    return result, abstract
+    return soup.h1.text, result, soup.p
     # TODO add arithmatex required js to the page
 
 
@@ -402,11 +404,13 @@ def gather_locale_md_info(path: pathlib.Path) -> TutorialTranslationContentWrapp
     try:
         name, lang = path.stem.split('.')
         # TODO I don't think you can do much about it since you can't change the input source in the command line?
-        title: str = get_name(message='Please edit the title of this tutorial:', default=name)
         lang_class: Type[TranslationBase] = select_tutorial_lang(lang)
 
         content_md = path.read_text()
-        content_html, abstract = parse_markdown(text=content_md)
+        md_title, content_html, abstract = parse_markdown(text=content_md)
+
+        title: str = get_name(message='Please edit the title of this tutorial:',
+                              default=md_title if md_title else name)
 
         # TODO again, you can't do much in a command line I guess?
         abstract: str = get_abstract(message='Edit the abstract of this translation:', default=abstract)
@@ -584,11 +588,13 @@ def gather_graph_locale_info(info_files: List[pathlib.Path]) -> List[GraphTransl
     for info_file in info_files:
         try:
             file_name, lang = info_file.name.split('.')
-            title = get_name(message='Please input the title of this graph', default=file_name)
 
             language_model: Type[GraphTranslationBase] = select_graph_lang(lang)
 
-            abstract, _ = parse_markdown(info_file.read_text())
+            md_title, abstract, _ = parse_markdown(info_file.read_text())
+
+            title = get_name(message='Please input the title of this graph',
+                             default=md_title if md_title else file_name)
 
             abstract: str = get_abstract(message='Edit the abstract of this translation', default=abstract)
 
