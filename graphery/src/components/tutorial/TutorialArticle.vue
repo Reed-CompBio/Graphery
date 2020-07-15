@@ -144,4 +144,8 @@
 
   #scroll-up-icon:hover
     cursor: pointer
+  #tutorial-content h2
+    font-size: 28px
+    margin: 8px 0
+    font-style: oblique
 </style>

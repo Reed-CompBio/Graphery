@@ -301,6 +301,7 @@
         this.cyInstance.getElementById(id).style({
           'overlay-color': color,
           'overlay-opacity': 0.5,
+          'overlay-padding': 5,
         });
       },
       unhighlightElement(id) {
@@ -330,11 +331,16 @@
         }
       },
       reloadGraph() {
-        this.cyInstance.style().resetToDefault();
-        this.reloadCyWithFullJson(this.currentGraphJsonObj);
-        this.updateLayout();
+        if (this.cyInstance) {
+          this.cyInstance.style().resetToDefault();
+          this.reloadCyWithFullJson(this.currentGraphJsonObj);
+          this.updateLayout();
+        }
       },
       updateLayout() {
+        if (!this.cyInstance) {
+          return;
+        }
         /**
          * copied from
          * @see {@link https://github.com/cylc/cylc-ui/blob/master/src/components/cylc/graph/Graph.vue}
