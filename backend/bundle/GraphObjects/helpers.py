@@ -10,7 +10,7 @@ from .Graph import Graph
 default_graph_styles: List[dict] = [
     {
         "selector": "node",
-        "css": {
+        "style": {
             "label": "data(id)",
             "text-valign": "center",
             "text-halign": "center",
@@ -19,6 +19,7 @@ default_graph_styles: List[dict] = [
             "text-outline-width": 1,
             "height": "10px",
             "width": "10px",
+            "font-size": "5px",
             "border-color": "black",
             "border-opacity": 1,
             "border-width": 1
@@ -78,9 +79,10 @@ class GraphObjectEncoder(json.JSONEncoder):
                 'nodes': cls.return_node_set_encoding(graph.V),
                 'edges': cls.return_edge_set_encoding(graph.E)
             },
-            'styles': [
+            'style': [
                 *default_graph_styles,
-                graph.styles
+                # graph.styles
+                # TODO you can't have a empty dict. They must be removed
             ]
         }
 
