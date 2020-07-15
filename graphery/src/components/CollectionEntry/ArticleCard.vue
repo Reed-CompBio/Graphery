@@ -44,9 +44,7 @@
           </div>
         </section>
         <section class="article-abstract-section q-mx-md">
-          <p>
-            {{ abstract }}
-          </p>
+          <div class="q-mb-sm" v-html="abstract"></div>
         </section>
         <q-card-actions>
           <q-btn :to="`/tutorial/${url}`" :disable="noContentNoClick">

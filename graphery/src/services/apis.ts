@@ -31,7 +31,9 @@ export async function apiCaller(
 ) {
   if (vuex.state.csrfToken === null) {
     // TODO use vuex. add a renew token in login page.
-    await apiClient.get('/csrf');
+    await apiClient.get('/csrf').then((re) => {
+      vuex.commit('SET_CSRF_TOKEN', re.data.csrfToken);
+    });
   }
   const response = await apiClient.post(
     '/graphql',
@@ -42,7 +44,7 @@ export async function apiCaller(
     {
       headers: {
         // TODO corresponding, change this
-        'X-CSRFToken': getCookie(csrfTokenCookieName),
+        'X-CSRFToken': vuex.state.csrfToken,
       },
     }
   );

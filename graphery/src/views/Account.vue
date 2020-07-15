@@ -132,6 +132,8 @@
               this.loading = false;
               this.resetForm();
             }
+
+            this.$store.commit('SET_CSRF_TOKEN', null);
           })
           .catch((err) => {
             // TODO handle error
