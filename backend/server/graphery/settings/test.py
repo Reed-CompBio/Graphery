@@ -12,7 +12,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 
-CORS_ORIGIN_WHITELIST = ['http://localhost:8080']
+CORS_ORIGIN_WHITELIST = ['http://localhost:8080', 'http://localhost:8088']
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
