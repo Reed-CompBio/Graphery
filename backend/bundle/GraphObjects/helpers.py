@@ -6,10 +6,26 @@ from .Node import Node, NodeSet
 from .Edge import Edge, EdgeSet
 from .Graph import Graph
 
-
 # TODO add default styles
-default_graph_styles = {}
-default_directed_styles = {}
+default_graph_styles: List[dict] = [
+    {
+        "selector": "node",
+        "css": {
+            "label": "data(id)",
+            "text-valign": "center",
+            "text-halign": "center",
+            "text-outline-color": "white",
+            "text-outline-opacity": 1,
+            "text-outline-width": 1,
+            "height": "10px",
+            "width": "10px",
+            "border-color": "black",
+            "border-opacity": 1,
+            "border-width": 1
+        }
+    },
+]
+default_directed_styles: dict = {}
 
 
 class GraphObjectEncoder(json.JSONEncoder):
@@ -25,7 +41,7 @@ class GraphObjectEncoder(json.JSONEncoder):
                 'data': {
                     'id': node.identity,
                 },
-                'style': node.styles,
+                'style': [node.styles],
             },
             node
         )
@@ -39,10 +55,10 @@ class GraphObjectEncoder(json.JSONEncoder):
                     'source': edge.get_incident_node().identity,
                     'target': edge.get_final_node().identity
                 },
-                'style': {
-                    **edge.styles,
-                    **(default_graph_styles if edge.directed else {})
-                }
+                'style': [
+                    edge.styles,
+                    default_directed_styles if edge.directed else {}
+                ]
             },
             edge
         )
@@ -62,10 +78,10 @@ class GraphObjectEncoder(json.JSONEncoder):
                 'nodes': cls.return_node_set_encoding(graph.V),
                 'edges': cls.return_edge_set_encoding(graph.E)
             },
-            'styles': {
-                **default_graph_styles,
-                **graph.styles
-            }
+            'styles': [
+                *default_graph_styles,
+                graph.styles
+            ]
         }
 
     def default(self, obj: Any) -> Any:
