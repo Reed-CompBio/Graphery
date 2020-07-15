@@ -1,10 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import vuex from '../store/index';
-
-const PRO_BASE_URL = 'http://localhost:8082';
-const DEV_BASE_URL = 'http://localhost:8082';
-export const BASE_URL =
-  process.env.NODE_ENV === 'production' ? PRO_BASE_URL : DEV_BASE_URL;
+import { BASE_URL } from '@/services/api_entry';
 
 export const apiClient: AxiosInstance = axios.create({
   withCredentials: true,
