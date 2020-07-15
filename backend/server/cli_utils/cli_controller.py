@@ -5,7 +5,7 @@ import shutil
 from importlib import import_module
 from typing import Tuple, List, MutableMapping, Sequence
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, ResultSet, Tag
 from django.db.models import QuerySet
 from django.db.transaction import commit, rollback
 
@@ -257,7 +257,7 @@ def create_tutorial_anchor() -> None:
     print_formatted_text('categories: {}'.format(anchor_wrapper.categories))
 
     def actions():
-        anchor_wrapper.get_model(overwrite=True)
+        anchor_wrapper.get_model()
         anchor_wrapper.prepare_model()
         anchor_wrapper.finalize_model()
         proceed_publishing_content(anchor_wrapper)
@@ -362,7 +362,7 @@ def create_graph() -> None:
 
     def actions():
         for graph_wrapper in graph_wrappers:
-            graph_wrapper.get_model(overwrite=True)
+            graph_wrapper.get_model()
             graph_wrapper.prepare_model()
             graph_wrapper.finalize_model()
 
@@ -390,24 +390,66 @@ def get_html_soup_from_string(html_string: str) -> BeautifulSoup:
     return BeautifulSoup(html_string, 'html.parser')
 
 
-def parse_markdown(text: str) -> Tuple[str, str, str]:
+def get_img_file(parent_folder: pathlib.Path, img_tag: Tag) -> Optional[pathlib.Path]:
+    file_name = img_tag.get('src', None)
+    if file_name:
+        return parent_folder / file_name
+    return None
+
+
+def move_file_to_static_folder(file: pathlib.Path, static_folder: pathlib.Path, target_folder: pathlib.Path) -> None:
+    pass
+
+
+def process_images(soup: BeautifulSoup, html_parent_folder: pathlib.Path) -> None:
+    img_tags: ResultSet = soup.find_all('img')
+    for img_tag in img_tags:
+        img_file_path = get_img_file(html_parent_folder, img_tag)
+        if not img_file_path:
+            continue
+        # TODO finish this
+        # move_file_to_static_folder(img_file_path,)
+
+
+def parse_markdown(text: str) -> BeautifulSoup:
     result: str = markdown.markdown(text, extensions=['codehilite', 'md_in_html', 'markdown_del_ins',
                                                       'pymdownx.arithmatex', 'pymdownx.details',
                                                       'pymdownx.inlinehilite', 'pymdownx.superfences'])
     soup = get_html_soup_from_string(result)
 
-    return soup.h1.text, result, soup.p
+    return soup
     # TODO add arithmatex required js to the page
+
+
+def get_meta_info_from_html(soup: BeautifulSoup) -> Tuple[str, str, str]:
+    title = soup.h1.text
+    soup.h1.decompose()
+    content_html = str(soup)
+    abstract = str(soup.p)
+    return title, content_html, abstract
 
 
 def gather_locale_md_info(path: pathlib.Path) -> TutorialTranslationContentWrapper:
     try:
-        name, lang = path.stem.split('.')
+        name_and_lang = path.stem.split('.')
+        if len(name_and_lang) < 2:
+            name, = name_and_lang
+            lang = 'en-us'
+        elif len(name_and_lang) > 2:
+            raise
+        else:
+            name, lang = name_and_lang
         # TODO I don't think you can do much about it since you can't change the input source in the command line?
+        # TODO this is broken because when the lang is not specified, it just returns None
         lang_class: Type[TranslationBase] = select_tutorial_lang(lang)
 
         content_md = path.read_text()
-        md_title, content_html, abstract = parse_markdown(text=content_md)
+        soup = parse_markdown(text=content_md)
+
+        md_title, content_html, abstract = get_meta_info_from_html(soup)
+
+        process_images(soup, path.absolute().parent)
+        # TODO there is a new line in str(soup)
 
         title: str = get_name(message='Please edit the title of this tutorial:',
                               default=md_title if md_title else name)
@@ -454,7 +496,7 @@ def create_locale_md() -> None:
 
     def actions():
         for md_file_wrapper in md_file_wrappers:
-            md_file_wrapper.get_model(overwrite=True)
+            md_file_wrapper.get_model()
             md_file_wrapper.prepare_model()
             md_file_wrapper.finalize_model()
         for md_file_wrapper in md_file_wrappers:
@@ -482,9 +524,10 @@ def code_executor(code_folder: pathlib.Path,
     with controller as folder_creator, \
             folder_creator(f'temp_code_folder_{time.time()}') as cache_folder, \
             TempSysPathAdder(cache_folder):
-        for any_file in code_folder.glob('*'):
-            # noinspection PyTypeChecker
-            shutil.copy(any_file, cache_folder / any_file.name)
+        for any_file in code_folder.glob('*.*'):
+            if any_file.is_file():
+                # noinspection PyTypeChecker
+                shutil.copy(any_file, cache_folder.cache_folder_path / any_file.name)
 
         try:
             imported_module = import_module('entry')
@@ -539,6 +582,7 @@ def gather_code_info(code_folder: pathlib.Path) -> Tuple[CodeWrapper, Sequence[E
         tutorial=tutorial_anchor,
         code=code_text
     )
+    # TODO something's wrong here. The code is not in the database
 
     exec_result_wrappers = [ExecResultJsonWrapper().set_variables(
         code=code_wrapper,
@@ -560,11 +604,11 @@ def create_code_obj() -> None:
         print_formatted_text(f'{wrapper}')
 
     def actions():
-        code_wrapper.get_model(overwrite=True)
+        code_wrapper.get_model()
         code_wrapper.prepare_model()
         code_wrapper.finalize_model()
         for result_wrapper in exec_result_wrappers:
-            result_wrapper.get_model(overwrite=True)
+            result_wrapper.get_model()
             result_wrapper.prepare_model()
             result_wrapper.finalize_model()
 
@@ -623,7 +667,7 @@ def create_graph_content_trans() -> None:
 
     def actions():
         for graph_content_wrapper in graph_content_wrappers:
-            graph_content_wrapper.get_model(overwrite=True)
+            graph_content_wrapper.get_model()
             graph_content_wrapper.prepare_model()
             graph_content_wrapper.finalize_model()
 
@@ -672,7 +716,7 @@ def create_user() -> None:
     print_formatted_text(f'role: {ROLES(role).label}')
 
     def actions():
-        user_wrapper.get_model(overwrite=True)
+        user_wrapper.get_model()
         user_wrapper.prepare_model()
         user_wrapper.finalize_model()
 

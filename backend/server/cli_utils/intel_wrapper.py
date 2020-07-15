@@ -109,7 +109,13 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
             # TODO directly setting values will cause problems since in many to many / one to many fieds
             #   you can only use model.add/set methods to overwrite values
             #   Use the method in graphene which determines which field should be DjangoListField
-            setattr(self.model, field, getattr(self, field))
+            field_value = getattr(self, field)
+            try:
+                setattr(self.model, field, field_value)
+            except ValueError:
+                field_model = getattr(self.model, field)
+                print(field_model)
+                field_model.set(field_value)
 
     def get_model(self, overwrite: bool = False) -> None:
         try:
