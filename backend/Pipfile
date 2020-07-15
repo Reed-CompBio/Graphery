@@ -19,6 +19,7 @@ django-cors-headers = "*"
 markdown-del-ins = "*"
 pymdown-extensions = "*"
 prompt-toolkit = "*"
+beautifulsoup4 = "*"
 
 [requires]
 python_version = "3.8"
