@@ -5,14 +5,18 @@ from typing import List, Mapping
 from prompt_toolkit import print_formatted_text
 
 from cli_utils.cli_ui import new_session, run_interruptable_checkbox_dialog
+
 from cli_utils.command_helpers.command_base import CommandBaseOverIterable
+
 from cli_utils.controller_helpers.cli_validators import name_validator, url_validator
 from cli_utils.controller_helpers.prompt_consent import proceed_publishing_content_iter
 from cli_utils.controller_helpers.prompt_getters import get_name, get_url, get_location
 from cli_utils.controller_helpers.prompt_selectors import select_tutorials, select_and_add_categories, select_authors, \
     select_graph_priority
+
 from cli_utils.errors import InvalidGraphJson
-from cli_utils.intel_wrapper import GraphWrapper, finalize_prerequisite_wrapper_iter
+
+from cli_utils.intel_wrappers.intel_wrapper import GraphWrapper, finalize_prerequisite_wrapper_iter
 
 
 class GraphCreator(CommandBaseOverIterable):

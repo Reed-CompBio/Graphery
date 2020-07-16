@@ -4,12 +4,15 @@ from django.db.models import QuerySet
 from prompt_toolkit import print_formatted_text
 
 from backend.model.TutorialRelatedModel import Tutorial
+
 from cli_utils.command_helpers.command_base import CommandBase
+
 from cli_utils.controller_helpers.cli_validators import name_validator, url_validator
 from cli_utils.controller_helpers.prompt_consent import proceed_publishing_content
 from cli_utils.controller_helpers.prompt_getters import get_name, get_url
 from cli_utils.controller_helpers.prompt_selectors import select_and_add_categories
-from cli_utils.intel_wrapper import TutorialAnchorWrapper, finalize_prerequisite_wrapper
+
+from cli_utils.intel_wrappers.intel_wrapper import TutorialAnchorWrapper, finalize_prerequisite_wrapper
 
 
 class TutorialAnchorCreator(CommandBase):

@@ -5,13 +5,16 @@ import bs4
 from prompt_toolkit import print_formatted_text
 
 from cli_utils.cli_ui import run_interruptable_checkbox_dialog
+
 from cli_utils.command_helpers.command_base import CommandBaseOverIterable
+
 from cli_utils.controller_helpers.content_creator_helper import get_file_name_and_lang, parse_markdown, \
     get_title_from_soup, get_abstract_from_soup
 from cli_utils.controller_helpers.prompt_consent import proceed_publishing_content_iter
 from cli_utils.controller_helpers.prompt_getters import get_name, get_abstract, get_location
 from cli_utils.controller_helpers.prompt_selectors import select_graph_lang, select_graph
-from cli_utils.intel_wrapper import GraphTranslationContentWrapper, finalize_prerequisite_wrapper_iter
+
+from cli_utils.intel_wrappers.intel_wrapper import GraphTranslationContentWrapper, finalize_prerequisite_wrapper_iter
 
 
 class GraphContentCreator(CommandBaseOverIterable):

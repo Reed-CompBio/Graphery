@@ -7,10 +7,12 @@ translation_tables: List[str] = []
 
 translation_types: List[Type[ObjectType]] = []
 
+# noinspection PyUnresolvedReferences
 translation_table_mapping: MutableMapping[str, Type['TranslationBase']] = {}
 
 graph_info_translation_tables: List[str] = []
 
+# noinspection PyUnresolvedReferences
 graph_info_translation_table_mapping: MutableMapping[str, Type['GraphTranslationBase']] = {}
 
 
