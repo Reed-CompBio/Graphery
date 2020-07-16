@@ -1,12 +1,13 @@
 import json
 import pathlib
-from typing import Tuple, Sequence
+from typing import Tuple, Sequence, Optional
 
 from prompt_toolkit import prompt
 from prompt_toolkit.validation import Validator
 
 from cli_utils.cli_ui import new_session
-from cli_utils.controller_helpers.cli_validators import location_validator, path_completer, code_source_folder_validator
+from cli_utils.controller_helpers.cli_validators import location_validator, path_completer, \
+    code_source_folder_validator, password_validator
 
 
 def strip_prompt(*args, **kwargs) -> str:
@@ -50,6 +51,14 @@ def get_password(message: str = '', validator: Validator = None) -> str:
     return strip_prompt(message=message, validator=validator, is_password=True)
 
 
+def enter_password() -> Optional[str]:
+    password = get_password(message='Please enter the password: ', validator=password_validator)
+    reenter_password = get_password(message='Please reenter the password: ', validator=password_validator)
+    if password == reenter_password:
+        return reenter_password
+    return None
+
+
 @new_session('input email')
 def get_email(message: str = '', validator: Validator = None) -> str:
     return strip_prompt(message=message, validator=validator)
@@ -64,6 +73,5 @@ def get_code_text_and_graph_req(source_folder_path: pathlib.Path) -> Tuple[str, 
 
     if 'required_graphs' in json_obj:
         return (source_folder_path / 'entry.py').read_text(), json_obj['required_graphs']
+    # TODO 
     raise
-
-

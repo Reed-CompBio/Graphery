@@ -6,7 +6,8 @@ from prompt_toolkit import print_formatted_text
 
 from cli_utils.cli_ui import run_interruptable_checkbox_dialog
 from cli_utils.command_helpers.command_base import CommandBaseOverIterable
-from cli_utils.controller_helpers.content_creator_helper import get_file_name_and_lang, parse_markdown
+from cli_utils.controller_helpers.content_creator_helper import get_file_name_and_lang, parse_markdown, \
+    get_title_from_soup, get_abstract_from_soup, get_content_from_soup
 from cli_utils.controller_helpers.prompt_consent import proceed_publishing_content_iter
 from cli_utils.controller_helpers.prompt_getters import get_location, get_name, get_abstract
 from cli_utils.controller_helpers.prompt_selectors import select_tutorial_lang, select_authors, select_tutorial
@@ -31,20 +32,6 @@ class TutorialContentCreator(CommandBaseOverIterable):
             default_values=md_selection_values
         )
         return selected_graph_file_paths
-
-    @staticmethod
-    def get_title_from_soup(soup: bs4.BeautifulSoup) -> str:
-        title = soup.h1.text
-        soup.h1.decompose()
-        return title
-
-    @staticmethod
-    def get_content_from_soup(soup: bs4.BeautifulSoup) -> str:
-        return str(soup)
-
-    @staticmethod
-    def get_abstract_from_soup(soup: bs4.BeautifulSoup) -> str:
-        return str(soup.p)
 
     @staticmethod
     def get_img_file(parent_folder: pathlib.Path, img_tag: bs4.Tag) -> Optional[pathlib.Path]:
@@ -85,8 +72,8 @@ class TutorialContentCreator(CommandBaseOverIterable):
 
             soup: bs4.BeautifulSoup = parse_markdown(text=content_md)
 
-            html_title = TutorialContentCreator.get_title_from_soup(soup)
-            html_abstract = TutorialContentCreator.get_abstract_from_soup(soup)
+            html_title = get_title_from_soup(soup)
+            html_abstract = get_abstract_from_soup(soup)
 
             TutorialContentCreator.process_images(soup, path.absolute().parent)
             # TODO there is a new line in str(soup)
@@ -98,7 +85,7 @@ class TutorialContentCreator(CommandBaseOverIterable):
             self.set_attr('abstract',
                           get_abstract(message='Edit the abstract of this translation:', default=html_abstract))
 
-            self.set_attr('content_html', TutorialContentCreator.get_content_from_soup(soup))
+            self.set_attr('content_html', get_content_from_soup(soup))
             self.set_attr('authors', select_authors())
             self.set_attr('tutorial_anchor', select_tutorial())
 

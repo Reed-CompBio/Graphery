@@ -107,7 +107,7 @@ def select_graph_lang(default_lang: str = 'en-us') -> Type[GraphTranslationBase]
 
 
 @new_session('select graph')
-def select_graph() -> Graph:
+def select_graph() -> GraphWrapper:
     graph_query_set: QuerySet = Graph.objects.all()
     graph_selections: List[Tuple[Graph, str]] = [(graph_model, f'{graph_model.url}: {graph_model.name}')
                                                  for graph_model in graph_query_set]
@@ -117,7 +117,7 @@ def select_graph() -> Graph:
         values=graph_selections,
     ).run()
 
-    return graph_choices
+    return GraphWrapper().load_model(graph_choices)
 
 
 @new_session('select user role')

@@ -19,7 +19,7 @@ def code_executor(code_folder: pathlib.Path,
     with controller as folder_creator, \
             folder_creator(f'temp_code_folder_{time()}') as cache_folder, \
             TempSysPathAdder(cache_folder):
-        for any_file in code_folder.glob('*.*'):
+        for any_file in code_folder.glob('*'):
             if any_file.is_file():
                 # noinspection PyTypeChecker
                 shutil.copy(any_file, cache_folder.cache_folder_path / any_file.name)
@@ -47,7 +47,7 @@ def code_executor(code_folder: pathlib.Path,
 
                 exec_result[graph_name] = controller.get_processed_result()
         except ImportError as e:
-            e.args = (f'Cannot import `entry` moduel. Error: {e}', )
+            e.args = (f'Cannot import `entry` module. Error: {e}', )
             raise
         except Exception as e:
             e.args = (f'Unknown exception occurs in executing the code. Error: {e}',)
