@@ -78,8 +78,11 @@ class CommandBaseOverIterable(CommandBase, ABC):
         return value
 
     def get_attr(self, name: str) -> Any:
-        # TODO 
+        # TODO
         raise
 
-    def new_attr(self):
+    def new_attr(self) -> None:
         self.command_attrs.append({})
+
+    def del_attr(self) -> Any:
+        return self.command_attrs.pop()

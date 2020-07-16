@@ -100,14 +100,18 @@ class GraphCreator(CommandBaseOverIterable):
         for path in graph_file_paths:
             print_formatted_text('  {}'.format(path.absolute()))
 
+        # TODO not dry enough
         for path in graph_file_paths:
-            self.gather_graph_info(path)
-
-    def create_helper(self) -> None:
-        self.graph_wrappers.extend(GraphWrapper().set_variables(**info_dict) for info_dict in self.command_attrs)
+            try:
+                self.gather_graph_info(path)
+            except Exception as e:
+                deleted_ele = self.del_attr()
+                e.args = (f'Exception occurs when creating a graph {deleted_ele}. Error: {e}', )
+                # TODO
+                raise
 
     def create(self):
-        self.create_helper()
+        self.graph_wrappers.extend(GraphWrapper().set_variables(**info_dict) for info_dict in self.command_attrs)
 
         return not not self.graph_wrappers
 

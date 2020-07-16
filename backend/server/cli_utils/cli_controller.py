@@ -21,9 +21,9 @@ from cli_utils.cli_ui import run_interruptable_checkbox_dialog, new_session, \
     info_session
 from cli_utils.controller_helpers.cli_validators import name_validator, url_validator, \
     code_source_folder_validator, email_validator, password_validator, username_validator
+from .controller_helpers.content_creator_helper import get_file_name_and_lang
 from .controller_helpers.prompt_consent import proceed_prompt, proceed_publishing_content_iter
 from .controller_helpers.prompt_getters import get_name, get_url, get_location, get_abstract, \
-    get_email, get_password
 from .controller_helpers.prompt_selectors import select_and_add_categories, select_tutorials, select_authors, \
     select_graph_priority, select_tutorial_lang, select_tutorial, select_graph, select_graph_lang, select_role
 from .errors import InvalidGraphJson
@@ -152,7 +152,7 @@ def gather_graph_locale_info(info_files: List[pathlib.Path]) -> List[GraphTransl
     locale_infos: List[GraphTranslationContentWrapper] = []
     for info_file in info_files:
         try:
-            file_name, lang = info_file.name.split('.')
+            file_name, lang = get_file_name_and_lang(info_file.stem)
 
             language_model: Type[GraphTranslationBase] = select_graph_lang(lang)
 
