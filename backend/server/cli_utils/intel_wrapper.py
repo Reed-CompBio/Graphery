@@ -107,11 +107,15 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
         ModelWrapperBase.__init__(self)
         SettableBase.__init__(self)
 
+        self.field_names = [self.validators.keys()]
+
     def set_variables(self, **kwargs) -> 'AbstractWrapper':
-        for field_name in self.validators.keys():
-            var = kwargs.get(field_name, None)
-            if var is not None:
-                setattr(self, field_name, var)
+        for key, value in kwargs.items():
+            if key in self.field_names:
+                setattr(self, key, value)
+            else:
+                raise
+                # TODO
 
         return self
 
