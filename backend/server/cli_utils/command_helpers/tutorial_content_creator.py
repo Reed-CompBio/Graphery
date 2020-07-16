@@ -56,6 +56,7 @@ class TutorialContentCreator(CommandBaseOverIterable):
     @staticmethod
     def move_file_to_static_folder(file: pathlib.Path, static_folder: pathlib.Path,
                                    target_folder: pathlib.Path) -> None:
+        # TODO
         pass
 
     @staticmethod

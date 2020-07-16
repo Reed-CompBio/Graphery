@@ -5,11 +5,7 @@ import shutil
 from importlib import import_module
 from typing import Tuple, List, MutableMapping, Sequence
 
-from bs4 import BeautifulSoup, ResultSet, Tag
-
 from prompt_toolkit import print_formatted_text
-
-import markdown
 
 from backend.model.UserModel import ROLES
 
@@ -19,28 +15,14 @@ from bundle.GraphObjects.Graph import Graph as CustomGraph
 
 from cli_utils.cli_ui import run_interruptable_checkbox_dialog, new_session, \
     info_session
-from cli_utils.controller_helpers.cli_validators import name_validator, url_validator, \
-    code_source_folder_validator, email_validator, password_validator, username_validator
+from cli_utils.controller_helpers.cli_validators import code_source_folder_validator, email_validator, \
+    password_validator, username_validator
 from .controller_helpers.content_creator_helper import get_file_name_and_lang
 from .controller_helpers.prompt_consent import proceed_prompt, proceed_publishing_content_iter
-from .controller_helpers.prompt_getters import get_name, get_url, get_location, get_abstract, \
-from .controller_helpers.prompt_selectors import select_and_add_categories, select_tutorials, select_authors, \
-    select_graph_priority, select_tutorial_lang, select_tutorial, select_graph, select_graph_lang, select_role
-from .errors import InvalidGraphJson
+from .controller_helpers.prompt_getters import get_name, get_location, get_abstract
+from .controller_helpers.prompt_selectors import select_tutorial, select_graph, select_graph_lang, select_role
 
 from .intel_wrapper import *
-
-
-def get_code_source_folder() -> pathlib.Path:
-    return get_location(validator=code_source_folder_validator)
-
-
-def get_code_text_and_graph_req(source_folder_path: pathlib.Path) -> Tuple[str, Sequence[str]]:
-    json_obj = json.loads((source_folder_path / 'graph-info.json').read_text())
-
-    if 'required_graphs' in json_obj:
-        return (source_folder_path / 'entry.py').read_text(), json_obj['required_graphs']
-    raise
 
 
 def code_executor(code_folder: pathlib.Path,
