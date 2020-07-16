@@ -1,16 +1,11 @@
-import json
 import pathlib
-import time
-import shutil
-from importlib import import_module
 from typing import Tuple, List, MutableMapping, Sequence
 
 from prompt_toolkit import print_formatted_text
 
 from backend.model.UserModel import ROLES
 
-from bundle.controller import controller
-from bundle.utils.cache_file_helpers import TempSysPathAdder
+
 from bundle.GraphObjects.Graph import Graph as CustomGraph
 
 from cli_utils.cli_ui import run_interruptable_checkbox_dialog, new_session, \
@@ -19,54 +14,10 @@ from cli_utils.controller_helpers.cli_validators import code_source_folder_valid
     password_validator, username_validator
 from .controller_helpers.content_creator_helper import get_file_name_and_lang
 from .controller_helpers.prompt_consent import proceed_prompt, proceed_publishing_content_iter
-from .controller_helpers.prompt_getters import get_name, get_location, get_abstract
+from .controller_helpers.prompt_getters import get_name, get_location, get_abstract, get_code_text_and_graph_req
 from .controller_helpers.prompt_selectors import select_tutorial, select_graph, select_graph_lang, select_role
 
 from .intel_wrapper import *
-
-
-def code_executor(code_folder: pathlib.Path,
-                  graph_object_mappings: Mapping[Graph, CustomGraph]) -> Mapping[Graph, Mapping]:
-    exec_result = {}
-
-    with controller as folder_creator, \
-            folder_creator(f'temp_code_folder_{time.time()}') as cache_folder, \
-            TempSysPathAdder(cache_folder):
-        for any_file in code_folder.glob('*.*'):
-            if any_file.is_file():
-                # noinspection PyTypeChecker
-                shutil.copy(any_file, cache_folder.cache_folder_path / any_file.name)
-
-        try:
-            imported_module = import_module('entry')
-
-            # TODO a better name maybe?
-            if not hasattr(imported_module, 'graph_object'):
-                raise ValueError('The `graph_object` is not used, which violates the naming convention')
-
-            main_function = getattr(imported_module, 'main', None)
-
-            if not main_function or not isinstance(main_function, Callable):
-                raise ValueError('There is not main function or it is not valid')
-
-            for graph_name, graph_obj in graph_object_mappings.items():
-                # I did not see this coming. I need to change the controller
-                controller.purge_records()
-
-                setattr(imported_module, 'graph_object', graph_obj)
-                main_function()
-
-                controller.generate_processed_record()
-
-                exec_result[graph_name] = controller.get_processed_result()
-        except ImportError as e:
-            e.args = (f'Cannot import `entry` moduel. Error: {e}', )
-            raise
-        except Exception as e:
-            e.args = (f'Unknown exception occurs in executing the code. Error: {e}',)
-            raise
-
-        return exec_result
 
 
 def gather_code_info(code_folder: pathlib.Path) -> Tuple[CodeWrapper, Sequence[ExecResultJsonWrapper]]:
