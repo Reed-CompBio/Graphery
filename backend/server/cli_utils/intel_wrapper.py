@@ -107,14 +107,14 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
         ModelWrapperBase.__init__(self)
         SettableBase.__init__(self)
 
-        self.field_names = [self.validators.keys()]
+        self.field_names = [*self.validators.keys()]
 
     def set_variables(self, **kwargs) -> 'AbstractWrapper':
         for key, value in kwargs.items():
             if key in self.field_names:
                 setattr(self, key, value)
             else:
-                raise
+                raise ValueError(f'The field name {key} is not in specified fields {self.field_names}')
                 # TODO
 
         return self

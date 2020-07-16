@@ -1,12 +1,10 @@
 import pathlib
 import shutil
-from collections import Mapping
 from importlib import import_module
 from time import time
-from typing import Callable
+from typing import Callable, Mapping
 
 from backend.model.TutorialRelatedModel import Graph
-
 from bundle.GraphObjects.Graph import Graph as CustomGraphObject
 from bundle.controller import controller
 from bundle.utils.cache_file_helpers import TempSysPathAdder
