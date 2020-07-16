@@ -1,39 +1,12 @@
-import argparse
 import re
 import pathlib
-from typing import Mapping, List
+from typing import List
 
 from django.db.models import QuerySet
+from prompt_toolkit.completion import PathCompleter
 
 from prompt_toolkit.document import Document
 from prompt_toolkit.validation import Validator, ValidationError
-
-
-commands = [
-    'create',
-    'add',
-    'modify',
-]
-
-#
-# contents = [
-#     'user',
-#     'tutorial_anchor',
-#     'tutorial_contents',
-#     'graph',
-#     'graph_contents',
-#     'code_and_exec_records'
-# ]
-
-
-def arg_parser() -> Mapping[str, str]:
-    parser = argparse.ArgumentParser(description='Graphery CLI')
-    command_group = parser.add_argument_group('Commands')
-    command_group.add_argument('command', choices=commands)
-    # command_group.add_argument('content', choices=contents)
-
-    args: argparse.Namespace = parser.parse_args()
-    return vars(args)
 
 
 class CodeSourceFolderValidator(Validator):
@@ -123,3 +96,36 @@ class PasswordValidator(Validator):
             raise ValidationError(message='The length of the password must be greater than 8')
         if len(document.text) > 20:
             raise ValidationError(message='The length of the password must be smaller than 20')
+
+
+class ServerPathValidator(Validator):
+    def validate(self, document: Document) -> None:
+        path = pathlib.Path(document.text)
+        if path.exists() and (path / 'manage.py').exists():
+            pass
+        else:
+            raise ValidationError(
+                message='The server location you provided {} is not valid'.format(str(path)),
+                cursor_position=len(document.text) - 1)
+
+
+class BundlePathValidator(Validator):
+    def validate(self, document: Document) -> None:
+        path = pathlib.Path(document.text)
+        if path.exists() and (path / 'bundle').exists():
+            pass
+        else:
+            raise ValidationError(message='Please enter the parent folder where bundle src live')
+
+
+server_path_validator = ServerPathValidator()
+bundle_validator = BundlePathValidator()
+
+path_completer = PathCompleter()
+name_validator = NameValidator()
+url_validator = UrlValidator()
+location_validator = LocationValidator()
+code_source_folder_validator = CodeSourceFolderValidator()
+email_validator = EmailValidator()
+username_validator = UsernameValidator()
+password_validator = PasswordValidator()

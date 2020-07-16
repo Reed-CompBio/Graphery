@@ -7,225 +7,30 @@ from typing import Tuple, List, MutableMapping, Sequence
 
 from bs4 import BeautifulSoup, ResultSet, Tag
 from django.db.models import QuerySet
-from django.db.transaction import commit, rollback
 
-from prompt_toolkit import print_formatted_text, prompt
-from prompt_toolkit.completion import PathCompleter
-from prompt_toolkit.validation import Validator
+from prompt_toolkit import print_formatted_text
 
 import markdown
 
 from backend.model.UserModel import ROLES
-from backend.model.translation_collection import translation_table_mapping, get_translation_table, \
-    get_graph_info_trans_table
-from cli_utils.cli_ui import run_interruptable_checkbox_dialog, new_session, inline_radio_dialog, \
-    info_session
+
 from bundle.controller import controller
 from bundle.utils.cache_file_helpers import TempSysPathAdder
 from bundle.GraphObjects.Graph import Graph as CustomGraph
-from .cli_helper import NameValidator, UrlValidator, LocationValidator, CodeSourceFolderValidator, \
-    EmailValidator, UsernameValidator, PasswordValidator
+
+from cli_utils.cli_ui import run_interruptable_checkbox_dialog, new_session, \
+    info_session
+from cli_utils.controller_helpers.cli_validators import name_validator, url_validator, \
+    code_source_folder_validator, email_validator, password_validator, username_validator
+from .controller_helpers.prompt_consent import proceed_prompt, proceed_publishing_content, \
+    proceed_publishing_content_iter
+from .controller_helpers.prompt_getters import get_name, get_url, get_location, get_abstract, \
+    get_email, get_password
+from .controller_helpers.prompt_selectors import select_and_add_categories, select_tutorials, select_authors, \
+    select_graph_priority, select_tutorial_lang, select_tutorial, select_graph, select_graph_lang, select_role
 from .errors import InvalidGraphJson
 
 from .intel_wrapper import *
-
-
-_path_completer = PathCompleter()
-_name_validator = NameValidator()
-_url_validator = UrlValidator()
-_location_validator = LocationValidator()
-_code_source_folder_validator = CodeSourceFolderValidator()
-_email_validator = EmailValidator()
-_username_validator = UsernameValidator()
-_password_validator = PasswordValidator()
-
-
-def new_line_prompt(*args, **kwargs) -> str:
-    message = kwargs.pop('message', '\n') + '\n'
-    return prompt(message=message, *args, **kwargs)
-
-
-@new_session('input location')
-def get_location(prompt_text: str = 'Please enter location',
-                 validator: Validator = _location_validator) -> pathlib.Path:
-    return pathlib.Path(new_line_prompt(message=prompt_text,
-                                        validator=validator,
-                                        completer=_path_completer, ))
-
-
-@new_session('input name')
-def get_name(message: str = '', validator: Validator = None, default: str = '') -> str:
-    return new_line_prompt(message=message,
-                           validator=validator,
-                           default=default).strip()
-
-
-@new_session('input url')
-def get_url(message: str = '', validator: Validator = None, default: str = '') -> str:
-    return new_line_prompt(message=message,
-                           validator=validator,
-                           default=default.replace(' ', '-')).strip()
-
-
-@new_session('input abstract')
-def get_abstract(message: str = '', validator: Validator = None, default: str = '', multiline=False) -> str:
-    return new_line_prompt(message=message, validator=validator, default=default, multiline=multiline)
-
-
-@new_session('input password')
-def get_password(message: str = '', validator: Validator = None):
-    return prompt(message=message, validator=validator, is_password=True)
-
-
-@new_session('input email')
-def get_email(message: str = '', validator: Validator = None):
-    return prompt(message=message, validator=validator)
-
-
-@new_session('select and add categories')
-def select_and_add_categories() -> List[CategoryWrapper]:
-    category_query_set: QuerySet = Category.objects.all()
-    category_selections: List[Tuple[Category, str]] = [(model, model.category) for model in category_query_set]
-
-    category_choices: List[Category] = run_interruptable_checkbox_dialog(
-        text='Please choose existing categories: ',
-        values=category_selections
-    )
-
-    new_categories: Iterable[str] = map(
-        lambda x: x.strip(),
-        new_line_prompt(message='Please enter new categories. Separate with ";"').split(';')
-    )
-
-    return [CategoryWrapper().load_model(category_model)
-            for category_model in category_choices if category_model] + \
-           [CategoryWrapper().set_variables(category_name=category_name)
-            for category_name in new_categories if category_name]
-
-
-@new_session('select authors')
-def select_authors() -> List[UserWrapper]:
-    user_query_set: QuerySet = User.objects.all()
-    user_selections: List[Tuple[User, str]] = [(model, f'{model.username}: {model.email}') for model in user_query_set]
-
-    user_choices: List[User] = run_interruptable_checkbox_dialog(
-        text='Please choose authors: ',
-        values=user_selections
-    )
-
-    return [UserWrapper().load_model(user_model) for user_model in user_choices if user_model]
-
-
-@new_session('select graph priority')
-def select_graph_priority() -> int:
-    return int(inline_radio_dialog(text='Please select the priority of this graph',
-                                   values=[(60, 'major graph',),
-                                           (40, 'minor graph',),
-                                           (20, 'trivial graph')]).run())
-
-
-@new_session('select matching tutorials')
-def select_tutorials() -> List[TutorialAnchorWrapper]:
-    tutorial_query_set = Tutorial.objects.all()
-    tutorial_selections = [(model, f'{model.url}: {model.name}') for model in tutorial_query_set]
-
-    tutorial_choices: List[Tutorial] = run_interruptable_checkbox_dialog(
-        text='Please select tutorials',
-        values=tutorial_selections
-    )
-
-    return [TutorialAnchorWrapper().load_model(tutorial_model) for tutorial_model in tutorial_choices if tutorial_model]
-
-
-@new_session('select matching tutorial')
-def select_tutorial() -> TutorialAnchorWrapper:
-    tutorial_query_set = Tutorial.objects.all()
-    tutorial_selections = [(model, f'{model.url}: {model.name}') for model in tutorial_query_set]
-
-    tutorial_choice: Tutorial = inline_radio_dialog(
-        text='Please select a tutorial',
-        values=tutorial_selections
-    ).run()
-
-    return TutorialAnchorWrapper().load_model(tutorial_choice)
-
-
-@new_session('select tutorial language')
-def select_tutorial_lang(default_lang: str = 'en-us') -> Type[TranslationBase]:
-    lang_selections: List[Tuple[Type, str]] = \
-        [(cls, f'{lang[:2]}-{lang[2:]}') for lang, cls in translation_table_mapping.items()]
-
-    lang_choice: Type[TranslationBase] = inline_radio_dialog(
-        text='Please select the language',
-        values=lang_selections,
-        default_value=(get_translation_table(default_lang), default_lang)
-    ).run()
-    return lang_choice
-
-
-@new_session('select graph language')
-def select_graph_lang(default_lang: str = 'en-us') -> Type[GraphTranslationBase]:
-    lang_selections: List[Tuple[Type, str]] = \
-        [(cls, f'{lang[:2]}-{lang[2:4]}') for lang, cls in translation_table_mapping.items()]
-
-    lang_choice: Type[GraphTranslationBase] = inline_radio_dialog(
-        text='Please select language',
-        values=lang_selections,
-        default_value=(get_graph_info_trans_table(default_lang), default_lang)
-    ).run()
-    return lang_choice
-
-
-@new_session('select graph')
-def select_graph() -> Graph:
-    graph_query_set: QuerySet = Graph.objects.all()
-    graph_selections: List[Tuple[Graph, str]] = [(graph_model, f'{graph_model.url}: {graph_model.name}')
-                                                 for graph_model in graph_query_set]
-
-    graph_choices: Graph = inline_radio_dialog(
-        text='Please select the matching graph',
-        values=graph_selections,
-    ).run()
-
-    return graph_choices
-
-
-@new_session('select user role')
-def select_role() -> int:
-    role_selection: int = inline_radio_dialog(
-        text='Please select the role of this user',
-        values=[
-            (value, label) for value, label in ROLES.choices
-        ],
-        default_value=(ROLES.VISITOR, '')
-    ).run()
-
-    return role_selection
-
-
-@new_session('confirmation')
-def proceed_prompt(actions: Callable) -> None:
-    proceed = prompt('Proceed Saving? (y/N) ')
-    if proceed.lower() == 'y':
-        actions()
-        commit()
-        print_formatted_text('Changes committed.')
-    else:
-        print_formatted_text('Changes not saved. Rolling back.')
-        rollback()
-        print_formatted_text('Rolled back')
-
-
-@new_session('publish confirmation')
-def proceed_publishing_content(published_model_wrapper: AbstractWrapper) -> None:
-    publish = prompt(f'Publish {published_model_wrapper}? (y/N) ')
-    if publish.lower() == 'y':
-        published_model_wrapper.model.is_published = True
-        published_model_wrapper.model.save()
-        commit()
-        print_formatted_text('Published Content')
-    else:
-        print_formatted_text(f'Content {published_model_wrapper} is saved but not published')
 
 
 def gather_tutorial_anchor_info() -> TutorialAnchorWrapper:
@@ -234,10 +39,10 @@ def gather_tutorial_anchor_info() -> TutorialAnchorWrapper:
     print_formatted_text('For naming convention, please visit https://poppy-poppy.github.io/Graphery/')
 
     name: str = get_name(message='Please enter the name of the tutorial: ',
-                         validator=_name_validator(tutorial_query_set))
+                         validator=name_validator(tutorial_query_set))
 
     url: str = get_url(message='Please enter the url of the tutorial: ',
-                       validator=_url_validator(tutorial_query_set),
+                       validator=url_validator(tutorial_query_set),
                        default=name)
 
     categories = select_and_add_categories()
@@ -257,9 +62,7 @@ def create_tutorial_anchor() -> None:
     print_formatted_text('categories: {}'.format(anchor_wrapper.categories))
 
     def actions():
-        anchor_wrapper.get_model()
-        anchor_wrapper.prepare_model()
-        anchor_wrapper.finalize_model()
+        finalize_prerequisite_wrapper(anchor_wrapper)
         proceed_publishing_content(anchor_wrapper)
 
     proceed_prompt(actions=actions)
@@ -314,11 +117,11 @@ def gather_graph_info(graph_file_path: pathlib.Path) -> GraphWrapper:
         raise
 
     name: str = get_name(message='Please input the name of the graph in {}'.format(graph_file_path.name),
-                         validator=_name_validator,
+                         validator=name_validator,
                          default=graph_file_path.stem)
 
     url: str = get_url(message='Please input the url of the graph in {}'.format(graph_file_path.name),
-                       validator=_url_validator,
+                       validator=url_validator,
                        default=name)
 
     matching_tutorials = select_tutorials()
@@ -361,13 +164,8 @@ def create_graph() -> None:
         return
 
     def actions():
-        for graph_wrapper in graph_wrappers:
-            graph_wrapper.get_model()
-            graph_wrapper.prepare_model()
-            graph_wrapper.finalize_model()
-
-        for graph_wrapper in graph_wrappers:
-            proceed_publishing_content(graph_wrapper)
+        finalize_prerequisite_wrapper_iter(graph_wrappers)
+        proceed_publishing_content_iter(graph_wrappers)
 
     proceed_prompt(actions=actions)
 
@@ -495,18 +293,15 @@ def create_locale_md() -> None:
         print_formatted_text(f'{wrapper}')
 
     def actions():
-        for md_file_wrapper in md_file_wrappers:
-            md_file_wrapper.get_model()
-            md_file_wrapper.prepare_model()
-            md_file_wrapper.finalize_model()
-        for md_file_wrapper in md_file_wrappers:
-            proceed_publishing_content(md_file_wrapper)
+        finalize_prerequisite_wrapper_iter(md_file_wrappers)
+
+        proceed_publishing_content_iter(md_file_wrappers)
 
     proceed_prompt(actions=actions)
 
 
 def get_code_source_folder() -> pathlib.Path:
-    return get_location(validator=_code_source_folder_validator)
+    return get_location(validator=code_source_folder_validator)
 
 
 def get_code_text_and_graph_req(source_folder_path: pathlib.Path) -> Tuple[str, Sequence[str]]:
@@ -604,13 +399,8 @@ def create_code_obj() -> None:
         print_formatted_text(f'{wrapper}')
 
     def actions():
-        code_wrapper.get_model()
-        code_wrapper.prepare_model()
-        code_wrapper.finalize_model()
-        for result_wrapper in exec_result_wrappers:
-            result_wrapper.get_model()
-            result_wrapper.prepare_model()
-            result_wrapper.finalize_model()
+        finalize_prerequisite_wrapper(code_wrapper)
+        finalize_prerequisite_wrapper_iter(exec_result_wrappers)
 
     proceed_prompt(actions=actions)
 
@@ -666,13 +456,9 @@ def create_graph_content_trans() -> None:
     graph_content_wrappers: List[GraphTranslationContentWrapper] = gather_graph_locale_info(graph_info_md_files)
 
     def actions():
-        for graph_content_wrapper in graph_content_wrappers:
-            graph_content_wrapper.get_model()
-            graph_content_wrapper.prepare_model()
-            graph_content_wrapper.finalize_model()
+        finalize_prerequisite_wrapper_iter(graph_content_wrappers)
 
-        for graph_content_wrapper in graph_content_wrappers:
-            proceed_publishing_content(graph_content_wrapper)
+        proceed_publishing_content_iter(graph_content_wrappers)
 
     info_session()
     print_formatted_text('Graph info translations: ')
@@ -683,16 +469,16 @@ def create_graph_content_trans() -> None:
 
 
 def enter_password() -> Optional[str]:
-    password = get_password(message='Please enter the password: ', validator=_password_validator)
-    reenter_password = get_password(message='Please reenter the password: ', validator=_password_validator)
+    password = get_password(message='Please enter the password: ', validator=password_validator)
+    reenter_password = get_password(message='Please reenter the password: ', validator=password_validator)
     if password == reenter_password:
         return reenter_password
     return None
 
 
 def create_user() -> None:
-    email: str = get_email(message='Please input email: ', validator=_email_validator)
-    username: str = get_name(message='Please input username: ', validator=_username_validator)
+    email: str = get_email(message='Please input email: ', validator=email_validator)
+    username: str = get_name(message='Please input username: ', validator=username_validator)
     role: int = select_role()
     while True:
         password: Optional[str] = enter_password()
@@ -716,9 +502,7 @@ def create_user() -> None:
     print_formatted_text(f'role: {ROLES(role).label}')
 
     def actions():
-        user_wrapper.get_model()
-        user_wrapper.prepare_model()
-        user_wrapper.finalize_model()
+        finalize_prerequisite_wrapper(user_wrapper)
 
     proceed_prompt(actions=actions)
 
@@ -741,8 +525,6 @@ class CommandWrapper:
             text='Please choose what you want to do',
             values=cls.action_values
         )
-
-        print(action_choices)
 
         for action in action_choices:
             action()

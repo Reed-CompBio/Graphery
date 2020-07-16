@@ -8,37 +8,13 @@ from typing import Mapping
 from django import setup as django_setup
 from django.db.transaction import set_autocommit, rollback
 from prompt_toolkit import prompt, print_formatted_text
-from prompt_toolkit.completion import PathCompleter
-from prompt_toolkit.document import Document
-from prompt_toolkit.validation import Validator, ValidationError
 
-from cli_utils.cli_helper import arg_parser
+from cli_utils.controller_helpers.arg_parser import parse_args
+from cli_utils.controller_helpers.cli_validators import path_completer as _path_completer
+from cli_utils.controller_helpers.cli_validators import server_path_validator as _server_path_validator
+from cli_utils.controller_helpers.cli_validators import bundle_validator as _bundle_validator
+
 from cli_utils.cli_ui import make_separation
-
-
-class ServerPathValidator(Validator):
-    def validate(self, document: Document) -> None:
-        path = pathlib.Path(document.text)
-        if path.exists() and (path / 'manage.py').exists():
-            pass
-        else:
-            raise ValidationError(
-                message='The server location you provided {} is not valid'.format(str(path)),
-                cursor_position=len(document.text) - 1)
-
-
-class BundlePathValidator(Validator):
-    def validate(self, document: Document) -> None:
-        path = pathlib.Path(document.text)
-        if path.exists() and (path / 'bundle').exists():
-            pass
-        else:
-            raise ValidationError(message='Please enter the parent folder where bundle src live')
-
-
-_path_completer = PathCompleter()
-_server_path_validator = ServerPathValidator()
-_bundle_validator = BundlePathValidator()
 
 
 def get_server_location() -> pathlib.Path:
@@ -97,7 +73,7 @@ def main(command_mapping: Mapping[str, str]):
 
 
 if __name__ == '__main__':
-    command_map: Mapping[str, str] = arg_parser()
+    command_map: Mapping[str, str] = parse_args()
 
     server_folder_path: pathlib.Path = get_valid_server_path()
     init_server_settings(server_folder_path)
