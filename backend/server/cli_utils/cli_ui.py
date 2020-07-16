@@ -55,8 +55,7 @@ def gen_application(text: str,
         ])),
         key_bindings=merge_key_bindings([load_key_bindings(), bindings]),
         mouse_support=True,
-        style=style,
-        full_screen=False)
+        style=style)
 
 
 def _inline_checkbox_dialog(text: str = '',
@@ -146,7 +145,7 @@ def run_interruptable_radio_box_dialog(text: str = '',
                                       values=values,
                                       default_value=default_value,
                                       additional_helper_text=additional_helper_text,
-                                      style=style)
+                                      style=style).run()
     if result is None:
         raise KeyboardInterrupt
 
