@@ -6,7 +6,7 @@ from backend.model.UserModel import ROLES
 from backend.model.translation_collection import translation_table_mapping, get_translation_table, \
     get_graph_info_trans_table
 
-from cli_utils.cli_ui import new_session, run_interruptable_checkbox_dialog, inline_radio_dialog
+from cli_utils.cli_ui import new_session, run_interruptable_checkbox_dialog, run_interruptable_radio_box_dialog
 from .prompt_getters import new_line_prompt
 
 from ..intel_wrapper import *
@@ -48,10 +48,10 @@ def select_authors() -> List[UserWrapper]:
 
 @new_session('select graph priority')
 def select_graph_priority() -> int:
-    return int(inline_radio_dialog(text='Please select the priority of this graph',
-                                   values=[(60, 'major graph',),
-                                           (40, 'minor graph',),
-                                           (20, 'trivial graph')]).run())
+    return int(run_interruptable_radio_box_dialog(text='Please select the priority of this graph',
+                                                  values=[(60, 'major graph',),
+                                                          (40, 'minor graph',),
+                                                          (20, 'trivial graph')]))
 
 
 @new_session('select matching tutorials')
@@ -72,37 +72,37 @@ def select_tutorial() -> TutorialAnchorWrapper:
     tutorial_query_set = Tutorial.objects.all()
     tutorial_selections = [(model, f'{model.url}: {model.name}') for model in tutorial_query_set]
 
-    tutorial_choice: Tutorial = inline_radio_dialog(
+    tutorial_choice: Tutorial = run_interruptable_radio_box_dialog(
         text='Please select a tutorial',
         values=tutorial_selections
-    ).run()
+    )
 
     return TutorialAnchorWrapper().load_model(tutorial_choice)
 
 
 @new_session('select tutorial language')
 def select_tutorial_lang(default_lang: str = 'en-us') -> Type[TranslationBase]:
-    lang_selections: List[Tuple[Type, str]] = \
+    lang_selections: List[Tuple[Type[TranslationBase], str]] = \
         [(cls, f'{lang[:2]}-{lang[2:]}') for lang, cls in translation_table_mapping.items()]
 
-    lang_choice: Type[TranslationBase] = inline_radio_dialog(
+    lang_choice: Type[TranslationBase] = run_interruptable_radio_box_dialog(
         text='Please select the language',
         values=lang_selections,
         default_value=(get_translation_table(default_lang), default_lang)
-    ).run()
+    )
     return lang_choice
 
 
 @new_session('select graph language')
 def select_graph_lang(default_lang: str = 'en-us') -> Type[GraphTranslationBase]:
-    lang_selections: List[Tuple[Type, str]] = \
+    lang_selections: List[Tuple[Type[GraphTranslationBase], str]] = \
         [(cls, f'{lang[:2]}-{lang[2:4]}') for lang, cls in translation_table_mapping.items()]
 
-    lang_choice: Type[GraphTranslationBase] = inline_radio_dialog(
+    lang_choice: Type[GraphTranslationBase] = run_interruptable_radio_box_dialog(
         text='Please select language',
         values=lang_selections,
         default_value=(get_graph_info_trans_table(default_lang), default_lang)
-    ).run()
+    )
     return lang_choice
 
 
@@ -112,22 +112,22 @@ def select_graph() -> GraphWrapper:
     graph_selections: List[Tuple[Graph, str]] = [(graph_model, f'{graph_model.url}: {graph_model.name}')
                                                  for graph_model in graph_query_set]
 
-    graph_choices: Graph = inline_radio_dialog(
+    graph_choices: Graph = run_interruptable_radio_box_dialog(
         text='Please select the matching graph',
         values=graph_selections,
-    ).run()
+    )
 
     return GraphWrapper().load_model(graph_choices)
 
 
 @new_session('select user role')
 def select_role() -> int:
-    role_selection: int = inline_radio_dialog(
+    role_selection: int = run_interruptable_radio_box_dialog(
         text='Please select the role of this user',
         values=[
             (value, label) for value, label in ROLES.choices
         ],
         default_value=(ROLES.VISITOR, '')
-    ).run()
+    )
 
     return role_selection

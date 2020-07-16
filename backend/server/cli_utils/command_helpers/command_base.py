@@ -4,7 +4,7 @@ from typing import Any,  List
 from django.db.transaction import commit, rollback
 from prompt_toolkit import prompt, print_formatted_text
 
-from cli_utils.cli_ui import info_session
+from cli_utils.cli_ui import new_session
 
 
 class CommandBase:
@@ -28,8 +28,8 @@ class CommandBase:
     def output_not_created_confirmation_info(self) -> None:
         raise NotImplementedError
 
+    @new_session('info')
     def output_confirmation_info(self, is_created: bool) -> None:
-        info_session()
         if is_created:
             self.output_created_confirmation_info()
         else:

@@ -16,16 +16,14 @@ def new_session(session_text: str = '') -> Callable:
         def wrapper(*args, **kwargs):
             print_formatted_text('\n======= {} ======='.format(session_text))
             return func(*args, **kwargs)
+
         return wrapper
+
     return wrapper_gen
 
 
 def make_separation(session_text: str) -> None:
     new_session(session_text)(lambda: None)()
-
-
-def info_session() -> None:
-    make_separation('info')
 
 
 def gen_application(text: str,
@@ -61,11 +59,11 @@ def gen_application(text: str,
         full_screen=False)
 
 
-def inline_checkbox_dialog(text: str = '',
-                           values: Sequence[Tuple] = (),
-                           default_values: Sequence[Tuple] = (),
-                           additional_helper_text: Sequence[str] = (),
-                           style=None) -> Application:
+def _inline_checkbox_dialog(text: str = '',
+                            values: Sequence[Tuple] = (),
+                            default_values: Sequence[Tuple] = (),
+                            additional_helper_text: Sequence[str] = (),
+                            style=None) -> Application:
     bindings = KeyBindings()
 
     cb_list = CheckboxList(values)
@@ -89,11 +87,11 @@ def inline_checkbox_dialog(text: str = '',
     return application
 
 
-def inline_radio_dialog(text: str = '',
-                        values: Sequence[Tuple] = (),
-                        default_value: Tuple = (),
-                        additional_helper_text: Sequence[str] = (),
-                        style=None) -> Application:
+def _inline_radio_dialog(text: str = '',
+                         values: Sequence[Tuple] = (),
+                         default_value: Tuple = (),
+                         additional_helper_text: Sequence[str] = (),
+                         style=None) -> Application:
     bindings = KeyBindings()
 
     @bindings.add('c-c')
@@ -117,19 +115,38 @@ def inline_radio_dialog(text: str = '',
     return application
 
 
-T = TypeVar("T")
+_G = TypeVar("_G")
 
 
 def run_interruptable_checkbox_dialog(text: str = '',
-                                      values: Sequence[Tuple[T, AnyFormattedText]] = (),
+                                      values: Sequence[Tuple[_G, AnyFormattedText]] = (),
                                       default_values: Sequence[Tuple] = (),
                                       additional_helper_text: Sequence[str] = (),
-                                      style=None) -> List[T]:
-    result = inline_checkbox_dialog(text=text,
-                                    values=values,
-                                    default_values=default_values,
-                                    additional_helper_text=additional_helper_text,
-                                    style=style).run()
+                                      style=None) -> List[_G]:
+    result = _inline_checkbox_dialog(text=text,
+                                     values=values,
+                                     default_values=default_values,
+                                     additional_helper_text=additional_helper_text,
+                                     style=style).run()
+    if result is None:
+        raise KeyboardInterrupt
+
+    return result
+
+
+_K = TypeVar("_K")
+
+
+def run_interruptable_radio_box_dialog(text: str = '',
+                                       values: Sequence[Tuple[_K, AnyFormattedText]] = (),
+                                       default_value: Tuple = (),
+                                       additional_helper_text: Sequence[str] = (),
+                                       style=None) -> _K:
+    result: _K = _inline_radio_dialog(text=text,
+                                      values=values,
+                                      default_value=default_value,
+                                      additional_helper_text=additional_helper_text,
+                                      style=style)
     if result is None:
         raise KeyboardInterrupt
 

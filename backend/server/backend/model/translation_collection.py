@@ -7,11 +7,11 @@ translation_tables: List[str] = []
 
 translation_types: List[Type[ObjectType]] = []
 
-translation_table_mapping: MutableMapping[str, Type] = {}
+translation_table_mapping: MutableMapping[str, Type['TranslationBase']] = {}
 
 graph_info_translation_tables: List[str] = []
 
-graph_info_translation_table_mapping: MutableMapping[str, Type] = {}
+graph_info_translation_table_mapping: MutableMapping[str, Type['GraphTranslationBase']] = {}
 
 
 def add_trans_type(cls: Type[ObjectType]):
