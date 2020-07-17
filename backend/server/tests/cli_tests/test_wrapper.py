@@ -11,7 +11,6 @@ from importlib import import_module
 from django.db import models
 from django import setup as django_setup
 
-
 from .utils import EmptyValue
 
 
@@ -74,7 +73,7 @@ def load_module_helper(abstract_wrapper_type, model_instance: models.Model, wrap
     'CodeWrapper',
     'ExecResultJsonWrapper',
 ])
-def test_load_module_of_fixed_class_wrapper(get_module, abstract_wrapper_type, wrapper_name: str):
+def test_load_model_of_fixed_class_wrapper(get_module, abstract_wrapper_type, wrapper_name: str):
     wrapper_class: Type[abstract_wrapper_type] = getattr(get_module, wrapper_name, EmptyValue)
     assert wrapper_class is not None
 
@@ -83,3 +82,19 @@ def test_load_module_of_fixed_class_wrapper(get_module, abstract_wrapper_type, w
 
     for model_instance in wrapped_module_class.objects.all():
         load_module_helper(abstract_wrapper_type, model_instance, wrapper_class)
+
+
+def test_load_model_of_trans_wrapper():
+    pass
+
+
+def test_retrieve_model():
+    pass
+
+
+def test_make_new_model():
+    pass
+
+
+def test_overwrite():
+    pass
