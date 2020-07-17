@@ -8,6 +8,7 @@ pytest = "*"
 coverage = "*"
 parameterized = "*"
 guppy3 = "*"
+pytest-django = "*"
 
 [packages]
 django = "*"
