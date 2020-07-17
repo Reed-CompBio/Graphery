@@ -1,6 +1,5 @@
 import json
-from typing import Optional, Iterable, Mapping, Type
-
+from typing import Optional, Iterable, Mapping, Type, TypeVar, Union
 
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson
@@ -308,14 +307,26 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
             'content_html': dummy_validator,
         })
 
-    def set_model_class(self, model_class: Type[TranslationBase]) -> None:
+    def load_model(self, loaded_model: TranslationBase) -> 'TutorialTranslationContentWrapper':
+        super().load_model(loaded_model=loaded_model)
+        self.title = loaded_model.title
+        self.authors = [UserWrapper().load_model(user_model) for user_model in loaded_model.authors.all()]
+        self.tutorial_anchor = TutorialAnchorWrapper().load_model(loaded_model.tutorial_anchor)
+        self.abstract = loaded_model.abstract
+        self.content_md = loaded_model.content_md
+        self.content_html = loaded_model.content_html
+        return self
+
+    def set_model_class(self, model_class: Type[TranslationBase]) -> 'TutorialTranslationContentWrapper':
         self.model_class = model_class
+        return self
 
     def set_variables(self, **kwargs) -> 'TutorialTranslationContentWrapper':
-        super().set_variables(**kwargs)
-        the_model_class = kwargs.get('model_class', None)
+        the_model_class = kwargs.pop('model_class', None)
         if the_model_class is not None and issubclass(the_model_class, TranslationBase):
             self.set_model_class(the_model_class)
+
+        super().set_variables(**kwargs)
         return self
 
     def retrieve_model(self) -> None:
@@ -364,14 +375,23 @@ class GraphTranslationContentWrapper(PublishedWrapper):
             'graph_anchor': dummy_validator,
         })
 
-    def set_model_class(self, model_class: Type[GraphTranslationBase]) -> None:
+    def load_model(self, loaded_model: GraphTranslationBase) -> 'GraphTranslationContentWrapper':
+        super().load_model(loaded_model=loaded_model)
+        self.title = loaded_model.title
+        self.abstract = loaded_model.abstract
+        self.graph_anchor = GraphWrapper().load_model(loaded_model.graph_anchor)
+        return self
+
+    def set_model_class(self, model_class: Type[GraphTranslationBase]) -> 'GraphTranslationContentWrapper':
         self.model_class = model_class
+        return self
 
     def set_variables(self, **kwargs) -> 'GraphTranslationContentWrapper':
-        super().set_variables(**kwargs)
-        the_model_class = kwargs.get('model_class', None)
+        the_model_class = kwargs.pop('model_class', None)
         if the_model_class is not None and issubclass(the_model_class, GraphTranslationBase):
             self.set_model_class(the_model_class)
+
+        super().set_variables(**kwargs)
         return self
 
     def retrieve_model(self) -> None:
@@ -392,3 +412,19 @@ class GraphTranslationContentWrapper(PublishedWrapper):
 
     def __repr__(self):
         return self.__str__()
+
+
+FixedTypeWrapper = TypeVar('FixedTypeWrapper',
+                           UserWrapper,
+                           CategoryWrapper,
+                           TutorialAnchorWrapper,
+                           GraphWrapper,
+                           CodeWrapper,
+                           ExecResultJsonWrapper)
+
+
+VariedTypeWrapper = TypeVar('VariedTypeWrapper',
+                            TutorialTranslationContentWrapper,
+                            GraphTranslationContentWrapper)
+
+WrappersType = Union[FixedTypeWrapper, VariedTypeWrapper]
