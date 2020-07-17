@@ -1,0 +1,2 @@
+class EmptyValue:
+    pass

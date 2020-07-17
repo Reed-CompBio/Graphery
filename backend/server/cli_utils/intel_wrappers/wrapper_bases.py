@@ -116,7 +116,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
                 if not (isinstance(field_value, Iterable) and
                         all(isinstance(field_wrapper, ModelWrapperBase) for field_wrapper in field_value)):
                     raise ValueError('Many-to-many/many-to-one field has to use iterable wrapper collections')
-                models_field.set(the_model.model for the_model in field_value)
+                models_field.set(model_wrapper.model for model_wrapper in field_value)
             else:
                 if isinstance(field_value, ModelWrapperBase):
                     setattr(self.model, field, field_value.model)
@@ -147,6 +147,13 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
 class PublishedWrapper(AbstractWrapper, ABC):
     def __init__(self, validators: Mapping[str, Callable]):
         super(PublishedWrapper, self).__init__(validators)
+
+    def set_variables(self, **kwargs) -> 'PublishedWrapper':
+        is_published = kwargs.pop('is_published', None)
+        if is_published is not None:
+            self.set_published(is_published)
+        super().set_variables(**kwargs)
+        return self
 
     def set_published(self, flag: bool = True):
         if self.model and isinstance(self.model, models.Model):

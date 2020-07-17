@@ -1,3 +1,4 @@
+import json
 from typing import Optional, Iterable, Mapping, Type
 
 
@@ -76,25 +77,25 @@ class CategoryWrapper(PublishedWrapper):
     model_class: Type[Category] = Category
 
     def __init__(self):
-        self.category_name: Optional[str] = None
+        self.category: Optional[str] = None
 
         PublishedWrapper.__init__(self, {
-            'category_name': dummy_validator
+            'category': dummy_validator
         })
 
     def load_model(self, loaded_model: Category) -> 'CategoryWrapper':
         super().load_model(loaded_model)
-        self.category_name = loaded_model.category
+        self.category = loaded_model.category
         return self
 
     def retrieve_model(self) -> None:
-        self.model: Category = self.model_class.objects.get(category=self.category_name)
+        self.model: Category = self.model_class.objects.get(category=self.category)
 
     def make_new_model(self) -> None:
-        self.model: Category = self.model_class(category=self.category_name, is_published=False)
+        self.model: Category = self.model_class(category=self.category, is_published=False)
 
     def __str__(self):
-        return '<CategoryWrapper category_name={}>'.format(self.category_name)
+        return '<CategoryWrapper category_name={}>'.format(self.category)
 
     def __repr__(self):
         return self.__str__()
@@ -227,6 +228,12 @@ class CodeWrapper(AbstractWrapper):
             'code': dummy_validator
         })
 
+    def load_model(self, loaded_model: Code) -> 'CodeWrapper':
+        super().load_model(loaded_model=loaded_model)
+        self.tutorial = TutorialAnchorWrapper().load_model(loaded_model.tutorial)
+        self.code = loaded_model.code
+        return self
+
     def retrieve_model(self) -> None:
         self.model: Code = self.model_class(tutorial=self.tutorial.model)
 
@@ -255,6 +262,14 @@ class ExecResultJsonWrapper(AbstractWrapper):
             'graph': dummy_validator,
             'json': dummy_validator,
         })
+
+    def load_model(self, loaded_model: ExecResultJson) -> 'ExecResultJsonWrapper':
+        super().load_model(loaded_model=loaded_model)
+        self.code = CodeWrapper().load_model(loaded_model.code)
+        self.graph = GraphWrapper().load_model(loaded_model.graph)
+        json_value = loaded_model.json
+        self.json = json.loads(json_value) if isinstance(json_value, str) else json_value
+        return self
 
     def retrieve_model(self) -> None:
         # TODO Unresolved attribute reference 'objects' for class 'ExecResultJson' ?????

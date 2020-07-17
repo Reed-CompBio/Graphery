@@ -29,7 +29,7 @@ def select_and_add_categories() -> List[CategoryWrapper]:
 
     return [CategoryWrapper().load_model(category_model)
             for category_model in category_choices if category_model] + \
-           [CategoryWrapper().set_variables(category_name=category_name)
+           [CategoryWrapper().set_variables(category=category_name)
             for category_name in new_categories if category_name]
 
 
