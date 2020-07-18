@@ -1,5 +1,5 @@
 import json
-from typing import Optional, Iterable, Mapping, Type, TypeVar, Union
+from typing import Optional, Iterable, Mapping, Type, Union
 
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson
@@ -174,7 +174,7 @@ class GraphWrapper(PublishedWrapper):
         self.categories = [CategoryWrapper().load_model(cat) for cat in loaded_model.categories.all()]
         self.authors = [UserWrapper().load_model(user) for user in loaded_model.authors.all()]
         self.priority = loaded_model.priority
-        self.cyjs = loaded_model.cyjs
+        self.cyjs = json.loads(loaded_model.cyjs) if isinstance(loaded_model.cyjs, str) else loaded_model.cyjs
         self.tutorials = [TutorialAnchorWrapper().load_model(tutorial_anchor)
                           for tutorial_anchor in loaded_model.tutorials.all()]
         return self
@@ -234,7 +234,7 @@ class CodeWrapper(AbstractWrapper):
         return self
 
     def retrieve_model(self) -> None:
-        self.model: Code = self.model_class(tutorial=self.tutorial.model)
+        self.model: Code = self.model_class.objects.get(tutorial=self.tutorial.model)
 
     def make_new_model(self) -> None:
         self.model: Code = self.model_class(tutorial=self.tutorial.model, code=self.code)
@@ -351,10 +351,10 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
         return f'<TutorialContentWrapper\n' \
                f'model_class={self.model_class}\n' \
                f'model={self.model}\n' \
-               f'title={self.title}\n'\
-               f'tutorial_anchor={self.tutorial_anchor.model}\n'\
-               f'abstract={self.abstract}\n'\
-               f'content_md={self.content_md}\n'\
+               f'title={self.title}\n' \
+               f'tutorial_anchor={self.tutorial_anchor.model}\n' \
+               f'abstract={self.abstract}\n' \
+               f'content_md={self.content_md}\n' \
                f'content_html={self.content_html}>'
 
     def __repr__(self):
@@ -398,7 +398,7 @@ class GraphTranslationContentWrapper(PublishedWrapper):
         self.model: GraphTranslationBase = self.model_class.objects.get(graph_anchor=self.graph_anchor.model)
 
     def make_new_model(self) -> None:
-        self.model: GraphTranslationBase = self.model_class(graph_anchor=self.graph_anchor,
+        self.model: GraphTranslationBase = self.model_class(graph_anchor=self.graph_anchor.model,
                                                             title=self.title,
                                                             abstract=self.abstract)
 
@@ -414,17 +414,14 @@ class GraphTranslationContentWrapper(PublishedWrapper):
         return self.__str__()
 
 
-FixedTypeWrapper = TypeVar('FixedTypeWrapper',
-                           UserWrapper,
-                           CategoryWrapper,
-                           TutorialAnchorWrapper,
-                           GraphWrapper,
-                           CodeWrapper,
-                           ExecResultJsonWrapper)
+FixedTypeWrapper = Union[UserWrapper,
+                         CategoryWrapper,
+                         TutorialAnchorWrapper,
+                         GraphWrapper,
+                         CodeWrapper,
+                         ExecResultJsonWrapper]
 
-
-VariedTypeWrapper = TypeVar('VariedTypeWrapper',
-                            TutorialTranslationContentWrapper,
-                            GraphTranslationContentWrapper)
+VariedTypeWrapper = Union[TutorialTranslationContentWrapper,
+                          GraphTranslationContentWrapper]
 
 WrappersType = Union[FixedTypeWrapper, VariedTypeWrapper]

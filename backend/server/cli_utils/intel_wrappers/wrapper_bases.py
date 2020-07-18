@@ -130,6 +130,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
         except AssertionError as e:
             e.args = 'Something went wrong when validating variables {} for the model {}. Error: {}' \
                          .format(list(self.validators.keys()), self.model_class, e),
+            # TODO
             raise
 
         try:
