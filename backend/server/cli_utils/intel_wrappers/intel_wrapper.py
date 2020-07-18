@@ -47,6 +47,9 @@ class UserWrapper(AbstractWrapper):
         return self
 
     def overwrite_model(self) -> None:
+        if not self.model_exists():
+            return
+
         field_list = [field for field in self.validators.keys() if field != 'password']
         for field in field_list:
             setattr(self.model, field, getattr(self, field))

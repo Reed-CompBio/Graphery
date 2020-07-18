@@ -102,6 +102,9 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
         return self
 
     def overwrite_model(self) -> None:
+        if not self.model_exists():
+            return
+
         for field in self.validators.keys():
             # directly setting values will cause problems since in many to many / many to one fieds
             # I can only use model.add/set methods to overwrite values
@@ -157,6 +160,6 @@ class PublishedWrapper(AbstractWrapper, ABC):
         return self
 
     def set_published(self, flag: bool = True):
-        if self.model and isinstance(self.model, models.Model):
+        if self.model_exists():
             self.model.is_published = flag
             self.save_model()
