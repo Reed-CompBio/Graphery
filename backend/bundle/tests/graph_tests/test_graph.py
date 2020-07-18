@@ -1,5 +1,5 @@
 import pytest
-from bundle.GraphObjects.Graph import Graph
+from bundle.GraphObjects.Graph import Graph, MutableGraph
 from bundle.GraphObjects.Node import Node
 from bundle.GraphObjects.Edge import Edge
 from .utils import path_join, TEST_PATH
@@ -38,3 +38,31 @@ def test_simple_graph_parsing(simple_graph_js):
     for i in range(17):
         assert Node('n%d' % i) in simple_graph
 
+
+@pytest.fixture
+def mutable_graph():
+    return MutableGraph()
+
+
+def test_mutable_graph_add_node(mutable_graph):
+    mutable_graph.add_node('')
+
+
+def test_mutable_graph_add_edge():
+    pass
+
+
+def test_mutable_graph_delete_node_no_conflict():
+    pass
+
+
+def test_mutable_graph_delete_node_conflict():
+    pass
+
+
+def test_mutable_graph_delete_edge():
+    pass
+
+
+def test_mutable_graph_generate_json():
+    pass

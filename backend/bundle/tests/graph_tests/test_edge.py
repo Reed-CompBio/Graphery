@@ -7,7 +7,7 @@ import json
 
 @pytest.fixture()
 def edge_json_obj():
-    with open(path_join(TEST_PATH, 'test_files', 'edges', 'edges.json'), 'r') as file:
+    with open(path_join(TEST_PATH, 'test_files', 'edges', 'edges.json')) as file:
         string = file.read()
         return json.loads(string)
 
@@ -43,7 +43,33 @@ def test_mutable_edge_set_add_edge(mutable_edge_set):
     assert not mutable_edge_set.is_empty()
 
 
-def test_mutable_edge_set_remove_edge(mutable_edge_set):
+def test_duplicate_edges(mutable_edge_set: MutableEdgeSet):
+    node1 = Node('1')
+    node2 = Node('2')
+    edge = Edge('e1', (node1, node2))
+    edge2 = Edge('e1', (node1, node2))
+
+    mutable_edge_set.add_edge(edge, edge2)
+
+    assert edge in mutable_edge_set
+    assert len(mutable_edge_set) == 1
+
+
+def test_mutable_edge_set_add_edges(mutable_edge_set: MutableEdgeSet):
+    edge_list = []
+
+    for i in range(10):
+        node1 = Node(f'{i}_{i}')
+        node2 = Node(f'{i}')
+        edge_list.append(Edge(f'e{i}', (node1, node2)))
+
+    mutable_edge_set.add_edge(*edge_list)
+
+    assert all(edge in mutable_edge_set for edge in edge_list)
+    assert len(edge_list) == len(mutable_edge_set)
+
+
+def test_mutable_edge_set_remove_edge(mutable_edge_set: MutableEdgeSet):
     node1 = Node('1')
     node2 = Node('2')
     edge = Edge('e1', (node1, node2))
@@ -51,4 +77,19 @@ def test_mutable_edge_set_remove_edge(mutable_edge_set):
     mutable_edge_set.remove_edge(edge)
 
     assert edge not in mutable_edge_set
+    assert mutable_edge_set.is_empty()
+
+
+def test_mutable_edge_set_remove_edges(mutable_edge_set: MutableEdgeSet):
+    edge_list = []
+
+    for i in range(10):
+        node2 = Node(f'{i}')
+        node1 = Node(f'{i}_{i}')
+        edge_list.append(Edge(f'e{i}', (node1, node2)))
+
+    mutable_edge_set.add_edge(*edge_list)
+    mutable_edge_set.remove_edge(*edge_list)
+
+    assert all(edge not in mutable_edge_set for edge in edge_list)
     assert mutable_edge_set.is_empty()

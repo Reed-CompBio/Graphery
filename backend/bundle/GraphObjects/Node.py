@@ -67,22 +67,15 @@ class MutableNodeSet(NodeSet):
     def __init__(self, nodes: Iterable[Node] = ()):
         super().__init__(nodes)
 
-    def add_node(self, node: Node):
-        if not isinstance(node, self.element_type):
+    def add_node(self, *nodes: Node):
+        if not all(isinstance(node, self.element_type) for node in nodes):
             raise TypeError(f'The Mutable Node Set Only Accept {self.element_type}')
-        self.elements.append(node)
 
-    def remove_node(self, node: Node):
-        if not isinstance(node, self.element_type):
-            raise TypeError(f'Why do you want to remove {type(node)} from Nodes?')
+        self.elements.update(nodes)
 
-        if node in self.elements:
+    def remove_node(self, *nodes: Node):
+        if not all(isinstance(node, self.element_type) for node in nodes):
+            raise TypeError(f'The Mutable Node Set Only Accept {self.element_type}')
+
+        for node in nodes:
             self.elements.remove(node)
-
-    def add_nodes(self, edges: Iterable[Node]) -> None:
-        for element in edges:
-            self.add_node(element)
-
-    def remove_nodes(self, edges: Iterable[Node]) -> None:
-        for element in edges:
-            self.remove_node(element)

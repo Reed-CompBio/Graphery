@@ -135,10 +135,10 @@ class ElementSet:
         @param elements:
         @param element_type:
         """
-        self.elements = []
+        self.elements = set()
         self.element_type = element_type
         if isinstance(elements, Iterable) and all(isinstance(element, self.element_type) for element in elements):
-            self.elements.extend(set(elements))
+            self.elements.update(elements)
         else:
             raise KeyError('elements are not all %s type' % self.element_type)
 

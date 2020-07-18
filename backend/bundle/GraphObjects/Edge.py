@@ -156,22 +156,15 @@ class MutableEdgeSet(EdgeSet):
     def __init__(self, edges: Iterable[Edge] = ()):
         super(MutableEdgeSet, self).__init__(edges)
 
-    def add_edge(self, edge: Edge) -> None:
-        if not isinstance(edge, self.element_type):
+    def add_edge(self, *edges: Edge) -> None:
+        if not all(isinstance(edge, self.element_type) for edge in edges):
             raise TypeError(f'Mutable Edge Set only accepts {self.element_type}')
-        self.elements.append(edge)
 
-    def remove_edge(self, edge: Edge) -> None:
-        if not isinstance(edge, self.element_type):
-            raise TypeError(f'Why do you want to remove {type(edge)} from Edges')
+        self.elements.update(edges)
 
-        if edge in self.elements:
+    def remove_edge(self, *edges: Edge) -> None:
+        if not all(isinstance(edge, self.element_type) for edge in edges):
+            raise TypeError(f'Mutable Edge Set only accepts {self.element_type}')
+
+        for edge in edges:
             self.elements.remove(edge)
-
-    def add_edges(self, edges: Iterable[Edge]) -> None:
-        for element in edges:
-            self.add_edge(element)
-
-    def remove_edges(self, edges: Iterable[Edge]) -> None:
-        for element in edges:
-            self.remove_edge(element)
