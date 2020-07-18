@@ -223,4 +223,4 @@ def test_import_not_found_err(lv1_cache_folder):
                                   / 'zip_files' / 'import_err.zip', folder.cache_folder_path)
         assert file_helper.verify_unloaded_files(folder.cache_folder_path)
         with pytest.raises(ModuleNotFoundError):
-            imported_module = import_module('entry')
+            import_module('entry')

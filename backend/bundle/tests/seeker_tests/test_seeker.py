@@ -11,7 +11,6 @@ from bundle.seeker.utils import truncate
 import pytest
 
 from bundle import seeker
-# from bundle import seeker
 from bundle.seeker.variables import needs_parentheses
 from .utils import (assert_output, assert_sample_output, VariableEntry,
                     CallEntry, LineEntry, ReturnEntry, ReturnValueEntry, ExceptionEntry, ExceptionValueEntry,

@@ -1,107 +1,50 @@
 #!/usr/bin/env python3
-import argparse
 import pathlib
 import sys
 import json
 from importlib import import_module
-from typing import Union, Mapping, Callable, List, Optional
+from typing import Union, Mapping, Callable, List
 from wsgiref.simple_server import make_server
 from multiprocessing import Pool, TimeoutError
 
 from bundle.GraphObjects.Graph import Graph
 from bundle.utils.cache_file_helpers import TempSysPathAdder, get_md5_of_a_string
 from bundle.controller import controller
-
-
-def valid_version():
-    v = sys.version_info
-    if v.major == 3 and v.minor >= 8:
-        return True
-    print('Your current python is %d.%d. Please use Python 3.8.' % (v.major, v.minor))
-    return False
-
-
-if not valid_version():
-    exit(1)
+from server_utils.params import TIMEOUT_SECONDS, REQUEST_CODE_NAME, ONLY_ACCEPTED_ORIGIN, ACCEPTED_ORIGIN, \
+    REQUEST_GRAPH_NAME, GRAPH_OBJ_ANCHOR_NAME, ENTRY_PY_MODULE_NAME, MAIN_FUNCTION_NAME, ENTRY_PY_FILE_NAME
+from server_utils.utils import arg_parser, valid_version, create_error_response, create_data_response
 
 
 class ExecutionException(Exception):
     pass
 
 
-DEFAULT_PORT: int = 7590
-ONLY_ACCEPTED_ORIGIN: bool = False
-ACCEPTED_ORIGIN: str = ''
-TIMEOUT_SECONDS: int = 10
-
-ENTRY_PY_MODULE_NAME: str = 'entry'
-ENTRY_PY_FILE_NAME: str = f'{ENTRY_PY_MODULE_NAME}.py'
-MAIN_FUNCTION_NAME: str = 'main'
-GRAPH_OBJ_ANCHOR_NAME: str = 'graph_object'
-
-REQUEST_CODE_NAME: str = 'code'
-REQUEST_GRAPH_NAME: str = 'graph'
-
-
-def arg_parser() -> Mapping[str, int]:
-    parser = argparse.ArgumentParser(description='Graphery Local Server')
-    parser.add_argument('-p', '--port',
-                        default=DEFAULT_PORT,
-                        type=int,
-                        help='The port the local server will run on')
-
-    args: argparse.Namespace = parser.parse_args()
-    return vars(args)
-
-
 def main(port: int):
-    httpd = make_server('127.0.0.1', port, application)
-    print('Press <ctrl+c> to stop the server. ')
-    print(f'Ready for Python code on port {port} ...')
-    httpd.serve_forever()
-
-
-def store_exec_cache(cache_folder: pathlib.Path, graph_hash: str, exec_result: List) -> None:
-    cache_file: pathlib.Path = cache_folder / 'exec_cache.json'
-    if cache_file.exists():
-        json_obj = json.loads(cache_file.read_text())
-    else:
-        json_obj = {}
-
-    json_obj[graph_hash] = exec_result
-    cache_file.write_text(json.dumps(json_obj))
-
-
-def get_exec_cache(cache_folder: pathlib.Path, graph_hash: str) -> Optional[List]:
-    cache_file: pathlib.Path = cache_folder / 'exec_cache.json'
-    if not cache_file.exists():
-        return None
-
-    json_obj: Mapping = json.loads(cache_file.read_text())
-
-    return json_obj.get(graph_hash, None)
+    with make_server('127.0.0.1', port, application) as httpd:
+        print('Press <ctrl+c> to stop the server. ')
+        print(f'Ready for Python code on port {port} ...')
+        httpd.serve_forever()
 
 
 def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool = False) -> List[Mapping]:
     folder_hash = get_md5_of_a_string(code)
-    graph_hash = get_md5_of_a_string(graph_json)
 
-    graph_json_obj = json.loads(graph_json) if isinstance(graph_json, str) else graph_json
+    try:
+        graph_json_obj = json.loads(graph_json) if isinstance(graph_json, str) else graph_json
 
-    graph_object = Graph.graph_generator(graph_json_obj)
+        graph_object = Graph.graph_generator(graph_json_obj)
+    except Exception as e:
+        raise ExecutionException(f'Cannot import graph objects. Error: {e}')
 
     with controller as folder_creator, \
             folder_creator(folder_hash, auto_delete=auto_delete_cache) as cache_folder, \
             TempSysPathAdder(cache_folder):
-        entry_file: pathlib.Path = cache_folder / ENTRY_PY_FILE_NAME
+        try:
+            entry_file: pathlib.Path = cache_folder / ENTRY_PY_FILE_NAME
 
-        if not entry_file.exists():
-            entry_file.touch()
             entry_file.write_text(code)
-        else:
-            cache_result = get_exec_cache(cache_folder=cache_folder, graph_hash=graph_hash)
-            if cache_result:
-                return cache_result
+        except Exception as e:
+            raise ExecutionException(f'Cannot create temporary execution file. Error: {e}')
 
         try:
             imported_module = import_module(ENTRY_PY_MODULE_NAME)
@@ -129,74 +72,77 @@ def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool 
             del sys.modules[ENTRY_PY_MODULE_NAME]
             del imported_module
 
-    exec_result = controller.get_processed_result()
-    if not auto_delete_cache:
-        store_exec_cache(cache_folder, graph_hash, exec_result)
-
     return controller.get_processed_result()
 
 
 def time_out_execute(*args, **kwargs):
-    response_dict = {}
     with Pool(processes=1) as pool:
-        result = pool.apply_async(func=execute, args=args, kwds=kwargs)
         try:
-            response_dict['data'] = result.get(timeout=TIMEOUT_SECONDS)
+            result = pool.apply_async(func=execute, args=args, kwds=kwargs)
+
+            response_dict = create_data_response({'exec_result': result.get(timeout=TIMEOUT_SECONDS)})
         except TimeoutError:
-            response_dict['errors'] = dict(type='Timeout', message=f'Code running timed out after {TIMEOUT_SECONDS} s.')
+            response_dict = create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS} s.')
         except ExecutionException as e:
-            response_dict['errors'] = dict(type='Exception', message=str(e))
+            response_dict = create_error_response(f'Exception: {e}.')
         except Exception as e:
-            response_dict['errors'] = dict(type='Unknown Exception', message=str(e))
+            response_dict = create_error_response(f'Unknown Exception: {e}.')
 
         print('Execution done.')
     return response_dict
 
 
-def application(environ, start_response):
+def application(environ: Mapping, start_response: Callable):
+    response_code = '200 OK'
+    headers = [('Content-Type', 'application/json')]
+
+    # origin check
+    origin = environ.get('HTTP_ORIGIN', '')
+    if ONLY_ACCEPTED_ORIGIN and origin.find(ACCEPTED_ORIGIN) == -1:
+        content = create_error_response(f'The ORIGIN, {ACCEPTED_ORIGIN}, is not accepted.')
+    else:
+        try:
+            content = application_helper(environ)
+        except Exception as e:
+            content = create_error_response(f'An exception occurs in the server. Error: {e}')
+
+    headers.append(('Access-Control-Allow-Origin', origin))
+    start_response(response_code, headers)
+    return [json.dumps(content).encode()]
+
+
+def application_helper(environ):
     method = environ.get('REQUEST_METHOD')
     path = environ.get('PATH_INFO')
 
     # info page
     if method == 'GET' and path == '/env':
-        start_response('200 OK', [('Content-Type', 'text/html')])
-        rep = [b'<html><head><title>ENV</title></head><body>']
-        for k, v in environ.items():
-            p = '<p>%s = %s' % (k, str(v))
-            rep.append(p.encode('utf-8'))
-        rep.append(b'</html>')
-        return rep
+        return create_data_response(environ)
 
     # entry point check
     if method != 'POST' or path != '/run':
-        start_response('400 Bad Request', [('Content-Type', 'application/json')])
-        return [b'{"error":"bad_request","res":"wrong_method"}']
-
-    # origin check
-    headers = [('Content-Type', 'application/json')]
-    origin = environ.get('HTTP_ORIGIN', '')
-    if ONLY_ACCEPTED_ORIGIN and origin.find(ACCEPTED_ORIGIN) == -1:
-        start_response('400 Bad Request', [('Content-Type', 'application/json')])
-        return [b'{"error":"invalid_origin"}']
+        # TODO change the response string
+        return create_error_response('Bad Request: Wrong Methods.')
 
     # get request content
     request_body = environ['wsgi.input'].read(int(environ['CONTENT_LENGTH']))
     request_json_object = json.loads(request_body)
-    if REQUEST_CODE_NAME not in request_json_object or REQUEST_GRAPH_NAME not in request_json_object:
-        start_response('400 Bad Request', [('Content-Type', 'application/json')])
-        return [b'{"error":"invalid_params","res":"no_code_embedded"}']
 
-    headers.append(('Access-Control-Allow-Origin', origin))
-    start_response('200 OK', headers)
+    if REQUEST_CODE_NAME not in request_json_object:
+        return create_error_response('No Code Snippets Embedded In The Request.')
+
+    if REQUEST_GRAPH_NAME not in request_json_object:
+        return create_error_response('No Graph Intel Embedded In The Request.')
 
     # execute program with timed out
-    result_dict = time_out_execute(code=request_json_object[REQUEST_CODE_NAME],
+    return time_out_execute(code=request_json_object[REQUEST_CODE_NAME],
                                    graph_json=request_json_object[REQUEST_GRAPH_NAME])
-
-    return [json.dumps(result_dict).encode('utf-8')]
 
 
 if __name__ == '__main__':
+    if not valid_version():
+        exit(1)
+
     try:
         main(arg_parser()['port'])
     except KeyboardInterrupt:

@@ -1,0 +1,12 @@
+DEFAULT_PORT: int = 7590
+ONLY_ACCEPTED_ORIGIN: bool = False
+ACCEPTED_ORIGIN: str = ''
+TIMEOUT_SECONDS: int = 10
+
+ENTRY_PY_MODULE_NAME: str = 'entry'
+ENTRY_PY_FILE_NAME: str = f'{ENTRY_PY_MODULE_NAME}.py'
+MAIN_FUNCTION_NAME: str = 'main'
+GRAPH_OBJ_ANCHOR_NAME: str = 'graph_object'
+
+REQUEST_CODE_NAME: str = 'code'
+REQUEST_GRAPH_NAME: str = 'graph'
