@@ -5,7 +5,7 @@ import pytest
 from django.db import models
 
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase, ENUS, ENUSGraphContent
-from backend.model.TutorialRelatedModel import Category, GraphPriority, Tutorial, Code, Graph
+from backend.model.TutorialRelatedModel import Category, GraphPriority, Tutorial, Code, Graph, ExecResultJson
 from backend.model.UserModel import ROLES, User
 from backend.model.translation_collection import translation_table_mapping, graph_info_translation_table_mapping
 from cli_utils.intel_wrappers.intel_wrapper import UserWrapper, TutorialAnchorWrapper, CategoryWrapper, GraphWrapper, \
@@ -122,37 +122,79 @@ def make_new_model_test_helper(wrapper_instance: AbstractWrapper, variables: dic
         assert model_field_value is not None
 
 
-@pytest.fixture
+@pytest.fixture()
 @pytest.mark.django_db
-def make_new_model_data_fixture_fixed():
-    mock_user = User.objects.create(**{
+def mock_user():
+    return User.objects.create(**{
         'username': 'mock_user',
         'email': 'mock_user@test.com',
         'password': 'password',  # omitted since the password field is a encrypted version of it
         'role': ROLES.AUTHOR,
     })
 
-    mock_category = Category.objects.create(**{
+
+@pytest.fixture()
+@pytest.mark.django_db
+def mock_category():
+    return Category.objects.create(**{
         'category': 'mock_category',
     })
 
-    mock_tutorial = Tutorial.objects.create(**{
+
+@pytest.fixture()
+@pytest.mark.django_db
+def mock_tutorial():
+    return Tutorial.objects.create(**{
         'url': 'mock_test_tutorial',
         'name': 'mock test tutorial',
     })
 
-    mock_graph = Graph.objects.create(**{
+
+@pytest.fixture()
+@pytest.mark.django_db
+def mock_graph():
+    return Graph.objects.create(**{
         'url': 'make-new-model-test-graph',
         'name': 'make nem model test graph',
         'priority': GraphPriority.MAIN,
         'cyjs': {'json': 'hello'},
     })
 
-    mock_code = Code.objects.create(**{
+
+@pytest.fixture()
+@pytest.mark.django_db
+def mock_code(mock_tutorial):
+    return Code.objects.create(**{
         'tutorial': mock_tutorial,
         'code': 'def hello(): \tprint("hello world")'
     })
 
+
+@pytest.fixture
+@pytest.mark.django_db
+def get_fixture(request):
+    def _get_fixture(name):
+        return request.getfixturevalue(name)
+
+    return _get_fixture
+
+# @pytest.fixture()
+# @pytest.mark.django_db
+# def mock_exec_result(mock_code, mock_graph):
+#     return ExecResultJson.objects.create(**{
+#         'code': CodeWrapper().load_model(mock_code),
+#         'graph': GraphWrapper().load_model(mock_graph),
+#         'json': {'json': 'hello~'}
+#     })
+
+
+@pytest.fixture
+@pytest.mark.django_db
+def make_new_model_data_fixture_fixed(mock_user,
+                                      mock_category,
+                                      mock_tutorial,
+                                      mock_graph,
+                                      mock_code):
     return [
         (UserWrapper, {
             'username': 'make-new-model-test',
@@ -182,8 +224,8 @@ def make_new_model_data_fixture_fixed():
             'code': 'def hello(): \tprint("hello world")'
         }),
         (ExecResultJsonWrapper, {
-            'code': CodeWrapper().load_model(mock_code),
-            'graph': GraphWrapper().load_model(mock_graph),
+            # 'code': CodeWrapper().load_model(mock_code),
+            # 'graph': GraphWrapper().load_model(mock_graph),
             'json': {'json': 'hello hello'}
         }),
     ]
@@ -197,19 +239,7 @@ def test_make_new_model_from_fixed_wrappers(make_new_model_data_fixture_fixed):
 
 @pytest.fixture
 @pytest.mark.django_db
-def make_new_model_varied():
-    mock_tutorial = Tutorial.objects.create(**{
-        'url': 'mock_test_tutorial_varied',
-        'name': 'mock test tutorial_varied',
-    })
-
-    mock_graph = Graph.objects.create(**{
-        'url': 'make-new-model-test-graph-varied',
-        'name': 'make nem model test graph varied',
-        'priority': GraphPriority.MAIN,
-        'cyjs': {'json': 'hello!'},
-    })
-
+def make_new_model_varied(mock_tutorial, mock_graph):
     return [
         (TutorialTranslationContentWrapper, ENUS, {
             'title': 'new-model-test',
@@ -233,5 +263,38 @@ def test_make_new_model_from_varied_wrappers(make_new_model_varied):
         make_new_model_test_helper(wrapper_class().set_model_class(wrapped_class), data)
 
 
-def test_overwrite():
-    pass
+@pytest.mark.parametrize('wrapper_class, mock_fixture, changed_data', [
+    (UserWrapper, 'mock_user', {
+        'username': 'new-user-name',
+        'email': 'new-email@emai.com',
+        'password': 'new-password',
+        'role': ROLES.VISITOR,
+    }),
+    (CategoryWrapper, 'mock_category', {
+        'category': 'new-category',
+    }),
+    (TutorialAnchorWrapper, 'mock_tutorial', {
+        'url': 'new-url',
+        'name': 'new name',
+    }),
+    (GraphWrapper, 'mock_graph', {
+        'url': 'new-url-graph',
+        'name': 'new url graph',
+        'priority': GraphPriority.TRIV,
+        'cyjs': {'new': 'json'},
+    }),
+    (CodeWrapper, 'mock_code', {
+        'code': 'new code!'
+    }),
+    # TODO add exec result test
+    # TODO add relationship overwrite test
+    # ('mock_exec_result', {
+    #
+    # })
+])
+@pytest.mark.django_db
+def test_overwrite(wrapper_class, mock_fixture, changed_data, get_fixture):
+    wrapper_instance = wrapper_class().load_model(get_fixture(mock_fixture))
+    wrapper_instance.set_variables(**changed_data)
+    wrapper_instance.prepare_model()
+    wrapper_instance.get_model()
