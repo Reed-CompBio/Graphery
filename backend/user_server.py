@@ -1,22 +1,13 @@
 #!/usr/bin/env python3
-import pathlib
-import sys
 import json
-from importlib import import_module
-from typing import Union, Mapping, Callable, List
+from typing import Mapping, Callable
 from wsgiref.simple_server import make_server
 from multiprocessing import Pool, TimeoutError
 
-from bundle.GraphObjects.Graph import Graph
-from bundle.utils.cache_file_helpers import TempSysPathAdder, get_md5_of_a_string
-from bundle.controller import controller
-from server_utils.params import TIMEOUT_SECONDS, REQUEST_CODE_NAME, ONLY_ACCEPTED_ORIGIN, ACCEPTED_ORIGIN, \
-    REQUEST_GRAPH_NAME, GRAPH_OBJ_ANCHOR_NAME, ENTRY_PY_MODULE_NAME, MAIN_FUNCTION_NAME, ENTRY_PY_FILE_NAME
-from server_utils.utils import arg_parser, valid_version, create_error_response, create_data_response
-
-
-class ExecutionException(Exception):
-    pass
+from bundle.server_utils.params import TIMEOUT_SECONDS, REQUEST_CODE_NAME, ONLY_ACCEPTED_ORIGIN, ACCEPTED_ORIGIN, \
+    REQUEST_GRAPH_NAME
+from bundle.server_utils.utils import arg_parser, valid_version, create_error_response, create_data_response, execute, \
+    ExecutionException
 
 
 def main(port: int):
@@ -24,72 +15,6 @@ def main(port: int):
         print('Press <ctrl+c> to stop the server. ')
         print(f'Ready for Python code on port {port} ...')
         httpd.serve_forever()
-
-
-def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool = False) -> List[Mapping]:
-    folder_hash = get_md5_of_a_string(code)
-
-    try:
-        graph_json_obj = json.loads(graph_json) if isinstance(graph_json, str) else graph_json
-
-        graph_object = Graph.graph_generator(graph_json_obj)
-    except Exception as e:
-        raise ExecutionException(f'Cannot import graph objects. Error: {e}')
-
-    with controller as folder_creator, \
-            folder_creator(folder_hash, auto_delete=auto_delete_cache) as cache_folder, \
-            TempSysPathAdder(cache_folder):
-        try:
-            entry_file: pathlib.Path = cache_folder / ENTRY_PY_FILE_NAME
-
-            entry_file.write_text(code)
-        except Exception as e:
-            raise ExecutionException(f'Cannot create temporary execution file. Error: {e}')
-
-        try:
-            imported_module = import_module(ENTRY_PY_MODULE_NAME)
-
-        except Exception as e:
-            raise ExecutionException(f'Cannot import module. Error: {e}')
-
-        try:
-            main_function = getattr(imported_module, MAIN_FUNCTION_NAME, None)
-
-            if not main_function or not isinstance(main_function, Callable):
-                raise ValueError('There is not main function or it is not valid')
-
-            if not hasattr(imported_module, GRAPH_OBJ_ANCHOR_NAME):
-                raise ValueError('There is not graph object, which violates the naming convention')
-
-            setattr(imported_module, GRAPH_OBJ_ANCHOR_NAME, graph_object)
-
-            controller.purge_records()
-            main_function()
-            controller.generate_processed_record()
-        except Exception as e:
-            raise ExecutionException(e)
-        finally:
-            del sys.modules[ENTRY_PY_MODULE_NAME]
-            del imported_module
-
-    return controller.get_processed_result()
-
-
-def time_out_execute(*args, **kwargs):
-    with Pool(processes=1) as pool:
-        try:
-            result = pool.apply_async(func=execute, args=args, kwds=kwargs)
-
-            response_dict = create_data_response({'exec_result': result.get(timeout=TIMEOUT_SECONDS)})
-        except TimeoutError:
-            response_dict = create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS} s.')
-        except ExecutionException as e:
-            response_dict = create_error_response(f'Exception: {e}.')
-        except Exception as e:
-            response_dict = create_error_response(f'Unknown Exception: {e}.')
-
-        print('Execution done.')
-    return response_dict
 
 
 def application(environ: Mapping, start_response: Callable):
@@ -111,7 +36,24 @@ def application(environ: Mapping, start_response: Callable):
     return [json.dumps(content).encode()]
 
 
-def application_helper(environ):
+def time_out_execute(*args, **kwargs):
+    with Pool(processes=1) as pool:
+        try:
+            result = pool.apply_async(func=execute, args=args, kwds=kwargs)
+
+            response_dict = create_data_response({'exec_result': result.get(timeout=TIMEOUT_SECONDS)})
+        except TimeoutError:
+            response_dict = create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS} s.')
+        except ExecutionException as e:
+            response_dict = create_error_response(f'Exception: {e}.')
+        except Exception as e:
+            response_dict = create_error_response(f'Unknown Exception: {e}.')
+
+        print('Execution done.')
+    return response_dict
+
+
+def application_helper(environ: Mapping) -> Mapping:
     method = environ.get('REQUEST_METHOD')
     path = environ.get('PATH_INFO')
 
@@ -121,7 +63,6 @@ def application_helper(environ):
 
     # entry point check
     if method != 'POST' or path != '/run':
-        # TODO change the response string
         return create_error_response('Bad Request: Wrong Methods.')
 
     # get request content

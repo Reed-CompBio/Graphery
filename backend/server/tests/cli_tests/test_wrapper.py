@@ -5,7 +5,7 @@ import pytest
 from django.db import models
 
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase, ENUS, ENUSGraphContent
-from backend.model.TutorialRelatedModel import Category, GraphPriority, Tutorial, Code, Graph, ExecResultJson
+from backend.model.TutorialRelatedModel import Category, GraphPriority, Tutorial, Code, Graph
 from backend.model.UserModel import ROLES, User
 from backend.model.translation_collection import translation_table_mapping, graph_info_translation_table_mapping
 from cli_utils.intel_wrappers.intel_wrapper import UserWrapper, TutorialAnchorWrapper, CategoryWrapper, GraphWrapper, \
