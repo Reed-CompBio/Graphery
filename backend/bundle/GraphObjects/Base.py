@@ -146,6 +146,9 @@ class ElementSet:
         if isinstance(element, self.element_type) and element in self.elements:
             self.elements.remove(element)
 
+    def is_empty(self):
+        return len(self.elements) == 0
+
     def __len__(self):
         """
         return the number of elements in this set

@@ -2,14 +2,13 @@ from .Base import Stylable
 from .Errors import GraphJsonFormatError
 from .Node import Node, NodeSet, MutableNodeSet
 from .Edge import Edge, EdgeSet, MutableEdgeSet, NodeTuple, EdgeIDTuple
+
 import json
 from typing import Iterable, Union, Optional, Mapping
 
 
 class Graph(Stylable):
-    """
-    The graph object
-    """
+    """The graph object"""
 
     def __init__(self, nodes: Iterable[Node], edges: Iterable[Edge], styles=None, classes=None):
         """

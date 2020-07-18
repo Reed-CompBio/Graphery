@@ -1,5 +1,5 @@
-from bundle.GraphObjects.Node import NodeSet
-from bundle.GraphObjects.Edge import Edge, EdgeSet
+from bundle.GraphObjects.Node import NodeSet, Node
+from bundle.GraphObjects.Edge import Edge, EdgeSet, MutableEdgeSet
 from .utils import TEST_PATH, path_join, gen_edge
 import pytest
 import json
@@ -26,3 +26,29 @@ def test_multiple_edges(multiple_edges, expected):
     assert len(edge_set) == 6
     for test_set in expected:
         assert gen_edge(test_set[0], 'n%s' % test_set[1], 'n%s' % test_set[2]) in edge_set
+
+
+@pytest.fixture
+def mutable_edge_set():
+    return MutableEdgeSet()
+
+
+def test_mutable_edge_set_add_edge(mutable_edge_set):
+    node1 = Node('1')
+    node2 = Node('2')
+    edge = Edge('e1', (node1, node2))
+    mutable_edge_set.add_edge(edge)
+
+    assert edge in mutable_edge_set
+    assert not mutable_edge_set.is_empty()
+
+
+def test_mutable_edge_set_remove_edge(mutable_edge_set):
+    node1 = Node('1')
+    node2 = Node('2')
+    edge = Edge('e1', (node1, node2))
+    mutable_edge_set.add_edge(edge)
+    mutable_edge_set.remove_edge(edge)
+
+    assert edge not in mutable_edge_set
+    assert mutable_edge_set.is_empty()

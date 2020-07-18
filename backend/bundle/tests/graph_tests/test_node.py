@@ -1,5 +1,5 @@
 import pytest
-from bundle.GraphObjects.Node import Node, NodeSet
+from bundle.GraphObjects.Node import Node, NodeSet, MutableNodeSet
 import json
 from .utils import TEST_PATH, path_join
 
@@ -63,3 +63,24 @@ def test_complex_node_set(complex_node):
     node_set = NodeSet.generate_node_set(complex_node)
     assert node_set.elements[0].properties == {"degree": 0, "clustering_coefficient": 0}
 
+
+@pytest.fixture
+def mutable_node_set():
+    return MutableNodeSet()
+
+
+def test_mutable_node_set_add_node(mutable_node_set):
+    node1 = Node('1')
+    mutable_node_set.add_node(node1)
+
+    assert node1 in mutable_node_set
+    assert not mutable_node_set.is_empty()
+
+
+def test_mutable_node_set_remove_node(mutable_node_set):
+    node1 = Node('1')
+    mutable_node_set.add_node(node1)
+    mutable_node_set.remove_node(node1)
+
+    assert node1 not in mutable_node_set
+    assert mutable_node_set.is_empty()

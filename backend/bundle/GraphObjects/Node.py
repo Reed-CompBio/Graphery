@@ -75,7 +75,9 @@ class MutableNodeSet(NodeSet):
     def remove_node(self, node: Node):
         if not isinstance(node, self.element_type):
             raise TypeError(f'Why do you want to remove {type(node)} from Nodes?')
-        self.elements.remove(node)
+
+        if node in self.elements:
+            self.elements.remove(node)
 
     def add_nodes(self, edges: Iterable[Node]) -> None:
         for element in edges:

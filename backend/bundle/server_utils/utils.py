@@ -79,10 +79,10 @@ def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool 
             main_function = getattr(imported_module, MAIN_FUNCTION_NAME, None)
 
             if not main_function or not isinstance(main_function, Callable):
-                raise ValueError('There is not main function or it is not valid')
+                raise ExecutionException('There is not main function or it is not valid')
 
             if not hasattr(imported_module, GRAPH_OBJ_ANCHOR_NAME):
-                raise ValueError('There is not graph object, which violates the naming convention')
+                raise ExecutionException('There is not graph object, which violates the naming convention')
 
             setattr(imported_module, GRAPH_OBJ_ANCHOR_NAME, graph_object)
 
