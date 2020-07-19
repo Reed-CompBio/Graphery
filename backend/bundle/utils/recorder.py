@@ -29,6 +29,16 @@ class Recorder:
         self.variables: Set[Tuple[str, str]] = set()
 
     def register_variable(self, identifier: Tuple[str, str]) -> None:
+        """Register a variable
+
+        a variable is identified by a identifier, which is
+        a tuple of two strings. The first strings is the
+        name of the place, ie functions etc., in which the
+        variable is created. The second string is the variable
+        name.
+        @param identifier:
+        @return:
+        """
         self.variables.add(identifier)
 
     # TODO test this
@@ -50,7 +60,15 @@ class Recorder:
         return self.changes[-1]
 
     def get_previous_record(self) -> dict:
-        return self.changes[-2]
+        """Get the second last record in the record list
+
+        In general cases, the first input line may not be
+        empty, so `self.changes[-2]` will result in
+        IndexError. In this case, we use `self.changes[-1]`
+        """
+        # this should not be a problem in official use, since the first line in the main function
+        # ie. `def main()`: has no variables.
+        return self.changes[-2] if len(self.changes) > 1 else self.changes[-1]
 
     def get_last_vc(self) -> dict:
         """
@@ -63,6 +81,7 @@ class Recorder:
         return self.get_last_record()['variables']
 
     def get_previous_vc(self) -> dict:
+        """Get the second last dict in the record list"""
         if not self.get_previous_record()['variables']:
             self.get_previous_record()['variables'] = {}
 
@@ -88,6 +107,15 @@ class Recorder:
         self.get_last_vc()[variable_identifier] = variable_state
 
     def add_vc_to_previous_record(self, variable_identifier: Tuple[str, str], variable_state: Any) -> None:
+        """Add variable change to previous (second last if possible) record.
+
+        When the variable is created/changed in line a,
+        the tracer evaluate it in line a+1. So, this function
+        is created to deal with this offset
+        @param variable_identifier:
+        @param variable_state:
+        @return:
+        """
         # if isinstance(variable_change, Tuple) and len(self.changes) > 1:
         self.get_previous_vc()[variable_identifier] = variable_state
 
@@ -100,5 +128,6 @@ class Recorder:
         self.get_last_ac().append(access_changes)
 
     def purge(self):
+        """Empty previous recorded items"""
         self.changes: List[dict] = []
         self.variables: Set[Tuple[str, str]] = set()

@@ -1,10 +1,10 @@
 from bundle.seeker import tracer
 
 tr = tracer()
-# TODO check if it's evaluation first or inspection first? I bet it's evaluation first,
+# check if it's evaluation first or inspection first? I bet it's evaluation first,
 # so I need to prepare the store space for the next line
 
-# TODO use just one tracer instance or multiple tracer instance?
+# use just one tracer instance or multiple tracer instance?
 # 1. pro: easier to manage con: may affect coding styles
 # 2. pro: users have more controls to their codes.
 #    con: multiple watch list is difficult for users to manage

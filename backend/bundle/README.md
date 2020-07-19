@@ -1,28 +1,15 @@
-# PySnooper - Never use print for debugging again #
+# Sight - see everything (not really) #
 
-TODO change introductions 
-
-**PySnooper** is a poor man's debugger.
-
-You're trying to figure out why your Python code isn't doing what you think it should be doing. You'd love to use a full-fledged debugger with breakpoints and watches, but you can't be bothered to set one up right now.
-
-You want to know which lines are running and which aren't, and what the values of the local variables are.
-
-Most people would use `print` lines, in strategic locations, some of them showing the values of variables.
-
-**PySnooper** lets you do the same, except instead of carefully crafting the right `print` lines, you just add one decorator line to the function you're interested in. You'll get a play-by-play log of your function, including which lines ran and   when, and exactly when local variables were changed.
-
-What makes **PySnooper** stand out from all other code intelligence tools? You can use it in your shitty, sprawling enterprise codebase without having to do any setup. Just slap the decorator on, as shown below, and redirect the output to a dedicated log file by specifying its path as the first argument.
+**Sight** derives from **PySnooper** but it is not a debugger.
 
 # Example #
 
-We're writing a function that converts a number to binary, by returning a list of bits. Let's snoop on it by adding the `@pysnooper.snoop()` decorator:
+We're writing a function that converts a number to binary, by returning a list of bits. Let's snoop on it by adding the `@tracer()` decorator (do ***not*** omit the parenthesis at the end of the `tracer`):
 
 ```python
-
 from bundle.seeker import tracer
 
-@tracer()
+@tracer(only_watch=False)
 def number_to_bits(number):
     if number:
         bits = []
@@ -38,11 +25,39 @@ number_to_bits(6)
 The output to stderr is:
 
 ```
-# TODO add an example 
+Source path:... <input>
+Starting var:.. number = 6
+                call         3 '''
+                line         5 from _pydev_comm.pydev_rpc import make_rpc_client, start_rpc_server, start_rpc_server_and_make_client
+                line         6 from _pydev_imps._pydev_saved_modules import thread
+New var:....... bits = []
+                line         7 
+                line         8 start_new_thread = thread.start_new_thread
+Modified var:.. number = 3
+New var:....... remainder = 0
+                line         9 
+Modified var:.. bits = [0]
+                line         7 
+                line         8 start_new_thread = thread.start_new_thread
+Modified var:.. number = 1
+Modified var:.. remainder = 1
+                line         9 
+Modified var:.. bits = [1, 0]
+                line         7 
+                line         8 start_new_thread = thread.start_new_thread
+Modified var:.. number = 0
+                line         9 
+Modified var:.. bits = [1, 1, 0]
+                line         7 
+                line        10 try:
+                return      10 try:
+Return value:.. [1, 1, 0]
+Elapsed time: 00:00:00.000748
 ```
 
 Or if you don't want to trace an entire function, you can wrap the relevant part in a `with` block:
 
+<!-- TODO use file to run the snippets instead of iPython -->
 ```python
 from bundle.seeker import tracer
 import random
@@ -63,6 +78,7 @@ foo()
 
 which outputs something like:
 
+<!-- TODO use file to run the snippets instead of iPython -->
 ```
 Source path:... <input>
 New var:....... lst = [779, 652, 993, 452, 256, 461, 926, 491, 684, 881]
@@ -75,6 +91,24 @@ New var:....... upper = 993
 New var:....... mid = 624.5
                 line        13     from _pydevd_bundle.pydevconsole_code_for_ironpython import InteractiveConsole
 Elapsed time: 00:00:00.000315
+```
+
+`tracer` does more than showing you what's changed, it also records the changes. You can get the records by using 
+
+```python
+tracer.get_recorder().changes  # type: List[dict]
+```
+
+For the first code in this doc, the output is 
+
+```
+[{'line': 3, 'variables': {('number_to_bits', 'number'): 6}, 'accesses': None}, {'line': 5, 'variables': None, 'accesses': None}, {'line': 6, 'variables': {('number_to_bits', 'bits'): []}, 'accesses': None}, {'line': 7, 'variables': None, 'accesses': None}, {'line': 8, 'variables': {('number_to_bits', 'number'): 3, ('number_to_bits', 'remainder'): 0}, 'accesses': None}, {'line': 9, 'variables': {('number_to_bits', 'bits'): [0]}, 'accesses': None}, {'line': 7, 'variables': None, 'accesses': None}, {'line': 8, 'variables': {('number_to_bits', 'number'): 1, ('number_to_bits', 'remainder'): 1}, 'accesses': None}, {'line': 9, 'variables': {('number_to_bits', 'bits'): [1, 0]}, 'accesses': None}, {'line': 7, 'variables': None, 'accesses': None}, {'line': 8, 'variables': {('number_to_bits', 'number'): 0}, 'accesses': None}, {'line': 9, 'variables': {('number_to_bits', 'bits'): [1, 1, 0]}, 'accesses': None}, {'line': 7, 'variables': None, 'accesses': None}, {'line': 10, 'variables': None, 'accesses': None}]
+```
+
+For the second snippet:
+
+```
+[{'line': 10, 'variables': {('', 'lst'): [420, 388, 791, 341, 704, 597, 662, 572, 838, 339], ('', 'i'): 9, ('', 'lower'): 339}, 'accesses': None}, {'line': 11, 'variables': {('', 'upper'): 838}, 'accesses': None}, {'line': 12, 'variables': {('', 'mid'): 588.5}, 'accesses': None}, {'line': 13, 'variables': None, 'accesses': None}]
 ```
 
 # Features #

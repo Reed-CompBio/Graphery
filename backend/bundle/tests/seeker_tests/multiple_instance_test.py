@@ -1,11 +1,11 @@
 from bundle.seeker import tracer
 
-# TODO check if it's evaluation first or inspection first? I bet it's evaluation first,
+# check if it's evaluation first or inspection first? I bet it's evaluation first,
 # so I need to prepare the store space for the next line. ANSWER: no I don't need prepare a new dict
 # but the evaluation does come first, the the 'access' field comes after.
 # I need the make access a dict, since there may be multiple accesses in one line
 
-# TODO use just one tracer instance or multiple tracer instance?
+# use just one tracer instance or multiple tracer instance?
 # I support multiple tracers
 # 1. pro: easier to manage con: may affect coding styles
 # 2. pro: users have more controls to their codes.
