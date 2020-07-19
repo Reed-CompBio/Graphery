@@ -12,7 +12,10 @@ from cli_utils.intel_wrappers.intel_wrapper import UserWrapper, TutorialAnchorWr
     ExecResultJsonWrapper, CodeWrapper, TutorialTranslationContentWrapper, GraphTranslationContentWrapper, \
     VariedTypeWrapper, FixedTypeWrapper
 from cli_utils.intel_wrappers.wrapper_bases import AbstractWrapper
-from .utils import EmptyValue
+
+
+class EmptyValue:
+    pass
 
 
 @pytest.mark.django_db
