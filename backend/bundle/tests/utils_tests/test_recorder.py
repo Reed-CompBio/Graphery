@@ -1,12 +1,11 @@
 import pytest
-from bundle.tests.utils_tests.recorder_utils import *
 from bundle.controller import controller
 
 
 @pytest.fixture()
 def use_samples():
     with controller as folder_crater, folder_crater():
-        from bundle.tests.seeker_tests.samples import recorder as samples
+        from tests.seeker_tests.samples import recorder as samples
         yield samples
 
 

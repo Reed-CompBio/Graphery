@@ -114,6 +114,11 @@ class CacheFolder(contextlib.AbstractContextManager):
         if self.auto_delete:
             self.delete_cache_folder()
 
+    def __truediv__(self, other):
+        if isinstance(other, str):
+            return self.cache_folder_path / other
+        raise TypeError('"/" operation only accepts string and returns a folder path object. ')
+
     def __str__(self):
         return 'CacheFolder <%s>' % self.cache_folder_path
 

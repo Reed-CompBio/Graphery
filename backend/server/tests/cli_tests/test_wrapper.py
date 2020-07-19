@@ -224,8 +224,8 @@ def make_new_model_data_fixture_fixed(mock_user,
             'code': 'def hello(): \tprint("hello world")'
         }),
         (ExecResultJsonWrapper, {
-            # 'code': CodeWrapper().load_model(mock_code),
-            # 'graph': GraphWrapper().load_model(mock_graph),
+            'code': CodeWrapper().load_model(mock_code),
+            'graph': GraphWrapper().load_model(mock_graph),
             'json': {'json': 'hello hello'}
         }),
     ]

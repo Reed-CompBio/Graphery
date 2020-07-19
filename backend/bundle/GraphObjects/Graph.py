@@ -166,10 +166,13 @@ class MutableGraph(Graph):
                  edge: Union[Edge, NodeTuple, EdgeIDTuple] = (),
                  styles=None, classes=None) -> Optional[Edge]:
         edge = Edge.return_edge(identity, edge, styles, classes)
-        if all(node in self for node in edge):
-            self.edges.add_edge(edge)
-            return edge
-        return None
+
+        # TODO think about it
+        for node in edge:
+            self.add_node(node)
+
+        self.edges.add_edge(edge)
+        return edge
 
     def remove_node(self, identity: Union[str, Node], with_edge: bool = False) -> bool:
         node = Node.return_node(identity)

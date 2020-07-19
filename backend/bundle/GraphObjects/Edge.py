@@ -108,6 +108,7 @@ class Edge(Comparable, HasProperty, Stylable):
             elif isinstance(edge, Tuple) and all(isinstance(ele, (str, Node)) for ele in edge):
                 incident_node, final_node = Node.return_node(edge[0]), Node.return_node(edge[1])
             else:
+                # TODO think about it
                 incident_node, final_node = None, None
             return Edge(identity, NodeTuple(incident_node, final_node), styles, classes)
         else:

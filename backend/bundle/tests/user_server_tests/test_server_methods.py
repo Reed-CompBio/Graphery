@@ -1,9 +1,12 @@
-from collections import Mapping
-from typing import Union
+import json
+import os
+from typing import Union, Mapping
+from itertools import product
 
 import pytest
+import pathlib
 
-from server_utils.utils import create_error_response, create_data_response
+from bundle.server_utils.utils import create_error_response, create_data_response, execute
 
 
 def test_create_error_response():
@@ -16,14 +19,14 @@ def test_create_error_response():
 
 
 @pytest.mark.parametrize('data_obj, data', [
-    ({
+    pytest.param({
         'exec_result': ['result']
     }, {
         'data': {
             'exec_result': ['result']
         }
     }),
-    ('this is info', {
+    pytest.param('this is info', {
         'data': {
             'info': 'this is info'
         }
@@ -33,5 +36,27 @@ def test_create_data_response(data_obj, data):
     assert create_data_response(data_obj) == data
 
 
-def test_execute(code: str, graph_json: Union[str, Mapping]):
-    pass
+resource_root_folder: pathlib.Path = pathlib.Path(os.path.dirname(os.path.abspath(__file__)))  / 'test_files'
+code_resource_folder: pathlib.Path = resource_root_folder / 'code'
+graph_resource_folder: pathlib.Path = resource_root_folder / 'json'
+
+
+def get_code_text(code_file_name: str) -> str:
+    return (code_resource_folder / code_file_name).read_text()
+
+
+def get_graph_json(graph_json_file_name: str) -> dict:
+    return json.loads((graph_resource_folder / graph_json_file_name).read_text())
+
+
+@pytest.mark.parametrize('code_file_name, graph_json_file_name', [
+    combination for combination in product(
+        ['count_degree.py', 'print_edge.py', 'print_node.py'],
+        ['double_node_graph.json', 'double_node_one_edge.json', 'single_node_graph.json']
+    )
+])
+def test_execution(code_file_name: str, graph_json_file_name: Union[str, Mapping]):
+    code_text = get_code_text(code_file_name)
+    graph_json = get_graph_json(graph_json_file_name)
+    result = execute(code_text, graph_json)
+    print(result)
