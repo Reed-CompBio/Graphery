@@ -491,8 +491,7 @@ class Tracer:
             if not ended_by_exception:
                 return_value_repr = utils.get_shortish_repr(arg,
                                                             custom_repr=self.custom_repr,
-                                                            max_length=self.max_variable_length,
-                                                            )
+                                                            max_length=self.max_variable_length, )
                 self.write('{indent}Return value:.. {return_value_repr}'.
                            format(**locals()))
 
