@@ -162,12 +162,14 @@ class MutableGraph(Graph):
         return node
 
     def add_edge(self,
-                 identity: Union[str, Edge] = None,
+                 identity: str = None,
                  edge: Union[Edge, NodeTuple, EdgeIDTuple] = (),
-                 styles=None, classes=None) -> Edge:
+                 styles=None, classes=None) -> Optional[Edge]:
         edge = Edge.return_edge(identity, edge, styles, classes)
-        self.edges.add_edge(edge)
-        return edge
+        if all(node in self for node in edge):
+            self.edges.add_edge(edge)
+            return edge
+        return None
 
     def remove_node(self, identity: Union[str, Node], with_edge: bool = False) -> bool:
         node = Node.return_node(identity)
@@ -175,18 +177,19 @@ class MutableGraph(Graph):
         if related_edges:
             if not with_edge:
                 return False
-            self.edges.remove_edges(related_edges)
+            self.edges.remove_edge(*related_edges)
 
         self.nodes.remove_node(node)
         return True
 
     def remove_edge(self, identity: Union[str, Edge]) -> bool:
+        # TODO it's a little messy here
         if isinstance(identity, Edge):
             edge = Edge.return_edge(edge=identity)
         else:
             edge = Edge.return_edge(identity=identity)
 
-        self.edges.remove_edges(edge)
+        self.edges.remove_edge(edge)
         return True
 
     def generate_json(self, indent: int = None) -> str:
