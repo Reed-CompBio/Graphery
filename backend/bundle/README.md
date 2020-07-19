@@ -20,9 +20,9 @@ We're writing a function that converts a number to binary, by returning a list o
 
 ```python
 
-from bundle import seeker
+from bundle.seeker import tracer
 
-@seeker.snoop()
+@tracer()
 def number_to_bits(number):
     if number:
         bits = []
@@ -44,8 +44,7 @@ The output to stderr is:
 Or if you don't want to trace an entire function, you can wrap the relevant part in a `with` block:
 
 ```python
-
-from bundle import seeker
+from bundle.seeker import tracer
 import random
 
 def foo():
@@ -53,7 +52,7 @@ def foo():
     for i in range(10):
         lst.append(random.randrange(1, 1000))
 
-    with seeker.tracer():
+    with tracer(only_watch=False):
         lower = min(lst)
         upper = max(lst)
         mid = (lower + upper) / 2
@@ -65,7 +64,17 @@ foo()
 which outputs something like:
 
 ```
-# TODO give an example 
+Source path:... <input>
+New var:....... lst = [779, 652, 993, 452, 256, 461, 926, 491, 684, 881]
+New var:....... i = 9
+                line        10 try:
+New var:....... lower = 256
+                line        11     from code import InteractiveConsole
+New var:....... upper = 993
+                line        12 except ImportError:
+New var:....... mid = 624.5
+                line        13     from _pydevd_bundle.pydevconsole_code_for_ironpython import InteractiveConsole
+Elapsed time: 00:00:00.000315
 ```
 
 # Features #
@@ -73,31 +82,39 @@ which outputs something like:
 If stderr is not easily accessible for you, you can redirect the output to a file:
 
 ```python
-@seeker.tracer(outpuyt='/my/log/file.log')
+from bundle.seeker import tracer
+
+@tracer(output='/my/log/file.log')
 ```
 
 You can also pass a stream or a callable instead, and they'll be used.
 
-Seeker will only look for the variables you provided in the watch list, 
+Tracer will only look for the variables you provided in the watch list, 
 ike the following decorators do
 
 ```python
-@seeker.tracer('foo.bar', 'self.x["whatever"]')
+from bundle.seeker import tracer
+
+@tracer('foo.bar', 'self.x["whatever"]')
 # Or 
-@seeker.tracer(watch=('foo.bar', 'self.x["whatever"]'))
+@tracer(watch=('foo.bar', 'self.x["whatever"]'))
 ```
 
 However, if you want to trace all variables in the scope and closure, 
 you can use flag `only_watch=False`:
 
 ```python
-@seeker.tracer(only_watch=False)
+from bundle.seeker import tracer
+
+@tracer(only_watch=False)
 ``` 
 
 Show snoop lines for functions that your function calls:
 
 ```python
-@seeker.tracer(depth=2)
+from bundle.seeker import tracer
+
+@tracer(depth=2)
 ```
 
 **See _Advanced Usage_ for more options.** <=

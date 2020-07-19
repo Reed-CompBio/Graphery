@@ -12,7 +12,9 @@ from time import time
 class Controller:
     def __init__(self, cache_path=USER_DOCS_PATH, auto_delete: bool = False):
         self.main_cache_folder = CacheFolder(cache_path, auto_delete=auto_delete)
-        self.log_folder = CacheFolder(cache_path, auto_delete=auto_delete)
+        self.log_folder = CacheFolder(cache_path / 'log', auto_delete=auto_delete)
+        # TODO think about this, and the log file location in the sight class
+        self.log_folder.cache_folder_path.mkdir(parents=True, exist_ok=True)
         self.tracer_cls = tracer
         self.recorder = Recorder()
         self.processor = Processor()
