@@ -10,7 +10,7 @@ All the utilities live in the `bundle` module. There are three sections: `GraphO
 
 The APIs exposed by `GraphObject` are listed [here](../user-manual/get-started.md). This section is for developers who wants to generate graph objects.
 
-`Graph.py` has a function called `graph_generator`, which takes in a json string in [`cyjs`](https://github.com/cool-RR) format (example [here](https://js.cytoscape.org/#notation/elements-json), the second example in the section) and returns a `Graph` object.
+`Graph.py` has a function called `graph_generator`, which takes in a json string in `cyjs` format (example [here](https://js.cytoscape.org/#notation/elements-json), the second example in the section) and returns a `Graph` object.
 
 The `cyjs` format is extended in this module. You can create an object filed `displayed` in a node or an edge element, like this:
 

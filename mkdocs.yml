@@ -11,5 +11,8 @@ nav:
       - "Get Started": "./user-manual/get-started.md"
   - "Backend Doc":
       - "Utilities": "./backend-docs/utils.md"
+      - "Databse Schema": "./backend-docs/database-specification.md"
+      - "Naming Conventions": "./backend-docs/naming-convention.md"
+      - "CLI Usages": "./backend-docs/cli-usages.md"
       - "APIs": "./backend-docs/api-specification.md"
   - About: "about.md"
