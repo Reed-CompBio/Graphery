@@ -80,7 +80,7 @@
             :text="$t('tooltips.runCodeOnTheCloud')"
           ></SwitchTooltip>
         </q-btn>
-        <q-btn dense>
+        <q-btn dense @click.prevent="pushCodeToExecute">
           <q-icon name="mdi-cloud-download" />
           <SwitchTooltip :text="$t('tooltips.runCodeLocally')"></SwitchTooltip>
         </q-btn>
@@ -135,6 +135,7 @@
 <script>
   import { mapActions, mapGetters, mapState } from 'vuex';
   import { saveTextToClipboard } from '../../services/helpers.ts';
+  import { localServerCaller } from '../../services/apis';
 
   export default {
     components: {
@@ -288,9 +289,12 @@
         this.sliderPos = 1;
         this.loadVariableObj(null);
       },
+      getCurrentCode() {
+        return this.$refs.editorComponent.content;
+      },
       copyCurrentCode() {
         if (this.$refs.editorComponent) {
-          saveTextToClipboard(this.$refs.editorComponent.content);
+          saveTextToClipboard(this.getCurrentCode());
         }
       },
       setCurrentCodeFromClipboard() {
@@ -304,6 +308,14 @@
           .catch((err) => {
             console.error('Failed to read clipboard contents: ', err);
           });
+      },
+      pushCodeToExecute() {
+        localServerCaller(
+          this.getCurrentCode(),
+          this.$store.getters['tutorials/currentGraphJsonObj']
+        ).then((response) => {
+          console.log(response.data);
+        });
       },
     },
     watch: {

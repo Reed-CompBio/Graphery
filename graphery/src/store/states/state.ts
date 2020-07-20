@@ -185,12 +185,12 @@ export interface WorkSpaceBaseState {
   codes: CodeInstance[];
   currentIndex: number;
 }
-
-export interface TutorialWorkSpaceState extends WorkSpaceBaseState {}
-
-export interface PlaygroundWorkSpace extends WorkSpaceBaseState {}
+//
+// export interface TutorialWorkSpaceState extends WorkSpaceBaseState {}
+//
+// export interface PlaygroundWorkSpace extends WorkSpaceBaseState {}
 
 export interface WorkSpaceState {
-  tutorialSpace: TutorialWorkSpaceState;
-  playgroundSpace: PlaygroundWorkSpace;
+  tutorialSpace: WorkSpaceBaseState;
+  playgroundSpace: WorkSpaceBaseState;
 }

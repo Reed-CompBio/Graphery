@@ -51,3 +51,11 @@ export async function apiCaller(
 
   return [response.data.data, response.data.errors];
 }
+
+export async function localServerCaller(
+  code: string,
+  graph: string | object,
+  port = 7590
+) {
+  return await axios.post('http://localhost:' + port + '/run', { code, graph });
+}
