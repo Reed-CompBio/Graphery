@@ -1,5 +1,5 @@
 import json
-from typing import Mapping, Callable
+from typing import Mapping, Callable, Any
 from wsgiref.simple_server import make_server
 from multiprocessing import Pool, TimeoutError
 
@@ -7,6 +7,14 @@ from bundle.server_utils.params import TIMEOUT_SECONDS, REQUEST_CODE_NAME, ONLY_
     REQUEST_GRAPH_NAME
 from bundle.server_utils.utils import create_error_response, create_data_response, execute, \
     ExecutionException
+
+
+class StringEncoder(json.JSONEncoder):
+    def default(self, obj: Any) -> Any:
+        try:
+            json.JSONEncoder.default(self, obj)
+        except TypeError:
+            return str(obj)
 
 
 def main(port: int):
@@ -32,7 +40,7 @@ def application(environ: Mapping, start_response: Callable):
 
     headers.append(('Access-Control-Allow-Origin', origin))
     start_response(response_code, headers)
-    return [json.dumps(content).encode()]
+    return [json.dumps(content, cls=StringEncoder).encode()]
 
 
 def time_out_execute(*args, **kwargs):

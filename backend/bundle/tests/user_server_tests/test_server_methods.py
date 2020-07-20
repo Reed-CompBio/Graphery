@@ -1,21 +1,27 @@
 import json
 import os
 import textwrap
-from typing import Union, Mapping
+import pathlib
+from time import sleep
+from typing import Union, Mapping, Optional, Any
+from multiprocessing import Pool, TimeoutError
 from itertools import product
 
 import pytest
-import pathlib
+import requests
 
 from bundle.server_utils.utils import create_error_response, create_data_response, execute
-from bundle.server_utils.main_functions import application_helper
+from bundle.server_utils.main_functions import application_helper, main
 from bundle.tests.user_server_tests.server_utils import Env, FileLikeObj, generate_wsgi_input
-from bundle.server_utils.params import TIMEOUT_SECONDS
+from bundle.server_utils.params import TIMEOUT_SECONDS, DEFAULT_PORT
 
 
 class AnyResp:
     def __eq__(self, other):
         return True
+
+
+AnyResp = AnyResp()
 
 
 def test_create_error_response():
@@ -72,7 +78,29 @@ def test_execution(code_file_name: str, graph_json_file_name: Union[str, Mapping
 
 
 def mock_graph_json() -> dict:
-    return {'elements': {'nodes': [{'data': {'id': 'v2', 'displayed': {}}, 'style': [{}]}, {'data': {'id': 'v1', 'displayed': {}}, 'style': [{}]}], 'edges': [{'data': {'id': 'e1', 'source': 'v1', 'target': 'v2', 'displayed': {}}, 'style': [{}, {}]}]}, 'style': [{'selector': 'node', 'style': {'label': 'data(id)', 'text-valign': 'center', 'text-halign': 'center', 'text-outline-color': 'white', 'text-outline-opacity': 1, 'text-outline-width': 1, 'height': '10px', 'width': '10px', 'font-size': '5px', 'border-color': 'black', 'border-opacity': 1, 'border-width': 1}}]}
+    return {'elements': {'nodes': [{'data': {'id': 'v2', 'displayed': {}}, 'style': [{}]},
+                                   {'data': {'id': 'v1', 'displayed': {}}, 'style': [{}]}],
+                         'edges': [{'data': {'id': 'e1', 'source': 'v1', 'target': 'v2', 'displayed': {}},
+                                    'style': [{}, {}]}]},
+            'style': [{'selector': 'node',
+                       'style': {'label': 'data(id)', 'text-valign': 'center', 'text-halign': 'center',
+                                 'text-outline-color': 'white', 'text-outline-opacity': 1, 'text-outline-width': 1,
+                                 'height': '10px', 'width': '10px', 'font-size': '5px', 'border-color': 'black',
+                                 'border-opacity': 1, 'border-width': 1
+                                 }}]}
+
+
+def mock_normal_code() -> str:
+    return textwrap.dedent('''\
+            from bundle.seeker import tracer
+            from bundle.utils.dummy_graph import graph_object
+            
+            
+            @tracer('edge')
+            def main() -> None:
+                for edge in graph_object.V:
+                    print(edge)
+            ''')
 
 
 @pytest.mark.parametrize('env, response', [
@@ -96,17 +124,8 @@ def mock_graph_json() -> dict:
         }))}).content,
                  create_error_response('No Graph Intel Embedded In The Request.')),  # no graph
     pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content({
-        'wsgi.input': generate_wsgi_input(code=textwrap.dedent('''\
-            from bundle.seeker import tracer
-            from bundle.utils.dummy_graph import graph_object
-            
-            
-            @tracer('edge')
-            def main() -> None:
-                for edge in graph_object.V:
-                    print(edge)
-        '''), graph=mock_graph_json())
-    }).content, AnyResp()),  # normal request
+        'wsgi.input': generate_wsgi_input(code=mock_normal_code(), graph=mock_graph_json())
+    }).content, AnyResp),  # normal request
     pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content({
         'wsgi.input': generate_wsgi_input(code=textwrap.dedent('''\
             from time import sleep
@@ -118,6 +137,37 @@ def mock_graph_json() -> dict:
         '''), graph=mock_graph_json())
     }).content, create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS} s.')),  # timeout error
 ])
-def test_server_connection(env, response):
+def test_application_helper(env, response):
     mock_response = application_helper(env)
     assert response == mock_response
+
+
+@pytest.fixture
+def local_server():
+    with Pool(1) as pool:
+        return pool.apply_async(main, args=[DEFAULT_PORT])
+
+
+BASE_URL = f'http://localhost:{DEFAULT_PORT}'
+
+
+@pytest.mark.parametrize('method, url, request_body, response', [
+    pytest.param('get', '/env', None, AnyResp),
+    pytest.param('post', '/run', {'code': mock_normal_code(), 'graph': mock_graph_json()}, AnyResp)
+])
+def test_server_connection(local_server, method: str, url: str, request_body: Optional[dict], response: Any):
+    sleep(1)
+    if method == 'get':
+        resp = requests.get(BASE_URL + url)
+    elif method == 'post':
+        resp = requests.post(BASE_URL + url, data=request_body)
+    else:
+        resp = None
+
+    assert resp.status_code == 200
+    assert response == resp.json()
+
+    try:
+        local_server.get(timeout=0.1)
+    except TimeoutError:
+        print('Ended Test')

@@ -97,3 +97,5 @@ class GraphObjectEncoder(json.JSONEncoder):
             return self.return_edge_set_encoding(obj)
         elif isinstance(obj, Graph):
             return self.return_graph_encoding(obj)
+        else:
+            return json.JSONEncoder.default(self, obj)

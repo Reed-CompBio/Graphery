@@ -9,6 +9,7 @@ coverage = "*"
 parameterized = "*"
 guppy3 = "*"
 pytest-django = "*"
+requests = "*"
 
 [packages]
 django = "*"
