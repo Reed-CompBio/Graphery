@@ -1,7 +1,7 @@
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 import {
   CodeHistoryState,
-  CodeInstance,
+  WorkSpaceInstance,
   RootState,
   WorkSpaceState,
 } from '@/store/states/state';
@@ -9,77 +9,74 @@ import get = Reflect.get;
 
 const state: WorkSpaceState = {
   tutorialSpace: {
-    codes: [],
-    currentIndex: -1,
+    workspaces: [],
   },
   playgroundSpace: {
-    codes: [],
-    currentIndex: -1,
+    workspaces: [],
   },
 };
 
 const mutations: MutationTree<WorkSpaceState> = {
-  ADD_NEW_WORKSPACE_TO_TUTORIAL(state, value: CodeInstance) {
-    state.tutorialSpace.codes.push(value);
+  ADD_NEW_WORKSPACE_TO_TUTORIAL(state, value: WorkSpaceInstance) {
+    state.tutorialSpace.workspaces.push(value);
   },
-  ADD_NEW_WORKSPACE_TO_PLAYGROUND(state, value: CodeInstance) {
-    state.playgroundSpace.codes.push(value);
+  ADD_NEW_WORKSPACE_TO_PLAYGROUND(state, value: WorkSpaceInstance) {
+    state.playgroundSpace.workspaces.push(value);
   },
   ADD_HISTORY(
     state,
     value: {
-      code: CodeInstance;
+      currentWorkSpace: WorkSpaceInstance;
       codeHash: string;
       execHistory: CodeHistoryState;
     }
   ) {
-    value.code.execHistories[value.codeHash] = value.execHistory;
-  },
-  CHANGE_TUTORIAL_WORKSPACE_INDEX(state, index: number) {
-    if (state.tutorialSpace.codes.length === 0) {
-      state.tutorialSpace.currentIndex = -1;
-    } else {
-      state.tutorialSpace.currentIndex = index;
-    }
-  },
-  CHANGE_PLAYGROUND_WORKSPACE_INDEX(state, index: number) {
-    if (state.tutorialSpace.codes.length === 0) {
-      state.tutorialSpace.currentIndex = -1;
-    } else {
-      state.tutorialSpace.currentIndex = index;
-    }
+    value.currentWorkSpace.execHistories[value.codeHash] = value.execHistory;
   },
 };
 
 const actions: ActionTree<WorkSpaceState, RootState> = {
-  addNewWorkSpaceToTutorial({ commit }, codeString: string) {
+  addNewWorkSpaceToTutorial(
+    { commit },
+    info: { name: string; codeString: string }
+  ) {
     commit('ADD_NEW_WORKSPACE_TO_TUTORIAL', {
-      code: codeString,
+      name: info.name,
+      code: info.codeString,
       lastModified: Date(),
-      history: [codeString],
+      history: [info.codeString],
     });
   },
-  addNewWorkSpaceToPlayground({ commit }, codeString: string) {
+  addNewWorkSpaceToPlayground(
+    { commit },
+    info: { name: string; codeString: string }
+  ) {
     commit('ADD_NEW_WORKSPACE_TO_PLAYGROUND', {
-      code: codeString,
+      name: info.name,
+      code: info.codeString,
       lastModified: Date(),
-      history: [codeString],
+      history: [info.codeString],
     });
   },
   addHistoryToCurrentTutorialWorkSpace(
     { commit, getters },
-    value: { codeHash: string; codeHistory: CodeHistoryState }
+    value: {
+      currentWorkSpace: WorkSpaceInstance;
+      codeHash: string;
+      codeHistory: CodeHistoryState;
+    }
   ) {
-    commit('ADD_HISTORY', { code: getters.currentTutorialWorkSpace, ...value });
+    commit('ADD_HISTORY', value);
   },
   addHistoryToCurrentPlaygroundWorkSpace(
     { commit, getters },
-    value: { codeHash: string; codeHistory: CodeHistoryState }
+    value: {
+      currentWorkSpace: WorkSpaceInstance;
+      codeHash: string;
+      codeHistory: CodeHistoryState;
+    }
   ) {
-    commit('ADD_HISTORY', {
-      code: getters.currentPlaygroundWorkSpace,
-      ...value,
-    });
+    commit('ADD_HISTORY', value);
   },
   changeTutorialWorkSpaceIndex({ commit }, value: number) {
     commit('CHANGE_TUTORIAL_WORKSPACE_INDEX', value);
@@ -89,33 +86,7 @@ const actions: ActionTree<WorkSpaceState, RootState> = {
   },
 };
 
-const getters: GetterTree<WorkSpaceState, RootState> = {
-  currentTutorialWorkSpace(state) {
-    const index = state.tutorialSpace.currentIndex;
-    if (index < 0) {
-      return null;
-    } else {
-      return state.tutorialSpace.codes[index];
-    }
-  },
-  currentTutorialCodeHistories(state, getters) {
-    return (
-      getters.currentTutorialWorkSpace &&
-      getters.currentTutorialWorkSpace.history
-    );
-  },
-  currentPlaygroundWorkSpace(state) {
-    const index = state.playgroundSpace.currentIndex;
-    if (index < 0) {
-      return null;
-    } else {
-      return state.tutorialSpace.codes[index];
-    }
-  },
-  currentPlaygroundCodeHistories(state, getters) {
-    return;
-  },
-};
+const getters: GetterTree<WorkSpaceState, RootState> = {};
 
 export default {
   namespaced: true,

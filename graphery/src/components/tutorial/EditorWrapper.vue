@@ -72,6 +72,7 @@
         </q-btn>
         <!-- TODO auto play maybe?  -->
       </q-btn-group>
+
       <!-- execution button group -->
       <q-btn-group flat class="q-mr-md">
         <q-btn dense>
@@ -85,6 +86,7 @@
           <SwitchTooltip :text="$t('tooltips.runCodeLocally')"></SwitchTooltip>
         </q-btn>
       </q-btn-group>
+
       <!-- copy paste button group -->
       <q-btn-group flat class="q-mr-md">
         <q-btn dense icon="mdi-content-copy" @click="copyCurrentCode">
@@ -99,6 +101,16 @@
         </q-btn>
       </q-btn-group>
 
+      <q-btn-group flat class="q-mr-md">
+        <q-btn
+          dense
+          icon="mdi-folder-network-outline"
+          :disable="true"
+          @click="openWorkSpaceSelection"
+        ></q-btn>
+      </q-btn-group>
+
+      <!-- Editor status -->
       <q-btn-group flat class="q-mr-md">
         <q-btn dense disable :icon="enableEditing ? 'lock_open' : 'lock'">
         </q-btn>
@@ -129,6 +141,32 @@
         </template>
       </q-splitter>
     </div>
+    <!--    <q-dialog v-model="isWorkSpaceSelectionOpen">-->
+    <!--      <q-card>-->
+    <!--        <q-toolbar>-->
+    <!--          <TutorialWorkSpaceController-->
+    <!--            style="width: 30%"-->
+    <!--            class="q-mr-md"-->
+    <!--          ></TutorialWorkSpaceController>-->
+    <!--          <q-space />-->
+    <!--          <q-btn flat round dense icon="close" v-close-popup />-->
+    <!--        </q-toolbar>-->
+
+    <!--        <q-drawer :v-model="true" persistent bordered>-->
+    <!--          <q-list>-->
+    <!--            <q-item v-for="i in [1, 2, 3]" :key="i">-->
+    <!--              {{ i }}-->
+    <!--            </q-item>-->
+    <!--          </q-list>-->
+    <!--        </q-drawer>-->
+    <!--        <q-card-section>-->
+    <!--          Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum-->
+    <!--          repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis-->
+    <!--          perferendis totam, ea at omnis vel numquam exercitationem aut, natus-->
+    <!--          minima, porro labore.-->
+    <!--        </q-card-section>-->
+    <!--      </q-card>-->
+    <!--    </q-dialog>-->
   </div>
 </template>
 
@@ -150,6 +188,8 @@
           // TODO notify the initializer here
           return md;
         }),
+      // TutorialWorkSpaceController: () =>
+      //   import('@/components/tutorial/TutorialWorkSpaceController.vue'),
     },
     data() {
       return {
@@ -159,6 +199,7 @@
         sliderPos: 1,
         codeValueListSplitPos: (5 / 6) * 100,
         advanceSteps: 5,
+        isWorkSpaceSelectionOpen: false,
       };
     },
     computed: {
@@ -315,7 +356,11 @@
           this.$store.getters['tutorials/currentGraphJsonObj']
         ).then((response) => {
           console.log(response.data);
+          // TODO use it to pass the actual content
         });
+      },
+      openWorkSpaceSelection() {
+        this.isWorkSpaceSelectionOpen = true;
       },
     },
     watch: {

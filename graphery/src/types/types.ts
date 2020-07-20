@@ -27,3 +27,10 @@ export interface AllTutorialsInfoType {
 export interface AllTutorialDataType {
   allTutorialInfo: AllTutorialsInfoType[];
 }
+
+export interface LocalServerSuccessResponse {
+  data: {
+    codeHash: string;
+    execResult: [];
+  };
+}

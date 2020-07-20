@@ -3,7 +3,7 @@ import json
 import sys
 import pathlib
 from importlib import import_module
-from typing import Mapping, Any, Callable, Union, List
+from typing import Mapping, Any, Callable, Union, List, Tuple
 
 from .params import DEFAULT_PORT, GRAPH_OBJ_ANCHOR_NAME, ENTRY_PY_MODULE_NAME, MAIN_FUNCTION_NAME, \
     ENTRY_PY_FILE_NAME
@@ -50,8 +50,8 @@ def create_data_response(data: Any) -> dict:
     }
 
 
-def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool = False) -> List[Mapping]:
-    folder_hash = get_md5_of_a_string(code)
+def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool = False) -> Tuple[str, List[Mapping]]:
+    folder_hash: str = get_md5_of_a_string(code)
 
     try:
         graph_json_obj = json.loads(graph_json) if isinstance(graph_json, str) else graph_json
@@ -96,4 +96,4 @@ def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool 
             del sys.modules[ENTRY_PY_MODULE_NAME]
             del imported_module
 
-    return controller.get_processed_result()
+    return folder_hash, controller.get_processed_result()

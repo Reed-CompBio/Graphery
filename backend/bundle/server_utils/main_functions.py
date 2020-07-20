@@ -54,7 +54,9 @@ def time_out_execute(*args, **kwargs):
         try:
             result = pool.apply_async(func=execute, args=args, kwds=kwargs)
 
-            response_dict = create_data_response({'exec_result': result.get(timeout=TIMEOUT_SECONDS)})
+            code_hash, exec_result = result.get(timeout=TIMEOUT_SECONDS)
+
+            response_dict = create_data_response({'codeHash': code_hash, 'execResult': exec_result})
         except TimeoutError:
             response_dict = create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS} s.')
         except ExecutionException as e:

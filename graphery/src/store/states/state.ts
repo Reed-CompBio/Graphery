@@ -174,7 +174,8 @@ export interface CodeHistoryCollectionState {
   [key: string]: CodeHistoryState;
 }
 
-export interface CodeInstance {
+export interface WorkSpaceInstance {
+  name: string;
   code: string;
   lastModified: Date;
   execHistories: CodeHistoryCollectionState;
@@ -182,8 +183,7 @@ export interface CodeInstance {
 }
 
 export interface WorkSpaceBaseState {
-  codes: CodeInstance[];
-  currentIndex: number;
+  workspaces: WorkSpaceInstance[];
 }
 //
 // export interface TutorialWorkSpaceState extends WorkSpaceBaseState {}
