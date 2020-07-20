@@ -1,3 +1,5 @@
+import { date } from 'quasar';
+
 export interface RootState {
   drawer: boolean;
 }
@@ -161,4 +163,34 @@ export interface SettingState extends SettingInfos {
 export interface BaseState {
   drawer: boolean;
   csrfToken: string | null;
+}
+
+export interface CodeHistoryState {
+  code: string;
+  execResult: string;
+}
+
+export interface CodeHistoryCollectionState {
+  [key: string]: CodeHistoryState;
+}
+
+export interface CodeInstance {
+  code: string;
+  lastModified: Date;
+  execHistories: CodeHistoryCollectionState;
+  // add a `from` field
+}
+
+export interface WorkSpaceBaseState {
+  codes: CodeInstance[];
+  currentIndex: number;
+}
+
+export interface TutorialWorkSpaceState extends WorkSpaceBaseState {}
+
+export interface PlaygroundWorkSpace extends WorkSpaceBaseState {}
+
+export interface WorkSpaceState {
+  tutorialSpace: TutorialWorkSpaceState;
+  playgroundSpace: PlaygroundWorkSpace;
 }

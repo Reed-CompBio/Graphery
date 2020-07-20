@@ -6,6 +6,7 @@ Vue.use(Vuex);
 import notifications from '@/store/modules/notifications';
 import tutorials from '@/store/modules/tutorials';
 import settings from '@/store/modules/settings';
+import workspaces from '@/store/modules/workspaces';
 import createPersistedState from 'vuex-persistedstate';
 import { BaseState } from '@/store/states/state';
 
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     notifications,
     tutorials,
     settings,
+    workspaces,
   },
   plugins: [createPersistedState({ paths: ['settings'] })],
   state: {
