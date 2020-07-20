@@ -7,6 +7,8 @@ import pytest
 import pathlib
 
 from bundle.server_utils.utils import create_error_response, create_data_response, execute
+from bundle.server_utils.main_functions import application_helper
+from bundle.tests.user_server_tests.server_utils import Env
 
 
 def test_create_error_response():
@@ -60,3 +62,20 @@ def test_execution(code_file_name: str, graph_json_file_name: Union[str, Mapping
     graph_json = get_graph_json(graph_json_file_name)
     result = execute(code_text, graph_json)
     print(result)
+
+
+@pytest.mark.parametrize('env, response', [
+    pytest.param(Env(REQUEST_METHOD='GET', PATH_INFO='/env'),
+                 create_data_response(Env(REQUEST_METHOD='GET', PATH_INFO='/env'))),  # info page
+    pytest.param(Env(REQUEST_METHOD='GET', PATH_INFO='/venv'),
+                 create_error_response('Bad Request: Wrong Methods.')),  # wrong request method
+    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/env'),
+                 create_error_response('Bad Request: Wrong Methods.')),  # wrong entry point
+    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run').content,
+                 create_error_response('No Code Snippets Embedded In The Request.')),
+    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run').add_content(),
+                 create_error_response('No Graph Intel Embedded In The Request.'))
+])
+def test_server_connection(env, response):
+    mock_response = application_helper(env)
+    assert mock_response == response
