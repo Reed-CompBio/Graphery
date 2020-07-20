@@ -1,5 +1,6 @@
 import json
 import os
+import textwrap
 from typing import Union, Mapping
 from itertools import product
 
@@ -8,7 +9,13 @@ import pathlib
 
 from bundle.server_utils.utils import create_error_response, create_data_response, execute
 from bundle.server_utils.main_functions import application_helper
-from bundle.tests.user_server_tests.server_utils import Env
+from bundle.tests.user_server_tests.server_utils import Env, FileLikeObj, generate_wsgi_input
+from bundle.server_utils.params import TIMEOUT_SECONDS
+
+
+class AnyResp:
+    def __eq__(self, other):
+        return True
 
 
 def test_create_error_response():
@@ -38,7 +45,7 @@ def test_create_data_response(data_obj, data):
     assert create_data_response(data_obj) == data
 
 
-resource_root_folder: pathlib.Path = pathlib.Path(os.path.dirname(os.path.abspath(__file__)))  / 'test_files'
+resource_root_folder: pathlib.Path = pathlib.Path(os.path.dirname(os.path.abspath(__file__))) / 'test_files'
 code_resource_folder: pathlib.Path = resource_root_folder / 'code'
 graph_resource_folder: pathlib.Path = resource_root_folder / 'json'
 
@@ -64,18 +71,53 @@ def test_execution(code_file_name: str, graph_json_file_name: Union[str, Mapping
     print(result)
 
 
+def mock_graph_json() -> dict:
+    return {'elements': {'nodes': [{'data': {'id': 'v2', 'displayed': {}}, 'style': [{}]}, {'data': {'id': 'v1', 'displayed': {}}, 'style': [{}]}], 'edges': [{'data': {'id': 'e1', 'source': 'v1', 'target': 'v2', 'displayed': {}}, 'style': [{}, {}]}]}, 'style': [{'selector': 'node', 'style': {'label': 'data(id)', 'text-valign': 'center', 'text-halign': 'center', 'text-outline-color': 'white', 'text-outline-opacity': 1, 'text-outline-width': 1, 'height': '10px', 'width': '10px', 'font-size': '5px', 'border-color': 'black', 'border-opacity': 1, 'border-width': 1}}]}
+
+
 @pytest.mark.parametrize('env, response', [
-    pytest.param(Env(REQUEST_METHOD='GET', PATH_INFO='/env'),
-                 create_data_response(Env(REQUEST_METHOD='GET', PATH_INFO='/env'))),  # info page
-    pytest.param(Env(REQUEST_METHOD='GET', PATH_INFO='/venv'),
+    pytest.param(Env(REQUEST_METHOD='GET', PATH_INFO='/env').content,
+                 create_data_response(Env(REQUEST_METHOD='GET', PATH_INFO='/env').content)),  # info page
+    pytest.param(Env(REQUEST_METHOD='GET', PATH_INFO='/venv').content,
                  create_error_response('Bad Request: Wrong Methods.')),  # wrong request method
-    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/env'),
+    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/env').content,
                  create_error_response('Bad Request: Wrong Methods.')),  # wrong entry point
-    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run').content,
-                 create_error_response('No Code Snippets Embedded In The Request.')),
-    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run').add_content(),
-                 create_error_response('No Graph Intel Embedded In The Request.'))
+    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content(
+        {
+            'wsgi.input': FileLikeObj(json.dumps({}))
+        }).content,
+                 create_error_response('No Code Snippets Embedded In The Request.')),  # no code
+    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content(
+        {'wsgi.input': FileLikeObj(json.dumps({
+            'code': textwrap.dedent('''\
+                def main():
+                    print('hello')
+                ''')
+        }))}).content,
+                 create_error_response('No Graph Intel Embedded In The Request.')),  # no graph
+    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content({
+        'wsgi.input': generate_wsgi_input(code=textwrap.dedent('''\
+            from bundle.seeker import tracer
+            from bundle.utils.dummy_graph import graph_object
+            
+            
+            @tracer('edge')
+            def main() -> None:
+                for edge in graph_object.V:
+                    print(edge)
+        '''), graph=mock_graph_json())
+    }).content, AnyResp()),  # normal request
+    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content({
+        'wsgi.input': generate_wsgi_input(code=textwrap.dedent('''\
+            from time import sleep
+            graph_object = {}
+            
+            def main() -> None:
+                while True:
+                    sleep(6000)        
+        '''), graph=mock_graph_json())
+    }).content, create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS} s.')),  # timeout error
 ])
 def test_server_connection(env, response):
     mock_response = application_helper(env)
-    assert mock_response == response
+    assert response == mock_response

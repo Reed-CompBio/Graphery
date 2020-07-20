@@ -1,4 +1,6 @@
+import json
 from collections import Mapping
+from typing import Union
 
 
 class Env:
@@ -17,3 +19,10 @@ class FileLikeObj:
     def read(self, *args, **kwargs) -> str:
         print(args, kwargs)
         return self.message
+
+
+def generate_wsgi_input(code: str, graph: Union[str, Mapping]):
+    return FileLikeObj(json.dumps({
+        'code': code,
+        'graph': graph
+    }))
