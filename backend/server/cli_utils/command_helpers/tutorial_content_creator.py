@@ -37,8 +37,8 @@ class TutorialContentCreator(CommandBaseOverIterable):
         return selected_graph_file_paths
 
     @staticmethod
-    def get_img_file(parent_folder: pathlib.Path, img_tag: bs4.Tag) -> Optional[pathlib.Path]:
-        file_name = img_tag.get('src', None)
+    def get_file_from_src(parent_folder: pathlib.Path, img_tag: bs4.Tag) -> Optional[pathlib.Path]:
+        file_name: Optional[str] = img_tag.get('src')
         if file_name:
             return parent_folder / file_name
         return None
@@ -50,14 +50,30 @@ class TutorialContentCreator(CommandBaseOverIterable):
         pass
 
     @staticmethod
-    def process_images(soup: bs4.BeautifulSoup, html_parent_folder: pathlib.Path) -> None:
+    def rewrite_src_path(src: pathlib.Path, static_folder: pathlib.Path) -> None:
+        pass
+
+    @staticmethod
+    def process_images(soup: bs4.BeautifulSoup,
+                       html_parent_folder: pathlib.Path,
+                       url: str) -> None:
+
         img_tags: bs4.ResultSet = soup.find_all('img')
-        for img_tag in img_tags:
-            img_file_path = TutorialContentCreator.get_img_file(html_parent_folder, img_tag)
+        video_tags: bs4.ResultSet = soup.find_all('video')
+        audio_tags: bs4.ResultSet = soup.find_all('audio')
+        source_tags: bs4.ResultSet = soup.find_all('source')
+
+        for src_tag in img_tags:
+            img_file_path = TutorialContentCreator.get_file_from_src(html_parent_folder, src_tag)
             if not img_file_path:
-                continue
-            # TODO finish this
-            # move_file_to_static_folder(img_file_path,)
+                # TODO
+                raise
+
+            if not img_file_path.exists():
+                # TODO warn users
+                raise
+
+            TutorialContentCreator.move_file_to_static_folder()
 
     def gather_locale_md_info(self, path: pathlib.Path) -> None:
         self.new_attr()
@@ -78,18 +94,21 @@ class TutorialContentCreator(CommandBaseOverIterable):
             html_title = get_title_from_soup(soup)
             html_abstract = get_abstract_from_soup(soup)
 
-            TutorialContentCreator.process_images(soup, path.absolute().parent)
             # TODO there is a new line in str(soup)
 
             self.set_attr('title', get_name(message='Please edit the title of this tutorial:',
                                             default=html_title if html_title else name))
+
+            anchor = select_authors()
+
+            TutorialContentCreator.process_images(soup, path.absolute().parent)
 
             # TODO again, you can't do much in a command line I guess?
             self.set_attr('abstract',
                           get_abstract(message='Edit the abstract of this translation:', default=html_abstract))
 
             self.set_attr('content_html', get_content_from_soup(soup))
-            self.set_attr('authors', select_authors())
+            self.set_attr('authors', anchor)
             self.set_attr('tutorial_anchor', select_tutorial())
 
         except ValueError as e:

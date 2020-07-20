@@ -19,6 +19,9 @@ The folder structure should be structured as following:
     │   ├── graph2.json
     │   └── ...
     └── locale
+        ├── statics
+        │   ├── example.jpg
+        │   └── ...
         ├── title.en-us.md
         ├── title.zh-cn.md
         └── ...
@@ -36,6 +39,9 @@ The folder structure should be structured as following:
 ### graph2.json
 ### ...
 ## locale
+### statics
+#### example.jpg
+#### ...
 ### title.en-us.md
 ### title.zh-cn.md
 ### ...
@@ -72,7 +78,9 @@ Additionally, every graph has a short abstract and a human readable title. Each 
 
 The `locale` folder contains the actual content of the tutorials. Each translation of the actual content should be stored in a Markdown file, whose file name also follows the Markdown file naming convention. 
 
-The `abstract` of the content in that translation will be the fist paragraph of the actual content. 
+The `abstract` of the content in that translation will be the fist paragraph of the actual content. You can modify it in the CLI or in the admin page. 
+
+The statics folder under the `locale` folder should contain any static objects used in the Markdown translation, like images for example. 
 
 ## Markdown File Convention
 

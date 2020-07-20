@@ -17,7 +17,7 @@ class StringEncoder(json.JSONEncoder):
             return str(obj)
 
 
-def main(port: int):
+def main(port: int = 7590):
     with make_server('127.0.0.1', port, application) as httpd:
         print('Press <ctrl+c> to stop the server. ')
         print(f'Ready for Python code on port {port} ...')
@@ -26,7 +26,13 @@ def main(port: int):
 
 def application(environ: Mapping, start_response: Callable):
     response_code = '200 OK'
-    headers = [('Content-Type', 'application/json')]
+    headers = [('Content-Type', 'application/json'),
+               ('Access-Control-Allow-Headers', ', '.join(('accept',
+                                                           'accept-encoding',
+                                                           'content-type',
+                                                           'origin',
+                                                           'user-agent',
+                                                           'x-requested-with', )))]
 
     # origin check
     origin = environ.get('HTTP_ORIGIN', '')
@@ -84,4 +90,4 @@ def application_helper(environ: Mapping) -> Mapping:
 
     # execute program with timed out
     return time_out_execute(code=request_json_object[REQUEST_CODE_NAME],
-                                   graph_json=request_json_object[REQUEST_GRAPH_NAME])
+                            graph_json=request_json_object[REQUEST_GRAPH_NAME])
