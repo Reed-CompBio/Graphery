@@ -19,7 +19,6 @@
         :disable="disableStepSlider"
         @change="updateInfoFromSliderChange"
       ></q-slider>
-      <!-- TODO  get the button actions done -->
       <!-- stepper button group -->
       <q-btn-group flat class="q-mr-md">
         <q-btn dense @click="showLabelAlwaysSwitch">
@@ -182,16 +181,8 @@
   export default {
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
-      Editor: () =>
-        import('@/components/tutorial/Editor.vue').then((md) => {
-          // TODO notify the initializer here
-          return md;
-        }),
-      VariableList: () =>
-        import('@/components/tutorial/VariableList.vue').then((md) => {
-          // TODO notify the initializer here
-          return md;
-        }),
+      Editor: () => import('@/components/tutorial/Editor.vue'),
+      VariableList: () => import('@/components/tutorial/VariableList.vue'),
       // TutorialWorkSpaceController: () =>
       //   import('@/components/tutorial/TutorialWorkSpaceController.vue'),
     },
@@ -361,11 +352,13 @@
         ).then((data) => {
           this.reloadStepper();
 
-          if (data['error']) {
-            // TODO error
+          if (data['error'] || !('data' in data)) {
+            // TODO handle error
           }
+
           const { codeHash, execResult } = data['data'];
           // TODO link this with workspace
+
           console.debug(codeHash, execResult);
           this.loadCustomJson(execResult);
 
@@ -381,9 +374,6 @@
         this.reloadStepper();
         this.initWrapperState();
       },
-    },
-    mounted() {
-      // TODO fix this, load init state after the API call is made
     },
   };
 </script>

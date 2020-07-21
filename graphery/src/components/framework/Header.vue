@@ -38,7 +38,6 @@
       <div id="language-switcher">
         <q-btn-dropdown flat dense icon="mdi-translate">
           <q-list>
-            <!-- TODO you may need to use a custom list of lang here -->
             <q-item
               v-for="lang in $i18n.availableLocales"
               :key="lang"

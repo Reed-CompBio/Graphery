@@ -69,7 +69,7 @@
             this.editor.layout();
           })
           .catch((err) => {
-            // TODO setup popup
+            // TODO handle error
             console.error(
               'An error occurs when initializing the monaco code editor',
               err

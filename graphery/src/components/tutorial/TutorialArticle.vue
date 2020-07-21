@@ -60,14 +60,13 @@
       <q-spinner-pie size="64px" color="primary"></q-spinner-pie>
     </q-inner-loading>
 
-    <!-- TODO fix this -->
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <transition
         appear
         enter-active-class="animated zoomIn"
         leave-active-class="animated zoomOut"
       >
-        <!-- TODO fix this? -->
+        <!-- TODO use quasar native utils to get percentage and replace the scroll func I wrote  -->
         <q-circular-progress
           size="42px"
           :value="1"

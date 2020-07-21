@@ -498,7 +498,7 @@
           this.registerExtensions();
         })
         .catch((error) => {
-          // TODO load up popup
+          // TODO load up popup error handle
           console.error('error occur', error);
         });
     },

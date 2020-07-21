@@ -27,7 +27,8 @@
     "Account": "Account",
     "Settings": "Settings",
     "Feedback": "Feedback",
-    "Login": "Login"
+    "Login": "Login",
+    "EmailMe": "Email Me"
   },
   "collectionPage": {
     "Filter": "Filter",

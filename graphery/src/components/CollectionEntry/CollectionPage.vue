@@ -164,9 +164,6 @@
         this.searchLoading = false;
       },
       loadInfo() {
-        // TODO for now,
-        console.debug('api query: ', this.query);
-
         this.toggleLoading();
 
         apiCaller(this.query, this.variables)
@@ -191,7 +188,7 @@
       search() {
         if (this.searchLoading) {
           console.log('Is searching, cancel current searching');
-          // TODO notify
+          // TODO notify and cancel axios's request
         }
         console.log('search');
         // this.toggleLoading();
@@ -208,7 +205,6 @@
     mounted() {
       this.loadInfo();
     },
-    // TODO maybe add a watch which emits an event once the info list is updated
   };
 </script>
 

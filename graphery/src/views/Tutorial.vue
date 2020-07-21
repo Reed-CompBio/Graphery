@@ -242,7 +242,7 @@
             this.loadTutorial(data.tutorial);
           })
           .catch((err) => {
-            // TODO in error
+            // TODO handle error
             console.error(err);
           });
       },

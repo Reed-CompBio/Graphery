@@ -66,7 +66,7 @@
           <div class="q-pa-sm">
             <q-card>
               <q-card-section>
-                <!-- TODO database pull -->
+                <!-- TODO pull messages from database  -->
                 <p style="margin: 0;">{{ $t('account.noNewAccount') }}</p>
               </q-card-section>
             </q-card>
@@ -111,15 +111,16 @@
         this.loading = true;
         apiCaller(loginMutation, loginCredential)
           .then(([data, errors]) => {
+            this.loading = false;
+
             if (errors) {
               // TODO handle error
-              console.error(errors);
+              throw Error(errors);
             }
 
             if (data) {
               // TODO change this
               this.setUser(data['login']['user']);
-              this.loading = false;
               this.resetForm();
             }
 

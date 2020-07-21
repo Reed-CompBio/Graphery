@@ -17,7 +17,6 @@
       </q-card-section>
       <q-separator />
       <q-card-actions align="center">
-        <!-- TODO add a link to admin page -->
         <q-btn
           :label="$t('account.ControlPanel')"
           to="/control-panel"

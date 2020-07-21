@@ -2,11 +2,9 @@
   <q-page class="page">
     <div class="container q-mx-auto shadow-12">
       <div class="content-container-wrapper">
-        <!-- TODO add a title section -->
         <slot></slot>
       </div>
     </div>
-    <!-- TODO add license section -->
   </q-page>
 </template>
 

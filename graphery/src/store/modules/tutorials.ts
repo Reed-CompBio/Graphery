@@ -110,7 +110,7 @@ const pseudoVariableObj = {
 // TODO remove the pseudo content!
 const state: TutorialState = {
   metaState: null,
-  articleContent: pseudoContent,
+  articleContent: null,
   currentGraphId: null,
   graphs: null,
   codes: null,
@@ -174,7 +174,6 @@ const mutations: MutationTree<TutorialState> = {
 };
 
 const actions: ActionTree<TutorialState, RootState> = {
-  // TODO API calls go here
   loadTutorialMetaState({ commit }, tutorialObj: TutorialDetailResponse) {
     const metaState: TutorialMetaState = {
       articleId: tutorialObj.id,
@@ -319,7 +318,7 @@ const getters: GetterTree<TutorialState, RootState> = {
   },
   getGraphById: (state) => (id: string) => {
     // TODO may return undefined
-    return state.graphs && state.graphs.find((g) => g.id === id);
+    return state.graphs && state.graphs.find((g) => g.id === id) && null;
   },
   getGraphByIndex: (state) => (index: number) => {
     return state.graphs && state.graphs[index];

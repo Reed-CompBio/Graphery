@@ -13,7 +13,6 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import { pullUser } from '@/services/helpers';
 
   const showFooterRe = /^(\/tutorial\/|\/graph\/)/;
 

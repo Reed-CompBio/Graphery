@@ -56,7 +56,7 @@
             variableValue = '<NULL>';
           }
           variableList.push({
-            // TODO temporary work round
+            // TODO temporary work round figure out how to style it
             label: key.split('#')[1],
             color: variableColor,
             value: variableValue,

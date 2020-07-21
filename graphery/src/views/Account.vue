@@ -35,9 +35,9 @@
       logout() {
         apiCaller(logoutMutation)
           .then(([data, errors]) => {
-            if (errors) {
+            if (errors || !data) {
               // TODO add error handling
-              console.error(errors);
+              throw Error(errors);
             }
 
             if (data && data['logout']['success']) {
