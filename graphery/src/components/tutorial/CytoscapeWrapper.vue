@@ -508,7 +508,7 @@
         .catch((error) => {
           errorDialog({
             message:
-              'An error occurs during initializing Cytoscape (Graph Display). ' +
+              'An error occurs during initializing Cytoscape (Graph Section). ' +
               error,
           });
         });
