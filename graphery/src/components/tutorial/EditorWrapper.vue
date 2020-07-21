@@ -75,13 +75,17 @@
 
       <!-- execution button group -->
       <q-btn-group flat class="q-mr-md">
-        <q-btn dense>
+        <q-btn dense disable>
           <q-icon name="mdi-cloud-upload" />
           <SwitchTooltip
             :text="$t('tooltips.runCodeOnTheCloud')"
           ></SwitchTooltip>
         </q-btn>
-        <q-btn dense @click.prevent="pushCodeToExecute">
+        <q-btn
+          dense
+          :disable="!enableEditing"
+          @click.prevent="pushCodeToExecute"
+        >
           <q-icon name="mdi-cloud-download" />
           <SwitchTooltip :text="$t('tooltips.runCodeLocally')"></SwitchTooltip>
         </q-btn>

@@ -80,7 +80,7 @@ The `locale` folder contains the actual content of the tutorials. Each translati
 
 The `abstract` of the content in that translation will be the fist paragraph of the actual content. You can modify it in the CLI or in the admin page. 
 
-The statics folder under the `locale` folder should contain any static objects used in the Markdown translation, like images for example. 
+The statics folder under the `locale` folder should contain any static objects used in the Markdown translation, like images for example. The static resources must use relative path which starts with `./`.
 
 ## Markdown File Convention
 

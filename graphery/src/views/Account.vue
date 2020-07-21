@@ -124,6 +124,7 @@
         apiCaller(loginMutation, loginCredential)
           .then(([data, errors]) => {
             if (errors) {
+              // TODO handle error
               console.error(errors);
             }
 
@@ -144,6 +145,7 @@
         apiCaller(logoutMutation)
           .then(([data, errors]) => {
             if (errors) {
+              // TODO add error handling
               console.error(errors);
             }
 

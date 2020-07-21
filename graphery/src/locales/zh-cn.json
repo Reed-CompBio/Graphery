@@ -70,7 +70,7 @@
     "Login": "登陆",
     "LogOut": "登出",
     "Register": "注册",
-    "AdminPage": "管理员页面",
+    "DjangoAdminPage": "Django 管理员页面",
     "noNewAccount": "我们暂时不支持注册新用户",
     "notEmpty": "它不能为空"
   }

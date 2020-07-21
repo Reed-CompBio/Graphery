@@ -71,6 +71,20 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/views/Settings.vue'),
   },
   {
+    path: '/control-panel',
+    name: 'Control',
+    component: () => import('@/views/ControlPanel.vue'),
+    children: [
+      {
+        path: '',
+        components: {
+          main: () => import('@/components/ControlPanel/MainPage.vue'),
+        },
+      },
+    ],
+    // TODO permission to enter this page
+  },
+  {
     path: '/*',
     name: '404',
     component: () =>

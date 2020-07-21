@@ -1,0 +1,55 @@
+<template>
+  <div style="height: calc(100vh - 66px);">
+    <!-- Left drawer-->
+    <q-layout view="hHh Lpr lff" container class="full-height">
+      <q-drawer
+        :v-model="true"
+        show-if-above
+        :width="200"
+        :breakpoint="700"
+        elevated
+      >
+        <q-list>
+          <q-card class="q-py-md">
+            <q-card-section>
+              <q-item>
+                <q-item-section>
+                  <div class="text-h5">
+                    Control Panel
+                  </div>
+                </q-item-section>
+              </q-item>
+            </q-card-section>
+          </q-card>
+          <q-item>
+            <q-card-section>
+              Main
+            </q-card-section>
+          </q-item>
+          <q-item>
+            <q-card-section>
+              Create Tutorial Anchor
+            </q-card-section>
+          </q-item>
+        </q-list>
+      </q-drawer>
+
+      <q-page-container>
+        <q-page padding>
+          <router-view :name="tabName"></router-view>
+        </q-page>
+      </q-page-container>
+    </q-layout>
+  </div>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {
+        showDrawer: true,
+        tabName: 'main',
+      };
+    },
+  };
+</script>

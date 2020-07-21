@@ -70,7 +70,7 @@
     "Login": "Login",
     "LogOut": "Log out",
     "Register": "Register",
-    "AdminPage": "Admin Page",
+    "DjangoAdminPage": "Django Admin Page",
     "noNewAccount": "We don't accept new accounts for now.",
     "notEmpty": "It cannot be empty"
   }

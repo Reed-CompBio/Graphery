@@ -19,10 +19,16 @@
       <q-card-actions align="center">
         <!-- TODO add a link to admin page -->
         <q-btn
-          :label="$t('account.AdminPage')"
+          :label="$t('account.ControlPanel')"
+          to="/control-panel"
+          v-if="isAuthor || isTranslator || isAdmin"
+        >
+        </q-btn>
+        <q-btn
+          :label="$t('account.DjangoAdminPage')"
           v-if="isAdmin"
           type="a"
-          :href="adminUrl"
+          :href="djangoAdminUrl"
           target="_blank"
         />
         <q-btn :label="$t('nav.Home')" :to="{ name: 'Home' }" />
@@ -41,13 +47,10 @@
     },
     data() {
       return {
-        adminUrl: BASE_URL + '/admin',
+        djangoAdminUrl: BASE_URL + '/admin',
       };
     },
     computed: {
-      adminSite() {
-        return BASE_URL + '/admin';
-      },
       username() {
         if (this.userObj) {
           return this.userObj['username'];
