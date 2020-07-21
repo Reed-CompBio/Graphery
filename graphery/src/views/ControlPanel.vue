@@ -52,13 +52,5 @@
         tabName: 'main',
       };
     },
-    beforeCreate() {
-      if (
-        this.$store.getters.noUser ||
-        this.$store.state['user'] === 'Visitor'
-      ) {
-        this.$router.push('/');
-      }
-    },
   };
 </script>

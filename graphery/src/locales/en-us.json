@@ -26,7 +26,8 @@
     "About": "About",
     "Account": "Account",
     "Settings": "Settings",
-    "Feedback": "Feedback"
+    "Feedback": "Feedback",
+    "Login": "Login"
   },
   "collectionPage": {
     "Filter": "Filter",
@@ -70,6 +71,7 @@
     "Login": "Login",
     "LogOut": "Log out",
     "Register": "Register",
+    "ControlPanel": "Control Panel",
     "DjangoAdminPage": "Django Admin Page",
     "noNewAccount": "We don't accept new accounts for now.",
     "notEmpty": "It cannot be empty"

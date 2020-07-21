@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
+import store from '../store/index';
+import { pullUser } from '@/services/helpers';
 
 Vue.use(VueRouter);
 
@@ -64,6 +66,32 @@ const routes: Array<RouteConfig> = [
     name: 'Account',
     component: () =>
       import(/* webpackChunkName: "account" */ '@/views/Account.vue'),
+    async beforeEnter(to, from, next) {
+      if (store.getters.noUser) {
+        await pullUser();
+        if (store.getters.noUser) {
+          next('/login');
+          return;
+        }
+      }
+      next();
+    },
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () =>
+      import(/* webpackChunkName: "Login" */ '@/views/Login.vue'),
+    async beforeEnter(to, from, next) {
+      if (store.getters.noUser) {
+        await pullUser();
+        if (store.getters.noUser) {
+          next();
+          return;
+        }
+      }
+      next('/account');
+    },
   },
   {
     path: '/settings',
@@ -82,7 +110,21 @@ const routes: Array<RouteConfig> = [
         },
       },
     ],
-    // TODO permission to enter this page
+    async beforeEnter(to, from, next) {
+      if (store.state['user'] === null) {
+        await pullUser();
+        if (store.state['user'] === null) {
+          next('/login');
+          return;
+        }
+      }
+
+      if (store.state['user'].role === 'Visitor') {
+        next('/account');
+      } else {
+        next();
+      }
+    },
   },
   {
     path: '/*',

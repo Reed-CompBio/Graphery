@@ -26,7 +26,8 @@
     "About": "关于",
     "Account": "账户",
     "Settings": "设置",
-    "Feedback": "反馈"
+    "Feedback": "反馈",
+    "Login": "登录"
   },
   "collectionPage": {
     "Filter": "筛选",
@@ -70,6 +71,7 @@
     "Login": "登陆",
     "LogOut": "登出",
     "Register": "注册",
+    "ControlPanel": "控制面板",
     "DjangoAdminPage": "Django 管理员页面",
     "noNewAccount": "我们暂时不支持注册新用户",
     "notEmpty": "它不能为空"
