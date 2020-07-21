@@ -123,6 +123,7 @@
 <script>
   import { mapState } from 'vuex';
   import { apiCaller } from '../../services/apis';
+  import { errorDialog } from '../../services/helpers';
 
   export default {
     components: {
@@ -169,20 +170,19 @@
         apiCaller(this.query, this.variables)
           .then(([data, errors]) => {
             if (errors !== undefined) {
-              console.error(errors);
-              throw Error(errors[0].message);
-              // TODO extract the messages and show popup windows
+              throw Error(errors);
             }
 
             this.infos = this.mappingFunction(data);
-
-            this.finishLoading();
           })
           .catch((err) => {
-            // TODO handle errors
-            this.finishLoading();
-            console.error('an error occurs in ' + this.title + ' page:', err);
+            errorDialog({
+              message: 'An error occurs in ' + this.title + ' page. ' + err,
+            });
             // TODO translate errors
+          })
+          .finally(() => {
+            this.finishLoading();
           });
       },
       search() {

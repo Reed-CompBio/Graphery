@@ -68,7 +68,7 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "account" */ '@/views/Account.vue'),
     async beforeEnter(to, from, next) {
       if (store.getters.noUser) {
-        await pullUser();
+        await pullUser().catch((_) => null);
         if (store.getters.noUser) {
           next('/login');
           return;
@@ -84,7 +84,7 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "Login" */ '@/views/Login.vue'),
     async beforeEnter(to, from, next) {
       if (store.getters.noUser) {
-        await pullUser();
+        await pullUser().catch((_) => null);
         if (store.getters.noUser) {
           next();
           return;
@@ -112,7 +112,7 @@ const routes: Array<RouteConfig> = [
     ],
     async beforeEnter(to, from, next) {
       if (store.state['user'] === null) {
-        await pullUser();
+        await pullUser().catch((_) => null);
         if (store.state['user'] === null) {
           next('/login');
           return;

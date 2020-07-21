@@ -10,6 +10,7 @@
 
 <script>
   import { mapGetters, mapState } from 'vuex';
+  import { errorDialog } from '../../services/helpers';
   let monacoEditor;
 
   export default {
@@ -69,11 +70,11 @@
             this.editor.layout();
           })
           .catch((err) => {
-            // TODO handle error
-            console.error(
-              'An error occurs when initializing the monaco code editor',
-              err
-            );
+            errorDialog({
+              message:
+                'An error occurs when initializing the Monaco code editor. ' +
+                err,
+            });
           });
       },
       generateDecoration(line, message) {

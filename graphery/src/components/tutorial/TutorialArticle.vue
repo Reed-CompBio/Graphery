@@ -95,6 +95,7 @@
   import {
     toLocalDateString,
     saveTextToClipboard,
+    successDialog,
   } from '../../services/helpers';
 
   export default {
@@ -125,7 +126,7 @@
       share() {
         saveTextToClipboard(window.location.href);
         // TODO use uniform notify
-        alert('The URL of this tutorial is copied.');
+        successDialog({ message: 'The URL of this tutorial is copied.' });
       },
       scrollToTop() {
         document.getElementById('articleWrapper').scrollTo({

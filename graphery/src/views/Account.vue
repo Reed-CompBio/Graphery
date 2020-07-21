@@ -19,6 +19,7 @@
   import { apiCaller } from '../services/apis.ts';
   import { logoutMutation } from '../services/queries';
   import { mapState, mapActions } from 'vuex';
+  import { errorDialog } from '../services/helpers';
 
   export default {
     components: {
@@ -35,20 +36,24 @@
       logout() {
         apiCaller(logoutMutation)
           .then(([data, errors]) => {
-            if (errors || !data) {
-              // TODO add error handling
+            if (errors) {
               throw Error(errors);
+            }
+
+            if (!data) {
+              throw Error('Failed to talk to server. Failed to logout.');
             }
 
             if (data && data['logout']['success']) {
               this.setUser(null);
             } else {
-              throw Error('Cannot logout at this time');
+              throw Error('Cannot logout at this time. Reason unknown.');
             }
           })
           .catch((err) => {
-            // TODO handle error
-            console.log(err);
+            errorDialog({
+              message: 'A error occurs during logging out. ' + err,
+            });
           });
       },
     },

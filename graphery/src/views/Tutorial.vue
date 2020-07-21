@@ -132,6 +132,7 @@
   import { mapState, mapActions, mapGetters } from 'vuex';
   import { apiCaller } from '../services/apis';
   import { pullTutorialDetailQuery } from '../services/queries';
+  import { errorDialog } from '../services/helpers';
 
   export default {
     props: ['url'],
@@ -232,7 +233,7 @@
           default: 'en-us',
         })
           .then(([data, errors]) => {
-            if (errors !== undefined) {
+            if (errors) {
               throw Error(
                 'Invalid Data Received! Please Contact The Developer:' +
                   errors[0].message
@@ -242,8 +243,9 @@
             this.loadTutorial(data.tutorial);
           })
           .catch((err) => {
-            // TODO handle error
-            console.error(err);
+            errorDialog({
+              message: 'An error occurs during pulling tutorials. ' + err,
+            });
           });
       },
       updateCytoscapeWithVarObj(varObj) {

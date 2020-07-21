@@ -177,6 +177,7 @@
   import { mapActions, mapGetters, mapState } from 'vuex';
   import { saveTextToClipboard } from '../../services/helpers.ts';
   import { localServerCaller } from '../../services/apis';
+  import { errorDialog, successDialog } from '../../services/helpers';
 
   export default {
     components: {
@@ -272,9 +273,10 @@
             }
           }
           // Which should never happen since the backend ensures the first element must have a var dict
-          throw Error(
-            'The execution result json is not valid. Please send a feedback to the developer.'
-          );
+          errorDialog({
+            message:
+              'The execution result json is not valid. Please send a feedback to the developer.',
+          });
         }
 
         return null;
@@ -339,31 +341,49 @@
           .then((text) => {
             if (this.$refs.editorComponent) {
               this.$refs.editorComponent.setCodeContent(text);
+              successDialog({
+                message: 'Pasted code successfully',
+              });
+            } else {
+              throw Error('Editor is not initialized.');
             }
           })
           .catch((err) => {
-            console.error('Failed to read clipboard contents: ', err);
+            errorDialog({
+              message: 'Failed to read clipboard contents. ' + err,
+            });
           });
       },
       pushCodeToExecute() {
         localServerCaller(
           this.getCurrentCode(),
           this.$store.getters['tutorials/currentGraphJsonObj']
-        ).then((data) => {
-          this.reloadStepper();
+        )
+          .then((data) => {
+            if (data['error']) {
+              throw Error(data['error']);
+            }
 
-          if (data['error'] || !('data' in data)) {
-            // TODO handle error
-          }
+            if (!('data' in data)) {
+              throw Error('No valid data returned from local server');
+            }
 
-          const { codeHash, execResult } = data['data'];
-          // TODO link this with workspace
+            const { codeHash, execResult } = data['data'];
+            // TODO link this with workspace
 
-          console.debug(codeHash, execResult);
-          this.loadCustomJson(execResult);
+            console.debug(codeHash, execResult);
+            this.loadCustomJson(execResult);
 
-          // TODO use it to pass the actual content
-        });
+            // TODO use it to pass the actual content
+          })
+          .catch((err) => {
+            errorDialog({
+              message: 'An error occurs when talking to local server. ' + err,
+            });
+          })
+          .finally(() => {
+            this.reloadStepper();
+          });
       },
       openWorkSpaceSelection() {
         this.isWorkSpaceSelectionOpen = true;

@@ -81,6 +81,7 @@
   import { apiCaller } from '../services/apis';
   import { loginMutation } from '../services/queries';
   import { mapActions, mapState } from 'vuex';
+  import { errorDialog } from '../services/helpers';
 
   export default {
     components: {
@@ -111,10 +112,7 @@
         this.loading = true;
         apiCaller(loginMutation, loginCredential)
           .then(([data, errors]) => {
-            this.loading = false;
-
             if (errors) {
-              // TODO handle error
               throw Error(errors);
             }
 
@@ -127,8 +125,12 @@
             this.$store.commit('SET_CSRF_TOKEN', null);
           })
           .catch((err) => {
-            // TODO handle error
-            console.error(err);
+            errorDialog({
+              message: 'An error occurs during logging in. ' + err,
+            });
+          })
+          .finally(() => {
+            this.loading = false;
           });
       },
       resetForm() {

@@ -94,6 +94,8 @@
     saveToFile,
     jpegMIMEType,
     jsonMIMEType,
+    errorDialog,
+    successDialog,
   } from '../../services/helpers';
 
   export default {
@@ -416,9 +418,12 @@
             JSON.stringify(this.cyInstance.json(), null, 2),
             jsonMIMEType
           );
+          successDialog({ message: 'Json downloaded.' });
         }
 
-        console.log('The cytoscape instance is not ready. Nothing is saved.');
+        errorDialog({
+          message: 'The Cytoscape instance is not ready. Nothing is saved.',
+        });
       },
       shareGraphScreenshot() {
         if (this.cyInstance) {
@@ -427,9 +432,12 @@
             this.cyInstance.jpg({ output: 'blob' }),
             jpegMIMEType
           );
+          successDialog({ message: 'Image downloaded.' });
         }
 
-        console.log('The cytoscape instance is not ready. Nothing is saved.');
+        errorDialog({
+          message: 'The Cytoscape instance is not ready. Nothing is saved.',
+        });
       },
     },
     watch: {
@@ -498,8 +506,11 @@
           this.registerExtensions();
         })
         .catch((error) => {
-          // TODO load up popup error handle
-          console.error('error occur', error);
+          errorDialog({
+            message:
+              'An error occurs during initializing Cytoscape (Graph Display). ' +
+              error,
+          });
         });
     },
     beforeDestroy() {
