@@ -57,5 +57,9 @@ export async function localServerCaller(
   graph: string | object,
   port = 7590
 ) {
-  return await axios.post('http://localhost:' + port + '/run', { code, graph });
+  const response = await axios.post('http://localhost:' + port + '/run', {
+    code,
+    graph,
+  });
+  return response.data;
 }

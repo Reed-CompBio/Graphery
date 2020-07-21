@@ -66,6 +66,7 @@ export interface TutorialState {
   codes: string | null;
   resultJsonList: ResultJsonType[] | null;
   variableObj: object | null;
+  customJson: object | null;
 }
 
 export interface TutorialContent {

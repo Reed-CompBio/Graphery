@@ -236,7 +236,7 @@
       },
     },
     methods: {
-      ...mapActions('tutorials', ['loadVariableObj']),
+      ...mapActions('tutorials', ['loadVariableObj', 'loadCustomJson']),
       switchTabView(tabName) {
         this.routerViewName = tabName;
       },
@@ -354,8 +354,17 @@
         localServerCaller(
           this.getCurrentCode(),
           this.$store.getters['tutorials/currentGraphJsonObj']
-        ).then((response) => {
-          console.log(response.data);
+        ).then((data) => {
+          this.reloadStepper();
+
+          if (data['error']) {
+            // TODO error
+          }
+          const { codeHash, execResult } = data['data'];
+          // TODO link this with workspace
+          console.debug(codeHash, execResult);
+          this.loadCustomJson(execResult);
+
           // TODO use it to pass the actual content
         });
       },

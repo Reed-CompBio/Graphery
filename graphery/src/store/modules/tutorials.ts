@@ -116,6 +116,7 @@ const state: TutorialState = {
   codes: null,
   resultJsonList: null,
   variableObj: null,
+  customJson: null,
   // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 
@@ -141,6 +142,9 @@ const mutations: MutationTree<TutorialState> = {
   LOAD_VARIABLE_OBJ(state, obj) {
     state.variableObj = obj;
   },
+  LOAD_CUSTOM_JSON(state, obj) {
+    state.customJson = obj;
+  },
 
   // clear states
   CLEAR_META_STATE(state) {
@@ -162,6 +166,9 @@ const mutations: MutationTree<TutorialState> = {
     state.resultJsonList = null;
   },
   CLEAR_VARIABLE_OBJ(state) {
+    state.variableObj = null;
+  },
+  CLEAR_CUSTOM_JSON(state) {
     state.variableObj = null;
   },
 };
@@ -216,6 +223,9 @@ const actions: ActionTree<TutorialState, RootState> = {
   loadVariableObj({ commit }, list) {
     commit('LOAD_VARIABLE_OBJ', list);
   },
+  loadCustomJson({ commit }, list) {
+    commit('LOAD_CUSTOM_JSON', list);
+  },
   clearAll({ commit }) {
     commit('CLEAR_META_STATE');
     commit('CLEAR_ARTICLE_CONTENT');
@@ -224,6 +234,7 @@ const actions: ActionTree<TutorialState, RootState> = {
     commit('CLEAR_CODES');
     commit('CLEAR_RESULT_JSON_LIST');
     commit('CLEAR_VARIABLE_OBJ');
+    commit('CLEAR_CUSTOM_JSON');
   },
 };
 
@@ -264,9 +275,14 @@ const getters: GetterTree<TutorialState, RootState> = {
     return getter.resultJsonArr.length === 0;
   },
   resultJsonArr(state, getter) {
+    if (state.customJson !== null) {
+      return state.customJson;
+    }
+
     if (getter.resultJson === null) {
       return [];
     }
+
     return JSON.parse(getter.resultJson);
   },
   variableObjEmpty(state, getter) {

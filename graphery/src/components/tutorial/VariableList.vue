@@ -36,7 +36,7 @@
           return [
             {
               label: 'Status',
-              value: 'Empty',
+              value: '<NULL>',
             },
           ];
         }
@@ -53,7 +53,7 @@
               variableValue = value;
             }
           } else {
-            variableValue = 'Empty';
+            variableValue = '<NULL>';
           }
           variableList.push({
             // TODO temporary work round
