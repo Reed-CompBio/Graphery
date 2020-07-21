@@ -161,9 +161,16 @@ export interface SettingState extends SettingInfos {
   settingVer: '1.0.0';
 }
 
+export interface UserType {
+  username: string;
+  email: string;
+  role: string;
+}
+
 export interface BaseState {
   drawer: boolean;
   csrfToken: string | null;
+  user: UserType | null;
 }
 
 export interface CodeHistoryState {

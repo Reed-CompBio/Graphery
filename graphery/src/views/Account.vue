@@ -89,6 +89,7 @@
     logoutMutation,
     userInfoQuery,
   } from '../services/queries';
+  import { mapState, mapActions } from 'vuex';
 
   export default {
     components: {
@@ -100,11 +101,13 @@
         account: '',
         password: '',
         showPwd: false,
-        loading: true,
-        userObj: null,
+        loading: false,
       };
     },
     computed: {
+      ...mapState({
+        userObj: (state) => state.user,
+      }),
       showLoginForm() {
         return this.userObj === null;
       },
@@ -113,6 +116,7 @@
       },
     },
     methods: {
+      ...mapActions(['setUser']),
       login() {
         const loginCredential = {};
         if (this.account && this.password) {
@@ -129,7 +133,8 @@
             }
 
             if (data) {
-              this.userObj = data['login']['user'];
+              // TODO change this
+              this.setUser(data['login']['user']);
               this.loading = false;
               this.resetForm();
             }
@@ -150,7 +155,7 @@
             }
 
             if (data && data['logout']['success']) {
-              this.userObj = null;
+              this.setUser(null);
             } else {
               throw Error('Cannot logout at this time');
             }
@@ -166,20 +171,6 @@
         this.showPwd = false;
         this.loading = false;
       },
-    },
-    mounted() {
-      apiCaller(userInfoQuery)
-        .then(([data, errors]) => {
-          if (!errors && data) {
-            this.userObj = data['userInfo'];
-          }
-
-          this.loading = false;
-        })
-        .catch((err) => {
-          // TODO handle error
-          console.error(err);
-        });
     },
   };
 </script>

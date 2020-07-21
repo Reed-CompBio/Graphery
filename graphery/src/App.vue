@@ -13,6 +13,8 @@
 
 <script lang="ts">
   import Vue from 'vue';
+  import { apiCaller } from '@/services/apis';
+  import { userInfoQuery } from '@/services/queries';
 
   const showFooterRe = /^(\/tutorial\/|\/graph\/)/;
 
@@ -50,6 +52,17 @@
       // Load language
       // TODO add a preferred language
       this.$i18n.locale = this.$store.state.settings.language;
+
+      apiCaller(userInfoQuery)
+        .then(([data, errors]) => {
+          if (!errors && data) {
+            this.$store.dispatch('setUser', data['userInfo']);
+          }
+        })
+        .catch((err) => {
+          // TODO handle error
+          console.error(err);
+        });
     },
   });
 </script>

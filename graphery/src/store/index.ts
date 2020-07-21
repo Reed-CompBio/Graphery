@@ -8,7 +8,7 @@ import tutorials from '@/store/modules/tutorials';
 import settings from '@/store/modules/settings';
 import workspaces from '@/store/modules/workspaces';
 import createPersistedState from 'vuex-persistedstate';
-import { BaseState } from '@/store/states/state';
+import { BaseState, UserType } from '@/store/states/state';
 
 export default new Vuex.Store({
   // TODO Make it lazy load
@@ -22,6 +22,7 @@ export default new Vuex.Store({
   state: {
     drawer: false,
     csrfToken: null,
+    user: null,
   } as BaseState,
   mutations: {
     CHANGE_DRAWER_STATE(state, value) {
@@ -30,10 +31,21 @@ export default new Vuex.Store({
     SET_CSRF_TOKEN(state, token: string) {
       state.csrfToken = token;
     },
+    SET_USER(state, userObj: UserType) {
+      state.user = userObj;
+    },
   },
   actions: {
     changeDrawerState({ commit }, value) {
       commit('CHANGE_DRAWER_STATE', value);
+    },
+    setUser({ commit }, user) {
+      commit('SET_USER', user);
+    },
+  },
+  getters: {
+    noUser(state) {
+      return state.user === null;
     },
   },
 });

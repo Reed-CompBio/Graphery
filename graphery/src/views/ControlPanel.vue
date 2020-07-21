@@ -5,7 +5,7 @@
       <q-drawer
         :v-model="true"
         show-if-above
-        :width="200"
+        :width="300"
         :breakpoint="700"
         elevated
       >
@@ -41,6 +41,7 @@
       </q-page-container>
     </q-layout>
   </div>
+  <!-- TODO put a full screen undismissiable dialog telling user they should not use mobile to access this page -->
 </template>
 
 <script>
@@ -50,6 +51,14 @@
         showDrawer: true,
         tabName: 'main',
       };
+    },
+    beforeCreate() {
+      if (
+        this.$store.getters.noUser ||
+        this.$store.state['user'] === 'Visitor'
+      ) {
+        this.$router.push('/');
+      }
     },
   };
 </script>
