@@ -1,140 +1,90 @@
 <template>
-  <ControlPageContentFrame>
+  <ControlPanelContentFrame>
     <template slot="title">
-      Edit Tutorial Anchor
+      Tutorial Anchor Editor
     </template>
     <template>
-      <!-- not full height -->
-      <div class="row full-height">
-        <!-- Editor Section -->
-        <div class="col-10 full-height q-pr-sm">
-          <!-- title -->
-          <div class="row q-mb-lg">
+      <div style="display: flex; flex-direction: column;" class="flex-center">
+        <InfoCard class="half-width-card">
+          <template v-slot:title>
+            Tutorial URL
+          </template>
+          <template>
             <q-input
-              v-model="title"
-              :hint="`URL: ${url}`"
               outlined
-              style="width: 100%"
-            >
-              <template v-slot:prepend>
-                <q-icon name="title" />
-              </template>
-            </q-input>
-          </div>
-          <!-- editor -->
-          <div class="row q-my-lg" style="height: 70vh;">
-            <EditorSection style="width: 100%; "></EditorSection>
-          </div>
-        </div>
+              v-model="tutorialUrl"
+              hint="please input URL. Do not start or end it with -_."
+            ></q-input>
+          </template>
+        </InfoCard>
 
-        <!-- Meta Section -->
-        <div class="col-2 q-pl-sm">
-          <!-- choose published -->
-          <div id="published-chooser" class="q-mb-md">
-            <q-card>
-              <q-card-section>
-                Published?
-              </q-card-section>
-              <q-separator />
-              <q-card-section>
-                <q-checkbox
-                  v-model="isPublished"
-                  :label="isPublished ? '✅' : '❌'"
-                  dense
-                ></q-checkbox>
-              </q-card-section>
-            </q-card>
-          </div>
+        <InfoCard class="half-width-card">
+          <template v-slot:title>
+            Tutorial Name
+          </template>
+          <template>
+            <q-input outlined v-model="tutorialName"></q-input>
+          </template>
+        </InfoCard>
 
-          <!-- choose authors -->
-          <div id="author-chooser" class="q-mb-md">
-            <q-card>
-              <q-card-section>
-                Authors
-              </q-card-section>
-              <q-separator></q-separator>
-              <q-card-section>
-                <q-select
-                  outlined
-                  use-chips
-                  multiple
-                  dense
-                  v-model="authorChoice"
-                  :options="authorOptions"
-                  label="Authors"
-                />
-              </q-card-section>
-            </q-card>
-          </div>
+        <InfoCard class="half-width-card">
+          <template v-slot:title>
+            Categories
+          </template>
+          <template>
+            <q-select
+              multiple
+              use-chips
+              clearable
+              v-model="categoryChoices"
+              :options="categoryOptions"
+            ></q-select>
+          </template>
+        </InfoCard>
 
-          <!-- choose language -->
-          <div id="lang-chooser" class="q-mb-md">
-            <q-card>
-              <q-card-section>
-                Language
-              </q-card-section>
-              <q-separator />
-              <q-card-section>
-                <q-option-group
-                  v-model="langChoice"
-                  :options="langOptions"
-                ></q-option-group>
-              </q-card-section>
-            </q-card>
-          </div>
+        <InfoCard class="half-width-card">
+          <template v-slot:title>
+            Published
+          </template>
+          <template>
+            <q-checkbox
+              v-model="tutorialPublished"
+              :label="tutorialPublished ? '✅' : '❌'"
+            />
+          </template>
+        </InfoCard>
 
-          <!-- abstract section -->
-          <div id="abstract-section" class="q-mb-md">
-            <q-card>
-              <q-card-section>
-                Abstract
-              </q-card-section>
-              <q-separator />
-              <q-card-section>
-                <q-input v-model="abstractText" outlined type="textarea" />
-              </q-card-section>
-            </q-card>
-          </div>
-
-          <!-- submit section -->
-          <div id="submit-section">
-            <!-- TODO button action -->
-            <q-btn label="Submit" style="width: 100%;"></q-btn>
-            <!-- TODO align two sections -->
-          </div>
-        </div>
+        <q-btn class="half-width-card" label="Submit"></q-btn>
       </div>
     </template>
-  </ControlPageContentFrame>
+  </ControlPanelContentFrame>
 </template>
 
 <script>
   export default {
     props: ['url'],
     components: {
-      EditorSection: () => import('./EditorSection'),
-      ControlPageContentFrame: () => import('./ControlPanelContentFrame.vue'),
+      ControlPanelContentFrame: () => import('./ControlPanelContentFrame.vue'),
+      InfoCard: () => import('./InfoCard.vue'),
     },
     data() {
       return {
-        loading: false,
-        title: '',
-        isPublished: false,
-        authorChoice: [],
-        authorOptions: [],
-        langChoice: '',
-        langOptions: [
-          {
-            label: 'en-us',
-            value: 'enus',
-          },
-          {
-            label: 'zh-cn',
-            value: 'zh-cn',
-          },
-        ],
-        abstractText: '',
+        tutorialUrl: '',
+        tutorialName: '',
+        categoryChoices: [],
+        categoryOptions: [],
+        tutorialPublished: false,
       };
+    },
+    computed: {
+      isCreatingNewAnchor() {
+        return this.url === '-new-';
+      },
     },
   };
 </script>
+
+<style lang="sass">
+  .half-width-card
+    width: 50%
+</style>

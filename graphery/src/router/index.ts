@@ -119,6 +119,13 @@ const routes: Array<RouteConfig> = [
           import('@/components/ControlPanel/TutorialAnchorCreation.vue'),
       },
       {
+        path: 'tutorial-content-editor/:url',
+        name: 'Tutorial Content Editor',
+        props: true,
+        component: () =>
+          import('@/components/ControlPanel/TutorialContentCreation.vue'),
+      },
+      {
         path: 'graphs',
         name: 'Graph List',
         component: () => import('@/components/ControlPanel/GraphList.vue'),
