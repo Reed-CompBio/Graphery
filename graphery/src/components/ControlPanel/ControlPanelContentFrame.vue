@@ -1,12 +1,14 @@
 <template>
-  <div class="full-height q-pa-xl">
-    <div id="title-section" class="q-my-md">
-      <h3 class="control-panel-h3">
-        <slot name="title"></slot>
-      </h3>
-    </div>
-    <div id="control-panel-content" class="q-my-md">
-      <slot></slot>
+  <div class="q-pa-xl full-height" style="min-height: inherit;">
+    <div>
+      <div id="title-section" class="q-mt-sm q-mb-xl">
+        <h3 class="control-panel-h3">
+          <slot name="title"></slot>
+        </h3>
+      </div>
+      <div id="control-panel-content" class="q-py-sm full-height">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -16,6 +18,6 @@
 </script>
 
 <style lang="sass">
-  #control-panel-h3
+  .control-panel-h3
     margin: 0
 </style>

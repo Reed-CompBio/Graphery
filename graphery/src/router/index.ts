@@ -108,10 +108,17 @@ const routes: Array<RouteConfig> = [
         component: () => import('@/components/ControlPanel/MainPage.vue'),
       },
       {
-        path: '/tutorial-anchors',
+        path: 'tutorial-anchors',
         name: 'Tutorial Anchor List',
         component: () =>
           import('@/components/ControlPanel/TutorialAnchorList.vue'),
+      },
+      {
+        path: 'tutorial-editor/:id',
+        name: 'Tutorial Anchor Editor',
+        props: true,
+        component: () =>
+          import('@/components/ControlPanel/TutorialAnchorCreation.vue'),
       },
     ],
     async beforeEnter(to, from, next) {

@@ -8,10 +8,10 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/github-markdown-css/2.2.1/github-markdown.css"
     />
-    <link
-      href="https://myCDN.com/prism@v1.x/themes/prism.css"
-      rel="stylesheet"
-    />
+    <!--    <link-->
+    <!--      href="https://myCDN.com/prism@v1.x/themes/prism.css"-->
+    <!--      rel="stylesheet"-->
+    <!--    />-->
     <div id="markdown-wrapper" v-html="outHtml"></div>
   </div>
 </template>
@@ -160,6 +160,11 @@
           : this.tocFirstLevel + 1;
       },
     },
+    updateHtml() {
+      this.outHtml = this.postrender(
+        this.show ? this.md.render(this.prerender(this.source)) : ''
+      );
+    },
     mounted() {
       this.md = new markdownIt()
         .use(subscript)
@@ -240,6 +245,7 @@
 
       this.$watch('source', () => {
         this.sourceData = this.prerender(this.source);
+        this.outHtml = this.postrender(this.md.render(this.sourceData));
         this.$forceUpdate();
       });
 
@@ -248,6 +254,11 @@
           this.$forceUpdate();
         });
       });
+    },
+    watch: {
+      source: function() {
+        this.updateHtml();
+      },
     },
   };
 </script>

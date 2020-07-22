@@ -318,7 +318,7 @@ const getters: GetterTree<TutorialState, RootState> = {
   },
   getGraphById: (state) => (id: string) => {
     // TODO may return undefined
-    return state.graphs && state.graphs.find((g) => g.id === id) && null;
+    return state.graphs && state.graphs.find((g) => g.id === id);
   },
   getGraphByIndex: (state) => (index: number) => {
     return state.graphs && state.graphs[index];

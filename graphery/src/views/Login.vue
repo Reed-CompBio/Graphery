@@ -81,7 +81,7 @@
   import { apiCaller } from '../services/apis';
   import { loginMutation } from '../services/queries';
   import { mapActions, mapState } from 'vuex';
-  import { errorDialog } from '../services/helpers';
+  import { errorDialog, successDialog } from '../services/helpers';
 
   export default {
     components: {
@@ -119,6 +119,7 @@
             if (data) {
               // TODO change this
               this.setUser(data['login']['user']);
+              successDialog({ message: 'Successfully Logged In!' });
               this.resetForm();
             }
 

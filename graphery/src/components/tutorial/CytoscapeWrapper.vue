@@ -419,11 +419,11 @@
             jsonMIMEType
           );
           successDialog({ message: 'Json downloaded.' });
+        } else {
+          errorDialog({
+            message: 'The Cytoscape instance is not ready. Nothing is saved.',
+          });
         }
-
-        errorDialog({
-          message: 'The Cytoscape instance is not ready. Nothing is saved.',
-        });
       },
       shareGraphScreenshot() {
         if (this.cyInstance) {
@@ -433,11 +433,11 @@
             jpegMIMEType
           );
           successDialog({ message: 'Image downloaded.' });
+        } else {
+          errorDialog({
+            message: 'The Cytoscape instance is not ready. Nothing is saved.',
+          });
         }
-
-        errorDialog({
-          message: 'The Cytoscape instance is not ready. Nothing is saved.',
-        });
       },
     },
     watch: {

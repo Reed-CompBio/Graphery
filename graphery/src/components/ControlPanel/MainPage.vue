@@ -8,10 +8,7 @@
           more fun.
         </p>
       </div>
-      <MarkdownSection
-        style="height: 400px;"
-        :source="exampleMd"
-      ></MarkdownSection>
+      <MarkdownSection :source="exampleMd"></MarkdownSection>
     </template>
   </ControlPanelContentFrame>
 </template>

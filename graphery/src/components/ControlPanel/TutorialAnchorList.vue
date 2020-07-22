@@ -24,17 +24,21 @@
           <q-tr :props="props">
             <!-- tutorial name -->
             <q-td key="name" :props="props">
-              <q-btn :label="props.row.name"> </q-btn>
+              <q-btn :label="props.row.name" flat>
+                <SwitchTooltip text="Open In Editor"></SwitchTooltip>
+              </q-btn>
             </q-td>
 
             <!-- tutorial published -->
             <q-td key="isPublished" :props="props">
-              {{ props.row.isPublished }}
+              {{ props.row.isPublished ? '✅' : '❌' }}
             </q-td>
 
             <!-- tutorial published -->
             <q-td key="url" :props="props">
-              <q-btn :label="props.row.url"></q-btn>
+              <q-btn :label="props.row.url" flat>
+                <SwitchTooltip text="Open Page"></SwitchTooltip>
+              </q-btn>
             </q-td>
 
             <!-- tutorial id -->
@@ -55,7 +59,8 @@
 
   export default {
     components: {
-      ControlPanelContentFrame: () => import('./ControlPanelContentFrame'),
+      ControlPanelContentFrame: () => import('./ControlPanelContentFrame.vue'),
+      SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
     },
     data() {
       return {
@@ -78,7 +83,6 @@
             label: 'Published?',
             field: 'isPublished',
             align: 'center',
-            format: (val) => (val ? '✅' : '❌'),
           },
           {
             name: 'url',
