@@ -98,17 +98,8 @@
 
           <!-- submit section -->
           <div id="submit-section">
-            <q-card>
-              <q-card-section>
-                Submit
-              </q-card-section>
-              <q-separator />
-              <!-- TODO add actions -->
-              <q-card-section>
-                <q-btn label="Yes!"></q-btn>
-              </q-card-section>
-            </q-card>
-
+            <!-- TODO button action -->
+            <q-btn label="Submit" style="width: 100%;"></q-btn>
             <!-- TODO align two sections -->
           </div>
         </div>
@@ -126,6 +117,7 @@
     },
     data() {
       return {
+        loading: false,
         title: '',
         isPublished: false,
         authorChoice: [],

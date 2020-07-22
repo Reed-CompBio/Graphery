@@ -114,6 +114,11 @@ const routes: Array<RouteConfig> = [
         component: () =>
           import('@/components/ControlPanel/TutorialAnchorCreation.vue'),
       },
+      {
+        path: 'graphs',
+        name: 'Graph List',
+        component: () => import('@/components/ControlPanel/GraphList.vue'),
+      },
     ],
     async beforeEnter(to, from, next) {
       if (store.state['user'] === null) {

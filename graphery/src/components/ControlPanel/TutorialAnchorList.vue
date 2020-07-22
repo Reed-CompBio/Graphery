@@ -9,7 +9,7 @@
         :columns="columns"
         :pagination="pagination"
         :loading="loadingTutorials"
-        no-data-label="No tutorials is found."
+        no-data-label="No tutorials are found."
         row-key="id"
         separator="cell"
       >
@@ -34,7 +34,7 @@
               {{ props.row.isPublished ? '✅' : '❌' }}
             </q-td>
 
-            <!-- tutorial published -->
+            <!-- tutorial url -->
             <q-td key="url" :props="props">
               <q-btn :label="props.row.url" flat>
                 <SwitchTooltip text="Open Page"></SwitchTooltip>
@@ -71,6 +71,7 @@
             field: 'name',
             align: 'center',
             sortable: true,
+            // Change this. Use custom title sorting: T(number), compare (number)
             sort: (a, b) => {
               if (a === b) {
                 return 0;
@@ -121,7 +122,7 @@
         apiCaller(tutorialAnchorsQuery)
           .then(([data, errors]) => {
             if (errors) {
-              throw Error(`Cannot load tutorials: ${errors}`);
+              throw Error(errors);
             }
 
             if (!data || !('allTutorialInfo' in data)) {

@@ -109,5 +109,20 @@ query {
     url
     id
   }
-}
-`;
+}`;
+
+export const graphsQuery = `
+query {
+  allGraphInfo {
+    name
+    isPublished
+    priority
+    cyjs
+    tutorials {
+      name
+    }
+    authors
+    url
+    id
+  }
+}`;

@@ -31,6 +31,11 @@
               Tutorial Anchors
             </q-card-section>
           </q-item>
+          <q-item clickable :to="{ name: 'Graph List' }">
+            <q-card-section>
+              Graphs
+            </q-card-section>
+          </q-item>
         </q-list>
       </q-drawer>
 
