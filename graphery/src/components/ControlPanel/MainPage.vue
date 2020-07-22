@@ -28,6 +28,7 @@
           '<h2> h2 Heading by HTML</h2>\n' +
           '\n' +
           '## Horizontal Rules\n' +
+          ' $\\sqrt{2}$ 1' +
           '\n' +
           '___\n' +
           '\n' +
