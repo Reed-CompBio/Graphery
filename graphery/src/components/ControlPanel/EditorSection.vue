@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="full-height">
     <q-splitter class="full-height" v-model="splitPos">
       <template v-slot:before>
-        <div>
-          <textarea></textarea>
+        <div style="width: 100%;">
+          <textarea style="width: 100%"></textarea>
         </div>
       </template>
       <template v-slot:separator>

@@ -19,25 +19,19 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/tutorial/:url',
-    name: 'Tutorial',
     props: true,
     component: () =>
       import(/* webpackChunkName: "tutorial" */ '@/views/Tutorial.vue'),
     children: [
       {
         path: '',
+        name: 'Tutorial',
         components: {
           default: () =>
             import(
               /* webpackChunkName: "editor" */
               '@/components/tutorial/Editor.vue'
             ),
-          editor: () =>
-            import(
-              /* webpackChunkName: "editor" */
-              '@/components/tutorial/Editor.vue'
-            ),
-          block: () => import('@/components/framework/LicenseCard.vue'),
         },
       },
     ],
@@ -114,7 +108,7 @@ const routes: Array<RouteConfig> = [
           import('@/components/ControlPanel/TutorialAnchorList.vue'),
       },
       {
-        path: 'tutorial-editor/:id',
+        path: 'tutorial-anchor-editor/:url',
         name: 'Tutorial Anchor Editor',
         props: true,
         component: () =>

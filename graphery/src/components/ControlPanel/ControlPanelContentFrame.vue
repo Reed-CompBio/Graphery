@@ -1,12 +1,15 @@
 <template>
-  <div class="q-pa-xl full-height" style="min-height: inherit;">
-    <div>
+  <div class="full-height" style="min-height: inherit;">
+    <div
+      class="q-pa-xl"
+      style=" display: flex; flex-direction: column; min-height: inherit;"
+    >
       <div id="title-section" class="q-mt-sm q-mb-xl">
         <h3 class="control-panel-h3">
           <slot name="title"></slot>
         </h3>
       </div>
-      <div id="control-panel-content" class="q-py-sm full-height">
+      <div id="control-panel-content" class="q-py-sm" style="flex-grow: 1;">
         <slot></slot>
       </div>
     </div>
