@@ -9,49 +9,41 @@
           <template v-slot:title>
             Tutorial URL
           </template>
-          <template>
-            <q-input
-              outlined
-              v-model="tutorialUrl"
-              hint="please input URL. Do not start or end it with -_."
-            ></q-input>
-          </template>
+          <q-input
+            outlined
+            v-model="tutorialUrl"
+            hint="please input URL. Do not start or end it with -_."
+          ></q-input>
         </InfoCard>
 
         <InfoCard class="half-width-card">
           <template v-slot:title>
             Tutorial Name
           </template>
-          <template>
-            <q-input outlined v-model="tutorialName"></q-input>
-          </template>
+          <q-input outlined v-model="tutorialName"></q-input>
         </InfoCard>
 
         <InfoCard class="half-width-card">
           <template v-slot:title>
             Categories
           </template>
-          <template>
-            <q-select
-              multiple
-              use-chips
-              clearable
-              v-model="categoryChoices"
-              :options="categoryOptions"
-            ></q-select>
-          </template>
+          <q-select
+            multiple
+            use-chips
+            clearable
+            v-model="categoryChoices"
+            :options="categoryOptions"
+          ></q-select>
         </InfoCard>
 
         <InfoCard class="half-width-card">
           <template v-slot:title>
             Published
           </template>
-          <template>
-            <q-checkbox
-              v-model="tutorialPublished"
-              :label="tutorialPublished ? '✅' : '❌'"
-            />
-          </template>
+          <q-checkbox
+            v-model="tutorialPublished"
+            :label="tutorialPublished ? '✅' : '❌'"
+          />
         </InfoCard>
 
         <q-btn class="half-width-card" label="Submit"></q-btn>

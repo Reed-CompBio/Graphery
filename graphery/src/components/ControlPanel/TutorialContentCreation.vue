@@ -31,70 +31,59 @@
         <div class="col-2 q-pl-sm">
           <!-- choose published -->
           <div id="published-chooser" class="q-mb-md">
-            <q-card>
-              <q-card-section>
+            <InfoCard>
+              <template v-slot:title>
                 Published?
-              </q-card-section>
-              <q-separator />
-              <q-card-section>
-                <q-checkbox
-                  v-model="isPublished"
-                  :label="isPublished ? '✅' : '❌'"
-                  dense
-                ></q-checkbox>
-              </q-card-section>
-            </q-card>
+              </template>
+              <q-checkbox
+                v-model="isPublished"
+                :label="isPublished ? '✅' : '❌'"
+                dense
+              ></q-checkbox>
+            </InfoCard>
           </div>
 
           <!-- choose authors -->
           <div id="author-chooser" class="q-mb-md">
-            <q-card>
-              <q-card-section>
+            <InfoCard>
+              <template v-slot:title>
                 Authors
-              </q-card-section>
-              <q-separator></q-separator>
-              <q-card-section>
-                <q-select
-                  outlined
-                  use-chips
-                  multiple
-                  dense
-                  clearable
-                  v-model="authorChoice"
-                  :options="authorOptions"
-                  label="Authors"
-                />
-              </q-card-section>
-            </q-card>
+              </template>
+
+              <q-select
+                outlined
+                use-chips
+                multiple
+                dense
+                clearable
+                v-model="authorChoice"
+                :options="authorOptions"
+                label="Authors"
+              />
+            </InfoCard>
           </div>
 
           <!-- choose language -->
           <div id="lang-chooser" class="q-mb-md">
-            <q-card>
-              <q-card-section>
+            <InfoCard>
+              <template v-slot:title>
                 Language
-              </q-card-section>
-              <q-separator />
-              <q-card-section>
-                <q-option-group
-                  v-model="langChoice"
-                  :options="langOptions"
-                ></q-option-group>
-              </q-card-section>
-            </q-card>
+              </template>
+              <q-option-group
+                v-model="langChoice"
+                :options="langOptions"
+              ></q-option-group>
+            </InfoCard>
           </div>
 
           <!-- abstract section -->
           <div id="abstract-section" class="q-mb-md">
-            <q-card>
-              <q-card-section>
+            <InfoCard>
+              <template v-slot:title>
                 Abstract
-              </q-card-section>
-              <q-separator />
-              <q-card-section>
-                <q-input v-model="abstractText" outlined type="textarea" />
-              </q-card-section>
-            </q-card>
+              </template>
+              <q-input v-model="abstractText" outlined type="textarea" />
+            </InfoCard>
           </div>
 
           <!-- submit section -->
@@ -113,8 +102,9 @@
   export default {
     props: ['url'],
     components: {
-      EditorSection: () => import('./EditorSection'),
+      EditorSection: () => import('./EditorSection.vue'),
       ControlPageContentFrame: () => import('./ControlPanelContentFrame.vue'),
+      InfoCard: () => import('./InfoCard.vue'),
     },
     data() {
       return {
