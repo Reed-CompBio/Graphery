@@ -8,6 +8,7 @@ from graphql import ResolveInfo
 
 from .decorators import login_required
 from ..model.filters import show_published_only
+from ..model.translation_collection import translation_tables
 from ..models import Category, Tutorial, Graph
 
 from .types import UserType, CategoryType, TutorialType, GraphType
@@ -20,6 +21,7 @@ class Query(graphene.ObjectType):
     all_categories = DjangoListField(CategoryType)
     all_tutorial_info = DjangoListField(TutorialType)
     all_graph_info = DjangoListField(GraphType)
+    all_supported_lang = graphene.List(graphene.String)
     tutorial_count = graphene.Int()
 
     tutorial = graphene.Field(TutorialType,
@@ -50,6 +52,9 @@ class Query(graphene.ObjectType):
 
     def resolve_all_graph_info(self, info: ResolveInfo):
         return Graph.objects.all()
+
+    def resolve_all_supported_lang(self, info: ResolveInfo):
+        return translation_tables
 
     @show_published_only
     def resolve_tutorial_count(self, info: ResolveInfo, is_published_only: bool, **kwargs):

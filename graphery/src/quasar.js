@@ -56,6 +56,8 @@ import {
   QTh,
   QTr,
   QTd,
+  QOptionGroup,
+  QCheckbox,
   // My plugins
   Notify,
   // My directive
@@ -116,6 +118,8 @@ Vue.use(Quasar, {
     QTh,
     QTr,
     QTd,
+    QOptionGroup,
+    QCheckbox,
   },
   directives: { ClosePopup },
   plugins: { Notify },

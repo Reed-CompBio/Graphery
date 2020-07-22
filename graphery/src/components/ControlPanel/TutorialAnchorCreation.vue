@@ -7,9 +7,9 @@
       <!-- not full height -->
       <div class="row full-height">
         <!-- Editor Section -->
-        <div class="col-10 full-height">
+        <div class="col-10 full-height q-pr-sm">
           <!-- title -->
-          <div class="row q-my-lg">
+          <div class="row q-mb-lg">
             <q-input
               v-model="title"
               :hint="`URL: ${url}`"
@@ -28,7 +28,90 @@
         </div>
 
         <!-- Meta Section -->
-        <div class="col-2"></div>
+        <div class="col-2 q-pl-sm">
+          <!-- choose published -->
+          <div id="published-chooser" class="q-mb-md">
+            <q-card>
+              <q-card-section>
+                Published?
+              </q-card-section>
+              <q-separator />
+              <q-card-section>
+                <q-checkbox
+                  v-model="isPublished"
+                  :label="isPublished ? '✅' : '❌'"
+                  dense
+                ></q-checkbox>
+              </q-card-section>
+            </q-card>
+          </div>
+
+          <!-- choose authors -->
+          <div id="author-chooser" class="q-mb-md">
+            <q-card>
+              <q-card-section>
+                Authors
+              </q-card-section>
+              <q-separator></q-separator>
+              <q-card-section>
+                <q-select
+                  outlined
+                  use-chips
+                  multiple
+                  dense
+                  v-model="authorChoice"
+                  :options="authorOptions"
+                  label="Authors"
+                />
+              </q-card-section>
+            </q-card>
+          </div>
+
+          <!-- choose language -->
+          <div id="lang-chooser" class="q-mb-md">
+            <q-card>
+              <q-card-section>
+                Language
+              </q-card-section>
+              <q-separator />
+              <q-card-section>
+                <q-option-group
+                  v-model="langChoice"
+                  :options="langOptions"
+                ></q-option-group>
+              </q-card-section>
+            </q-card>
+          </div>
+
+          <!-- abstract section -->
+          <div id="abstract-section" class="q-mb-md">
+            <q-card>
+              <q-card-section>
+                Abstract
+              </q-card-section>
+              <q-separator />
+              <q-card-section>
+                <q-input v-model="abstractText" outlined type="textarea" />
+              </q-card-section>
+            </q-card>
+          </div>
+
+          <!-- submit section -->
+          <div id="submit-section">
+            <q-card>
+              <q-card-section>
+                Submit
+              </q-card-section>
+              <q-separator />
+              <!-- TODO add actions -->
+              <q-card-section>
+                <q-btn label="Yes!"></q-btn>
+              </q-card-section>
+            </q-card>
+
+            <!-- TODO align two sections -->
+          </div>
+        </div>
       </div>
     </template>
   </ControlPageContentFrame>
@@ -44,6 +127,21 @@
     data() {
       return {
         title: '',
+        isPublished: false,
+        authorChoice: [],
+        authorOptions: [],
+        langChoice: '',
+        langOptions: [
+          {
+            label: 'en-us',
+            value: 'enus',
+          },
+          {
+            label: 'zh-cn',
+            value: 'zh-cn',
+          },
+        ],
+        abstractText: '',
       };
     },
   };
