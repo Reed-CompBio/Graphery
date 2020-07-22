@@ -44,7 +44,7 @@
               throw Error('Failed to talk to server. Failed to logout.');
             }
 
-            if (data && data['logout']['success']) {
+            if (data['logout']['success']) {
               this.setUser(null);
             } else {
               throw Error('Cannot logout at this time. Reason unknown.');

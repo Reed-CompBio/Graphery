@@ -14,7 +14,7 @@
 <script lang="ts">
   import Vue from 'vue';
 
-  const showFooterRe = /^(\/tutorial\/|\/graph\/)/;
+  const showFooterRe = /^(\/tutorial\/|\/graph\/|\/control-panel)/;
 
   export default Vue.extend({
     name: 'App',

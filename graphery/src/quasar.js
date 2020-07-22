@@ -52,6 +52,10 @@ import {
   QFabAction,
   QAjaxBar,
   QForm,
+  QTable,
+  QTh,
+  QTr,
+  QTd,
   // My plugins
   Notify,
   // My directive
@@ -108,6 +112,10 @@ Vue.use(Quasar, {
     QFabAction,
     QAjaxBar,
     QForm,
+    QTable,
+    QTh,
+    QTr,
+    QTd,
   },
   directives: { ClosePopup },
   plugins: { Notify },

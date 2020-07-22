@@ -100,3 +100,14 @@ mutation {
     success
   }
 }`;
+
+export const tutorialAnchorsQuery = `
+query {
+  allTutorialInfo {
+    name
+    isPublished
+    url
+    id
+  }
+}
+`;

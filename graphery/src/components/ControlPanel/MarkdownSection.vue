@@ -1,5 +1,19 @@
 <template>
-  <div id="markdown-wrapper" v-html="outHtml"></div>
+  <div>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/github-markdown-css/2.2.1/github-markdown.css"
+    />
+    <link
+      href="https://myCDN.com/prism@v1.x/themes/prism.css"
+      rel="stylesheet"
+    />
+    <div id="markdown-wrapper" v-html="outHtml"></div>
+  </div>
 </template>
 
 <script>
@@ -237,3 +251,5 @@
     },
   };
 </script>
+
+<style lang="sass"></style>
