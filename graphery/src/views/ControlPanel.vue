@@ -21,14 +21,14 @@
               </q-item>
             </q-card-section>
           </q-card>
-          <q-item>
+          <q-item clickable :to="{ name: 'Control Panel' }">
             <q-card-section>
               Main
             </q-card-section>
           </q-item>
-          <q-item>
+          <q-item clickable :to="{ name: 'Tutorial Anchor List' }">
             <q-card-section>
-              Create Tutorial Anchor
+              Tutorial Anchors
             </q-card-section>
           </q-item>
         </q-list>
@@ -36,7 +36,7 @@
 
       <q-page-container>
         <q-page padding>
-          <router-view :name="tabName"></router-view>
+          <router-view></router-view>
         </q-page>
       </q-page-container>
     </q-layout>

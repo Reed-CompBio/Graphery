@@ -100,14 +100,18 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/control-panel',
-    name: 'Control',
     component: () => import('@/views/ControlPanel.vue'),
     children: [
       {
         path: '',
-        components: {
-          main: () => import('@/components/ControlPanel/MainPage.vue'),
-        },
+        name: 'Control Panel',
+        component: () => import('@/components/ControlPanel/MainPage.vue'),
+      },
+      {
+        path: '/tutorial-anchors',
+        name: 'Tutorial Anchor List',
+        component: () =>
+          import('@/components/ControlPanel/TutorialAnchorList.vue'),
       },
     ],
     async beforeEnter(to, from, next) {

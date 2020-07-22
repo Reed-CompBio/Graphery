@@ -5,6 +5,7 @@
     </template>
     <template>
       <q-table
+        :data="tableContent"
         :columns="columns"
         :pagination="pagination"
         :loading="loadingTutorials"
@@ -12,18 +13,18 @@
         row-key="id"
         separator="cell"
       >
-        <template v-slot:header>
-          <q-btn icon="refresh" @click.prevent="fetchTutorials"></q-btn>
+        <template v-slot:top>
+          <q-btn
+            icon="refresh"
+            @click.prevent="fetchTutorials"
+            label="Refresh"
+          ></q-btn>
         </template>
-        <template v-slot:name="props">
+        <template v-slot:body="props">
           <q-tr :props="props">
             <!-- tutorial name -->
             <q-td key="name" :props="props">
-              <q-btn
-                @click.prevent="$emit('editTutorial', props.row.id)"
-                :label="props.row.name"
-              >
-              </q-btn>
+              <q-btn :label="props.row.name"> </q-btn>
             </q-td>
 
             <!-- tutorial published -->
@@ -33,10 +34,7 @@
 
             <!-- tutorial published -->
             <q-td key="url" :props="props">
-              <q-btn
-                @click.prevent="$emit('open', `/tutorial/${props.row.url}`)"
-                :label="props.row.url"
-              ></q-btn>
+              <q-btn :label="props.row.url"></q-btn>
             </q-td>
 
             <!-- tutorial id -->
@@ -129,12 +127,12 @@
             this.tableContent = data['allTutorialInfo'];
           })
           .catch((err) => {
+            this.tableContent = [];
             errorDialog({
               message: `Cannot load tutorials. ${err}`,
             });
           })
           .finally(() => {
-            this.tableContent = [];
             this.finishedLoading();
           });
       },
