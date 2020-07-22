@@ -9,7 +9,7 @@
           <slot name="title"></slot>
         </h3>
       </div>
-      <div id="control-panel-content" class="q-py-sm" style="flex-grow: 1;">
+      <div id="control-panel-content" style="flex-grow: 1;">
         <slot></slot>
       </div>
     </div>

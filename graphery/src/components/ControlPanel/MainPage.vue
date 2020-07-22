@@ -8,7 +8,7 @@
           more fun.
         </p>
       </div>
-      <MarkdownSection :source="exampleMd"></MarkdownSection>
+      <MarkdownSection :markdownRaw="exampleMd"></MarkdownSection>
     </template>
   </ControlPanelContentFrame>
 </template>

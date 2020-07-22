@@ -22,8 +22,8 @@
             </q-input>
           </div>
           <!-- editor -->
-          <div class="row q-my-lg">
-            <EditorSection style="width: 100%"></EditorSection>
+          <div class="row q-my-lg" style="height: 70vh;">
+            <EditorSection style="width: 100%; "></EditorSection>
           </div>
         </div>
 

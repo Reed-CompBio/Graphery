@@ -1,37 +1,28 @@
 <template>
-  <div class="full-height">
-    <q-splitter class="full-height" v-model="splitPos">
-      <template v-slot:before>
-        <div style="width: 100%;">
-          <textarea style="width: 100%"></textarea>
-        </div>
-      </template>
-      <template v-slot:separator>
-        <div
-          style="border-left: 4px solid rgb(179, 179, 179); border-radius: 25px; height: 10%;"
-        ></div>
-      </template>
-      <template v-slot:after>
-        <div>
-          <MarkdownSection
-            ref="markdownSection"
-            :source="rawText"
-          ></MarkdownSection>
-        </div>
-      </template>
-    </q-splitter>
+  <div id="md-editor" class="full-height">
+    <mavonEditor
+      language="en"
+      :ishljs="true"
+      ref="mdEditor"
+      :value="initValue"
+      class="full-height"
+    ></mavonEditor>
   </div>
 </template>
 
 <script>
+  import { mavonEditor } from 'mavon-editor';
+  import 'mavon-editor/dist/css/index.css';
+
   export default {
     components: {
-      MarkdownSection: () => import('./MarkdownSection'),
+      mavonEditor,
     },
     data() {
       return {
         rawText: '',
         splitPos: 50,
+        initValue: '',
       };
     },
     methods: {
@@ -44,3 +35,8 @@
     },
   };
 </script>
+
+<style lang="sass">
+  .markdown-editor-splitter .q-splitter
+    height: 100%
+</style>

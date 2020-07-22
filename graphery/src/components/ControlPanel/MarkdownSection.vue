@@ -1,264 +1,98 @@
 <template>
-  <div>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/github-markdown-css/2.2.1/github-markdown.css"
-    />
-    <!--    <link-->
-    <!--      href="https://myCDN.com/prism@v1.x/themes/prism.css"-->
-    <!--      rel="stylesheet"-->
-    <!--    />-->
-    <div id="markdown-wrapper" v-html="outHtml"></div>
-  </div>
+  <div class="markdown-body" v-html="processedHtml"></div>
 </template>
 
 <script>
-  import markdownIt from 'markdown-it';
-  import emoji from 'markdown-it-emoji';
-  import subscript from 'markdown-it-sub';
-  import superscript from 'markdown-it-sup';
-  import footnote from 'markdown-it-footnote';
-  import deflist from 'markdown-it-deflist';
-  import abbreviation from 'markdown-it-abbr';
-  import insert from 'markdown-it-ins';
-  import mark from 'markdown-it-mark';
-  import toc from 'markdown-it-toc-and-anchor';
-  import katex from 'markdown-it-katex';
-  import tasklists from 'markdown-it-task-lists';
+  // TODO use custom css
+  import 'mavon-editor/src/lib/css/md.css';
+  import markdown from 'mavon-editor/src/lib/mixins/markdown';
 
   export default {
     props: {
-      rawData: {
+      markdownRaw: {
         type: String,
         default: '',
       },
-      watches: {
-        type: Array,
-        default: () => ['source', 'show', 'toc'],
-      },
-      source: {
+      inputHtml: {
         type: String,
-        default: ``,
-      },
-      show: {
-        type: Boolean,
-        default: true,
-      },
-      highlight: {
-        type: Boolean,
-        default: true,
-      },
-      html: {
-        type: Boolean,
-        default: true,
-      },
-      xhtmlOut: {
-        type: Boolean,
-        default: true,
-      },
-      breaks: {
-        type: Boolean,
-        default: true,
-      },
-      linkify: {
-        type: Boolean,
-        default: true,
-      },
-      emoji: {
-        type: Boolean,
-        default: true,
-      },
-      typographer: {
-        type: Boolean,
-        default: true,
-      },
-      langPrefix: {
-        type: String,
-        default: 'language-',
-      },
-      quotes: {
-        type: String,
-        default: '“”‘’',
-      },
-      tableClass: {
-        type: String,
-        default: 'table',
-      },
-      taskLists: {
-        type: Boolean,
-        default: true,
-      },
-      toc: {
-        type: Boolean,
-        default: false,
-      },
-      tocId: {
-        type: String,
-      },
-      tocClass: {
-        type: String,
-        default: 'table-of-contents',
-      },
-      tocFirstLevel: {
-        type: Number,
-        default: 2,
-      },
-      tocLastLevel: {
-        type: Number,
-      },
-      tocAnchorLink: {
-        type: Boolean,
-        default: true,
-      },
-      tocAnchorClass: {
-        type: String,
-        default: 'toc-anchor',
-      },
-      tocAnchorLinkSymbol: {
-        type: String,
-        default: '#',
-      },
-      tocAnchorLinkSpace: {
-        type: Boolean,
-        default: true,
-      },
-      tocAnchorLinkClass: {
-        type: String,
-        default: 'toc-anchor-link',
-      },
-      anchorAttributes: {
-        type: Object,
-        default: () => ({}),
-      },
-      prerender: {
-        type: Function,
-        default: (sourceData) => {
-          return sourceData;
-        },
-      },
-      postrender: {
-        type: Function,
-        default: (htmlData) => {
-          return htmlData;
-        },
+        default: null,
       },
     },
-    data() {
-      return {
-        sourceData: this.source,
-        outHtml: '',
-      };
+    mixins: [markdown],
+    methods: {
+      loadLink(src) {
+        const check = document.querySelectorAll("link[href='" + src + "']");
+        if (check.length > 0) {
+          return;
+        }
+        const link = document.createElement('link');
+        const head = document.getElementsByTagName('head')[0];
+        link.rel = 'stylesheet';
+        link.href = src;
+        head.appendChild(link);
+      },
+      loadScript(src) {
+        const check = document.querySelectorAll("script[src='" + src + "']");
+        if (check.length > 0) {
+          return;
+        }
+        const script = document.createElement('script');
+        const head = document.getElementsByTagName('head')[0];
+        script.type = 'text/javascript';
+        script.charset = 'UTF-8';
+        script.src = src;
+        head.appendChild(script);
+      },
+      hljsLang: function(lang) {
+        return (
+          'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/' +
+          lang +
+          '.min.js'
+        );
+      },
+      hljsCss: function(css) {
+        return (
+          'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/' +
+          css +
+          '.min.css'
+        );
+      },
     },
     computed: {
-      tocLastLevelComputed() {
-        return this.tocLastLevel > this.tocFirstLevel
-          ? this.tocLastLevel
-          : this.tocFirstLevel + 1;
+      processedHtml() {
+        if (this.inputHtml !== null) {
+          return this.inputHtml;
+        }
+
+        return this.markdownIt.render(this.markdownRaw);
       },
     },
-    updateHtml() {
-      this.outHtml = this.postrender(
-        this.show ? this.md.render(this.prerender(this.source)) : ''
+    beforeMount() {
+      // katex
+      this.loadScript(
+        'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.js'
       );
-    },
-    mounted() {
-      this.md = new markdownIt()
-        .use(subscript)
-        .use(superscript)
-        .use(footnote)
-        .use(deflist)
-        .use(abbreviation)
-        .use(insert)
-        .use(mark)
-        .use(katex, { throwOnError: false, errorColor: ' #cc0000' })
-        .use(tasklists, { enabled: this.taskLists });
 
-      if (this.emoji) {
-        this.md.use(emoji);
-      }
+      // highlight js
+      this.loadScript(
+        'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js'
+      );
 
-      this.md.set({
-        html: this.html,
-        xhtmlOut: this.xhtmlOut,
-        breaks: this.breaks,
-        linkify: this.linkify,
-        typographer: this.typographer,
-        langPrefix: this.langPrefix,
-        quotes: this.quotes,
-      });
-      this.md.renderer.rules['table_open'] = () =>
-        `<table class="${this.tableClass}">\n`;
-      const defaultLinkRenderer =
-        this.md.renderer.rules['link_open'] ||
-        function(tokens, idx, options, env, self) {
-          return self.renderToken(tokens, idx, options);
-        };
-      this.md.renderer.rules['link_open'] = (
-        tokens,
-        idx,
-        options,
-        env,
-        self
-      ) => {
-        Object.keys(this.anchorAttributes).map((attribute) => {
-          const aIndex = tokens[idx].attrIndex(attribute);
-          const value = this.anchorAttributes[attribute];
-          if (aIndex < 0) {
-            tokens[idx].attrPush([attribute, value]); // add new attribute
-          } else {
-            tokens[idx].attrs[aIndex][1] = value;
-          }
-        });
-        return defaultLinkRenderer(tokens, idx, options, env, self);
-      };
+      // highlight lang
+      this.loadScript(this.hljsLang('python'));
 
-      if (this.toc) {
-        this.md.use(toc, {
-          tocClassName: this.tocClass,
-          tocFirstLevel: this.tocFirstLevel,
-          tocLastLevel: this.tocLastLevelComputed,
-          anchorLink: this.tocAnchorLink,
-          anchorLinkSymbol: this.tocAnchorLinkSymbol,
-          anchorLinkSpace: this.tocAnchorLinkSpace,
-          anchorClassName: this.tocAnchorClass,
-          anchorLinkSymbolClassName: this.tocAnchorLinkClass,
-          tocCallback: (tocMarkdown, tocArray, tocHtml) => {
-            if (tocHtml) {
-              if (this.tocId && document.getElementById(this.tocId)) {
-                document.getElementById(this.tocId).innerHTML = tocHtml;
-              }
+      // Markdown css
+      this.loadLink(
+        'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css'
+      );
 
-              this.$emit('toc-rendered', tocHtml);
-            }
-          },
-        });
-      }
+      // Highlighting css
+      this.loadLink(this.hljsCss('vs'));
 
-      const temp = this.show
-        ? this.md.render(this.prerender(this.sourceData))
-        : '';
-      this.outHtml = this.postrender(temp);
-
-      this.$watch('source', () => {
-        this.sourceData = this.prerender(this.source);
-        this.outHtml = this.postrender(this.md.render(this.sourceData));
-        this.$forceUpdate();
-      });
-
-      this.watches.forEach((v) => {
-        this.$watch(v, () => {
-          this.$forceUpdate();
-        });
-      });
-    },
-    watch: {
-      source: function() {
-        this.updateHtml();
-      },
+      // Katex css
+      this.loadLink(
+        'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.css'
+      );
     },
   };
 </script>
