@@ -40,10 +40,15 @@
               {{ props.row.priority }}
             </q-td>
 
-            <!-- cyjs -->
-            <q-td key="cyjs" :props="props">
-              <q-input v-model="props.row.cyjs" type="textarea" readonly>
-              </q-input>
+            <!-- authors -->
+            <q-td key="authors" :props="props">
+              <q-select
+                multiple
+                use-chips
+                readonly
+                :option="props.row.authors"
+                v-model="props.row.authors"
+              ></q-select>
             </q-td>
 
             <!-- tutorials -->
@@ -57,15 +62,10 @@
               ></q-select>
             </q-td>
 
-            <!-- authors -->
-            <q-td key="authors" :props="props">
-              <q-select
-                multiple
-                use-chips
-                readonly
-                :option="props.row.authors"
-                v-model="props.row.authors"
-              ></q-select>
+            <!-- cyjs -->
+            <q-td key="cyjs" :props="props">
+              <q-input v-model="props.row.cyjs" type="textarea" readonly>
+              </q-input>
             </q-td>
 
             <!-- url -->
@@ -125,11 +125,10 @@
             align: 'center',
           },
           {
-            name: 'cyjs',
-            label: 'CYJS',
-            field: 'cyjs',
+            name: 'authors',
+            label: 'Authors',
+            field: 'authors',
             align: 'center',
-            style: 'min-width: 200px;',
           },
           {
             name: 'tutorials',
@@ -139,10 +138,11 @@
             align: 'center',
           },
           {
-            name: 'authors',
-            label: 'Authors',
-            field: 'authors',
+            name: 'cyjs',
+            label: 'CYJS',
+            field: 'cyjs',
             align: 'center',
+            style: 'min-width: 200px;',
           },
           {
             name: 'url',

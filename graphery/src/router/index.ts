@@ -98,6 +98,10 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: '',
+        redirect: { name: 'Control Panel' },
+      },
+      {
+        path: 'main',
         name: 'Control Panel',
         component: () => import('@/components/ControlPanel/MainPage.vue'),
       },
