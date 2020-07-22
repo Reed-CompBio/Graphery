@@ -12,6 +12,7 @@
         no-data-label="No tutorials are found."
         row-key="id"
         separator="cell"
+        class="custom-table"
       >
         <template v-slot:top>
           <q-btn

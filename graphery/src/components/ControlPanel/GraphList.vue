@@ -5,7 +5,6 @@
     </template>
     <template>
       <q-table
-        class="graph-table"
         :data="tableContent"
         :columns="columns"
         :pagination="pagination"
@@ -13,6 +12,7 @@
         no-data-label="No graphs are found"
         row-key="id"
         separator="cell"
+        class="custom-table"
       >
         <template v-slot:top>
           <q-btn
@@ -210,7 +210,7 @@
 </script>
 
 <style lang="sass">
-  .graph-table
+  .custom-table
 
     thead tr:first-child th:first-child
       /* bg color is important for th; just specify one */
@@ -223,5 +223,5 @@
     td:first-child
       position: sticky
       left: 0
-      z-index: 1
+      z-index: 5
 </style>
