@@ -5,7 +5,7 @@
 <script>
   // TODO use custom css
   import 'mavon-editor/src/lib/css/md.css';
-  import markdown from 'mavon-editor/src/lib/mixins/markdown';
+  import markdown from 'mavon-editor/src/lib/core/markdown';
 
   export default {
     props: {
@@ -21,9 +21,9 @@
     data() {
       return {
         renderedHtml: '',
+        markdownIt: markdown,
       };
     },
-    mixins: [markdown],
     methods: {
       loadLink(src, callback) {
         if (!(typeof callback === 'function')) {
@@ -130,6 +130,8 @@
           }
         );
 
+        this.loadScript(this.hljsLang('python'), this.renderHtml());
+
         // Markdown css
         this.loadLink(
           'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css'
@@ -143,8 +145,20 @@
           'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.css'
         );
       },
+      highlightCode() {
+        document.querySelectorAll('pre div.hljs code').forEach((block) => {
+          const hljs = window.hljs;
+          if (hljs) {
+            hljs.highlightBlock(block);
+          }
+        });
+      },
       renderHtml() {
         this.renderedHtml = this.markdownIt.render(this.markdownRaw);
+        this.highlightCode();
+        // this.$render(this.markdownRaw, (res) => {
+        //   this.renderedHtml = res;
+        // });
       },
     },
     computed: {
@@ -158,15 +172,12 @@
     },
     mounted() {
       this.loadExternalResources();
-      this.renderHtml();
     },
     watch: {
       // TODO merge this into a computed value
       markdownRaw: function() {
-        this.renderedHtml();
+        this.renderHtml();
       },
     },
   };
 </script>
-
-<style lang="sass"></style>

@@ -117,23 +117,13 @@
           '```\n' +
           'Syntax highlighting\n' +
           '\n' +
-          '``` javascript\n' +
-          'var foo = function (bar) {\n' +
-          '  return bar++;\n' +
-          '};\n' +
+          '```python\n' +
+          'def hello():\n' +
+          '    print("hello world")\n' +
+          '    return None\n' +
           '\n' +
-          'console.log(foo(5));\n' +
           '```\n' +
           '\n' +
-          '``` go\n' +
-          'package main\n' +
-          '\n' +
-          'import "fmt"\n' +
-          '\n' +
-          'func main() {\n' +
-          '\tfmt.Println("Hello, world!")\n' +
-          '}\n' +
-          '```\n' +
           '\n' +
           '## Tables\n' +
           '\n' +
