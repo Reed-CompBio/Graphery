@@ -8,7 +8,7 @@
         :data="tableContent"
         :columns="columns"
         :pagination="pagination"
-        :loading="loadingCategories"
+        :loading="loadingTable"
         no-data-label="No Categories are found."
         row-key="id"
         separator="cell"
@@ -34,15 +34,17 @@
 </template>
 
 <script>
-  import { apiCaller } from '../../services/apis';
-  import { categoryQuery } from '../../services/queries';
-  import { errorDialog } from '../../services/helpers';
+  import { apiCaller } from '../../../services/apis';
+  import { categoryListQuery } from '../../../services/queries';
+  import { errorDialog } from '../../../services/helpers';
+  import loadingMixin from './LoadingMixin.vue';
 
   export default {
+    mixins: [loadingMixin],
     components: {
-      ControlPanelContentFrame: () => import('./ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('./RefreshButton'),
-      OpenInEditorButton: () => import('./OpenInEditorButton'),
+      ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
+      RefreshButton: () => import('../RefreshButton'),
+      OpenInEditorButton: () => import('../OpenInEditorButton'),
     },
     data() {
       return {
@@ -77,16 +79,10 @@
       };
     },
     methods: {
-      startLoading() {
-        this.loadingCategories = true;
-      },
-      finishedLoading() {
-        this.loadingCategories = false;
-      },
       fetchCategories() {
         this.startLoading();
 
-        apiCaller(categoryQuery)
+        apiCaller(categoryListQuery)
           .then(([data, errors]) => {
             if (errors) {
               throw Error(errors);

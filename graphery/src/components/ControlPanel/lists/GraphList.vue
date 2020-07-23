@@ -8,7 +8,7 @@
         :data="tableContent"
         :columns="columns"
         :pagination="pagination"
-        :loading="loadingGraphs"
+        :loading="loadingTable"
         no-data-label="No graphs are found"
         row-key="id"
         separator="cell"
@@ -79,16 +79,18 @@
 </template>
 
 <script>
-  import { apiCaller } from '../../services/apis';
-  import { graphsQuery } from '../../services/queries';
-  import { errorDialog } from '../../services/helpers';
+  import { apiCaller } from '../../../services/apis';
+  import { graphListQuery } from '../../../services/queries';
+  import { errorDialog } from '../../../services/helpers';
+  import loadingMixin from './LoadingMixin.vue';
 
   export default {
+    mixins: [loadingMixin],
     components: {
-      ControlPanelContentFrame: () => import('./ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('./RefreshButton'),
-      OpenInEditorButton: () => import('./OpenInEditorButton'),
-      OpenInPageButton: () => import('./OpenInPageButton'),
+      ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
+      RefreshButton: () => import('../RefreshButton'),
+      OpenInEditorButton: () => import('../OpenInEditorButton'),
+      OpenInPageButton: () => import('../OpenInPageButton'),
     },
     data() {
       return {
@@ -158,20 +160,13 @@
           sortBy: 'name',
           rowsPerPage: 10,
         },
-        loadingGraphs: false,
         tableContent: [],
       };
     },
     methods: {
-      startLoading() {
-        this.loadingGraphs = true;
-      },
-      finishedLoading() {
-        this.loadingGraphs = false;
-      },
       fetchGraphs() {
         this.startLoading();
-        apiCaller(graphsQuery)
+        apiCaller(graphListQuery)
           .then(([data, errors]) => {
             if (errors) {
               throw Error(errors);

@@ -101,7 +101,7 @@ mutation {
   }
 }`;
 
-export const tutorialAnchorsQuery = `
+export const tutorialAnchorListQuery = `
 query {
   allTutorialInfo {
     name
@@ -111,7 +111,7 @@ query {
   }
 }`;
 
-export const graphsQuery = `
+export const graphListQuery = `
 query {
   allGraphInfo {
     name
@@ -127,10 +127,26 @@ query {
   }
 }`;
 
-export const categoryQuery = `
+export const categoryListQuery = `
 query {
   allCategories {
     category
     id
+  }
+}`;
+
+export const tutorialContentListQuery = `
+query ($translation: String, $default: String = "") {
+  allTutorialInfo {
+    name
+    content (translation: $translation, default: $default) {
+      title
+      isPublished 
+      abstract
+      authors
+      contentMd
+      contentHtml
+      id 
+    }
   }
 }`;

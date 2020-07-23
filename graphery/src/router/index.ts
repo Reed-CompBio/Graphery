@@ -108,13 +108,14 @@ const routes: Array<RouteConfig> = [
       {
         path: 'categories',
         name: 'Category List',
-        component: () => import('@/components/ControlPanel/CategoryList.vue'),
+        component: () =>
+          import('@/components/ControlPanel/lists/CategoryList.vue'),
       },
       {
         path: 'tutorial-anchors',
         name: 'Tutorial Anchor List',
         component: () =>
-          import('@/components/ControlPanel/TutorialAnchorList.vue'),
+          import('@/components/ControlPanel/lists/TutorialAnchorList.vue'),
       },
       {
         path: 'tutorial-anchor-editor/:url',
@@ -127,7 +128,7 @@ const routes: Array<RouteConfig> = [
         path: 'tutorial-content',
         name: 'Tutorial Content List',
         component: () =>
-          import('@/components/ControlPanel/TutorialContentList.vue'),
+          import('@/components/ControlPanel/lists/TutorialContentList.vue'),
       },
       {
         path: 'tutorial-content-editor/:url',
@@ -139,7 +140,8 @@ const routes: Array<RouteConfig> = [
       {
         path: 'graphs',
         name: 'Graph List',
-        component: () => import('@/components/ControlPanel/GraphList.vue'),
+        component: () =>
+          import('@/components/ControlPanel/lists/GraphList.vue'),
       },
       {
         path: 'graph-editor/:url',

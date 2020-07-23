@@ -8,7 +8,7 @@
         :data="tableContent"
         :columns="columns"
         :pagination="pagination"
-        :loading="loadingTutorials"
+        :loading="loadingTable"
         no-data-label="No tutorials are found."
         row-key="id"
         separator="cell"
@@ -46,16 +46,18 @@
 </template>
 
 <script>
-  import { apiCaller } from '../../services/apis';
-  import { tutorialAnchorsQuery } from '../../services/queries';
-  import { errorDialog } from '../../services/helpers';
+  import { apiCaller } from '../../../services/apis';
+  import { tutorialAnchorListQuery } from '../../../services/queries';
+  import { errorDialog } from '../../../services/helpers';
+  import loadingMixin from './LoadingMixin.vue';
 
   export default {
+    mixins: [loadingMixin],
     components: {
-      ControlPanelContentFrame: () => import('./ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('./RefreshButton'),
-      OpenInEditorButton: () => import('./OpenInEditorButton'),
-      OpenInPageButton: () => import('./OpenInPageButton'),
+      ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
+      RefreshButton: () => import('../RefreshButton'),
+      OpenInEditorButton: () => import('../OpenInEditorButton'),
+      OpenInPageButton: () => import('../OpenInPageButton'),
     },
     data() {
       return {
@@ -106,15 +108,9 @@
       };
     },
     methods: {
-      startLoading() {
-        this.loadingTutorials = true;
-      },
-      finishedLoading() {
-        this.loadingTutorials = false;
-      },
       fetchTutorials() {
         this.startLoading();
-        apiCaller(tutorialAnchorsQuery)
+        apiCaller(tutorialAnchorListQuery)
           .then(([data, errors]) => {
             if (errors) {
               throw Error(errors);
