@@ -15,18 +15,12 @@
         class="custom-table"
       >
         <template v-slot:top>
-          <q-btn
-            icon="refresh"
-            @click.prevent="fetchCategories"
-            label="Refresh"
-          ></q-btn>
+          <RefreshButton :fetch-func="fetchCategories" />
         </template>
         <template v-slot:body="props">
           <q-tr :props="props">
             <q-td key="category" :props="props">
-              <q-btn :label="props.row.category" flat>
-                <SwitchTooltip text="Open In Editor"></SwitchTooltip>
-              </q-btn>
+              <OpenInEditorButton :label="props.row.category" />
             </q-td>
 
             <q-td key="id" :props="props">
@@ -46,8 +40,9 @@
 
   export default {
     components: {
-      SwitchTooltip: () => import('../framework/SwitchTooltip'),
       ControlPanelContentFrame: () => import('./ControlPanelContentFrame.vue'),
+      RefreshButton: () => import('./RefreshButton'),
+      OpenInEditorButton: () => import('./OpenInEditorButton'),
     },
     data() {
       return {

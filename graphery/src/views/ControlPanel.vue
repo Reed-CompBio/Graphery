@@ -36,6 +36,11 @@
               Tutorial Anchors
             </q-card-section>
           </q-item>
+          <q-item clickable :to="{ name: 'Tutorial Content List' }">
+            <q-card-section>
+              Tutorial Content
+            </q-card-section>
+          </q-item>
           <q-item clickable :to="{ name: 'Graph List' }">
             <q-card-section>
               Graphs

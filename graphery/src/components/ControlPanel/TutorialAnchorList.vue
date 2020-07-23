@@ -1,7 +1,7 @@
 <template>
   <ControlPanelContentFrame>
     <template slot="title">
-      Tutorials
+      Tutorial Anchors
     </template>
     <template>
       <q-table
@@ -15,19 +15,13 @@
         class="custom-table"
       >
         <template v-slot:top>
-          <q-btn
-            icon="refresh"
-            @click.prevent="fetchTutorials"
-            label="Refresh"
-          ></q-btn>
+          <RefreshButton :fetch-func="fetchTutorials"></RefreshButton>
         </template>
         <template v-slot:body="props">
           <q-tr :props="props">
             <!-- tutorial name -->
             <q-td key="name" :props="props">
-              <q-btn :label="props.row.name" flat>
-                <SwitchTooltip text="Open In Editor"></SwitchTooltip>
-              </q-btn>
+              <OpenInEditorButton :label="props.row.name" />
             </q-td>
 
             <!-- tutorial published -->
@@ -37,9 +31,7 @@
 
             <!-- tutorial url -->
             <q-td key="url" :props="props">
-              <q-btn :label="props.row.url" flat>
-                <SwitchTooltip text="Open Page"></SwitchTooltip>
-              </q-btn>
+              <OpenInPageButton :label="props.row.url" />
             </q-td>
 
             <!-- tutorial id -->
@@ -61,7 +53,9 @@
   export default {
     components: {
       ControlPanelContentFrame: () => import('./ControlPanelContentFrame.vue'),
-      SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
+      RefreshButton: () => import('./RefreshButton'),
+      OpenInEditorButton: () => import('./OpenInEditorButton'),
+      OpenInPageButton: () => import('./OpenInPageButton'),
     },
     data() {
       return {
