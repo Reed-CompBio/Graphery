@@ -52,6 +52,29 @@
         <div class="col-4 q-pl-sm">
           <InfoCard class="half-width-card">
             <template v-slot:title>
+              Published
+            </template>
+            <q-checkbox
+              v-model="graphPublished"
+              :label="graphPublished ? '✅' : '❌'"
+            />
+          </InfoCard>
+
+          <InfoCard>
+            <template v-slot:title>
+              Authors
+            </template>
+            <q-select
+              multiple
+              use-chips
+              clearable
+              v-model="authorChoices"
+              :options="authorOptions"
+            ></q-select>
+          </InfoCard>
+
+          <InfoCard>
+            <template v-slot:title>
               Categories
             </template>
             <q-select
@@ -63,14 +86,17 @@
             ></q-select>
           </InfoCard>
 
-          <InfoCard class="half-width-card">
+          <InfoCard>
             <template v-slot:title>
-              Published
+              Tutorials
             </template>
-            <q-checkbox
-              v-model="graphPublished"
-              :label="graphPublished ? '✅' : '❌'"
-            />
+            <!-- TODO add a confirmation dialog during deleting tutorials -->
+            <q-select
+              multiple
+              use-chips
+              v-model="tutorialChoices"
+              :options="tutorialOptions"
+            ></q-select>
           </InfoCard>
 
           <q-btn class="half-width-card" label="Submit"></q-btn>
@@ -94,9 +120,13 @@
         cyjs: '',
         graphUrl: '',
         graphName: '',
+        graphPublished: false,
+        authorChoices: [],
+        authorOptions: [],
         categoryChoices: [],
         categoryOptions: [],
-        graphPublished: false,
+        tutorialChoices: [],
+        tutorialOptions: [],
         uploadFile: [],
       };
     },
