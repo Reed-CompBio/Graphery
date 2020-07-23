@@ -162,7 +162,7 @@
         ],
         pagination: {
           sortBy: 'name',
-          rowsPerPage: 20,
+          rowsPerPage: 10,
         },
         loadingGraphs: false,
         tableContent: [],
@@ -184,7 +184,7 @@
             }
 
             if (!data || !('allGraphInfo' in data)) {
-              throw Error('invalid data returned');
+              throw Error('Invalid data returned');
             }
 
             this.tableContent = data['allGraphInfo'].map((obj) => {

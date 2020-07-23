@@ -126,3 +126,11 @@ query {
     id
   }
 }`;
+
+export const categoryQuery = `
+query {
+  allCategories {
+    category
+    id
+  }
+}`;

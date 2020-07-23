@@ -26,6 +26,11 @@
               Main
             </q-card-section>
           </q-item>
+          <q-item clickable :to="{ name: 'Category List' }">
+            <q-card-section>
+              Categories
+            </q-card-section>
+          </q-item>
           <q-item clickable :to="{ name: 'Tutorial Anchor List' }">
             <q-card-section>
               Tutorial Anchors
@@ -41,7 +46,9 @@
 
       <q-page-container>
         <q-page>
-          <router-view></router-view>
+          <keep-alive>
+            <router-view></router-view>
+          </keep-alive>
         </q-page>
       </q-page-container>
     </q-layout>

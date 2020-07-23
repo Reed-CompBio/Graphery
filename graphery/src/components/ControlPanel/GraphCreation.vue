@@ -28,7 +28,12 @@
           <div class="row full-width q-mt-md">
             <!-- TODO set an appropriate -->
             <q-card class="full-width q-mb-md">
-              <q-input type="textarea" outlined v-model="cyjs"></q-input>
+              <q-input
+                type="textarea"
+                shadow-text="Graph JSON"
+                outlined
+                v-model="cyjs"
+              ></q-input>
             </q-card>
             <q-file
               v-model="uploadFile"

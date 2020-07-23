@@ -106,6 +106,11 @@ const routes: Array<RouteConfig> = [
         component: () => import('@/components/ControlPanel/MainPage.vue'),
       },
       {
+        path: 'categories',
+        name: 'Category List',
+        component: () => import('@/components/ControlPanel/CategoryList.vue'),
+      },
+      {
         path: 'tutorial-anchors',
         name: 'Tutorial Anchor List',
         component: () =>
