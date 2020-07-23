@@ -37,7 +37,7 @@
     "mavon-editor": "^2.9.0",
     "monaco-editor": "^0.20.0",
     "monaco-editor-webpack-plugin": "^1.9.0",
-    "quasar": "^1.12.11",
+    "quasar": "^1.12.13",
     "tippy.js": "^5.2.1",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
@@ -68,13 +68,13 @@
     "eslint-plugin-vue": "^6.2.2",
     "node-sass": "^4.13.0",
     "prettier": "^1.19.1",
-    "sass": "^1.26.9",
+    "sass": "^1.26.10",
     "sass-loader": "^8.0.0",
     "ts-jest": "^26.1.1",
-    "typescript": "~3.9.3",
+    "typescript": "^3.9.7",
     "vue-cli-plugin-i18n": "~1.0.1",
     "vue-cli-plugin-quasar": "~2.0.2",
-    "vue-jest": "^3.0.5",
+    "vue-jest": "^3.0.6",
     "vue-template-compiler": "^2.6.11"
   }
 }
