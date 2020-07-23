@@ -9,7 +9,6 @@ export function successDialog(info: { message: string }) {
   Notify.create({
     ...info,
     type: 'positive',
-    multiLine: true,
     timeout: 5000,
     actions: [
       {

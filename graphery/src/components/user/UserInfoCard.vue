@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-xs">
+  <div>
     <q-card>
       <q-card-section>
         <UserInfoItem
@@ -18,20 +18,22 @@
       <q-separator />
       <q-card-actions align="center">
         <q-btn
+          flat
           :label="$t('account.ControlPanel')"
           to="/control-panel"
           v-if="isAuthor || isTranslator || isAdmin"
         >
         </q-btn>
         <q-btn
+          flat
           :label="$t('account.DjangoAdminPage')"
           v-if="isAdmin"
           type="a"
           :href="djangoAdminUrl"
           target="_blank"
         />
-        <q-btn :label="$t('nav.Home')" :to="{ name: 'Home' }" />
-        <q-btn :label="$t('account.LogOut')" @click="$emit('logout')" />
+        <q-btn flat :label="$t('nav.Home')" :to="{ name: 'Home' }" />
+        <q-btn flat :label="$t('account.LogOut')" @click="$emit('logout')" />
       </q-card-actions>
     </q-card>
   </div>

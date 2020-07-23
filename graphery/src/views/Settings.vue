@@ -10,7 +10,9 @@
       <div id="content-section">
         <SettingDisplayCard :title="$t('settings.Display')">
           <template v-slot:toggles>
-            <SettingUnit :name="$t('settings.darkMode')">
+            <SettingUnit
+              :name="$t('settings.darkMode') + '  (Just DON\'T Use it )'"
+            >
               <q-toggle
                 left-label
                 size="xl"

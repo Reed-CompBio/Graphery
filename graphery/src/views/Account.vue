@@ -7,7 +7,7 @@
     </div>
     <div>
       <div id="user-info" class="row">
-        <div id="user-info-wrapper" class="col-12 flex-center q-ma-md">
+        <div id="user-info-wrapper" class="col-12 flex-center q-my-md">
           <UserInfoCard :userObj="userObj" @logout="logout"></UserInfoCard>
         </div>
       </div>

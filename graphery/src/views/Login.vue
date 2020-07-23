@@ -58,6 +58,7 @@
                   >
                     <div class="q-ma-sm">
                       <q-btn
+                        flat
                         :label="$t('account.Login')"
                         type="submit"
                         :loading="loading"
@@ -66,6 +67,7 @@
                     </div>
                     <div class="q-ma-sm">
                       <q-btn
+                        flat
                         :label="$t('account.Register')"
                         @click.prevent="register"
                       ></q-btn>
