@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import SwitchTooltip from '../framework/SwitchTooltip';
+  import SwitchTooltip from '../../framework/SwitchTooltip';
 
   export default {
     props: ['label', 'action', 'routePath'],

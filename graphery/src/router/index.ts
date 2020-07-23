@@ -122,7 +122,9 @@ const routes: Array<RouteConfig> = [
         name: 'Tutorial Anchor Editor',
         props: true,
         component: () =>
-          import('@/components/ControlPanel/TutorialAnchorCreation.vue'),
+          import(
+            '@/components/ControlPanel/editors/TutorialAnchorCreation.vue'
+          ),
       },
       {
         path: 'tutorial-content',
@@ -135,7 +137,9 @@ const routes: Array<RouteConfig> = [
         name: 'Tutorial Content Editor',
         props: true,
         component: () =>
-          import('@/components/ControlPanel/TutorialContentCreation.vue'),
+          import(
+            '@/components/ControlPanel/editors/TutorialContentCreation.vue'
+          ),
       },
       {
         path: 'graphs',
@@ -147,7 +151,8 @@ const routes: Array<RouteConfig> = [
         path: 'graph-editor/:url',
         name: 'Graph Editor',
         props: true,
-        component: () => import('@/components/ControlPanel/GraphCreation.vue'),
+        component: () =>
+          import('@/components/ControlPanel/editors/GraphCreation.vue'),
       },
     ],
     async beforeEnter(to, from, next) {

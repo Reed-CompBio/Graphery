@@ -88,9 +88,9 @@
     mixins: [loadingMixin],
     components: {
       ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../RefreshButton'),
-      OpenInEditorButton: () => import('../OpenInEditorButton'),
-      OpenInPageButton: () => import('../OpenInPageButton'),
+      RefreshButton: () => import('../parts/RefreshButton'),
+      OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
+      OpenInPageButton: () => import('../parts/OpenInPageButton'),
     },
     data() {
       return {

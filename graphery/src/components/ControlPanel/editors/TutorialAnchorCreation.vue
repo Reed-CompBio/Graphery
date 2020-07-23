@@ -56,8 +56,8 @@
   export default {
     props: ['url'],
     components: {
-      ControlPanelContentFrame: () => import('./ControlPanelContentFrame.vue'),
-      InfoCard: () => import('./InfoCard.vue'),
+      ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
+      InfoCard: () => import('../parts/InfoCard.vue'),
     },
     data() {
       return {

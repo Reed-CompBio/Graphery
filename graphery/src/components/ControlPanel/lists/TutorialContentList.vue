@@ -104,9 +104,9 @@
   export default {
     mixins: [loadingMixin],
     components: {
-      OpenInEditorButton: () => import('../OpenInEditorButton'),
+      OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
       ControlPanelContentFrame: () => import('../ControlPanelContentFrame'),
-      RefreshButton: () => import('../RefreshButton'),
+      RefreshButton: () => import('../parts/RefreshButton'),
     },
     data() {
       return {

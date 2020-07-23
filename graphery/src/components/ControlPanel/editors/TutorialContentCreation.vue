@@ -103,8 +103,8 @@
     props: ['url'],
     components: {
       EditorSection: () => import('./EditorSection.vue'),
-      ControlPageContentFrame: () => import('./ControlPanelContentFrame.vue'),
-      InfoCard: () => import('./InfoCard.vue'),
+      ControlPageContentFrame: () => import('../ControlPanelContentFrame.vue'),
+      InfoCard: () => import('../parts/InfoCard.vue'),
     },
     data() {
       return {

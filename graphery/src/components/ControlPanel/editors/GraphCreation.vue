@@ -112,13 +112,13 @@
 </template>
 
 <script>
-  import { errorDialog } from '../../services/helpers';
+  import { errorDialog } from '../../../services/helpers';
 
   export default {
     props: ['url'],
     components: {
-      ControlPanelContentFrame: () => import('./ControlPanelContentFrame'),
-      InfoCard: () => import('./InfoCard.vue'),
+      ControlPanelContentFrame: () => import('../ControlPanelContentFrame'),
+      InfoCard: () => import('../parts/InfoCard.vue'),
     },
     data() {
       return {
