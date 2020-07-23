@@ -40,7 +40,7 @@
 </template>
 
 <script>
-  import { BASE_URL } from '../../services/apis';
+  import { BASE_URL } from '../../services/api_entry';
   export default {
     props: ['userObj'],
     components: {
