@@ -10,6 +10,9 @@ cache:
 python:
   - "3.8"
 
+services:
+  - postgresql
+
 env:
   - PIPENV_IGNORE_VIRTUALENVS=1
 
@@ -18,6 +21,11 @@ install:
   - cd graphery
   - npm install -g npm@latest
   - npm install
+
+before_script:
+  - psql -c 'create database graphery;' -U postgres
+  - psql -c 'create user graphery with encrypted password "graphery";' -U postgres
+  - psql -c 'grant all privileges on database graphery to graphery;' -U postgres
 
 script:
   - npm run build
