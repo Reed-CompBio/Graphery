@@ -1,80 +1,94 @@
 <template>
-  <MaterialPage>
-    <div>
-      <h3 class="material-page-shorter-h3">
-        {{ $t('nav.Login') }}
-      </h3>
-    </div>
-    <div>
-      <div id="login-form" class="row">
-        <div id="login-module-wrapper" class="col-7 q-pr-md flex-center">
-          <div id="login-content">
-            <q-form @submit="login" @reset="resetForm">
-              <div id="account" class="q-my-md">
-                <q-input
-                  outlined
-                  v-model="account"
-                  :label="$t('account.Username')"
-                  type="text"
-                  :rules="[(val) => !!val || $t('account.notEmpty')]"
-                  :lazy-rules="true"
-                  :loading="loading"
-                  :disable="loading"
-                />
-              </div>
-              <div id="password" class="q-my-md">
-                <q-input
-                  outlined
-                  v-model="password"
-                  :label="$t('account.Password')"
-                  :type="showPwd ? 'text' : 'password'"
-                  :rules="[(val) => !!val || $t('account.notEmpty')]"
-                  :lazy-rules="true"
-                  :loading="loading"
-                  :disable="loading"
-                >
-                  <template v-slot:append>
-                    <q-icon
-                      :name="showPwd ? 'visibility' : 'visibility_off'"
-                      class="cursor-pointer"
-                      @click="showPwd = !showPwd"
+  <div style="display: flex; margin: auto;" class="flex-center">
+    <q-card :style="responsiveStyle">
+      <q-card-section>
+        <div :class="$q.screen.gt.xs ? 'q-pl-xl' : 'q-pl.md'">
+          <h3 class="material-page-shorter-h3">
+            {{ $t('nav.Login') }}
+          </h3>
+        </div>
+        <div>
+          <div id="login-form" class="row">
+            <div
+              id="login-module-wrapper"
+              :class="[
+                $q.screen.gt.md ? 'col-8' : 'full-width',
+                $q.screen.gt.xs ? 'q-px-xl' : 'q-px.md',
+                'flex-center',
+              ]"
+            >
+              <div id="login-content">
+                <q-form @submit="login" @reset="resetForm">
+                  <div id="account" class="q-my-md">
+                    <q-input
+                      outlined
+                      v-model="account"
+                      :label="$t('account.Username')"
+                      type="text"
+                      :rules="[(val) => !!val || $t('account.notEmpty')]"
+                      :lazy-rules="true"
+                      :loading="loading"
+                      :disable="loading"
                     />
-                  </template>
-                </q-input>
+                  </div>
+                  <div id="password" class="q-my-md">
+                    <q-input
+                      outlined
+                      v-model="password"
+                      :label="$t('account.Password')"
+                      :type="showPwd ? 'text' : 'password'"
+                      :rules="[(val) => !!val || $t('account.notEmpty')]"
+                      :lazy-rules="true"
+                      :loading="loading"
+                      :disable="loading"
+                    >
+                      <template v-slot:append>
+                        <q-icon
+                          :name="showPwd ? 'visibility' : 'visibility_off'"
+                          class="cursor-pointer"
+                          @click="showPwd = !showPwd"
+                        />
+                      </template>
+                    </q-input>
+                  </div>
+                  <div
+                    id="login-actions"
+                    style="display: flex; flex-direction: row-reverse; flex-wrap: wrap;"
+                    class="q-my-md"
+                  >
+                    <div class="q-ma-sm">
+                      <q-btn
+                        :label="$t('account.Login')"
+                        type="submit"
+                        :loading="loading"
+                        :disable="loading"
+                      ></q-btn>
+                    </div>
+                    <div class="q-ma-sm">
+                      <q-btn
+                        :label="$t('account.Register')"
+                        @click.prevent="register"
+                      ></q-btn>
+                    </div>
+                  </div>
+                </q-form>
               </div>
-              <div
-                id="login-actions"
-                style="display: flex; flex-direction: row-reverse; flex-wrap: wrap;"
-                class="q-my-md"
-              >
-                <div class="q-ma-sm">
-                  <q-btn
-                    :label="$t('account.Login')"
-                    type="submit"
-                    :loading="loading"
-                    :disable="loading"
-                  ></q-btn>
-                </div>
-                <div class="q-ma-sm">
-                  <q-btn :label="$t('account.Register')" disable></q-btn>
-                </div>
+            </div>
+
+            <div
+              id="info-wrapper"
+              v-if="$q.screen.gt.md"
+              class="col q-ml-md q-pr-xl q-my-md"
+            >
+              <div style="display: flex;" class="flex-center">
+                <q-img :src="logoSrc" style="width: 90%"></q-img>
               </div>
-            </q-form>
+            </div>
           </div>
         </div>
-        <div id="info-wrapper" class="col q-ml-md q-mt-lg">
-          <div class="q-pa-sm">
-            <q-card>
-              <q-card-section>
-                <!-- TODO pull messages from database  -->
-                <p style="margin: 0;">{{ $t('account.noNewAccount') }}</p>
-              </q-card-section>
-            </q-card>
-          </div>
-        </div>
-      </div>
-    </div>
-  </MaterialPage>
+      </q-card-section>
+    </q-card>
+  </div>
 </template>
 
 <script>
@@ -84,21 +98,30 @@
   import { errorDialog, successDialog } from '../services/helpers';
 
   export default {
-    components: {
-      MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
-    },
+    components: {},
     data() {
       return {
         account: '',
         password: '',
         showPwd: false,
         loading: false,
+        logoSrc: require('@/assets/images/compbio-lab.png'),
       };
     },
     computed: {
       ...mapState({
         userObj: (state) => state.user,
       }),
+      responsiveStyle() {
+        return {
+          'max-width': '900px',
+          width: this.$q.screen.gt.xs
+            ? this.$q.screen.gt.md
+              ? '50vw'
+              : '70vw'
+            : '90vw',
+        };
+      },
     },
     methods: {
       ...mapActions(['setUser']),
@@ -133,6 +156,11 @@
           .finally(() => {
             this.loading = false;
           });
+      },
+      register() {
+        errorDialog({
+          message: this.$t('account.noNewAccount'),
+        });
       },
       resetForm() {
         this.account = '';

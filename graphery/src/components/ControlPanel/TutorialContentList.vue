@@ -4,7 +4,7 @@
       Tutorial Contents
     </template>
     <template>
-      <q-table></q-table>
+      <q-table> </q-table>
     </template>
   </ControlPanelContentFrame>
 </template>
@@ -16,7 +16,26 @@
     },
     data() {
       return {
-        columns: [],
+        columns: [
+          {
+            name: 'title',
+            label: 'Title',
+            field: 'title',
+            align: 'center',
+            sortable: true,
+            sort: (a, b) => {
+              if (a === b) {
+                return 0;
+              }
+              return a < b ? -1 : 1;
+            },
+          },
+          {
+            name: 'authors',
+            label: 'Authors',
+            field: 'authors',
+          },
+        ],
       };
     },
   };
