@@ -2,21 +2,12 @@
   <q-header class="q-py-sm q-px-xs">
     <!--    TODO change the color in dark mode    -->
     <q-toolbar>
-      <router-link to="/" class="q-ml-sm">
-        <q-img
-          alt="Reed Logo"
-          class="shrink mr-2"
-          contain
-          transition="scale-transition"
-          width="40px"
-          :src="siteLogo"
-        >
-          <!-- Logo section on the top left corner -->
-        </q-img>
-      </router-link>
-
       <!-- TODO Make it clickable -->
-      <q-toolbar-title style="text-transform: uppercase; font-size: 20px">
+      <q-toolbar-title
+        id="site-name-section"
+        class="q-ml-lg"
+        style="text-transform: uppercase; font-size: 30px"
+      >
         {{ siteName }}
       </q-toolbar-title>
 
@@ -106,4 +97,6 @@
     text-align: center
     text-transform: uppercase
     font-weight: bold
+  #site-name-section
+    font-family: 'Amiri', serif
 </style>

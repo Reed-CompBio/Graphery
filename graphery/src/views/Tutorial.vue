@@ -306,4 +306,6 @@
     height: 12px
   .resizable-v-separator-splitter:hover
     width: 12px
+  .q-bar
+    background: rgba(0,0,0,0.07)
 </style>

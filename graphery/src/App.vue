@@ -1,7 +1,7 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <Header></Header>
-    <q-ajax-bar size="5px"></q-ajax-bar>
+    <q-ajax-bar color="grey" size="5px"></q-ajax-bar>
     <q-page-container>
       <router-view></router-view>
     </q-page-container>

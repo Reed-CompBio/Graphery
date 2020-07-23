@@ -66,7 +66,11 @@ import {
 } from 'quasar';
 
 Vue.use(Quasar, {
-  config: {},
+  config: {
+    brand: {
+      primary: '#A70E16',
+    },
+  },
   components: {
     QLayout,
     QHeader,
