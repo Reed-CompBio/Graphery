@@ -16,7 +16,7 @@
       >
         <template v-slot:top>
           <RefreshButton :fetch-func="fetchTutorialContent" class="q-mr-sm" />
-          <q-btn-dropdown flat dense icon="mdi-translate" :label="$i18n.locale">
+          <q-btn-dropdown flat dense icon="mdi-translate" :label="tableLang">
             <q-list>
               <q-item
                 v-for="lang in $i18n.availableLocales"
@@ -27,7 +27,7 @@
               >
                 <q-item-section thumbnail>
                   <q-icon
-                    v-if="$i18n.locale === lang"
+                    v-if="tableLang === lang"
                     name="keyboard_arrow_right"
                   />
                 </q-item-section>
@@ -107,6 +107,7 @@
   import loadingMixin from './LoadingMixin.vue';
   import { tutorialContentListQuery } from '../../../services/queries';
   import { errorDialog } from '../../../services/helpers';
+  import { emptyTutorialContentTag } from '../../../services/params';
 
   export default {
     mixins: [loadingMixin],
@@ -192,7 +193,7 @@
     computed: {
       requestVariable() {
         return {
-          translation: this.$i18n.locale,
+          translation: this.tableLang,
         };
       },
     },
@@ -228,7 +229,7 @@
         this.tableLang = lang;
       },
       emptyContent(title) {
-        return title === '<None>';
+        return title === emptyTutorialContentTag;
       },
     },
     mounted() {

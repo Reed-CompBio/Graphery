@@ -23,4 +23,24 @@
 <style lang="sass">
   .control-panel-h3
     margin: 0
+
+  .custom-table
+    thead tr:first-child th:first-child
+      /* bg color is important for th; just specify one */
+      background-color: #fff
+
+    td:first-child
+      background-color: #f5f5dc
+
+    th
+      font-size: 16px
+
+    th:first-child,
+    td:first-child
+      position: sticky
+      left: 0
+      z-index: 5
+
+  .half-width-card
+    width: 50%
 </style>

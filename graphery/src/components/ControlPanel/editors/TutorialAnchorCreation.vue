@@ -12,8 +12,8 @@
           <q-input
             outlined
             v-model="tutorialUrl"
-            hint="please input URL. Do not start or end it with -_."
-          ></q-input>
+            hint="Please input URL. Do not start or end it with -_."
+          />
         </InfoCard>
 
         <InfoCard class="half-width-card">
@@ -46,13 +46,15 @@
           />
         </InfoCard>
 
-        <q-btn class="half-width-card" label="Submit"></q-btn>
+        <q-btn class="half-width-card" label="Submit" />
       </div>
     </template>
   </ControlPanelContentFrame>
 </template>
 
 <script>
+  import { newContentTag } from '../../../services/params';
+
   export default {
     props: ['url'],
     components: {
@@ -70,7 +72,7 @@
     },
     computed: {
       isCreatingNewAnchor() {
-        return this.url === '-new-';
+        return this.url === newContentTag;
       },
     },
   };

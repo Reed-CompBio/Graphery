@@ -112,6 +112,13 @@ const routes: Array<RouteConfig> = [
           import('@/components/ControlPanel/lists/CategoryList.vue'),
       },
       {
+        path: 'category-editor/:id',
+        name: 'Category Editor',
+        props: true,
+        component: () =>
+          import('@/components/ControlPanel/editors/CategoryCreation.vue'),
+      },
+      {
         path: 'tutorial-anchors',
         name: 'Tutorial Anchor List',
         component: () =>
