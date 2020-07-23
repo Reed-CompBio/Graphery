@@ -51,8 +51,15 @@
             </q-td>
 
             <!-- tutorial -->
-            <q-td key="tutorial" :props="props">
-              {{ props.row.name }}
+            <q-td key="tutorialName" :props="props">
+              {{ props.row.tutorialName }}
+            </q-td>
+
+            <q-td key="tutorialUrl" :props="props">
+              <OpenInPageButton
+                :label="props.row.tutorialUrl"
+                :disabled="emptyContent(props.row.title)"
+              />
             </q-td>
 
             <!-- abstract -->
@@ -104,6 +111,7 @@
   export default {
     mixins: [loadingMixin],
     components: {
+      OpenInPageButton: () => import('../parts/OpenInPageButton.vue'),
       OpenInEditorButton: () => import('../parts/OpenInEditorButton.vue'),
       ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton.vue'),
@@ -131,9 +139,15 @@
             align: 'center',
           },
           {
-            name: 'tutorial',
-            label: 'Tutorial',
-            field: 'name',
+            name: 'tutorialName',
+            label: 'Tutorial Name',
+            field: 'tutorialName',
+            align: 'center',
+          },
+          {
+            name: 'tutorialUrl',
+            label: 'Tutorial URL',
+            field: 'tutorialUrl',
             align: 'center',
           },
           {
@@ -196,7 +210,8 @@
             }
 
             this.tableContent = data['allTutorialInfo'].map((obj) => {
-              obj.content.name = obj.name;
+              obj.content.tutorialName = obj.name;
+              obj.content.tutorialUrl = obj.url;
               return obj.content;
             });
           })
@@ -211,6 +226,9 @@
       },
       changeTableLang(lang) {
         this.tableLang = lang;
+      },
+      emptyContent(title) {
+        return title === '<None>';
       },
     },
     mounted() {

@@ -138,6 +138,7 @@ query {
 export const tutorialContentListQuery = `
 query ($translation: String, $default: String = "") {
   allTutorialInfo {
+    url
     name
     content (translation: $translation, default: $default) {
       title
