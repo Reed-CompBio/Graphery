@@ -55,9 +55,9 @@
     mixins: [loadingMixin],
     components: {
       ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../parts/RefreshButton'),
-      OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
-      OpenInPageButton: () => import('../parts/OpenInPageButton'),
+      RefreshButton: () => import('../parts/RefreshButton.vue'),
+      OpenInEditorButton: () => import('../parts/OpenInEditorButton.vue'),
+      OpenInPageButton: () => import('../parts/OpenInPageButton.vue'),
     },
     data() {
       return {

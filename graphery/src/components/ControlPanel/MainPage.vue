@@ -238,8 +238,8 @@
       };
     },
     components: {
-      ControlPanelContentFrame: () => import('./ControlPanelContentFrame'),
-      MarkdownSection: () => import('./MarkdownSection'),
+      ControlPanelContentFrame: () => import('./ControlPanelContentFrame.vue'),
+      MarkdownSection: () => import('./MarkdownSection.vue'),
     },
     computed: {
       ...mapState({
