@@ -36,7 +36,8 @@
   export default {
     props: ['id'],
     components: {
-      ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
+      ControlPanelContentFrame: () =>
+        import('../frames/ControlPanelContentFrame.vue'),
       InfoCard: () => import('../parts/InfoCard.vue'),
     },
     data() {

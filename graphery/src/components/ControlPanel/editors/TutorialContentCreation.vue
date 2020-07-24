@@ -4,10 +4,8 @@
       Edit Tutorial Content
     </template>
     <template>
-      <!-- not full height -->
-      <div class="row full-height">
-        <!-- Editor Section -->
-        <div class="col-9 full-height q-pr-sm">
+      <EditorFrame>
+        <template v-slot:left>
           <!-- title -->
           <div class="row q-mb-lg">
             <q-input
@@ -25,10 +23,9 @@
           <div class="row q-my-lg" style="height: 70vh;">
             <EditorSection class="full-width"></EditorSection>
           </div>
-        </div>
+        </template>
 
-        <!-- Meta Section -->
-        <div class="col-3 q-pl-sm">
+        <template v-slot:right>
           <!-- choose published -->
           <div id="published-chooser" class="q-mb-md">
             <InfoCard>
@@ -92,8 +89,8 @@
             <q-btn label="Submit" class="full-width"></q-btn>
             <!-- TODO align two sections -->
           </div>
-        </div>
-      </div>
+        </template>
+      </EditorFrame>
     </template>
   </ControlPageContentFrame>
 </template>
@@ -104,8 +101,10 @@
     mixins: [loadingMixin],
     props: ['url'],
     components: {
+      ControlPageContentFrame: () =>
+        import('../frames/ControlPanelContentFrame.vue'),
+      EditorFrame: () => import('../frames/EditorFrame.vue'),
       EditorSection: () => import('../parts/EditorSection.vue'),
-      ControlPageContentFrame: () => import('../ControlPanelContentFrame.vue'),
       InfoCard: () => import('../parts/InfoCard.vue'),
     },
     data() {

@@ -99,7 +99,8 @@
       LangSelector: () => import('../parts/LangSelector.vue'),
       OpenInPageButton: () => import('../parts/OpenInPageButton.vue'),
       OpenInEditorButton: () => import('../parts/OpenInEditorButton.vue'),
-      ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
+      ControlPanelContentFrame: () =>
+        import('../frames/ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton.vue'),
     },
     data() {

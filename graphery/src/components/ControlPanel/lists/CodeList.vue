@@ -30,7 +30,7 @@
                 type="textarea"
                 v-model="props.row.code"
               />
-              <OpenInEditorButton label="Edit" />
+              <OpenInEditorButton label="Edit" class="q-mt-sm" />
             </q-td>
 
             <q-td key="tutorialUrl" :props="props">
@@ -56,7 +56,8 @@
   export default {
     mixins: [loadingMixin],
     components: {
-      ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
+      ControlPanelContentFrame: () =>
+        import('../frames/ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton'),
       OpenInPageButton: () => import('../parts/OpenInPageButton'),
       OpenInEditorButton: () => import('../parts/OpenInEditorButton'),

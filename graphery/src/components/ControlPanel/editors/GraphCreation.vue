@@ -117,7 +117,8 @@
   export default {
     props: ['url'],
     components: {
-      ControlPanelContentFrame: () => import('../ControlPanelContentFrame'),
+      ControlPanelContentFrame: () =>
+        import('../frames/ControlPanelContentFrame'),
       InfoCard: () => import('../parts/InfoCard.vue'),
     },
     data() {

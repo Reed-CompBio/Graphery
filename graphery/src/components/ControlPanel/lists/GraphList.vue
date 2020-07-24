@@ -87,7 +87,8 @@
   export default {
     mixins: [loadingMixin],
     components: {
-      ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
+      ControlPanelContentFrame: () =>
+        import('../frames/ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton'),
       OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
       OpenInPageButton: () => import('../parts/OpenInPageButton'),

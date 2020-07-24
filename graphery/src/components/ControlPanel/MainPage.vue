@@ -238,7 +238,8 @@
       };
     },
     components: {
-      ControlPanelContentFrame: () => import('./ControlPanelContentFrame.vue'),
+      ControlPanelContentFrame: () =>
+        import('./frames/ControlPanelContentFrame.vue'),
       MarkdownSection: () => import('./MarkdownSection.vue'),
     },
     computed: {

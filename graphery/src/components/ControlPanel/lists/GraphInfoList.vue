@@ -63,7 +63,8 @@
     components: {
       OpenInPageButton: () => import('../parts/OpenInPageButton'),
       OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
-      ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
+      ControlPanelContentFrame: () =>
+        import('../frames/ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton.vue'),
       LangSelector: () => import('../parts/LangSelector.vue'),
     },
