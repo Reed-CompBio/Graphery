@@ -9,9 +9,9 @@ from graphql import ResolveInfo
 from .decorators import login_required
 from ..model.filters import show_published_only
 from ..model.translation_collection import translation_tables
-from ..models import Category, Tutorial, Graph
+from ..models import Category, Tutorial, Graph, ExecResultJson
 
-from .types import UserType, CategoryType, TutorialType, GraphType
+from .types import UserType, CategoryType, TutorialType, GraphType, Code, ExecResultJsonType, CodeType
 
 
 class Query(graphene.ObjectType):
@@ -21,6 +21,8 @@ class Query(graphene.ObjectType):
     all_categories = DjangoListField(CategoryType)
     all_tutorial_info = DjangoListField(TutorialType)
     all_graph_info = DjangoListField(GraphType)
+    all_code = DjangoListField(CodeType)
+    all_exec_result = DjangoListField(ExecResultJsonType)
     all_supported_lang = graphene.List(graphene.String)
     tutorial_count = graphene.Int()
 
@@ -52,6 +54,14 @@ class Query(graphene.ObjectType):
 
     def resolve_all_graph_info(self, info: ResolveInfo):
         return Graph.objects.all()
+
+    @login_required
+    def resolve_all_code(self, info: ResolveInfo):
+        return Code.objects.all()
+
+    @login_required
+    def resolve_all_exec_result(self, info: ResolveInfo):
+        return ExecResultJson.objects.all()
 
     def resolve_all_supported_lang(self, info: ResolveInfo):
         return translation_tables

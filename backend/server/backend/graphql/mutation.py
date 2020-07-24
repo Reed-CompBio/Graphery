@@ -32,6 +32,11 @@ class Logout(graphene.Mutation):
             raise GraphQLError('Not Logged In')
 
 
+class UpdateCategory(graphene.Mutation):
+    def mutate(self, info):
+        pass
+
+
 class Mutation(graphene.ObjectType):
     login = Login.Field()
     logout = Logout.Field()
