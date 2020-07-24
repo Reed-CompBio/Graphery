@@ -19,15 +19,8 @@
         </template>
         <template v-slot:body="props">
           <q-tr :props="props">
-            <q-td key="edit" :props="props">
-              <OpenInEditorButton label="Edit" />
-            </q-td>
             <q-td key="tutorialName" :props="props">
               {{ props.row.tutorialName }}
-            </q-td>
-
-            <q-td key="graphName" :props="props">
-              {{ props.row.graphName }}
             </q-td>
 
             <q-td key="code" :props="props">
@@ -37,23 +30,15 @@
                 type="textarea"
                 v-model="props.row.code"
               />
-            </q-td>
-
-            <q-td key="json" :props="props">
-              <q-input
-                outlined
-                readonly
-                type="textarea"
-                v-model="props.row.json"
-              />
+              <OpenInEditorButton label="Edit" />
             </q-td>
 
             <q-td key="tutorialUrl" :props="props">
               <OpenInPageButton :label="props.row.tutorialUrl" />
             </q-td>
 
-            <q-td key="graphUrl" :props="props">
-              <OpenInPageButton :label="props.row.graphUrl" />
+            <q-td key="id" :props="props">
+              {{ props.row.id }}
             </q-td>
           </q-tr>
         </template>
@@ -64,6 +49,9 @@
 
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
+  import { apiCaller } from '../../../services/apis';
+  import { codeListQuery } from '../../../services/queries';
+  import { errorDialog } from '../../../services/helpers';
 
   export default {
     mixins: [loadingMixin],
@@ -76,24 +64,10 @@
     data() {
       return {
         columns: [
-          { name: 'edit', label: 'Edit' },
           {
             name: 'tutorialName',
             label: 'Tutorial Name',
             field: 'tutorialName',
-            align: 'center',
-            sortable: true,
-            sort: (a, b) => {
-              if (a === b) {
-                return 0;
-              }
-              return a < b ? -1 : 1;
-            },
-          },
-          {
-            name: 'graphName',
-            label: 'Graph Name',
-            field: 'graphName',
             align: 'center',
             sortable: true,
             sort: (a, b) => {
@@ -110,21 +84,9 @@
             align: 'center',
           },
           {
-            name: 'json',
-            label: 'JSON',
-            field: 'json',
-            align: 'center',
-          },
-          {
             name: 'tutorialUrl',
             label: 'Tutorial URL',
             field: 'tutorialUrl',
-            align: 'center',
-          },
-          {
-            name: 'graphUrl',
-            label: 'Graph URL',
-            field: 'graphUrl',
             align: 'center',
           },
           {
@@ -144,8 +106,39 @@
     },
     methods: {
       fetchCode() {
-        // TODO
+        this.startLoading();
+
+        apiCaller(codeListQuery)
+          .then(([data, errors]) => {
+            if (errors) {
+              throw Error(errors);
+            }
+
+            if (!data || !('allCode' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            this.tableContent = data['allCode'].map((obj) => {
+              return {
+                tutorialName: obj.tutorial.name,
+                tutorialUrl: obj.tutorial.url,
+                code: obj.code,
+                id: obj.id,
+              };
+            });
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during fetching code. ${err}`,
+            });
+          })
+          .finally(() => {
+            this.finishedLoading();
+          });
       },
+    },
+    mounted() {
+      this.fetchCode();
     },
   };
 </script>

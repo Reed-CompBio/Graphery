@@ -166,3 +166,14 @@ query ($translation: String, $default: String = "") {
     }
   }
 }`;
+
+export const codeListQuery = `query {
+  allCode {
+    tutorial {
+      name
+      url
+    }
+    code
+    id
+  }
+}`;
