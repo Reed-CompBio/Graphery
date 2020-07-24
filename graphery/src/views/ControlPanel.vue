@@ -21,36 +21,31 @@
               </q-item>
             </q-card-section>
           </q-card>
-          <q-item clickable :to="{ name: 'Control Panel' }">
-            <q-card-section>
-              Main
-            </q-card-section>
-          </q-item>
-          <q-item clickable :to="{ name: 'Category List' }">
-            <q-card-section>
-              Categories
-            </q-card-section>
-          </q-item>
-          <q-item clickable :to="{ name: 'Tutorial Anchor List' }">
-            <q-card-section>
-              Tutorial Anchors
-            </q-card-section>
-          </q-item>
-          <q-item clickable :to="{ name: 'Tutorial Content List' }">
-            <q-card-section>
-              Tutorial Content
-            </q-card-section>
-          </q-item>
-          <q-item clickable :to="{ name: 'Graph List' }">
-            <q-card-section>
-              Graphs
-            </q-card-section>
-          </q-item>
-          <q-item clickable :to="{ name: 'Graph Info List' }">
-            <q-card-section>
-              Graph Info
-            </q-card-section>
-          </q-item>
+          <DrawerListItem
+            :destination="{ name: 'Control Panel' }"
+            title="Main"
+          />
+          <DrawerListItem
+            :destination="{ name: 'Category List' }"
+            title="Categories"
+          />
+          <DrawerListItem
+            :destination="{ name: 'Tutorial Anchor List' }"
+            title="Tutorial Anchors"
+          />
+          <DrawerListItem
+            :destination="{ name: 'Tutorial Content List' }"
+            title="Tutorial Content"
+          />
+          <DrawerListItem
+            :destination="{ name: 'Graph List' }"
+            title="Graphs"
+          />
+          <DrawerListItem
+            :destination="{ name: 'Graph Info List' }"
+            title="Graph Info"
+          />
+          <DrawerListItem :destination="{ name: 'Code List' }" title="Code" />
         </q-list>
       </q-drawer>
 
@@ -68,6 +63,10 @@
 
 <script>
   export default {
+    components: {
+      DrawerListItem: () =>
+        import('@/components/ControlPanel/parts/DrawerListItem.vue'),
+    },
     data() {
       return {
         showDrawer: true,

@@ -102,7 +102,6 @@
           sortBy: 'name',
           rowsPerPage: 20,
         },
-        loadingTutorials: false,
         tableContent: [],
         // TODO add trans to no data label
       };
