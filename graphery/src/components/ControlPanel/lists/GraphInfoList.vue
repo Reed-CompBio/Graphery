@@ -46,6 +46,7 @@
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import tableLangMixin from '../mixins/TableLangMixin.vue';
   import OpenInEditorButton from '../parts/OpenInEditorButton';
+  import { apiCaller } from '../../../services/apis';
 
   export default {
     mixins: [loadingMixin, tableLangMixin],
@@ -120,7 +121,8 @@
     },
     methods: {
       fetchGraphInfo() {
-        console.log('load');
+        this.startLoading();
+        apiCaller();
       },
     },
   };

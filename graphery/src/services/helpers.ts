@@ -9,7 +9,7 @@ export function successDialog(info: { message: string }) {
   Notify.create({
     ...info,
     type: 'positive',
-    timeout: 5000,
+    timeout: 1000,
     actions: [
       {
         label: 'Close',
@@ -27,7 +27,7 @@ export function errorDialog(info: { message: string }) {
     icon: 'report',
     multiLine: true,
     group: false,
-    timeout: 5000,
+    timeout: 10000,
     actions: [
       {
         label: 'Contact Dev',

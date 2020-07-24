@@ -1,7 +1,7 @@
 <template>
   <ControlPanelContentFrame>
     <template v-slot:title>
-      Tutorial Contents
+      Tutorial Content
     </template>
     <template>
       <q-table
