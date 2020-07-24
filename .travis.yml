@@ -1,6 +1,6 @@
 language: python
 
-nodoe_js:
+node_js:
   - node
 
 cache:
@@ -10,8 +10,8 @@ cache:
 python:
   - "3.8"
 
-addons:
-  postgresql: "12.3"
+services:
+  - postgresql
 
 env:
   - PIPENV_IGNORE_VIRTUALENVS=1
