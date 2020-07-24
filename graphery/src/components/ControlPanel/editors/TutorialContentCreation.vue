@@ -7,14 +7,14 @@
       <!-- not full height -->
       <div class="row full-height">
         <!-- Editor Section -->
-        <div class="col-10 full-height q-pr-sm">
+        <div class="col-9 full-height q-pr-sm">
           <!-- title -->
           <div class="row q-mb-lg">
             <q-input
               v-model="title"
-              :hint="`URL: ${url}`"
+              :hint="`Tutorial URL: ${url}`"
               outlined
-              style="width: 100%"
+              class="full-width"
             >
               <template v-slot:prepend>
                 <q-icon name="title" />
@@ -23,12 +23,12 @@
           </div>
           <!-- editor -->
           <div class="row q-my-lg" style="height: 70vh;">
-            <EditorSection style="width: 100%; "></EditorSection>
+            <EditorSection class="full-width"></EditorSection>
           </div>
         </div>
 
         <!-- Meta Section -->
-        <div class="col-2 q-pl-sm">
+        <div class="col-3 q-pl-sm">
           <!-- choose published -->
           <div id="published-chooser" class="q-mb-md">
             <InfoCard>
@@ -89,7 +89,7 @@
           <!-- submit section -->
           <div id="submit-section">
             <!-- TODO button action -->
-            <q-btn label="Submit" style="width: 100%;"></q-btn>
+            <q-btn label="Submit" class="full-width"></q-btn>
             <!-- TODO align two sections -->
           </div>
         </div>
@@ -99,16 +99,17 @@
 </template>
 
 <script>
+  import loadingMixin from '../mixins/LoadingMixin.vue';
   export default {
+    mixins: [loadingMixin],
     props: ['url'],
     components: {
-      EditorSection: () => import('./EditorSection.vue'),
+      EditorSection: () => import('../parts/EditorSection.vue'),
       ControlPageContentFrame: () => import('../ControlPanelContentFrame.vue'),
       InfoCard: () => import('../parts/InfoCard.vue'),
     },
     data() {
       return {
-        loading: false,
         title: '',
         isPublished: false,
         authorChoice: [],
@@ -117,7 +118,7 @@
         langOptions: [
           {
             label: 'en-us',
-            value: 'enus',
+            value: 'en-us',
           },
           {
             label: 'zh-cn',

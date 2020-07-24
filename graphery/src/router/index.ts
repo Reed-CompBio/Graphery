@@ -167,6 +167,13 @@ const routes: Array<RouteConfig> = [
         component: () =>
           import('@/components/ControlPanel/lists/GraphInfoList.vue'),
       },
+      {
+        path: 'graph-info-editor/:url',
+        name: 'Graph Info Editor',
+        props: true,
+        component: () =>
+          import('@/components/ControlPanel/editors/GraphInfoCreation.vue'),
+      },
     ],
     async beforeEnter(to, from, next) {
       if (store.state['user'] === null) {
