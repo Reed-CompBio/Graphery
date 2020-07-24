@@ -23,6 +23,10 @@
               <OpenInEditorButton :label="props.row.category" />
             </q-td>
 
+            <q-td key="isPublished" :props="props">
+              {{ props.row.isPublished ? '✅' : '❌' }}
+            </q-td>
+
             <q-td key="id" :props="props">
               {{ props.row.id }}
             </q-td>
@@ -37,7 +41,7 @@
   import { apiCaller } from '../../../services/apis';
   import { categoryListQuery } from '../../../services/queries';
   import { errorDialog } from '../../../services/helpers';
-  import loadingMixin from './LoadingMixin.vue';
+  import loadingMixin from '../mixins/LoadingMixin.vue';
 
   export default {
     mixins: [loadingMixin],
@@ -61,6 +65,12 @@
               }
               return a < b ? -1 : 1;
             },
+          },
+          {
+            name: 'isPublished',
+            label: 'Published?',
+            field: 'isPublished',
+            align: 'center',
           },
           {
             name: 'id',

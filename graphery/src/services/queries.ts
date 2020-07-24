@@ -131,6 +131,7 @@ export const categoryListQuery = `
 query {
   allCategories {
     category
+    isPublished
     id
   }
 }`;

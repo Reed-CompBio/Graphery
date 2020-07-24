@@ -49,7 +49,7 @@
   import { apiCaller } from '../../../services/apis';
   import { tutorialAnchorListQuery } from '../../../services/queries';
   import { errorDialog } from '../../../services/helpers';
-  import loadingMixin from './LoadingMixin.vue';
+  import loadingMixin from '../mixins/LoadingMixin.vue';
 
   export default {
     mixins: [loadingMixin],

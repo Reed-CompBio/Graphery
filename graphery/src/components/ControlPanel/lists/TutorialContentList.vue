@@ -16,27 +16,10 @@
       >
         <template v-slot:top>
           <RefreshButton :fetch-func="fetchTutorialContent" class="q-mr-sm" />
-          <q-btn-dropdown flat dense icon="mdi-translate" :label="tableLang">
-            <q-list>
-              <q-item
-                v-for="lang in $i18n.availableLocales"
-                :key="lang"
-                clickable
-                v-close-popup
-                @click="changeTableLang(lang)"
-              >
-                <q-item-section thumbnail>
-                  <q-icon
-                    v-if="tableLang === lang"
-                    name="keyboard_arrow_right"
-                  />
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label class="lang-label">{{ lang }}</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-btn-dropdown>
+          <LangSelector
+            :current-lang="tableLang"
+            :change-callback="changeTableLang"
+          />
         </template>
         <template v-slot:body="props">
           <q-tr :props="props">
@@ -104,14 +87,16 @@
 
 <script>
   import { apiCaller } from '../../../services/apis';
-  import loadingMixin from './LoadingMixin.vue';
   import { tutorialContentListQuery } from '../../../services/queries';
   import { errorDialog } from '../../../services/helpers';
   import { emptyTutorialContentTag } from '../../../services/params';
+  import loadingMixin from '../mixins/LoadingMixin.vue';
+  import tableLangMixin from '../mixins/TableLangMixin.vue';
 
   export default {
-    mixins: [loadingMixin],
+    mixins: [loadingMixin, tableLangMixin],
     components: {
+      LangSelector: () => import('../parts/LangSelector.vue'),
       OpenInPageButton: () => import('../parts/OpenInPageButton.vue'),
       OpenInEditorButton: () => import('../parts/OpenInEditorButton.vue'),
       ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
@@ -180,6 +165,7 @@
             label: 'ID',
             field: 'id',
             align: 'center',
+            required: true,
           },
         ],
         tableContent: [],
@@ -187,7 +173,6 @@
           sortBy: 'title',
           rowsPerPage: 10,
         },
-        tableLang: this.$i18n.locale,
       };
     },
     computed: {
@@ -224,9 +209,6 @@
           .finally(() => {
             this.finishedLoading();
           });
-      },
-      changeTableLang(lang) {
-        this.tableLang = lang;
       },
       emptyContent(title) {
         return title === emptyTutorialContentTag;
