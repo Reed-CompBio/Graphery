@@ -179,6 +179,12 @@ const routes: Array<RouteConfig> = [
         name: 'Code List',
         component: () => import('@/components/ControlPanel/lists/CodeList.vue'),
       },
+      {
+        path: 'code-editor/:id',
+        name: 'Code Editor',
+        component: () =>
+          import('@/components/ControlPanel/editors/CodeCreation.vue'),
+      },
     ],
     async beforeEnter(to, from, next) {
       if (store.state['user'] === null) {
