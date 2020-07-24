@@ -109,6 +109,7 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
 
 
 class GraphContentInterface(graphene.Interface):
+    id = graphene.UUID()
     title = graphene.String()
     abstract = graphene.String()
     is_published = graphene.Boolean()

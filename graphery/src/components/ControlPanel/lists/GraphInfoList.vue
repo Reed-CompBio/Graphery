@@ -3,7 +3,16 @@
     <template v-slot:title>
       Graph Info
     </template>
-    <q-table :data="tableContent" :columns="columns">
+    <q-table
+      :data="tableContent"
+      :columns="columns"
+      :pagination="pagination"
+      :loading="loadingTable"
+      no-data-label="No graph info is found."
+      row-key="id"
+      separator="cell"
+      class="custom-table"
+    >
       <template v-slot:top>
         <RefreshButton :fetch-func="fetchGraphInfo" class="q-mr-sm" />
         <LangSelector
@@ -25,12 +34,12 @@
             <q-input v-model="props.row.abstract" type="textarea" readonly />
           </q-td>
 
-          <q-td key="tutorialName" :props="props">
-            {{ props.row.tutorialName }}
+          <q-td key="graphName" :props="props">
+            {{ props.row.graphName }}
           </q-td>
 
           <q-td key="graphUrl" :props="props">
-            {{ props.row.graphUrl }}
+            <OpenInPageButton :label="props.row.graphUrl" />
           </q-td>
 
           <q-td key="id" :props="props">
@@ -45,13 +54,15 @@
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import tableLangMixin from '../mixins/TableLangMixin.vue';
-  import OpenInEditorButton from '../parts/OpenInEditorButton';
   import { apiCaller } from '../../../services/apis';
+  import { graphInfoListQuery } from '../../../services/queries';
+  import { errorDialog } from '../../../services/helpers';
 
   export default {
     mixins: [loadingMixin, tableLangMixin],
     components: {
-      OpenInEditorButton,
+      OpenInPageButton: () => import('../parts/OpenInPageButton'),
+      OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
       ControlPanelContentFrame: () => import('../ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton.vue'),
       LangSelector: () => import('../parts/LangSelector.vue'),
@@ -122,7 +133,38 @@
     methods: {
       fetchGraphInfo() {
         this.startLoading();
-        apiCaller();
+        apiCaller(graphInfoListQuery, this.requestVariable)
+          .then(([data, errors]) => {
+            if (errors) {
+              throw Error(errors);
+            }
+
+            if (!data || !('allGraphInfo' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            this.tableContent = data['allGraphInfo'].map((obj) => {
+              obj.content.graphName = obj.name;
+              obj.content.graphUrl = obj.url;
+              return obj.content;
+            });
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during fetching graph info. ${err}`,
+            });
+          })
+          .finally(() => {
+            this.finishedLoading();
+          });
+      },
+    },
+    mounted() {
+      this.fetchGraphInfo();
+    },
+    watch: {
+      tableLang: function() {
+        this.fetchGraphInfo();
       },
     },
   };

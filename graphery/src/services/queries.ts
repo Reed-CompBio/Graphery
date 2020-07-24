@@ -152,3 +152,17 @@ query ($translation: String, $default: String = "") {
     }
   }
 }`;
+
+export const graphInfoListQuery = `
+query ($translation: String, $default: String = "") {
+  allGraphInfo {
+    name 
+    url
+    content (translation: $translation, default:$default) {
+      title
+      isPublished
+      abstract
+      id
+    }
+  }
+}`;

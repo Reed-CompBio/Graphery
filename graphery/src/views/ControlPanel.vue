@@ -46,6 +46,11 @@
               Graphs
             </q-card-section>
           </q-item>
+          <q-item clickable :to="{ name: 'Graph Info List' }">
+            <q-card-section>
+              Graph Info
+            </q-card-section>
+          </q-item>
         </q-list>
       </q-drawer>
 

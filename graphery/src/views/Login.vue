@@ -141,14 +141,17 @@
               throw Error(errors);
             }
 
-            if (data) {
+            if (data.login.success) {
               // TODO change this
               this.setUser(data['login']['user']);
               successDialog({ message: 'Successfully Logged In!' });
+              this.$store.commit('SET_CSRF_TOKEN', null);
               this.resetForm();
+            } else {
+              throw Error(
+                'Login Failed. Please check your username and password.'
+              );
             }
-
-            this.$store.commit('SET_CSRF_TOKEN', null);
           })
           .catch((err) => {
             errorDialog({

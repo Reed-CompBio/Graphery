@@ -161,6 +161,12 @@ const routes: Array<RouteConfig> = [
         component: () =>
           import('@/components/ControlPanel/editors/GraphCreation.vue'),
       },
+      {
+        path: 'graph-info',
+        name: 'Graph Info List',
+        component: () =>
+          import('@/components/ControlPanel/lists/GraphInfoList.vue'),
+      },
     ],
     async beforeEnter(to, from, next) {
       if (store.state['user'] === null) {
