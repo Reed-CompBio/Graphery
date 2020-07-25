@@ -28,9 +28,11 @@
                 />
               </div>
               <div>
-                <q-btn label="Add Graph" />
-                <q-btn label="Exec" />
-                <q-btn label="Exec All" />
+                <q-btn label="Add Graph" :loading="resultLoading" />
+                <q-btn label="Exec" :loading="resultLoading" />
+                <q-btn label="Exec Locally" :loading="resultLoading" />
+                <q-btn label="Exec All" :loading="resultLoading" />
+                <q-btn label="Exec All Locally" :loading="resultLoading" />
               </div>
             </template>
             <div>
@@ -41,6 +43,9 @@
                 type="textarea"
                 outlined
               />
+              <q-inner-loading :showing="resultLoading">
+                <q-spinner-pie size="48px" color="primary" />
+              </q-inner-loading>
             </div>
           </InfoCard>
         </template>
@@ -95,6 +100,9 @@
       ...mapState('settings', ['dark', 'fontSize']),
       resultJson() {
         return '';
+      },
+      resultLoading() {
+        return false;
       },
     },
     mounted() {
