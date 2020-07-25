@@ -3,11 +3,7 @@
     <!--    TODO change the color in dark mode    -->
     <q-toolbar>
       <!-- TODO Make it clickable -->
-      <q-toolbar-title
-        id="site-name-section"
-        class="q-ml-lg"
-        style="text-transform: uppercase; font-size: 30px"
-      >
+      <q-toolbar-title id="site-name-section" class="q-ml-lg">
         {{ siteName }}
       </q-toolbar-title>
 
@@ -27,27 +23,10 @@
         </q-btn>
       </div>
       <div id="language-switcher">
-        <q-btn-dropdown flat dense icon="mdi-translate">
-          <q-list>
-            <q-item
-              v-for="lang in $i18n.availableLocales"
-              :key="lang"
-              clickable
-              v-close-popup
-              @click="changeLocal(lang)"
-            >
-              <q-item-section thumbnail>
-                <q-icon
-                  v-if="$i18n.locale === lang"
-                  name="keyboard_arrow_right"
-                />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label class="lang-label">{{ lang }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-btn-dropdown>
+        <LangSelector
+          :change-callback="changeLocal"
+          :current-lang="$i18n.locale"
+        />
       </div>
       <q-btn flat round dense v-if="$q.screen.lt.md" size="20px">
         <q-icon name="mdi-menu" @click="showDrawer" />
@@ -59,9 +38,11 @@
 <script>
   import { siteName, navigationButtons } from '../../store/states/meta';
   import { mapState } from 'vuex';
+  import LangSelector from '../ControlPanel/parts/LangSelector';
 
   export default {
     name: 'Header',
+    components: { LangSelector },
     data() {
       return {
         siteName,
@@ -92,10 +73,9 @@
 </script>
 
 <style lang="sass">
-  .lang-label
-    text-align: center
-    text-transform: uppercase
-    font-weight: bold
   #site-name-section
     font-family: 'Amiri', serif
+    text-transform: uppercase
+    font-size: 28px
+    padding-top: 5px
 </style>

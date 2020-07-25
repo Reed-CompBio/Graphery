@@ -1,5 +1,10 @@
 <template>
-  <q-btn-dropdown flat dense icon="mdi-translate" :label="currentLang">
+  <q-btn-dropdown
+    flat
+    dense
+    icon="mdi-translate"
+    :label="showHeader ? currentLang : null"
+  >
     <q-list>
       <q-item
         v-for="lang in $i18n.availableLocales"
@@ -21,6 +26,13 @@
 
 <script>
   export default {
-    props: ['currentLang', 'changeCallback'],
+    props: ['currentLang', 'changeCallback', 'showHeader'],
   };
 </script>
+
+<style lang="sass">
+  .lang-label
+    text-align: center
+    text-transform: uppercase
+    font-weight: bold
+</style>

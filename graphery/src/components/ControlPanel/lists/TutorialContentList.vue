@@ -19,6 +19,7 @@
           <LangSelector
             :current-lang="tableLang"
             :change-callback="changeTableLang"
+            :show-header="true"
           />
         </template>
         <template v-slot:body="props">
