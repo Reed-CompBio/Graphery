@@ -47,7 +47,7 @@
           <div class="q-mb-sm" v-html="abstract"></div>
         </section>
         <q-card-actions>
-          <q-btn flat :to="`${url}`" :disable="noContentNoClick">
+          <q-btn flat :to="url" :disable="noContentNoClick">
             {{ moreButtonText }}
           </q-btn>
         </q-card-actions>

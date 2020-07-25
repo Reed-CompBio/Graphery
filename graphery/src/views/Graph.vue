@@ -20,7 +20,73 @@
         />
       </template>
       <template v-slot:after>
-        <Editor class="full-height"></Editor>
+        <div>
+          <q-bar class="graph-menu-bar">
+            <div class="graph-menu-wrapper">
+              <q-select
+                class="graph-selector"
+                :options="getCodeList"
+                v-model="graphChoice"
+                label="Graph"
+                :multiple="false"
+                dropdown-icon="mdi-menu-down"
+                :loading="graphsEmpty"
+              >
+                <template v-slot:no-option>
+                  <q-item>
+                    <q-item-section class="text-grey">
+                      No results
+                    </q-item-section>
+                  </q-item>
+                </template>
+                <template v-slot:prepend>
+                  <q-icon name="mdi-graphql"></q-icon>
+                </template>
+              </q-select>
+            </div>
+            <div class="menu-button-group-wrapper">
+              <q-btn-group rounded class="menu-button-group q-mx-auto">
+                <q-btn-dropdown>
+                  <template v-slot:label>
+                    <q-icon name="mdi-share-variant" />
+                    <SwitchTooltip :text="$t('tooltips.Share')"></SwitchTooltip>
+                  </template>
+                  <q-list>
+                    <!-- share graph json -->
+                    <q-item clickable v-close-popup @click="shareGraphJson">
+                      <q-item-section avatar>
+                        <q-avatar icon="mdi-code-json" />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>Share Json</q-item-label>
+                        <q-item-label caption>
+                          Copy the json of this graph
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                    <!-- share graph screen shot -->
+                    <q-item
+                      clickable
+                      v-close-popup
+                      @click="shareGraphScreenshot"
+                    >
+                      <q-item-section avatar>
+                        <q-avatar icon="photo" />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>Share Screenshot</q-item-label>
+                        <q-item-label caption>
+                          Copy the screenshot of this graph
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-btn-dropdown>
+              </q-btn-group>
+            </div>
+          </q-bar>
+          <EditorWrapper style="max-height: calc(100% - 56px);"></EditorWrapper>
+        </div>
       </template>
     </q-splitter>
   </div>
@@ -31,11 +97,11 @@
   import { headerSize } from '../store/states/meta';
 
   export default {
-    props: ['name'],
+    props: ['url'],
     components: {
+      EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
       CytoscapeWrapper: () =>
         import('@/components/tutorial/CytoscapeWrapper.vue'),
-      Editor: () => import('@/components/tutorial/Editor.vue'),
     },
     computed: {
       ...mapState('settings', ['graphSplitPos']),

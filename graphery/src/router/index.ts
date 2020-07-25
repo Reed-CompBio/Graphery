@@ -43,7 +43,7 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "graphs" */ '@/views/Graphs.vue'),
   },
   {
-    path: '/graph/:name',
+    path: '/graph/:url',
     name: 'Graph',
     props: true,
     component: () =>
