@@ -10,6 +10,7 @@
           :multiple="false"
           dropdown-icon="mdi-menu-down"
           :loading="graphsEmpty"
+          emit-value
         >
           <template v-slot:no-option>
             <q-item>

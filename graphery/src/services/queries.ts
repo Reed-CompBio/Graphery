@@ -55,6 +55,7 @@ query ($url: String, $translation: String, $default: String = "en-us") {
       cyjs
     }
     code {
+      id
       code
       execresultjsonSet {
         json
@@ -62,6 +63,28 @@ query ($url: String, $translation: String, $default: String = "en-us") {
           id
         }
       }
+    }
+  }
+}`;
+
+export const pullGraphAndCodeQuery = `
+query ($url: String, $translation: String, $default: String = "en-us") {
+  graph(url: $url) {
+    id
+    cyjs
+    isPublished
+    priority
+    content(translation: $translation, default: $default){
+      title 
+      abstract
+      isPublished
+    }
+    execresultjsonSet {
+      code {
+        id 
+        code
+      }
+      json
     }
   }
 }`;

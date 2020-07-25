@@ -41,6 +41,7 @@ export interface Graph {
 export interface ResultJsonType {
   json: string;
   graphId: string;
+  codeId: string;
 }
 
 export interface TutorialMetaState {
@@ -62,6 +63,7 @@ export interface TutorialState {
   articleContent: TutorialArticleContent | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
   currentGraphId: string | null;
+  currentCodeId: string | null;
   graphs: Graph[] | null;
   codes: string | null;
   resultJsonList: ResultJsonType[] | null;
@@ -95,6 +97,7 @@ export interface TutorialExecResultJson {
 }
 
 export interface TutorialCode {
+  id: string;
   code: string;
   execresultjsonSet: TutorialExecResultJson[];
 }

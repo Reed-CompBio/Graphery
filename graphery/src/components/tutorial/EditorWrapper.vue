@@ -2,7 +2,7 @@
   <div id="editor-container">
     <q-bar>
       <q-icon name="mdi-function" />
-      <div style="text-transform: uppercase;">{{ routerViewName }}</div>
+      <div style="text-transform: uppercase;">Editor</div>
       <q-space />
       <q-slider
         id="stepper-slider"
@@ -178,18 +178,19 @@
   import { saveTextToClipboard } from '../../services/helpers.ts';
   import { localServerCaller } from '../../services/apis';
   import { errorDialog, successDialog } from '../../services/helpers';
+  import Editor from '@/components/tutorial/Editor.vue';
 
   export default {
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
-      Editor: () => import('@/components/tutorial/Editor.vue'),
+      Editor,
       VariableList: () => import('@/components/tutorial/VariableList.vue'),
+      // TODO decouple the workspace controller
       // TutorialWorkSpaceController: () =>
       //   import('@/components/tutorial/TutorialWorkSpaceController.vue'),
     },
     data() {
       return {
-        routerViewName: 'editor',
         isPlaying: false,
         showLabelAlways: true,
         sliderPos: 1,
@@ -233,9 +234,6 @@
     },
     methods: {
       ...mapActions('tutorials', ['loadVariableObj', 'loadCustomJson']),
-      switchTabView(tabName) {
-        this.routerViewName = tabName;
-      },
       showLabelAlwaysSwitch() {
         this.showLabelAlways = !this.showLabelAlways;
       },
