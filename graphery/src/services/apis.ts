@@ -4,7 +4,12 @@ import vuex from '../store/index';
 
 import { Dialog } from 'quasar';
 
-axios.interceptors.response.use(
+export const apiClient: AxiosInstance = axios.create({
+  withCredentials: true,
+  baseURL: BASE_URL,
+});
+
+apiClient.interceptors.response.use(
   (resp) => resp,
   (resp) => {
     if (resp.response.status == 502) {
@@ -23,11 +28,6 @@ axios.interceptors.response.use(
     }
   }
 );
-
-export const apiClient: AxiosInstance = axios.create({
-  withCredentials: true,
-  baseURL: BASE_URL,
-});
 
 // export function getCookie(name: string) {
 //   let cookieValue = null;
