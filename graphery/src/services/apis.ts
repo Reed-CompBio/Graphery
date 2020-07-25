@@ -12,11 +12,14 @@ export const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.response.use(
   (resp) => resp,
   (resp) => {
-    if (resp.response.status == 502) {
+    if (resp.response.status >= 500) {
       Dialog.create({
         title: 'Maintenance',
         message:
-          'We are currently under maintenance. Please come pack later. We are so sorry for the inconvenience!',
+          '<p>We are currently under maintenance. </p>' +
+          '<p>Please come back later and refresh this page. </p>' +
+          '<p>We are so sorry for the inconvenience! </p>',
+        html: true,
         persistent: true,
         ok: false,
         cancel: false,
@@ -25,6 +28,8 @@ apiClient.interceptors.response.use(
         noRouteDismiss: true,
         seamless: false,
       });
+
+      return Promise.reject(resp);
     }
   }
 );

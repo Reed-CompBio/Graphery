@@ -6,13 +6,14 @@
       <router-view></router-view>
     </q-page-container>
     <Footer v-if="showFooter"></Footer>
-    <NavigationDrawer></NavigationDrawer>
+    <NavigationDrawer v-if="$q.screen.lt.md"></NavigationDrawer>
     <Notification></Notification>
   </q-layout>
 </template>
 
 <script lang="ts">
   import Vue from 'vue';
+  import { apiClient } from '@/services/apis';
 
   const showFooterRe = /^(\/tutorial\/|\/graph\/|\/control-panel)/;
 
@@ -50,6 +51,15 @@
       // Load language
       // TODO add a preferred language
       this.$i18n.locale = this.$store.state.settings.language;
+
+      apiClient
+        .get('/csrf')
+        .then((re) => {
+          this.$store.commit('SET_CSRF_TOKEN', re.data.csrfToken);
+        })
+        .catch((err) => {
+          console.error(`Cannot get CSRF token in App. ${err}`);
+        });
     },
   });
 </script>

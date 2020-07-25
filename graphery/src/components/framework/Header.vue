@@ -11,7 +11,7 @@
         {{ siteName }}
       </q-toolbar-title>
 
-      <div class="gt-sm">
+      <div v-if="$q.screen.gt.sm">
         <!-- page buttons -->
         <q-btn
           flat
@@ -49,7 +49,7 @@
           </q-list>
         </q-btn-dropdown>
       </div>
-      <q-btn flat round dense class="lt-md" size="20px">
+      <q-btn flat round dense v-if="$q.screen.lt.md" size="20px">
         <q-icon name="mdi-menu" @click="showDrawer" />
       </q-btn>
     </q-toolbar>
@@ -65,7 +65,6 @@
     data() {
       return {
         siteName,
-        siteLogo: require('@/assets/images/reed-compbio-logo.png'),
         buttons: navigationButtons,
       };
     },
