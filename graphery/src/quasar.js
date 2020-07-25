@@ -60,6 +60,7 @@ import {
   QCheckbox,
   QFile,
   // My plugins
+  Dialog,
   Notify,
   // My directive
   ClosePopup,
@@ -128,5 +129,5 @@ Vue.use(Quasar, {
     QFile,
   },
   directives: { ClosePopup },
-  plugins: { Notify },
+  plugins: { Dialog, Notify },
 });
