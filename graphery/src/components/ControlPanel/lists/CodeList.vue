@@ -13,12 +13,33 @@
         row-key="id"
         separator="cell"
         class="custom-table"
+        :expanded.sync="expanded"
       >
         <template v-slot:top>
           <RefreshButton :fetch-func="fetchCode" />
         </template>
+        <template v-slot:header="props">
+          <q-tr :props="props">
+            <q-th auto-width>
+              More
+            </q-th>
+            <q-th v-for="col in props.cols" :key="col.name" :props="props">
+              {{ col.label }}
+            </q-th>
+          </q-tr>
+        </template>
         <template v-slot:body="props">
           <q-tr :props="props">
+            <q-td auto-width class="text-center">
+              <q-btn
+                size="sm"
+                color="accent"
+                round
+                dense
+                @click="props.expand = !props.expand"
+                :icon="props.expand ? 'remove' : 'add'"
+              />
+            </q-td>
             <q-td key="tutorialName" :props="props">
               {{ props.row.tutorialName }}
             </q-td>
@@ -39,6 +60,13 @@
 
             <q-td key="id" :props="props">
               {{ props.row.id }}
+            </q-td>
+          </q-tr>
+
+          <!-- Expand info -->
+          <q-tr v-show="props.expand" :props="props">
+            <q-td colspan="100%">
+              <div class="text-left">Currently Not Available</div>
             </q-td>
           </q-tr>
         </template>
@@ -98,6 +126,7 @@
             required: true,
           },
         ],
+        expanded: [],
         pagination: {
           sortBy: 'tutorialName',
           rowsPerPage: 10,
