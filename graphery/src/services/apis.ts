@@ -3,7 +3,6 @@ import { BASE_URL } from '@/services/api_entry';
 import vuex from '../store/index';
 
 import { Dialog } from 'quasar';
-import { errorDialog } from '@/services/helpers';
 
 export const apiClient: AxiosInstance = axios.create({
   withCredentials: true,
@@ -29,9 +28,8 @@ apiClient.interceptors.response.use(
         noRouteDismiss: true,
         seamless: false,
       });
-
-      return Promise.reject(resp);
     }
+    return Promise.reject(resp);
   }
 );
 
