@@ -91,7 +91,6 @@ class Query(graphene.ObjectType):
 
     @show_published_only
     def resolve_graph(self, info: ResolveInfo, is_published_only: bool, url=None, id=None):
-        print(info)
         raw_result: QuerySet = Graph.objects.is_published_only_all(is_published_only=is_published_only)
 
         if url:
