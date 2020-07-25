@@ -43,4 +43,7 @@
 
   .half-width-card
     width: 50%
+
+  .half-height-textarea textarea
+    height: 50vh
 </style>

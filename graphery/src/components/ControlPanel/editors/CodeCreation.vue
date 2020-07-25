@@ -6,11 +6,46 @@
     <template>
       <EditorFrame>
         <template v-slot:left>
-          <q-card id="editor-wrapper" class="q-py-md q-px-sm">
+          <q-card id="editor-wrapper" class="q-py-md q-px-sm q-mb-md">
             <div style="height: 70vh;" id="editor"></div>
+            <q-inner-loading :showing="editor === null">
+              <q-spinner-pie size="64px" color="primary" />
+            </q-inner-loading>
           </q-card>
+
+          <InfoCard>
+            <template v-slot:title>
+              <div class="q-mb-md">
+                Exec JSON
+              </div>
+              <div class="q-mb-md">
+                <q-select
+                  :options="graphOptions"
+                  v-model="graphChoice"
+                  label="Select Graph"
+                  outlined
+                  clearable
+                />
+              </div>
+              <div>
+                <q-btn label="Add Graph" />
+                <q-btn label="Exec" />
+                <q-btn label="Exec All" />
+              </div>
+            </template>
+            <div>
+              <q-input
+                readonly
+                class="half-height-textarea"
+                v-model="resultJson"
+                type="textarea"
+                outlined
+              />
+            </div>
+          </InfoCard>
         </template>
         <template v-slot:right>
+          <!-- TODO make this section follow the scrolling -->
           <div id="tutorial-selection">
             <InfoCard>
               <template v-slot:title>
@@ -20,9 +55,8 @@
                 label="Tutorial"
                 v-model="tutorialChoice"
                 :options="tutorialOptions"
-                use-chips
                 outlined
-                dense
+                clearable
               ></q-select>
             </InfoCard>
           </div>
@@ -53,10 +87,15 @@
         editor: null,
         tutorialChoice: '',
         tutorialOptions: [],
+        graphChoice: '',
+        graphOptions: [],
       };
     },
     computed: {
       ...mapState('settings', ['dark', 'fontSize']),
+      resultJson() {
+        return '';
+      },
     },
     mounted() {
       import('monaco-editor').then((md) => {

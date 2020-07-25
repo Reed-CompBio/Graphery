@@ -29,6 +29,7 @@
             <!-- TODO set an appropriate -->
             <q-card class="full-width q-mb-md">
               <q-input
+                class="half-height-textarea"
                 type="textarea"
                 shadow-text="Graph JSON"
                 outlined
