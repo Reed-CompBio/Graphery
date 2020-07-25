@@ -9,7 +9,7 @@
         const input = data.allTutorialInfo;
         return input.map((ele) => {
           return {
-            url: ele.url,
+            url: `/tutorial/${ele.url}`,
             categories: ele.categories,
             isAnchorPublished: ele.isPublished,
             title: ele.content.title,
@@ -21,6 +21,7 @@
         });
       }
     "
+    moreButtonText="Read More"
   ></CollectionPage>
 </template>
 

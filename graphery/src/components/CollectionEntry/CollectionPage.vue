@@ -110,6 +110,7 @@
                 :isTransPublished="info.isTransPublished"
                 @category-filter="addToCategoryFilter"
                 @author-filter="addToAuthorFilter"
+                :moreButtonText="moreButtonText"
               ></ArticleCard>
               <!-- TODO why do you want to filter authors? -->
             </div>
@@ -130,7 +131,7 @@
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       ArticleCard: () => import('@/components/CollectionEntry/ArticleCard.vue'),
     },
-    props: ['title', 'query', 'variables', 'mappingFunction'],
+    props: ['title', 'query', 'variables', 'mappingFunction', 'moreButtonText'],
     data() {
       return {
         searchText: '',

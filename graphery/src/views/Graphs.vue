@@ -9,7 +9,7 @@
         const input = data.allGraphInfo;
         return input.map((ele) => {
           return {
-            url: ele.url,
+            url: `/graph/${ele.url}`,
             categories: [],
             isAnchorPublished: ele.isPublished,
             title: ele.content.title,
@@ -21,6 +21,7 @@
         });
       }
     "
+    moreButtonText="Play With It"
   ></CollectionPage>
 </template>
 
