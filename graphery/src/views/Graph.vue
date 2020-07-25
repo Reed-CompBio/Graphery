@@ -46,7 +46,10 @@
               </q-select>
             </div>
           </q-bar>
-          <EditorWrapper style="max-height: calc(100% - 56px);"></EditorWrapper>
+          <EditorWrapper
+            style="max-height: calc(100% - 56px);"
+            @updateCyWithVarObj="updateCytoscapeWithVarObj"
+          ></EditorWrapper>
         </div>
       </template>
     </q-splitter>
@@ -164,6 +167,9 @@
               message: `An error occurs during fetching graph and code. ${err}`,
             });
           });
+      },
+      updateCytoscapeWithVarObj(varObj) {
+        this.$refs.cytoscapeWrapper.highlightVarObj(varObj);
       },
     },
     mounted() {
