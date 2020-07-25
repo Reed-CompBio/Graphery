@@ -20,6 +20,32 @@ export function successDialog(info: { message: string }) {
   });
 }
 
+export function warningDialog(info: { message: string }) {
+  Notify.create({
+    ...info,
+    type: 'warning',
+    icon: 'report',
+    multiLine: true,
+    group: false,
+    timeout: 10000,
+    actions: [
+      {
+        label: 'Contact Dev',
+        color: 'red',
+        handler: () => {
+          // TODO add a feedback page
+          window.open('');
+        },
+      },
+      {
+        label: 'Close',
+        color: 'red',
+        handler: () => null,
+      },
+    ],
+  });
+}
+
 export function errorDialog(info: { message: string }) {
   Notify.create({
     ...info,
@@ -78,9 +104,9 @@ export async function pullUser(
     return null;
   }
 ) {
-  const [data, errors] = await apiCaller(userInfoQuery);
+  const data = await apiCaller(userInfoQuery);
   action();
-  if (!errors && data) {
+  if (data) {
     await store.dispatch('setUser', data['userInfo']);
   }
 }

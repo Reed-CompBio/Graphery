@@ -136,12 +136,8 @@
 
         this.loading = true;
         apiCaller(loginMutation, loginCredential)
-          .then(([data, errors]) => {
-            if (errors) {
-              throw Error(errors);
-            }
-
-            if (data.login.success) {
+          .then((data) => {
+            if (data && data.login.success) {
               // TODO change this
               this.setUser(data['login']['user']);
               successDialog({ message: 'Successfully Logged In!' });

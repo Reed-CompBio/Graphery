@@ -232,14 +232,10 @@
           translation: this.$i18n.locale,
           default: 'en-us',
         })
-          .then(([data, errors]) => {
-            if (errors) {
-              throw Error(
-                'Invalid Data Received! Please Contact The Developer:' +
-                  errors[0].message
-              );
+          .then((data) => {
+            if (!data) {
+              throw Error('Invalid data returned.');
             }
-
             this.loadTutorial(data.tutorial);
           })
           .catch((err) => {

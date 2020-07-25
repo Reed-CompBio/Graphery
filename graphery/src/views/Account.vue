@@ -35,11 +35,7 @@
       ...mapActions(['setUser']),
       logout() {
         apiCaller(logoutMutation)
-          .then(([data, errors]) => {
-            if (errors) {
-              throw Error(errors);
-            }
-
+          .then((data) => {
             if (!data) {
               throw Error('Failed to talk to server. Failed to logout.');
             }

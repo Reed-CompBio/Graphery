@@ -3,6 +3,7 @@ import { BASE_URL } from '@/services/api_entry';
 import vuex from '../store/index';
 
 import { Dialog } from 'quasar';
+import { errorDialog } from '@/services/helpers';
 
 export const apiClient: AxiosInstance = axios.create({
   withCredentials: true,
@@ -74,7 +75,11 @@ export async function apiCaller(
     }
   );
 
-  return [response.data.data, response.data.errors];
+  if (response.data.errors) {
+    throw Error(response.data.errors[0].message);
+  }
+
+  return response.data.data;
 }
 
 export async function localServerCaller(

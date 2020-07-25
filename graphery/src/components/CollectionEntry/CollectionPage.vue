@@ -169,11 +169,10 @@
         this.toggleLoading();
 
         apiCaller(this.query, this.variables)
-          .then(([data, errors]) => {
-            if (errors !== undefined) {
-              throw Error(errors);
+          .then((data) => {
+            if (!data) {
+              throw Error('Invalid data returned.');
             }
-
             this.infos = this.mappingFunction(data);
           })
           .catch((err) => {

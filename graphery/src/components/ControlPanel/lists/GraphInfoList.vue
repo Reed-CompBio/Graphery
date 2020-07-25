@@ -135,11 +135,7 @@
       fetchGraphInfo() {
         this.startLoading();
         apiCaller(graphInfoListQuery, this.requestVariable)
-          .then(([data, errors]) => {
-            if (errors) {
-              throw Error(errors);
-            }
-
+          .then((data) => {
             if (!data || !('allGraphInfo' in data)) {
               throw Error('Invalid data returned.');
             }

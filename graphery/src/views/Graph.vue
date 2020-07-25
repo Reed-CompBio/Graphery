@@ -61,7 +61,7 @@
   import { headerSize } from '../store/states/meta';
   import { apiCaller } from '../services/apis';
   import { pullGraphAndCodeQuery } from '../services/queries';
-  import { errorDialog } from '../services/helpers';
+  import { errorDialog, warningDialog } from '../services/helpers';
 
   export default {
     props: ['url'],
@@ -113,11 +113,7 @@
     methods: {
       loadGraphAndCode() {
         apiCaller(pullGraphAndCodeQuery, this.requestPayload)
-          .then(([data, errors]) => {
-            if (errors) {
-              throw Error(errors);
-            }
-
+          .then((data) => {
             if (!data || !('graph' in data)) {
               throw Error('Invalid data returned');
             }
@@ -138,20 +134,26 @@
             const resultJsonList = [];
             this.codeSnippets = {};
 
-            data.graph.execresultjsonSet.forEach((obj) => {
-              this.codeOptions.push({
-                label: obj.code.id,
-                value: obj.code.id,
-              });
+            if (graphObj.execresultjsonSet.length > 0) {
+              graphObj.execresultjsonSet.forEach((obj) => {
+                this.codeOptions.push({
+                  label: obj.code.id,
+                  value: obj.code.id,
+                });
 
-              resultJsonList.push({
-                json: obj.json,
-                graphId: graphObj.id,
-                codeId: obj.code.id,
-              });
+                resultJsonList.push({
+                  json: obj.json,
+                  graphId: graphObj.id,
+                  codeId: obj.code.id,
+                });
 
-              this.codeSnippets[obj.code.id] = obj.code.code;
-            });
+                this.codeSnippets[obj.code.id] = obj.code.code;
+              });
+            } else {
+              warningDialog({
+                message: 'This graph has no code associate with it!',
+              });
+            }
 
             if (this.codeOptions.length > 0) {
               this.codeChoice = this.codeOptions[0].value;
@@ -180,6 +182,9 @@
         this.$store.commit('tutorials/LOAD_CURRENT_CODE_ID', this.codeChoice);
         this.$store.commit('tutorials/LOAD_CODES', this.currentCode);
       },
+    },
+    destroyed() {
+      this.$store.dispatch('tutorials/clearAll');
     },
   };
 </script>

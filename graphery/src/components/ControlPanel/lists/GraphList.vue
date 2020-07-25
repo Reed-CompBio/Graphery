@@ -168,13 +168,9 @@
       fetchGraphs() {
         this.startLoading();
         apiCaller(graphListQuery)
-          .then(([data, errors]) => {
-            if (errors) {
-              throw Error(errors);
-            }
-
+          .then((data) => {
             if (!data || !('allGraphInfo' in data)) {
-              throw Error('Invalid data returned');
+              throw Error('Invalid data returned.');
             }
 
             this.tableContent = data['allGraphInfo'].map((obj) => {

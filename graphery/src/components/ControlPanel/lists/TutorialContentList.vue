@@ -187,13 +187,9 @@
       fetchTutorialContent() {
         this.startLoading();
         apiCaller(tutorialContentListQuery, this.requestVariable)
-          .then(([data, errors]) => {
-            if (errors) {
-              throw Error(errors);
-            }
-
+          .then((data) => {
             if (!data || !('allTutorialInfo' in data)) {
-              throw Error('Invalid data returned');
+              throw Error('Invalid data returned.');
             }
 
             this.tableContent = data['allTutorialInfo'].map((obj) => {

@@ -94,11 +94,7 @@
         this.startLoading();
 
         apiCaller(categoryListQuery)
-          .then(([data, errors]) => {
-            if (errors) {
-              throw Error(errors);
-            }
-
+          .then((data) => {
             if (!data || !('allCategories' in data)) {
               throw Error('Invalid Result is received.');
             }

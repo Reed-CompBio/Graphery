@@ -147,11 +147,7 @@
         this.startLoading();
 
         apiCaller(codeListQuery)
-          .then(([data, errors]) => {
-            if (errors) {
-              throw Error(errors);
-            }
-
+          .then((data) => {
             if (!data || !('allCode' in data)) {
               throw Error('Invalid data returned.');
             }
