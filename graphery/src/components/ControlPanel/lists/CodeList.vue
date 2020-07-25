@@ -20,16 +20,27 @@
         </template>
         <template v-slot:header="props">
           <q-tr :props="props">
+            <q-th :key="props.cols[0].name" :props="props">
+              {{ props.cols[0].label }}
+            </q-th>
             <q-th auto-width>
               More
             </q-th>
-            <q-th v-for="col in props.cols" :key="col.name" :props="props">
+            <q-th
+              v-for="col in props.cols.slice(1, props.cols.length)"
+              :key="col.name"
+              :props="props"
+            >
               {{ col.label }}
             </q-th>
           </q-tr>
         </template>
         <template v-slot:body="props">
           <q-tr :props="props">
+            <q-td key="tutorialName" :props="props">
+              {{ props.row.tutorialName }}
+            </q-td>
+
             <q-td auto-width class="text-center">
               <q-btn
                 size="sm"
@@ -39,9 +50,6 @@
                 @click="props.expand = !props.expand"
                 :icon="props.expand ? 'remove' : 'add'"
               />
-            </q-td>
-            <q-td key="tutorialName" :props="props">
-              {{ props.row.tutorialName }}
             </q-td>
 
             <q-td key="code" :props="props">

@@ -28,11 +28,27 @@
                 />
               </div>
               <div>
-                <q-btn label="Add Graph" :loading="resultLoading" />
-                <q-btn label="Exec" :loading="resultLoading" />
-                <q-btn label="Exec Locally" :loading="resultLoading" />
-                <q-btn label="Exec All" :loading="resultLoading" />
-                <q-btn label="Exec All Locally" :loading="resultLoading" />
+                <q-btn
+                  label="Add Graph"
+                  :loading="resultLoading"
+                  class="q-mr-sm"
+                />
+                <q-btn label="Exec" :loading="resultLoading" class="q-mr-sm" />
+                <q-btn
+                  label="Exec Locally"
+                  :loading="resultLoading"
+                  class="q-mr-sm"
+                />
+                <q-btn
+                  label="Exec All"
+                  :loading="resultLoading"
+                  class="q-mr-sm"
+                />
+                <q-btn
+                  label="Exec All Locally"
+                  :loading="resultLoading"
+                  class="q-mr-sm"
+                />
               </div>
             </template>
             <div>
@@ -42,6 +58,7 @@
                 v-model="resultJson"
                 type="textarea"
                 outlined
+                label="Execution Result Json (Read Only)"
               />
               <q-inner-loading :showing="resultLoading">
                 <q-spinner-pie size="48px" color="primary" />

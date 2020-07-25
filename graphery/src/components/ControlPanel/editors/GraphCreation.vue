@@ -4,8 +4,8 @@
       Graph Editor
     </template>
     <template>
-      <div class="row">
-        <div class="col-8 q-pr-sm">
+      <EditorFrame>
+        <template v-slot:left>
           <div class="row full-width">
             <div class="col-6 q-pr-sm">
               <q-input
@@ -31,7 +31,7 @@
               <q-input
                 class="half-height-textarea"
                 type="textarea"
-                shadow-text="Graph JSON"
+                label="Graph JSON"
                 outlined
                 v-model="cyjs"
               ></q-input>
@@ -54,9 +54,9 @@
               </template>
             </q-file>
           </div>
-        </div>
-        <div class="col-4 q-pl-sm">
-          <InfoCard class="half-width-card">
+        </template>
+        <template v-slot:right>
+          <InfoCard>
             <template v-slot:title>
               Published
             </template>
@@ -106,8 +106,8 @@
           </InfoCard>
 
           <q-btn class="half-width-card" label="Submit"></q-btn>
-        </div>
-      </div>
+        </template>
+      </EditorFrame>
     </template>
   </ControlPanelContentFrame>
 </template>
@@ -120,6 +120,7 @@
     components: {
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame'),
+      EditorFrame: () => import('../frames/EditorFrame.vue'),
       InfoCard: () => import('../parts/InfoCard.vue'),
     },
     data() {
