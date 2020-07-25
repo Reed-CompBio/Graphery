@@ -1,5 +1,5 @@
 <template>
-  <q-card class="q-px-md q-py-lg license-card white-a">
+  <q-card class="q-px-md q-py-lg q-mt-xl q-mb-sm license-card white-a">
     <p>
       {{ $t('license.licenseInfo1') }}
       <a

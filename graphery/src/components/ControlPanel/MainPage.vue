@@ -240,7 +240,7 @@
     components: {
       ControlPanelContentFrame: () =>
         import('./frames/ControlPanelContentFrame.vue'),
-      MarkdownSection: () => import('./MarkdownSection.vue'),
+      MarkdownSection: () => import('../framework/MarkdownSection.vue'),
     },
     computed: {
       ...mapState({

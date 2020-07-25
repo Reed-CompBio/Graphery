@@ -46,7 +46,9 @@
         </div>
 
         <!-- actual contents goes into here -->
-        <div id="tutorial-content" v-html="htmlContent"></div>
+        <div id="tutorial-content">
+          <MarkdownSection :input-html="htmlContent"></MarkdownSection>
+        </div>
 
         <LicenseCard></LicenseCard>
       </div>
@@ -100,6 +102,7 @@
 
   export default {
     components: {
+      MarkdownSection: () => import('../framework/MarkdownSection'),
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
       LicenseCard: () => import('@/components/framework/LicenseCard.vue'),
     },
