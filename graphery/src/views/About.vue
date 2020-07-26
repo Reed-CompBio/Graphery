@@ -29,6 +29,86 @@
           applications such as animal social networks, ecology food webs,
           molecular interaction networks, and phylogenetic trees.
         </p>
+        <h4>
+          Contributors
+        </h4>
+        <ul class="uo-list">
+          <li>
+            Heyuan Zeng
+          </li>
+          <li>
+            Jinbiao Zhang
+          </li>
+        </ul>
+        <h4>
+          Libraries
+        </h4>
+        <p>
+          This website can't be done without the following open source
+          libraries. Big thanks to all the contributors directly and indirectly
+          making this project happen.
+        </p>
+        <ul class="uo-list">
+          <li>
+            <NewTabA link="https://quasar.dev/"> Quasar </NewTabA>
+          </li>
+          <li>
+            <NewTabA link="https://vuejs.org">Vue.JS</NewTabA>
+          </li>
+          <li>
+            <NewTabA link="https://github.com/hinesboy/mavonEditor">
+              Mavon Editor
+            </NewTabA>
+          </li>
+          <li>
+            <NewTabA link="https://github.com/markdown-it/markdown-it">
+              Markdown It
+            </NewTabA>
+          </li>
+          <li>
+            <NewTabA
+              link="https://github.com/markdown-it/markdown-it#syntax-extensions"
+            >
+              Markdown It Extensions
+            </NewTabA>
+          </li>
+          <li>
+            <NewTabA link="https://github.com/cytoscape/cytoscape.js">
+              Cytoscape.JS
+            </NewTabA>
+          </li>
+          <li>
+            <NewTabA link="https://js.cytoscape.org/#extensions">
+              Cytoscape.JS Extensions
+            </NewTabA>
+          </li>
+          <li>
+            <NewTabA link="https://github.com/atomiks/tippyjs">
+              Tippy.JS
+            </NewTabA>
+          </li>
+          <li>
+            <NewTabA link="https://github.com/Microsoft/monaco-editor">
+              Monaco Editor
+            </NewTabA>
+          </li>
+          <li>
+            <NewTabA link="https://github.com/cool-RR/PySnooper">
+              PySnooper
+            </NewTabA>
+          </li>
+          <li>
+            <NewTabA link="https://www.djangoproject.com/"> Django </NewTabA>
+          </li>
+          <li>
+            <NewTabA link="https://github.com/graphql-python/graphene-django">
+              Graphene Django
+            </NewTabA>
+          </li>
+          <li>
+            <NewTabA link="https://www.postgresql.org/"> PostgreSQL </NewTabA>
+          </li>
+        </ul>
         <LicenseCard></LicenseCard>
       </section>
     </article>
@@ -36,8 +116,10 @@
 </template>
 
 <script>
+  import NewTabA from '../components/framework/NewTabA';
   export default {
     components: {
+      NewTabA,
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       LicenseCard: () => import('@/components/framework/LicenseCard.vue'),
     },
@@ -48,4 +130,6 @@
   .about-section
     p
       font-size: 1.2rem
+  .uo-list
+    font-size: 1.1rem
 </style>
