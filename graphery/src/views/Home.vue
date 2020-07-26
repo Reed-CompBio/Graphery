@@ -1,10 +1,20 @@
 <template>
   <MaterialPage>
-    <div class="flex-center text-center">
+    <div class="flex-center text-center ">
       <h3>Welcome to Graphery</h3>
-      <p class="text-subtitle1">This is a graph algorithm tutorial website.</p>
+      <div class="text-body1">
+        <p class="text-subtitle1">
+          This is a interactive graph algorithm tutorial website.
+        </p>
+        <p>
+          Check out our tutorials and play with graphs.
+        </p>
+        <p>
+          More info is listed in
+          <router-link :to="{ name: 'About' }"> About </router-link>
+        </p>
+      </div>
     </div>
-    <q-separator></q-separator>
     <div class="q-mx-auto">
       <div
         :class="{
@@ -58,14 +68,7 @@
         </div>
       </div>
     </div>
-    <div class="flex-center text-center text-body1">
-      <p>
-        You can check out our tutorials and play with graphs.
-      </p>
-      <p>
-        You don't have an account yet, the settings will only be stored locally.
-      </p>
-    </div>
+    <q-separator />
   </MaterialPage>
 </template>
 
