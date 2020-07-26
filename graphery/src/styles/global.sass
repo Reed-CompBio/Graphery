@@ -5,15 +5,11 @@ a
 .q-bar
   background: rgba(0,0,0,0.07) !important
 
-.resizable-h-separator-splitter:hover, .resizable-v-separator-splitter:hover
-  transform: scale(1.5)
-.resizable-h-separator-splitter, .resizable-v-separator-splitter
-  transition: 300ms ease-out
+
+$splitter-line-width: 10px
+
 .resizable-h-separator-splitter
-  height: 8px !important
-.resizable-h-separator-splitter:hover
-  height: 12px
+  height: $splitter-line-width !important
+
 .resizable-v-separator-splitter
-  width: 8px !important
-.resizable-v-separator-splitter:hover
-  width: 12px
+  width: $splitter-line-width !important

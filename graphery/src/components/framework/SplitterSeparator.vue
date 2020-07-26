@@ -16,18 +16,21 @@
 </script>
 
 <style lang="sass">
+  $separator-height: 50px
+  $separator-width: 4px
   .splitter-separator-horizontal
-    border-top: 4px solid #b3b3b3
-    width: 10%
+    border-top: $separator-width solid
+    width: $separator-height
 
   .splitter-separator-vertical
-    border-left: 4px solid #b3b3b3
-    height: 10%
+    border-left: $separator-width solid
+    height: $separator-height
 
   .splitter-separator:hover
-    transform: change_color(#fff)
+    border-color: #fff
 
   .splitter-separator
-    transition: 300ms ease-out
+    transition: 150ms ease-in-out
     border-radius: 25px
+    border-color: #929292
 </style>

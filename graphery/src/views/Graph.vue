@@ -10,7 +10,6 @@
           ? 'resizable-h-separator-splitter'
           : 'resizable-v-separator-splitter'
       "
-      separator-style="width: 4px"
     >
       <template v-slot:before>
         <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
