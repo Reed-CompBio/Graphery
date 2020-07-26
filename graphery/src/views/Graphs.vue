@@ -22,6 +22,7 @@
       }
     "
     moreButtonText="Play With it"
+    :notClickableWhenNoContent="false"
   ></CollectionPage>
 </template>
 

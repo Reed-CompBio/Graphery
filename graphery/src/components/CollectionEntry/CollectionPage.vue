@@ -115,6 +115,7 @@
                 @category-filter="addToCategoryFilter"
                 @author-filter="addToAuthorFilter"
                 :moreButtonText="moreButtonText"
+                :notClickableWhenNoContent="notClickableWhenNoContent"
               ></ArticleCard>
               <!-- TODO why do you want to filter authors? -->
             </div>
@@ -135,7 +136,14 @@
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       ArticleCard: () => import('@/components/CollectionEntry/ArticleCard.vue'),
     },
-    props: ['title', 'query', 'variables', 'mappingFunction', 'moreButtonText'],
+    props: [
+      'title',
+      'query',
+      'variables',
+      'mappingFunction',
+      'moreButtonText',
+      'notClickableWhenNoContent',
+    ],
     data() {
       return {
         searchText: '',

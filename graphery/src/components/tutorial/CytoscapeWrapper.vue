@@ -12,7 +12,6 @@
           :loading="graphsEmpty"
           :option-label="inputSectionLabelMapper"
           option-value="id"
-          option-disable="isPublished"
           emit-value
           map-options
         >

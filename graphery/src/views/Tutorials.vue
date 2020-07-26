@@ -22,6 +22,7 @@
       }
     "
     moreButtonText="Read More"
+    :notClickableWhenNoContent="true"
   ></CollectionPage>
 </template>
 

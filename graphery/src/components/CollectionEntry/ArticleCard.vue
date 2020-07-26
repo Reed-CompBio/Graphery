@@ -58,7 +58,7 @@
 
 <script>
   import { toLocalDateString } from '../../services/helpers';
-  const noContentTitle = '<None>';
+  import { emptyTutorialContentTag } from '../../services/params';
 
   export default {
     props: [
@@ -71,13 +71,17 @@
       'isTransPublished',
       'isAnchorPublished',
       'moreButtonText',
+      'notClickableWhenNoContent',
     ],
     methods: {
       toLocalDateString,
     },
     computed: {
       noContentNoClick() {
-        return this.title === noContentTitle;
+        return (
+          this.title === emptyTutorialContentTag &&
+          this.notClickableWhenNoContent
+        );
       },
     },
   };
