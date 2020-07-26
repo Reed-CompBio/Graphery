@@ -2,8 +2,8 @@
   <MaterialPage>
     <div class="flex-center text-center ">
       <h3>Welcome to Graphery</h3>
-      <div class="text-body1">
-        <p class="text-subtitle1">
+      <div class="home-intro-text">
+        <p>
           This is a interactive graph algorithm tutorial website.
         </p>
         <p>
@@ -89,4 +89,6 @@
   .feedback-item
     text-align: center
     font-weight: bold
+  .home-intro-text
+    font-size: 18px
 </style>

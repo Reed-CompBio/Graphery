@@ -16,7 +16,7 @@
           :key="button.name"
           :to="{ name: button.name }"
           class="q-ml-sm"
-          size="18px"
+          size="20px"
           exact
         >
           {{ $t(`nav.${button.name}`) }}
