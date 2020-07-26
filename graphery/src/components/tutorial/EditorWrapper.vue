@@ -126,7 +126,6 @@
       <q-splitter
         v-model="codeValueListSplitPos"
         separator-class="resizable-v-separator-splitter"
-        separator-style="width: 4px;"
         class="full-height full-width"
       >
         <template v-slot:before>
@@ -135,9 +134,7 @@
           </q-card>
         </template>
         <template v-slot:separator>
-          <div
-            style="border-left: 4px solid rgb(179, 179, 179); border-radius: 25px; height: 10%;"
-          ></div>
+          <SplitterSeparator />
         </template>
         <template v-slot:after>
           <VariableList></VariableList>
@@ -179,9 +176,11 @@
   import { localServerCaller } from '../../services/apis';
   import { errorDialog, successDialog } from '../../services/helpers';
   import Editor from '@/components/tutorial/Editor.vue';
+  import SplitterSeparator from '../framework/SplitterSeparator';
 
   export default {
     components: {
+      SplitterSeparator,
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
       Editor,
       VariableList: () => import('@/components/tutorial/VariableList.vue'),

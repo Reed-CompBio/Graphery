@@ -4,20 +4,19 @@
       v-if="$q.screen.gt.xs"
       v-model="splitPos"
       :style="splitterStyle"
-      :horizontal="$q.screen.lt.md"
-      separator-class="bg-light-blue"
+      :horizontal="verticalSplitter"
+      :separator-class="
+        verticalSplitter
+          ? 'resizable-h-separator-splitter'
+          : 'resizable-v-separator-splitter'
+      "
       separator-style="width: 4px"
     >
       <template v-slot:before>
         <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
       </template>
       <template v-slot:separator>
-        <q-avatar
-          color="primary"
-          text-color="white"
-          size="32px"
-          icon="mdi-drag"
-        />
+        <SplitterSeparator :horizontal="verticalSplitter" />
       </template>
       <template v-slot:after>
         <div>
@@ -62,10 +61,12 @@
   import { apiCaller } from '../services/apis';
   import { pullGraphAndCodeQuery } from '../services/queries';
   import { errorDialog, warningDialog } from '../services/helpers';
+  import SplitterSeparator from '../components/framework/SplitterSeparator';
 
   export default {
     props: ['url'],
     components: {
+      SplitterSeparator,
       EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
       CytoscapeWrapper: () =>
         import('@/components/tutorial/CytoscapeWrapper.vue'),
@@ -109,6 +110,9 @@
         }
         return null;
       },
+      verticalSplitter() {
+        return this.$q.screen.lt.md;
+      },
     },
     methods: {
       loadGraphAndCode() {
@@ -151,7 +155,7 @@
               });
             } else {
               warningDialog({
-                message: 'This graph has no code associate with it!',
+                message: 'This graph has no code associated with it!',
               });
             }
 
