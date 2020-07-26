@@ -11,9 +11,10 @@
   </q-layout>
 </template>
 
-<script lang="ts">
+<script>
   import Vue from 'vue';
   import { apiClient } from '@/services/apis';
+  import { mapState } from 'vuex';
 
   const showFooterRe = /^(\/tutorial\/|\/graph\/|\/control-panel)/;
 
@@ -27,39 +28,57 @@
       Notification: () => import('@/components/framework/Notification.vue'),
     },
     computed: {
+      ...mapState('settings', ['dark']),
       showFooter() {
         return !showFooterRe.test(this.$route.fullPath);
       },
     },
+    methods: {
+      asciiArt() {
+        // draw ascii art
+        console.log(
+          '%c' +
+            ' o-o               o                 \n' +
+            'o                  |                 \n' +
+            '|  -o o-o  oo o-o  O--o o-o o-o o  o \n' +
+            "o   | |   | | |  | |  | |-' |   |  | \n" +
+            ' o-o  o   o-o-O-o  o  o o-o o   o--O \n' +
+            '              |                    | \n' +
+            '              o                 o--o ',
+          'color: #A70E16'
+        );
+        console.log('Welcome to Graphery, a graph tutorial website');
+        console.log('GitHub: https://github.com/poppy-poppy/Graphery');
+      },
+      loadLang() {
+        // Load language
+        // TODO add a preferred language
+        this.$i18n.locale = this.$store.state.settings.language;
+      },
+      loadCSRFToken() {
+        apiClient
+          .get('/csrf')
+          .then((re) => {
+            this.$store.commit('SET_CSRF_TOKEN', re.data.csrfToken);
+          })
+          .catch((err) => {
+            console.error(`Cannot get CSRF token in App. ${err}`);
+          });
+      },
+      loadDarkTheme() {
+        this.$q.dark.set(this.dark);
+      },
+    },
     mounted() {
-      // draw ascii art
-      console.log(
-        '%c' +
-          ' o-o               o                 \n' +
-          'o                  |                 \n' +
-          '|  -o o-o  oo o-o  O--o o-o o-o o  o \n' +
-          "o   | |   | | |  | |  | |-' |   |  | \n" +
-          ' o-o  o   o-o-O-o  o  o o-o o   o--O \n' +
-          '              |                    | \n' +
-          '              o                 o--o ',
-        'color: #A70E16'
-      );
-      console.log('Welcome to Graphery, a graph tutorial website');
-      console.log('GitHub: https://github.com/poppy-poppy/Graphery');
-
-      // load $q.dark.set is in Header.vue
-      // Load language
-      // TODO add a preferred language
-      this.$i18n.locale = this.$store.state.settings.language;
-
-      apiClient
-        .get('/csrf')
-        .then((re) => {
-          this.$store.commit('SET_CSRF_TOKEN', re.data.csrfToken);
-        })
-        .catch((err) => {
-          console.error(`Cannot get CSRF token in App. ${err}`);
-        });
+      this.asciiArt();
+      this.loadLang();
+      this.loadCSRFToken();
+      this.loadDarkTheme();
+    },
+    watch: {
+      dark: function() {
+        this.loadDarkTheme();
+      },
     },
   });
 </script>

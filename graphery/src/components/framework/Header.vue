@@ -37,7 +37,6 @@
 
 <script>
   import { siteName, navigationButtons } from '../../store/states/meta';
-  import { mapState } from 'vuex';
   import LangSelector from '../ControlPanel/parts/LangSelector';
 
   export default {
@@ -49,9 +48,6 @@
         buttons: navigationButtons,
       };
     },
-    computed: {
-      ...mapState('settings', ['dark']),
-    },
     methods: {
       showDrawer() {
         this.$store.dispatch('changeDrawerState', true);
@@ -60,14 +56,6 @@
         this.$i18n.locale = lang;
         this.$store.dispatch('settings/changeLanguage', lang);
       },
-    },
-    watch: {
-      dark: function() {
-        this.$q.dark.set(this.dark);
-      },
-    },
-    mounted() {
-      this.$q.dark.set(this.dark);
     },
   };
 </script>
