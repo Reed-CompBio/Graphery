@@ -11,11 +11,6 @@
           ? 'resizable-h-separator-splitter'
           : 'resizable-v-separator-splitter'
       "
-      :separator-style="
-        $q.screen.lt.md
-          ? tutorialHorizontalSeparatorStyle
-          : tutorialVerticalSeparatorStyle
-      "
       class="overflow-hidden-splitter"
     >
       <template v-slot:before>
@@ -24,7 +19,6 @@
           v-model="editorSplitPos"
           horizontal
           separator-class="resizable-h-separator-splitter zero-z-index-separator"
-          :separator-style="tutorialHorizontalSeparatorStyle"
           class="overflow-visible-splitter"
         >
           <template v-slot:before>
@@ -34,7 +28,7 @@
             ></CytoscapeWrapper>
           </template>
           <template v-slot:separator>
-            <div :style="tutorialHorizontalSeparatorIconStyle"></div>
+            <SplitterSeparator :horizontal="true" />
           </template>
           <template v-slot:after>
             <EditorWrapper
@@ -112,11 +106,7 @@
         </q-splitter>
       </template>
       <template v-slot:separator>
-        <div
-          :style="tutorialHorizontalSeparatorIconStyle"
-          v-if="$q.screen.lt.md"
-        ></div>
-        <div :style="tutorialVerticalSeparatorIconStyle" v-else></div>
+        <SplitterSeparator :horizontal="$q.screen.lt.md" />
       </template>
       <template v-slot:after>
         <TutorialArticle class="full-height"></TutorialArticle>
@@ -136,10 +126,12 @@
     pullTutorialDetailQuery,
   } from '../services/queries';
   import { errorDialog } from '../services/helpers';
+  import SplitterSeparator from '../components/framework/SplitterSeparator';
 
   export default {
     props: ['url'],
     components: {
+      SplitterSeparator,
       CytoscapeWrapper: () =>
         import('@/components/tutorial/CytoscapeWrapper.vue'),
       TutorialArticle: () =>
@@ -152,9 +144,6 @@
     data() {
       return {
         editorSplitPos: 60,
-        tutorialSeparatorWidth: 8, // px
-        tutorialSeparatorIconSize: 4, // px
-        tutorialSeparatorIconLength: 10, // %
         currentTab: 'editor',
       };
     },
@@ -175,30 +164,6 @@
       tutorialStyle() {
         return {
           height: `calc(100vh - ${headerSize}px)`,
-        };
-      },
-      tutorialHorizontalSeparatorStyle() {
-        return {
-          height: `${this.tutorialSeparatorWidth}px`,
-        };
-      },
-      tutorialVerticalSeparatorStyle() {
-        return {
-          width: `${this.tutorialSeparatorWidth}px`,
-        };
-      },
-      tutorialHorizontalSeparatorIconStyle() {
-        return {
-          'border-top': `${this.tutorialSeparatorIconSize}px solid #b3b3b3`,
-          'border-radius': '25px',
-          width: `${this.tutorialSeparatorIconLength}%`,
-        };
-      },
-      tutorialVerticalSeparatorIconStyle() {
-        return {
-          'border-left': `${this.tutorialSeparatorIconSize}px solid #b3b3b3`,
-          'border-radius': '25px',
-          height: `${this.tutorialSeparatorIconLength}%`,
         };
       },
       notTortureSmallScreen() {
@@ -325,14 +290,4 @@
     overflow: visible
   .overflow-hidden-splitter > .q-splitter__before
     overflow: hidden
-  .resizable-h-separator-splitter:hover, .resizable-v-separator-splitter:hover
-    transform: scale(1.5)
-  .resizable-h-separator-splitter, .resizable-v-separator-splitter
-    transition: 300ms ease-out
-  .resizable-h-separator-splitter:hover
-    height: 12px
-  .resizable-v-separator-splitter:hover
-    width: 12px
-  .q-bar
-    background: rgba(0,0,0,0.07)
 </style>
