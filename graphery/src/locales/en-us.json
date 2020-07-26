@@ -17,7 +17,9 @@
     "editor": "Editor",
     "howTo": "How To",
     "notAvailableCurrently": "Not Available Currently",
-    "goToSettingsToChangeEditingPermission": "Please Go To Settings To Change Editing Permission"
+    "goToSettingsToChangeEditingPermission": "Please Go To Settings To Change Editing Permission",
+    "changeVariableListOrientation": "Change Variable List Orientation",
+    "openWorkSpace": "Open Work Space"
   },
   "nav": {
     "Home": "Home",

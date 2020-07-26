@@ -45,11 +45,8 @@
         >
           <SwitchTooltip :text="$t('tooltips.oneStepBack')"></SwitchTooltip>
         </q-btn>
-        <q-btn dense :icon="playPauseButton">
-          <!--          <SwitchTooltip :text="$t('tooltips.autoRun')"></SwitchTooltip>-->
-          <SwitchTooltip
-            :text="$t('tooltips.notAvailableCurrently')"
-          ></SwitchTooltip>
+        <q-btn dense :icon="playPauseButton" @click="notAvailableMessage">
+          <SwitchTooltip :text="$t('tooltips.autoRun')"></SwitchTooltip>
         </q-btn>
         <q-btn
           dense
@@ -74,8 +71,7 @@
 
       <!-- execution button group -->
       <q-btn-group flat class="q-mr-md">
-        <q-btn dense disable>
-          <q-icon name="mdi-cloud-upload" />
+        <q-btn dense icon="mdi-cloud-upload" @click="notAvailableMessage">
           <SwitchTooltip
             :text="$t('tooltips.runCodeOnTheCloud')"
           ></SwitchTooltip>
@@ -111,9 +107,10 @@
         <q-btn
           dense
           icon="mdi-folder-network-outline"
-          :disable="true"
-          @click="openWorkSpaceSelection"
-        ></q-btn>
+          @click="notAvailableMessage"
+        >
+          <SwitchTooltip :text="$t('tooltips.openWorkSpace')" />
+        </q-btn>
       </q-btn-group>
 
       <!-- Editor status -->
@@ -398,6 +395,11 @@
           'settings/changeVariableListOrientation',
           !this.variableListHorizontal
         );
+      },
+      notAvailableMessage() {
+        errorDialog({
+          message: this.$t('tooltips.notAvailableCurrently'),
+        });
       },
     },
     watch: {

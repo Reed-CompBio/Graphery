@@ -17,7 +17,9 @@
     "editor": "编辑器",
     "howTo": "使用帮助",
     "notAvailableCurrently": "暂时无法使用",
-    "goToSettingsToChangeEditingPermission": "请前往设置开关编辑权限"
+    "goToSettingsToChangeEditingPermission": "请前往设置开关编辑权限",
+    "changeVariableListOrientation": "改变变量表朝向",
+    "openWorkSpace": "打开工作区"
   },
   "nav": {
     "Home": "首页",
