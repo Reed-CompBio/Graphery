@@ -36,11 +36,12 @@
         >
           <div
             id="filter-section"
-            :class="{
-              'col-4': true,
-              'flex-center': true,
-              row: $q.screen.lt.sm,
-            }"
+            :class="[
+              'col-4',
+              'flex-center',
+              'q-pr-xs',
+              $q.screen.lt.sm ? 'row' : '',
+            ]"
           >
             <div class="q-mr-lg">
               <h5>
@@ -69,7 +70,10 @@
             </div>
           </div>
 
-          <div id="content-list" class="col-8">
+          <div
+            id="content-list"
+            :class="['col-8', $q.screen.lt.sm ? 'full-width' : '']"
+          >
             <div id="page-manager" class="flex flex-center">
               <q-pagination
                 :max="paginationMax"
@@ -87,7 +91,7 @@
               >
               </q-pagination>
             </div>
-            <div class="q-px-sm">
+            <div>
               <div
                 class="relative-position"
                 id="inner-loader"
@@ -209,8 +213,6 @@
 </script>
 
 <style lang="sass">
-  .material-page-shorter-h3
-    margin-bottom: 20px
   #inner-loader
     min-height: 100px
 </style>

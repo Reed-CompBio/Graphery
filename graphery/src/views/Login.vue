@@ -19,7 +19,7 @@
             >
               <div id="login-content">
                 <q-form @submit="login" @reset="resetForm">
-                  <div id="account" class="q-my-md">
+                  <div id="account" class="q-mb-md">
                     <q-input
                       outlined
                       v-model="account"

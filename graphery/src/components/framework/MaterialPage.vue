@@ -41,7 +41,7 @@
 
   .container
     @media (max-width: $breakpoint-xs-max)
-      padding: 16px 10% 50px
+      padding: 16px 7% 50px
     @media (min-width: $breakpoint-sm-min) and (max-width: $breakpoint-md-max)
       margin-bottom: 24px
       padding: 16px 6% 50px
@@ -52,4 +52,7 @@
   .content-container-wrapper
     margin: 0 auto
     max-width: 900px
+
+  .material-page-shorter-h3
+    margin-bottom: 20px
 </style>
