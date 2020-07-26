@@ -98,7 +98,11 @@
         >
           <SwitchTooltip :text="$t('tooltips.pasteCodes')" />
         </q-btn>
-        <q-btn dense icon="autorenew" @click="changeVariableListOrientation">
+        <q-btn
+          dense
+          icon="mdi-rotate-right-variant"
+          @click="changeVariableListOrientation"
+        >
           <SwitchTooltip :text="$t('tooltips.changeVariableListOrientation')" />
         </q-btn>
       </q-btn-group>
