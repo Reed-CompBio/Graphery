@@ -26,11 +26,13 @@
     border-left: $separator-width solid
     height: $separator-height
 
-  .splitter-separator:hover
+  .splitter-separator:hover,
+  /*.q-splitter--active .splitter-separator,*/
+  .q-splitter__separator:hover .splitter-separator
     border-color: #fff
 
   .splitter-separator
     transition: 150ms ease-in-out
-    border-radius: 25px
+    border-radius: 50px
     border-color: #929292
 </style>

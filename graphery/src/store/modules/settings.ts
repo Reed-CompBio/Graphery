@@ -20,6 +20,7 @@ const state: SettingState = {
   softTab: false,
   fontSize: 14,
   codeWrap: false,
+  variableListHorizontal: false,
 
   // display
   pageDisplayNum: 5,
@@ -63,6 +64,9 @@ const mutations: MutationTree<SettingState> = {
   },
   CHANGE_CODE_WRAP(state, value: boolean) {
     state.codeWrap = value;
+  },
+  CHANGE_VARIABLE_LIST_ORIENTATION(state, value: boolean) {
+    state.variableListHorizontal = value;
   },
   CHANGE_PAGE_DISPLAY_NUM(state, value: number) {
     state.pageDisplayNum = value;
@@ -111,6 +115,9 @@ const actions: ActionTree<SettingState, RootState> = {
   },
   changeCodeWrap({ commit }, value: boolean) {
     commit('CHANGE_CODE_WRAP', value);
+  },
+  changeVariableListOrientation({ commit }, value: boolean) {
+    commit('CHANGE_VARIABLE_LIST_ORIENTATION', value);
   },
   changePageDisplayNum({ commit }, value: number) {
     commit('CHANGE_PAGE_DISPLAY_NUM', value);

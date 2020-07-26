@@ -93,14 +93,17 @@
       <!-- copy paste button group -->
       <q-btn-group flat class="q-mr-md">
         <q-btn dense icon="mdi-content-copy" @click="copyCurrentCode">
-          <SwitchTooltip :text="$t('tooltips.copyCodes')"></SwitchTooltip>
+          <SwitchTooltip :text="$t('tooltips.copyCodes')" />
         </q-btn>
         <q-btn
           dense
           icon="mdi-content-paste"
           @click="setCurrentCodeFromClipboard"
         >
-          <SwitchTooltip :text="$t('tooltips.pasteCodes')"></SwitchTooltip>
+          <SwitchTooltip :text="$t('tooltips.pasteCodes')" />
+        </q-btn>
+        <q-btn dense icon="autorenew" @click="changeVariableListOrientation">
+          <SwitchTooltip :text="$t('tooltips.changeVariableListOrientation')" />
         </q-btn>
       </q-btn-group>
 
@@ -125,7 +128,12 @@
     <div class="row" style="height: calc(100% - 32px); overflow: hidden;">
       <q-splitter
         v-model="codeValueListSplitPos"
-        separator-class="resizable-v-separator-splitter"
+        :separator-class="
+          variableListHorizontal
+            ? 'resizable-h-separator-splitter'
+            : 'resizable-v-separator-splitter'
+        "
+        :horizontal="variableListHorizontal"
         class="full-height full-width"
       >
         <template v-slot:before>
@@ -134,7 +142,7 @@
           </q-card>
         </template>
         <template v-slot:separator>
-          <SplitterSeparator />
+          <SplitterSeparator :horizontal="variableListHorizontal" />
         </template>
         <template v-slot:after>
           <VariableList></VariableList>
@@ -204,7 +212,7 @@
         'variableObjEmpty',
         'resultJsonArr',
       ]),
-      ...mapState('settings', ['enableEditing']),
+      ...mapState('settings', ['enableEditing', 'variableListHorizontal']),
       playPauseButton() {
         if (this.isPlaying) {
           return 'mdi-pause';
@@ -384,6 +392,12 @@
       },
       openWorkSpaceSelection() {
         this.isWorkSpaceSelectionOpen = true;
+      },
+      changeVariableListOrientation() {
+        this.$store.dispatch(
+          'settings/changeVariableListOrientation',
+          !this.variableListHorizontal
+        );
       },
     },
     watch: {

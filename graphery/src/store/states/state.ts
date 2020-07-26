@@ -153,6 +153,7 @@ export interface SettingInfos {
   softTab: boolean;
   fontSize: number;
   codeWrap: boolean;
+  variableListHorizontal: boolean;
 
   // display
   pageDisplayNum: number;
