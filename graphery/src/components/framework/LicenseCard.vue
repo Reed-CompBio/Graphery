@@ -10,7 +10,7 @@
         {{ $t('license.licenseInfo2') }}
       </a>
     </p>
-    <p class="no_bt_p">
+    <p class="no_mb_p">
       <a
         rel="license"
         target="_blank"
@@ -27,8 +27,12 @@
 </template>
 
 <style lang="sass">
-  .no_bt_p
+  .no_mb_p
     margin-bottom: 0
   .license-card
-    background-color: orange
+    background-color: #a70e16
+    color: white
+    a
+      color: inherit
+      text-decoration: underline
 </style>

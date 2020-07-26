@@ -3,8 +3,11 @@
     <!--    TODO change the color in dark mode    -->
     <q-toolbar>
       <!-- TODO Make it clickable -->
+
       <q-toolbar-title id="site-name-section" class="q-ml-lg">
-        {{ siteName }}
+        <router-link :to="{ name: 'Home' }" style="color: inherit">
+          {{ siteName }}
+        </router-link>
       </q-toolbar-title>
 
       <div v-if="$q.screen.gt.sm">
@@ -66,4 +69,6 @@
     text-transform: uppercase
     font-size: 28px
     padding-top: 5px
+  .bg-header
+    background: #870400
 </style>
