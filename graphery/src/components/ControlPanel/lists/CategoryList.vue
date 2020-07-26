@@ -8,7 +8,7 @@
         :data="tableContent"
         :columns="columns"
         :pagination="pagination"
-        :loading="loadingTable"
+        :loading="loadingContent"
         no-data-label="No Categories are found."
         row-key="id"
         separator="cell"
@@ -20,7 +20,13 @@
         <template v-slot:body="props">
           <q-tr :props="props">
             <q-td key="category" :props="props">
-              <OpenInEditorButton :label="props.row.category" />
+              <OpenInEditorButton
+                :label="props.row.category"
+                :routePath="{
+                  name: 'Category Editor',
+                  params: { id: props.row.id },
+                }"
+              />
             </q-td>
 
             <q-td key="isPublished" :props="props">

@@ -1,5 +1,5 @@
 <template>
-  <ControlPanelContentFrame>
+  <ControlPanelContentFrame ref="contentFrame">
     <template v-slot:title>
       Category Editor
     </template>
@@ -23,6 +23,15 @@
             hint="Please input the name of this category."
           />
         </InfoCard>
+        <InfoCard class="half-width-card">
+          <template v-slot:title>
+            Published?
+          </template>
+          <q-checkbox
+            v-model="categoryPublished"
+            :label="categoryPublished ? '✅' : '❌'"
+          />
+        </InfoCard>
 
         <q-btn class="half-width-card" label="Submit" />
       </div>
@@ -31,10 +40,16 @@
 </template>
 
 <script>
-  import { newContentTag } from '../../../services/params';
+  import { newModelUUID } from '../../../services/params';
+  import { apiCaller } from '../../../services/apis';
+  import { categoryMutation } from '../../../services/queries';
 
   export default {
-    props: ['id'],
+    props: {
+      id: {
+        default: newModelUUID,
+      },
+    },
     components: {
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
@@ -43,11 +58,12 @@
     data() {
       return {
         category: '',
+        categoryPublished: false,
       };
     },
     computed: {
       newCategory() {
-        return this.id === newContentTag;
+        return this.id === newModelUUID;
       },
       displayedId() {
         if (this.newCategory) {
@@ -57,12 +73,33 @@
         }
       },
     },
+    methods: {
+      fetchValue() {
+        this.$refs.contentFrame.startLoading();
+
+        if (!this.newCategory) {
+          apiCaller(categoryMutation, {
+            id: this.id,
+            category: this.category,
+            isPublished: this.categoryPublished,
+          })
+            .then((data) => {
+              if (!data) {
+                throw Error(
+                  'Invalid data returned. Cannot modify current entry.'
+                );
+              }
+            })
+            .then(() => {
+              this.$refs.contentFrame.finishedLoading();
+            });
+        }
+      },
+    },
     watch: {
       id: function(newVal, oldVal) {
-        if (oldVal === newContentTag) {
-          this.$router.push(
-            this.$route.fullPath.replace(newContentTag, newVal)
-          );
+        if (oldVal === newModelUUID) {
+          this.$router.push(this.$route.fullPath.replace(newModelUUID, newVal));
         }
       },
     },

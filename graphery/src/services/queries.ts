@@ -209,3 +209,5 @@ export const codeListQuery = `query {
     id
   }
 }`;
+
+export const categoryMutation = ``;

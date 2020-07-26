@@ -7,7 +7,7 @@
       :data="tableContent"
       :columns="columns"
       :pagination="pagination"
-      :loading="loadingTable"
+      :loading="loadingContent"
       no-data-label="No graph info is found."
       row-key="id"
       separator="cell"

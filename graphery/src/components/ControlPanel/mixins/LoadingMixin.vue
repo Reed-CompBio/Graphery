@@ -2,15 +2,15 @@
   export default {
     data() {
       return {
-        loadingTable: false,
+        loadingContent: false,
       };
     },
     methods: {
       startLoading() {
-        this.loadingTable = true;
+        this.loadingContent = true;
       },
       finishedLoading() {
-        this.loadingTable = false;
+        this.loadingContent = false;
       },
     },
   };

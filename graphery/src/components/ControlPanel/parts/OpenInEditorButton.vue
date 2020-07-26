@@ -1,5 +1,5 @@
 <template>
-  <q-btn :label="label" @click.prevent="action" :to="routePath" flat>
+  <q-btn :label="label" @click="action" :to="routePath" flat>
     <SwitchTooltip text="Open In Editor"></SwitchTooltip>
   </q-btn>
 </template>
@@ -8,7 +8,17 @@
   import SwitchTooltip from '../../framework/SwitchTooltip.vue';
 
   export default {
-    props: ['label', 'action', 'routePath'],
+    props: {
+      label: {
+        default: '',
+      },
+      action: {
+        default: () => () => null,
+      },
+      routePath: {
+        default: null,
+      },
+    },
     components: {
       SwitchTooltip,
     },
