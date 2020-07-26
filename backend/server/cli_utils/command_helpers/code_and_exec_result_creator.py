@@ -11,7 +11,7 @@ from cli_utils.controller_helpers.code_helper import code_executor
 from cli_utils.controller_helpers.prompt_getters import get_code_text_and_graph_req, get_code_source_folder
 from cli_utils.controller_helpers.prompt_selectors import select_tutorial
 
-from cli_utils.intel_wrappers.intel_wrapper import CodeWrapper, ExecResultJsonWrapper, GraphWrapper, \
+from backend.intel_wrappers.intel_wrapper import CodeWrapper, ExecResultJsonWrapper, GraphWrapper, \
     finalize_prerequisite_wrapper, finalize_prerequisite_wrapper_iter, TutorialAnchorWrapper
 
 from bundle.GraphObjects.Graph import Graph as CustomGraphObject

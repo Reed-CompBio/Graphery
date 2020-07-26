@@ -8,10 +8,10 @@ from backend.model.TranslationModels import TranslationBase, GraphTranslationBas
 from backend.model.TutorialRelatedModel import Category, GraphPriority, Tutorial, Code, Graph
 from backend.model.UserModel import ROLES, User
 from backend.model.translation_collection import translation_table_mapping, graph_info_translation_table_mapping
-from cli_utils.intel_wrappers.intel_wrapper import UserWrapper, TutorialAnchorWrapper, CategoryWrapper, GraphWrapper, \
+from backend.intel_wrappers.intel_wrapper import UserWrapper, TutorialAnchorWrapper, CategoryWrapper, GraphWrapper, \
     ExecResultJsonWrapper, CodeWrapper, TutorialTranslationContentWrapper, GraphTranslationContentWrapper, \
     VariedTypeWrapper, FixedTypeWrapper
-from cli_utils.intel_wrappers.wrapper_bases import AbstractWrapper
+from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 
 
 class EmptyValue:

@@ -4,7 +4,7 @@ from django.db.transaction import commit, rollback
 from prompt_toolkit import prompt, print_formatted_text
 
 from cli_utils.cli_ui import new_session
-from cli_utils.intel_wrappers.intel_wrapper import AbstractWrapper
+from backend.intel_wrappers.intel_wrapper import AbstractWrapper
 
 
 @new_session('confirmation')

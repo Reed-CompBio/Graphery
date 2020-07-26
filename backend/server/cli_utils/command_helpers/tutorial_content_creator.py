@@ -14,7 +14,7 @@ from cli_utils.controller_helpers.prompt_consent import proceed_publishing_conte
 from cli_utils.controller_helpers.prompt_getters import get_location, get_name, get_abstract
 from cli_utils.controller_helpers.prompt_selectors import select_tutorial_lang, select_authors, select_tutorial
 
-from cli_utils.intel_wrappers.intel_wrapper import TutorialTranslationContentWrapper, finalize_prerequisite_wrapper_iter
+from backend.intel_wrappers.intel_wrapper import TutorialTranslationContentWrapper, finalize_prerequisite_wrapper_iter
 
 
 class TutorialContentCreator(CommandBaseOverIterable):

@@ -6,7 +6,7 @@ from cli_utils.command_helpers.command_base import CommandBase
 from cli_utils.controller_helpers.cli_validators import email_validator, username_validator
 from cli_utils.controller_helpers.prompt_getters import get_email, get_name, enter_password
 from cli_utils.controller_helpers.prompt_selectors import select_role, finalize_prerequisite_wrapper
-from cli_utils.intel_wrappers.intel_wrapper import UserWrapper
+from backend.intel_wrappers.intel_wrapper import UserWrapper
 
 
 class UserCreator(CommandBase):

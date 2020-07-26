@@ -4,7 +4,7 @@ from typing import Optional, Iterable, Mapping, Type, Union
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson
 from backend.model.UserModel import User
-from cli_utils.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper
+from backend.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper
 
 
 def dummy_validator(info):

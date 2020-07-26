@@ -9,7 +9,7 @@ from backend.model.translation_collection import translation_table_mapping, get_
 from cli_utils.cli_ui import new_session, run_interruptable_checkbox_dialog, run_interruptable_radio_box_dialog
 from .prompt_getters import new_line_prompt
 
-from cli_utils.intel_wrappers.intel_wrapper import *
+from backend.intel_wrappers.intel_wrapper import *
 
 
 @new_session('select and add categories')

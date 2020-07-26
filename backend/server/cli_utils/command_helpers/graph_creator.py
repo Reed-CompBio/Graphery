@@ -16,7 +16,7 @@ from cli_utils.controller_helpers.prompt_selectors import select_tutorials, sele
 
 from cli_utils.errors import InvalidGraphJson
 
-from cli_utils.intel_wrappers.intel_wrapper import GraphWrapper, finalize_prerequisite_wrapper_iter
+from backend.intel_wrappers.intel_wrapper import GraphWrapper, finalize_prerequisite_wrapper_iter
 
 
 class GraphCreator(CommandBaseOverIterable):

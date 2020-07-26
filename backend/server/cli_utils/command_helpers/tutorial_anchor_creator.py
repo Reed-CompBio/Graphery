@@ -12,7 +12,7 @@ from cli_utils.controller_helpers.prompt_consent import proceed_publishing_conte
 from cli_utils.controller_helpers.prompt_getters import get_name, get_url
 from cli_utils.controller_helpers.prompt_selectors import select_and_add_categories
 
-from cli_utils.intel_wrappers.intel_wrapper import TutorialAnchorWrapper, finalize_prerequisite_wrapper
+from backend.intel_wrappers.intel_wrapper import TutorialAnchorWrapper, finalize_prerequisite_wrapper
 
 
 class TutorialAnchorCreator(CommandBase):

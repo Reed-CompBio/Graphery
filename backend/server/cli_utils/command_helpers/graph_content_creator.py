@@ -14,7 +14,7 @@ from cli_utils.controller_helpers.prompt_consent import proceed_publishing_conte
 from cli_utils.controller_helpers.prompt_getters import get_name, get_abstract, get_location
 from cli_utils.controller_helpers.prompt_selectors import select_graph_lang, select_graph
 
-from cli_utils.intel_wrappers.intel_wrapper import GraphTranslationContentWrapper, finalize_prerequisite_wrapper_iter
+from backend.intel_wrappers.intel_wrapper import GraphTranslationContentWrapper, finalize_prerequisite_wrapper_iter
 
 
 class GraphContentCreator(CommandBaseOverIterable):
