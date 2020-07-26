@@ -10,7 +10,11 @@
           :multiple="false"
           dropdown-icon="mdi-menu-down"
           :loading="graphsEmpty"
+          :option-label="inputSectionLabelMapper"
+          option-value="id"
+          option-disable="isPublished"
           emit-value
+          map-options
         >
           <template v-slot:no-option>
             <q-item>
@@ -143,7 +147,7 @@
             this.choseGraphObj = choseGraphObj;
             this.$store.commit(
               'tutorials/LOAD_CURRENT_GRAPH_ID',
-              choseGraphObj.value
+              choseGraphObj
             );
           }
         },
@@ -440,10 +444,24 @@
           });
         }
       },
+      loadFirstGraph() {
+        if (this.getGraphList && this.getGraphList.length > 0) {
+          this.graphChoice = this.getGraphList[0].id;
+        }
+
+        this.graphChoice = null;
+      },
+      inputSectionLabelMapper(obj) {
+        return Object(obj) === obj && 'content' in obj
+          ? obj.content.title === '<None>'
+            ? 'No Title'
+            : obj.content.title
+          : null;
+      },
     },
     watch: {
       getGraphList: function() {
-        this.graphChoice = this.getGraphList[0];
+        this.loadFirstGraph();
       },
       currentGraph: function() {
         this.reloadGraph();
@@ -493,7 +511,7 @@
           );
           console.debug('cy obj is mounted', this.cyInstance);
 
-          this.graphChoice = this.getGraphList[0];
+          this.loadFirstGraph();
           this.reloadGraph();
 
           // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph

@@ -67,6 +67,15 @@ query ($url: String, $translation: String, $default: String = "en-us") {
   }
 }`;
 
+export const pullTutorialArticle = `query ($url: String, $translation: String, $default: String = "en-us") {
+  tutorial(url: $url) {
+    content(translation: $translation, default: $default) {
+      title
+      contentHtml
+    }
+  }
+}`;
+
 export const pullGraphAndCodeQuery = `
 query ($url: String, $translation: String, $default: String = "en-us") {
   graph(url: $url) {

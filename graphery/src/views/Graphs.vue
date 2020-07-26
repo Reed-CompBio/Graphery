@@ -21,7 +21,7 @@
         });
       }
     "
-    moreButtonText="Play"
+    moreButtonText="Play With it"
   ></CollectionPage>
 </template>
 

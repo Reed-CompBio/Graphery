@@ -209,19 +209,7 @@ const getters: GetterTree<TutorialState, RootState> = {
     );
   },
   getGraphList(state) {
-    const arr: { label: string; value: string }[] = [];
-    if (!state.graphs) {
-      return arr;
-    }
-
-    state.graphs.forEach((value) => {
-      arr.push({
-        label: value.content.title,
-        value: value.id,
-      });
-    });
-
-    return arr;
+    return state.graphs;
   },
   resultJson(state) {
     if (state.resultJsonList) {

@@ -131,7 +131,10 @@
   import { headerSize } from '../store/states/meta';
   import { mapState, mapActions, mapGetters } from 'vuex';
   import { apiCaller } from '../services/apis';
-  import { pullTutorialDetailQuery } from '../services/queries';
+  import {
+    pullTutorialArticle,
+    pullTutorialDetailQuery,
+  } from '../services/queries';
   import { errorDialog } from '../services/helpers';
 
   export default {
@@ -219,6 +222,9 @@
         }
         return '';
       },
+      currentLang() {
+        return this.$i18n.locale;
+      },
     },
     methods: {
       ...mapActions('tutorials', ['clearAll', 'loadTutorial']),
@@ -229,7 +235,7 @@
         );
         apiCaller(pullTutorialDetailQuery, {
           url: this.url,
-          translation: this.$i18n.locale,
+          translation: this.currentLang,
           default: 'en-us',
         })
           .then((data) => {
@@ -249,6 +255,31 @@
       },
       switchTabView(tab) {
         this.currentTab = tab;
+      },
+    },
+    watch: {
+      currentLang: function(newVal) {
+        this.$store.commit('tutorials/CLEAR_ARTICLE_CONTENT');
+
+        apiCaller(pullTutorialArticle, {
+          url: this.url,
+          translation: newVal,
+          default: 'en-us',
+        })
+          .then((data) => {
+            if (!data || !('tutorial' in data)) {
+              throw Error('Invalid data returned.');
+            }
+            this.$store.commit(
+              'tutorials/LOAD_ARTICLE_CONTENT',
+              data.tutorial.content
+            );
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during switching languages. ${err}`,
+            });
+          });
       },
     },
     mounted() {
