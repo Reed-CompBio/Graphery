@@ -51,9 +51,9 @@
 
       <q-page-container>
         <q-page>
-          <keep-alive>
-            <router-view></router-view>
-          </keep-alive>
+          <!--          <keep-alive :exclude="/.*Creation.*/">-->
+          <router-view></router-view>
+          <!--          </keep-alive>-->
         </q-page>
       </q-page-container>
     </q-layout>

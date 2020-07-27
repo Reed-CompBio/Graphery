@@ -210,4 +210,10 @@ export const codeListQuery = `query {
   }
 }`;
 
-export const categoryMutation = ``;
+export const categoryQuery = `
+query ($id: String!){
+  category(pk: $id) {
+    isPublished
+    category
+  }
+}`;

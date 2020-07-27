@@ -1,5 +1,5 @@
 <template>
-  <ControlPanelContentFrame ref="contentFrame">
+  <ControlPanelContentFrame>
     <template v-slot:title>
       Category Editor
     </template>
@@ -33,18 +33,28 @@
           />
         </InfoCard>
 
-        <q-btn class="half-width-card" label="Submit" />
+        <q-btn
+          class="half-width-card"
+          label="Submit"
+          :loading="loadingContent"
+        />
       </div>
+      <q-inner-loading :showing="loadingContent">
+        <q-spinner-pie size="64px" color="primary" />
+      </q-inner-loading>
     </template>
   </ControlPanelContentFrame>
 </template>
 
 <script>
+  import loadingMixin from '../mixins/LoadingMixin.vue';
   import { newModelUUID } from '../../../services/params';
   import { apiCaller } from '../../../services/apis';
-  import { categoryMutation } from '../../../services/queries';
+  import { categoryQuery } from '../../../services/queries';
+  import { errorDialog } from '../../../services/helpers';
 
   export default {
+    mixins: [loadingMixin],
     props: {
       id: {
         default: newModelUUID,
@@ -75,33 +85,35 @@
     },
     methods: {
       fetchValue() {
-        this.$refs.contentFrame.startLoading();
-
         if (!this.newCategory) {
-          apiCaller(categoryMutation, {
+          this.startLoading();
+
+          apiCaller(categoryQuery, {
             id: this.id,
-            category: this.category,
-            isPublished: this.categoryPublished,
           })
             .then((data) => {
-              if (!data) {
+              if (!data || !('category' in data) || !data.category) {
                 throw Error(
                   'Invalid data returned. Cannot modify current entry.'
                 );
               }
+
+              this.category = data.category.category;
+              this.categoryPublished = data.category.isPublished;
             })
-            .then(() => {
-              this.$refs.contentFrame.finishedLoading();
+            .catch((err) => {
+              errorDialog({
+                message: `An error occurs during fetching Category. ${err}`,
+              });
+            })
+            .finally(() => {
+              this.finishedLoading();
             });
         }
       },
     },
-    watch: {
-      id: function(newVal, oldVal) {
-        if (oldVal === newModelUUID) {
-          this.$router.push(this.$route.fullPath.replace(newModelUUID, newVal));
-        }
-      },
+    beforeMount() {
+      this.fetchValue();
     },
   };
 </script>
