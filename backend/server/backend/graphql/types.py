@@ -1,6 +1,7 @@
 from typing import Tuple, Any, Iterable
 
 from django.db.models import QuerySet
+from graphene_django import DjangoListField
 from graphql import ResolveInfo
 
 from ..model.TutorialRelatedModel import FAKE_UUID, GraphPriority
@@ -70,12 +71,12 @@ class CategoryType(PublishedFilterBase, DjangoObjectType):
 
 class TutorialType(PublishedFilterBase, DjangoObjectType):
     content = graphene.Field(TutorialInterface, translation=graphene.String(), default=graphene.String(), required=True)
-    categories = graphene.List(graphene.String)
+    categories = DjangoListField(CategoryType, required=True)
 
     @show_published_only
     def resolve_categories(self, info, is_published_only: bool):
         raw_results = self.categories.is_published_only_all(is_published_only=is_published_only)
-        return raw_results.values_list('category', flat=True)
+        return raw_results
 
     @show_published_only
     def resolve_content(self,
@@ -118,7 +119,7 @@ class GraphContentInterface(graphene.Interface):
 class GraphType(PublishedFilterBase, DjangoObjectType):
     priority = graphene.String(required=True)
     authors = graphene.List(graphene.String)
-    categories = graphene.List(graphene.String)
+    categories = DjangoListField(CategoryType)
     content = graphene.Field(GraphContentInterface,
                              translation=graphene.String(),
                              default=graphene.String(),
@@ -137,7 +138,7 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
     @show_published_only
     def resolve_categories(self, info, is_published_only: bool):
         raw_results = self.categories.is_published_only_all(is_published_only=is_published_only)
-        return raw_results.values_list('category', flat=True)
+        return raw_results
 
     @show_published_only
     def resolve_content(self,

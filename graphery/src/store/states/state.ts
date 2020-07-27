@@ -102,10 +102,15 @@ export interface TutorialCode {
   execresultjsonSet: TutorialExecResultJson[];
 }
 
+export interface CategoryType {
+  id: string;
+  category: string;
+}
+
 export interface TutorialDetailResponse {
   id: string;
   isPublished: boolean;
-  categories: string[];
+  categories: CategoryType[];
   content: TutorialContent;
   graphSet: TutorialGraph[];
   code: TutorialCode;

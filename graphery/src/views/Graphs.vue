@@ -10,7 +10,7 @@
         return input.map((ele) => {
           return {
             url: `/graph/${ele.url}`,
-            categories: [],
+            categories: ele.categories.map((obj) => obj.category),
             isAnchorPublished: ele.isPublished,
             title: ele.content.title,
             authors: ele.authors,

@@ -14,7 +14,6 @@
                 v-model="graphObj.url"
                 hint="please input URL. Do not start or end it with -_."
                 label="Graph URL"
-                :disable="!isCreatingNewGraph"
               ></q-input>
             </div>
             <div class="col-6 q-pl-sm">

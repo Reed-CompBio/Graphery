@@ -3,7 +3,9 @@ query ($translation: String, $default: String = "en-us") {
   allTutorialInfo {
     url
     isPublished
-    categories
+    categories {
+      category
+    }
     content (translation: $translation, default: $default) {
       title
       authors
@@ -20,6 +22,9 @@ query ($translation: String, $default: String = "en-us") {
   allGraphInfo {
     url
     authors
+    categories {
+      category
+    }
     isPublished
     modifiedTime
     content(translation: $translation, default: $default) {
@@ -35,7 +40,9 @@ export const pullTutorialDetailQuery = `
 query ($url: String, $translation: String, $default: String = "en-us") {
   tutorial(url: $url) {
     isPublished
-    categories
+    categories {
+      category
+    }
     content(translation: $translation, default: $default) {
       title
       authors
@@ -101,6 +108,7 @@ query ($url: String, $translation: String, $default: String = "en-us") {
 export const allCategoryQuery = `
 query {
   allCategories {
+    id
     category
   }
 }`;
@@ -236,7 +244,9 @@ query($id: String!) {
   tutorial(id: $id) {
     url
     name
-    categories
+    categories {
+      id
+    }
     isPublished
   }
 }`;
@@ -247,3 +257,5 @@ mutation ($id: String!, $url: String!, $name: String!, $categories: [String], $i
     success
   }
 }`;
+
+export const graphQuery = ``;

@@ -108,7 +108,7 @@ const actions: ActionTree<TutorialState, RootState> = {
       isAnchorPublished: tutorialObj.isPublished,
       isTransPublished: tutorialObj.content.isPublished,
       authors: tutorialObj.content.authors,
-      categories: tutorialObj.categories,
+      categories: tutorialObj.categories.map((obj) => obj.category),
       modifiedTime: tutorialObj.content.modifiedTime,
     });
 

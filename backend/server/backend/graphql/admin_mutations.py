@@ -56,7 +56,7 @@ class UpdateTutorialAnchor(graphene.Mutation):
         url = url.strip()
         name = name.strip()
 
-        categories: List[CategoryWrapper] = [CategoryWrapper().load_model(Category.objects.get(category=cat))
+        categories: List[CategoryWrapper] = [CategoryWrapper().load_model(Category.objects.get(id=cat))
                                              for cat in categories]
 
         tutorial_anchor_wrapper = process_model_wrapper(TutorialAnchorWrapper,

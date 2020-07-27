@@ -31,10 +31,13 @@
           <q-select
             multiple
             use-chips
-            clearable
             v-model="tutorialAnchorObj.categories"
             :options="categoryOptions"
             :loading="loadingCategory"
+            emit-value
+            map-options
+            option-label="category"
+            option-value="id"
           ></q-select>
         </InfoCard>
 
@@ -109,6 +112,7 @@
               this.tutorialAnchorObj = {
                 ...this.tutorialAnchorObj,
                 ...data.tutorial,
+                categories: data.tutorial.categories.map((obj) => obj.id),
               };
             })
             .catch((err) => {
@@ -128,9 +132,7 @@
               throw Error('Invalid data returned.');
             }
 
-            this.categoryOptions = data.allCategories.map(
-              (obj) => obj.category
-            );
+            this.categoryOptions = data.allCategories;
           })
           .catch((err) => {
             errorDialog({
