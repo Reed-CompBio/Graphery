@@ -217,3 +217,11 @@ query ($id: String!){
     category
   }
 }`;
+
+export const updateCategoryMutation = `
+mutation($id: String!, $category: String!, $isPublished: Boolean) {
+  updateCategory(pk: $id, category: $category, isPublished: $isPublished) {
+    success
+    id
+  }
+}`;

@@ -33,11 +33,7 @@
           />
         </InfoCard>
 
-        <q-btn
-          class="half-width-card"
-          label="Submit"
-          :loading="loadingContent"
-        />
+        <SubmitButton class="half-width-card" :action="postValue" />
       </div>
       <q-inner-loading :showing="loadingContent">
         <q-spinner-pie size="64px" color="primary" />
@@ -50,8 +46,12 @@
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import { newModelUUID } from '../../../services/params';
   import { apiCaller } from '../../../services/apis';
-  import { categoryQuery } from '../../../services/queries';
+  import {
+    categoryQuery,
+    updateCategoryMutation,
+  } from '../../../services/queries';
   import { errorDialog } from '../../../services/helpers';
+  import SubmitButton from '../parts/SubmitButton';
 
   export default {
     mixins: [loadingMixin],
@@ -61,6 +61,7 @@
       },
     },
     components: {
+      SubmitButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       InfoCard: () => import('../parts/InfoCard.vue'),
@@ -110,6 +111,39 @@
               this.finishedLoading();
             });
         }
+      },
+      pushToNewPlace(id) {
+        if (this.newCategory) {
+          this.$router.push({ name: 'Category Editor', params: { id } });
+        }
+      },
+      postValue() {
+        this.startLoading();
+        apiCaller(updateCategoryMutation, {
+          id: this.id,
+          category: this.category,
+          isPublished: this.categoryPublished,
+        })
+          .then((data) => {
+            if (!data || !('updateCategory' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            if (!data.updateCategory.success) {
+              throw Error('Cannot modify category for unknown reason');
+            }
+
+            this.pushToNewPlace(data.updateCategory.id);
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during updating category entry. ${err}`,
+            });
+          })
+          .finally(() => {
+            this.finishedLoading();
+            this.fetchValue();
+          });
       },
     },
     beforeMount() {
