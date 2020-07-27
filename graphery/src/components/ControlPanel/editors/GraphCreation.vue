@@ -68,12 +68,25 @@
 
           <InfoCard>
             <template v-slot:title>
+              Priority
+            </template>
+            <q-select
+              v-model="graphObj.priority"
+              :options="priorityOptions"
+              emit-value
+              map-options
+              option-label="label"
+              option-value="priority"
+            />
+          </InfoCard>
+
+          <InfoCard>
+            <template v-slot:title>
               Authors
             </template>
             <q-select
               multiple
               use-chips
-              clearable
               v-model="graphObj.authors"
               :options="authorOptions"
             ></q-select>
@@ -86,7 +99,6 @@
             <q-select
               multiple
               use-chips
-              clearable
               v-model="graphObj.categories"
               :options="categoryOptions"
             ></q-select>
@@ -136,6 +148,7 @@
           id: this.id,
           url: '',
           name: '',
+          priority: 60,
           cyjs: '',
           isPublished: false,
           authors: [],
@@ -143,6 +156,21 @@
           tutorials: [],
         },
         authorOptions: [],
+        // TODO hard coded for now
+        priorityOptions: [
+          {
+            priority: 60,
+            label: 'Main Graph',
+          },
+          {
+            priority: 40,
+            label: 'Supplement Graph',
+          },
+          {
+            priority: 20,
+            label: 'Trivial Graph',
+          },
+        ],
         categoryOptions: [],
         tutorialOptions: [],
         uploadFile: [],

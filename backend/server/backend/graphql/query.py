@@ -73,9 +73,11 @@ class Query(graphene.ObjectType):
     def resolve_all_exec_result(self, info: ResolveInfo):
         return ExecResultJson.objects.all()
 
+    @write_required
     def resolve_all_supported_lang(self, info: ResolveInfo):
         return translation_tables
 
+    @write_required
     def resolve_all_graph_priority(self, info: ResolveInfo):
         return [GraphPriorityType(priority=priority, label=label) for priority, label in GraphPriority.choices]
 
