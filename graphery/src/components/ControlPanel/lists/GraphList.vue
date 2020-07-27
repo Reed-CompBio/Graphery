@@ -16,12 +16,19 @@
       >
         <template v-slot:top>
           <RefreshButton :fetch-func="fetchGraphs" />
+          <AddNewButton :create-func="createGraph" />
         </template>
         <template v-slot:body="props">
           <q-tr :props="props">
             <!-- name -->
             <q-td key="name" :props="props">
-              <OpenInEditorButton :label="props.row.name" />
+              <OpenInEditorButton
+                :label="props.row.name"
+                :routePath="{
+                  name: 'Graph Editor',
+                  params: { url: props.row.url },
+                }"
+              />
             </q-td>
 
             <!-- published -->
@@ -81,12 +88,15 @@
 <script>
   import { apiCaller } from '../../../services/apis';
   import { graphListQuery } from '../../../services/queries';
-  import { errorDialog } from '../../../services/helpers';
+  import { errorDialog, resolveAndOpenLink } from '../../../services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
+  import AddNewButton from '../parts/AddNewButton';
+  import { newContentTag } from '../../../services/params';
 
   export default {
     mixins: [loadingMixin],
     components: {
+      AddNewButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton'),
@@ -187,6 +197,14 @@
           .finally(() => {
             this.finishedLoading();
           });
+      },
+      createGraph() {
+        resolveAndOpenLink({
+          name: 'Graph Editor',
+          params: {
+            url: newContentTag,
+          },
+        });
       },
     },
     mounted() {

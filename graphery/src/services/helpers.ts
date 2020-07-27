@@ -6,7 +6,6 @@ import store from '@/store/index';
 import { Notify } from 'quasar';
 import { Location } from 'vue-router';
 import router from '@/router/index';
-import { newContentTag } from '@/services/params';
 
 export function successDialog(info: { message: string }) {
   Notify.create({
