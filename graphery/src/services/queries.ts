@@ -58,7 +58,10 @@ query ($url: String, $translation: String, $default: String = "en-us") {
         abstract
         isPublished
       }
-      priority
+      priority {
+        priority
+        label
+      }
       cyjs
     }
     code {
@@ -89,7 +92,10 @@ query ($url: String, $translation: String, $default: String = "en-us") {
     id
     cyjs
     isPublished
-    priority
+    priority {
+      priority
+      label
+    }
     content(translation: $translation, default: $default){
       title 
       abstract
@@ -156,7 +162,9 @@ query {
   allGraphInfo {
     name
     isPublished
-    priority
+    priority {
+      label
+    }
     cyjs
     tutorials {
       name

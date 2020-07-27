@@ -184,6 +184,7 @@
             }
 
             this.tableContent = data['allGraphInfo'].map((obj) => {
+              obj.priority = obj.priority.label;
               obj.tutorials = obj.tutorials.map((o) => o.name);
               return obj;
             });

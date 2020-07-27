@@ -1,5 +1,3 @@
-import { date } from 'quasar';
-
 export interface RootState {
   drawer: boolean;
 }
@@ -26,6 +24,11 @@ export interface NotificationState {
   details: string;
 }
 
+export interface PriorityType {
+  priority: number;
+  label: string;
+}
+
 export interface Graph {
   id: string;
   isPublished: boolean;
@@ -34,7 +37,7 @@ export interface Graph {
     abstract: string;
     isPublished: boolean;
   };
-  priority: number;
+  priority: PriorityType;
   cyjs: object | string;
 }
 
@@ -87,7 +90,7 @@ export interface TutorialGraph {
     abstract: string;
     isPublished: boolean;
   };
-  priority: number;
+  priority: PriorityType;
   cyjs: string;
 }
 

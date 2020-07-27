@@ -116,8 +116,13 @@ class GraphContentInterface(graphene.Interface):
     is_published = graphene.Boolean()
 
 
+class PriorityInterface(graphene.ObjectType):
+    priority = graphene.Int(required=True)
+    label = graphene.String(required=True)
+
+
 class GraphType(PublishedFilterBase, DjangoObjectType):
-    priority = graphene.String(required=True)
+    priority = graphene.Field(PriorityInterface, required=True)
     authors = graphene.List(graphene.String)
     categories = DjangoListField(CategoryType)
     content = graphene.Field(GraphContentInterface,
@@ -130,7 +135,7 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
     # and will be automatically translated to DjangoListField
 
     def resolve_priority(self, info):
-        return GraphPriority(self.priority).label
+        return PriorityInterface(priority=self.priority, label=GraphPriority(self.priority).label)
 
     def resolve_authors(self, info):
         return self.authors.all().values_list('username', flat=True)
