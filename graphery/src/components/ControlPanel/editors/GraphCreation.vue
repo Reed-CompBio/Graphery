@@ -7,10 +7,11 @@
       <EditorFrame>
         <template v-slot:left>
           <div class="row full-width">
+            <IDCard :id="graphObj.id" class="full-width" />
             <div class="col-6 q-pr-sm">
               <q-input
                 outlined
-                v-model="graphUrl"
+                v-model="graphObj.url"
                 hint="please input URL. Do not start or end it with -_."
                 label="Graph URL"
                 :disable="!isCreatingNewGraph"
@@ -19,7 +20,7 @@
             <div class="col-6 q-pl-sm">
               <q-input
                 outlined
-                v-model="graphName"
+                v-model="graphObj.name"
                 hint="Please enter a unique name."
                 label="Graph Name"
               ></q-input>
@@ -33,7 +34,7 @@
                 type="textarea"
                 label="Graph JSON"
                 outlined
-                v-model="cyjs"
+                v-model="graphObj.cyjs"
               ></q-input>
             </q-card>
             <q-file
@@ -61,8 +62,8 @@
               Published
             </template>
             <q-checkbox
-              v-model="graphPublished"
-              :label="graphPublished ? '✅' : '❌'"
+              v-model="graphObj.isPublished"
+              :label="graphObj.isPublished ? '✅' : '❌'"
             />
           </InfoCard>
 
@@ -74,7 +75,7 @@
               multiple
               use-chips
               clearable
-              v-model="authorChoices"
+              v-model="graphObj.authors"
               :options="authorOptions"
             ></q-select>
           </InfoCard>
@@ -87,7 +88,7 @@
               multiple
               use-chips
               clearable
-              v-model="categoryChoices"
+              v-model="graphObj.categories"
               :options="categoryOptions"
             ></q-select>
           </InfoCard>
@@ -100,7 +101,7 @@
             <q-select
               multiple
               use-chips
-              v-model="tutorialChoices"
+              v-model="graphObj.tutorials"
               :options="tutorialOptions"
             ></q-select>
           </InfoCard>
@@ -114,10 +115,13 @@
 
 <script>
   import { errorDialog } from '../../../services/helpers';
+  import { newModelUUID } from '../../../services/params';
+  import IDCard from '../parts/IDCard';
 
   export default {
-    props: ['url'],
+    props: ['id'],
     components: {
+      IDCard,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
@@ -125,22 +129,25 @@
     },
     data() {
       return {
-        cyjs: '',
-        graphUrl: '',
-        graphName: '',
-        graphPublished: false,
-        authorChoices: [],
+        graphObj: {
+          id: this.id,
+          url: '',
+          name: '',
+          cyjs: '',
+          isPublished: false,
+          authors: [],
+          categories: [],
+          tutorials: [],
+        },
         authorOptions: [],
-        categoryChoices: [],
         categoryOptions: [],
-        tutorialChoices: [],
         tutorialOptions: [],
         uploadFile: [],
       };
     },
     computed: {
       isCreatingNewGraph() {
-        return this.url === '-new-';
+        return this.id === newModelUUID;
       },
     },
     methods: {

@@ -58,7 +58,7 @@
   import { errorDialog, resolveAndOpenLink } from '../../../services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import AddNewButton from '../parts/AddNewButton';
-  import { newContentTag } from '../../../services/params';
+  import { newModelUUID } from '../../../services/params';
 
   export default {
     mixins: [loadingMixin],
@@ -141,7 +141,7 @@
       createTutorial() {
         resolveAndOpenLink({
           name: 'Tutorial Anchor Editor',
-          params: { url: newContentTag },
+          params: { id: newModelUUID },
         });
       },
     },

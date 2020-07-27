@@ -5,6 +5,7 @@
     </template>
     <template>
       <div style="display: flex; flex-direction: column;" class="flex-center">
+        <IDCard class="half-width-card" :id="this.tutorialAnchorObj.id" />
         <InfoCard class="half-width-card">
           <template v-slot:title>
             Tutorial URL
@@ -64,11 +65,13 @@
   } from '../../../services/queries';
   import { errorDialog, successDialog } from '../../../services/helpers';
   import SubmitButton from '../parts/SubmitButton';
+  import IDCard from '../parts/IDCard';
 
   export default {
     mixins: [loadingMixin],
     props: ['id'],
     components: {
+      IDCard,
       SubmitButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
@@ -89,7 +92,7 @@
     },
     computed: {
       isCreatingNewAnchor() {
-        return this.tutorialAnchorObj.url === newModelUUID;
+        return this.tutorialAnchorObj.id === newModelUUID;
       },
     },
     methods: {
@@ -146,36 +149,30 @@
         }
       },
       postTutorial() {
-        if (!this.isCreatingNewAnchor) {
-          this.startLoading();
-          apiCaller(updateTutorialAnchorMutation, this.tutorialAnchorObj)
-            .then((data) => {
-              if (!data || !('updateTutorialAnchor' in data)) {
-                throw Error('Invalid data returned.');
-              }
+        this.startLoading();
+        apiCaller(updateTutorialAnchorMutation, this.tutorialAnchorObj)
+          .then((data) => {
+            if (!data || !('updateTutorialAnchor' in data)) {
+              throw Error('Invalid data returned.');
+            }
 
-              if (!data.updateTutorialAnchor.success) {
-                throw Error('Cannot update tutorial anchor at this time.');
-              }
+            if (!data.updateTutorialAnchor.success) {
+              throw Error('Cannot update tutorial anchor at this time.');
+            }
 
-              this.pushToNewPlace(this.tutorialAnchorObj.url);
-              successDialog({
-                message: 'Update Tutorial Anchor Successfully!',
-              });
-            })
-            .catch((err) => {
-              errorDialog({
-                message: `An error occurs during fetching tutorial anchor detail. ${err}`,
-              });
-            })
-            .finally(() => {
-              this.finishedLoading();
+            this.pushToNewPlace(this.tutorialAnchorObj.url);
+            successDialog({
+              message: 'Update Tutorial Anchor Successfully!',
             });
-        } else {
-          errorDialog({
-            message: 'Please change the url.',
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during fetching tutorial anchor detail. ${err}`,
+            });
+          })
+          .finally(() => {
+            this.finishedLoading();
           });
-        }
       },
     },
     mounted() {

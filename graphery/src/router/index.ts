@@ -155,7 +155,7 @@ const routes: Array<RouteConfig> = [
           import('@/components/ControlPanel/lists/GraphList.vue'),
       },
       {
-        path: 'graph-editor/:url',
+        path: 'graph-editor/:id',
         name: 'Graph Editor',
         props: true,
         component: () =>

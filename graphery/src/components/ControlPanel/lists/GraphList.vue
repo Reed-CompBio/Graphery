@@ -26,7 +26,7 @@
                 :label="props.row.name"
                 :routePath="{
                   name: 'Graph Editor',
-                  params: { url: props.row.url },
+                  params: { id: props.row.id },
                 }"
               />
             </q-td>
@@ -91,7 +91,7 @@
   import { errorDialog, resolveAndOpenLink } from '../../../services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import AddNewButton from '../parts/AddNewButton';
-  import { newContentTag } from '../../../services/params';
+  import { newModelUUID } from '../../../services/params';
 
   export default {
     mixins: [loadingMixin],
@@ -202,7 +202,7 @@
         resolveAndOpenLink({
           name: 'Graph Editor',
           params: {
-            url: newContentTag,
+            id: newModelUUID,
           },
         });
       },
