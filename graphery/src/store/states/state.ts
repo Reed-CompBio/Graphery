@@ -74,9 +74,13 @@ export interface TutorialState {
   customJson: object | null;
 }
 
+export interface UserType {
+  username: string;
+}
+
 export interface TutorialContent {
   title: string;
-  authors: string[];
+  authors: UserType[];
   contentHtml: string;
   isPublished: boolean;
   modifiedTime: string;

@@ -194,6 +194,9 @@
             }
 
             this.tableContent = data['allTutorialInfo'].map((obj) => {
+              obj.content.authors = obj.content.authors.map(
+                (obj) => obj.username
+              );
               obj.content.tutorialName = obj.name;
               obj.content.tutorialUrl = obj.url;
               return obj.content;

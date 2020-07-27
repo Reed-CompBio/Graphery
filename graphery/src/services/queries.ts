@@ -8,7 +8,9 @@ query ($translation: String, $default: String = "en-us") {
     }
     content (translation: $translation, default: $default) {
       title
-      authors
+      authors {
+        username
+      }
       abstract
       isPublished
       modifiedTime
@@ -21,7 +23,9 @@ export const allGraphAbstractInfoQuery = `
 query ($translation: String, $default: String = "en-us") {
   allGraphInfo {
     url
-    authors
+    authors {
+      username
+    }
     categories {
       category
     }
@@ -45,7 +49,9 @@ query ($url: String, $translation: String, $default: String = "en-us") {
     }
     content(translation: $translation, default: $default) {
       title
-      authors
+      authors {
+        username
+      }
       contentHtml
       isPublished
       modifiedTime
@@ -169,7 +175,9 @@ query {
     tutorials {
       name
     }
-    authors
+    authors {
+      username
+    }
     url
     id
   }
@@ -193,7 +201,9 @@ query ($translation: String, $default: String = "") {
       title
       isPublished 
       abstract
-      authors
+      authors {
+        username
+      }
       contentMd
       contentHtml
       id 

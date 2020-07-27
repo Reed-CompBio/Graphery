@@ -185,7 +185,8 @@
 
             this.tableContent = data['allGraphInfo'].map((obj) => {
               obj.priority = obj.priority.label;
-              obj.tutorials = obj.tutorials.map((o) => o.name);
+              obj.authors = obj.authors.map((obj) => obj.username);
+              obj.tutorials = obj.tutorials.map((obj) => obj.name);
               return obj;
             });
           })

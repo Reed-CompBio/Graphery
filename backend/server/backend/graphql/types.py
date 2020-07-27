@@ -49,7 +49,7 @@ class UserType(DjangoObjectType):
 class TutorialInterface(graphene.Interface):
     id = graphene.UUID()
     title = graphene.String()
-    authors = graphene.List(graphene.String)
+    authors = DjangoListField(UserType)
     abstract = graphene.String()
     content_md = graphene.String()
     content_html = graphene.String()
@@ -58,7 +58,7 @@ class TutorialInterface(graphene.Interface):
     modified_time = graphene.DateTime()
 
     def resolve_authors(self, info):
-        return self.authors.all().values_list('username', flat=True)
+        return self.authors.all()
 
 
 class CategoryType(PublishedFilterBase, DjangoObjectType):
@@ -123,7 +123,7 @@ class GraphPriorityType(graphene.ObjectType):
 
 class GraphType(PublishedFilterBase, DjangoObjectType):
     priority = graphene.Field(GraphPriorityType, required=True)
-    authors = graphene.List(graphene.String)
+    authors = DjangoListField(UserType)
     categories = DjangoListField(CategoryType)
     content = graphene.Field(GraphContentInterface,
                              translation=graphene.String(),
@@ -138,7 +138,7 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
         return GraphPriorityType(priority=self.priority, label=GraphPriority(self.priority).label)
 
     def resolve_authors(self, info):
-        return self.authors.all().values_list('username', flat=True)
+        return self.authors.all()
 
     @show_published_only
     def resolve_categories(self, info, is_published_only: bool):
@@ -197,8 +197,7 @@ class ExecResultJsonType(DjangoObjectType):
 
 
 TutorialTransBaseFields = ('tutorial_anchor', 'authors',
-                           'abstract', 'content_md', 'content_html',
-                           )
+                           'abstract', 'content_md', 'content_html', )
 
 
 @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
