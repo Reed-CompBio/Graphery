@@ -1,8 +1,11 @@
 from abc import abstractmethod, ABC
 
-from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union
+from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, MutableMapping
 
+from django.core.exceptions import ValidationError
 from django.db import models, IntegrityError
+
+from backend.intel_wrappers.validators import is_published_validator
 
 
 class IntelWrapperBase(ABC):
@@ -17,10 +20,9 @@ class IntelWrapperBase(ABC):
                 raise AssertionError('Cannot find the field {} during validation'
                                      .format(field_name))
             try:
-                validator(field_name)
+                validator(field)
             except AssertionError as e:
-                e.args = 'The field {} does not pass the validator and has following error: {}' \
-                             .format(field_name, e),
+                e.args = f'The field {field_name} does not pass the validator and has following error: {e}',
                 raise
 
 
@@ -140,7 +142,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
             self.retrieve_model()
             if overwrite:
                 self.overwrite_model()
-        except self.model_class.DoesNotExist:
+        except (self.model_class.DoesNotExist, ValidationError):
             self.make_new_model()
         except self.model_class.MultipleObjectsReturned as e:
             # which should never happen
@@ -149,17 +151,12 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
 
 
 class PublishedWrapper(AbstractWrapper, ABC):
-    def __init__(self, validators: Mapping[str, Callable]):
+    def __init__(self, validators: MutableMapping[str, Callable]):
+        self.is_published: bool = False
+        validators['is_published'] = is_published_validator
         super(PublishedWrapper, self).__init__(validators)
 
-    def set_variables(self, **kwargs) -> 'PublishedWrapper':
-        is_published = kwargs.pop('is_published', None)
-        if is_published is not None:
-            self.set_published(is_published)
-        super().set_variables(**kwargs)
-        return self
-
-    def set_published(self, flag: bool = True):
+    def set_published(self):
         if self.model_exists():
-            self.model.is_published = flag
+            self.model.is_published = self.is_published
             self.save_model()

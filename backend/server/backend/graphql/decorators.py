@@ -4,6 +4,9 @@ from graphql import ResolveInfo, GraphQLError
 
 
 # Copied from django-graphql-jwt
+from backend.model.UserModel import ROLES
+
+
 def context(f):
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -26,3 +29,7 @@ def user_passes_test(test_func, exc=GraphQLError('You do not have permission to 
 
 
 login_required = user_passes_test(lambda u: u.is_authenticated)
+
+write_required = user_passes_test(lambda u: u.role > ROLES.TRANSLATOR)
+
+admin_required = user_passes_test(lambda u: u.role == ROLES.ADMINISTRATOR)

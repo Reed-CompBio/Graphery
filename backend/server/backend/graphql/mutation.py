@@ -2,6 +2,7 @@ import graphene
 from graphql import GraphQLError
 from django.contrib.auth import authenticate, login, logout
 
+from backend.graphql.admin_mutations import UpdateCategory
 from backend.graphql.types import UserType
 
 
@@ -32,11 +33,7 @@ class Logout(graphene.Mutation):
             raise GraphQLError('Not Logged In')
 
 
-class UpdateCategory(graphene.Mutation):
-    def mutate(self, info):
-        pass
-
-
 class Mutation(graphene.ObjectType):
     login = Login.Field()
     logout = Logout.Field()
+    updateCategory = UpdateCategory.Field()

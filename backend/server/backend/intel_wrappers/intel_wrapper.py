@@ -1,19 +1,16 @@
 import json
 from typing import Optional, Iterable, Mapping, Type, Union
 
+from backend.intel_wrappers.validators import dummy_validator, category_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson
 from backend.model.UserModel import User
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper
 
 
-def dummy_validator(info):
-    return info
-
-
-def finalize_prerequisite_wrapper(model_wrapper: AbstractWrapper) -> None:
+def finalize_prerequisite_wrapper(model_wrapper: AbstractWrapper, overwrite: bool = False) -> None:
     model_wrapper.prepare_model()
-    model_wrapper.get_model()
+    model_wrapper.get_model(overwrite=overwrite)
     model_wrapper.finalize_model()
 
 
@@ -79,22 +76,25 @@ class CategoryWrapper(PublishedWrapper):
     model_class: Type[Category] = Category
 
     def __init__(self):
+        self.id: Optional[str] = None
         self.category: Optional[str] = None
 
         PublishedWrapper.__init__(self, {
-            'category': dummy_validator
+            'id': dummy_validator,
+            'category': category_validator
         })
 
     def load_model(self, loaded_model: Category) -> 'CategoryWrapper':
         super().load_model(loaded_model)
+        self.id = loaded_model.id
         self.category = loaded_model.category
         return self
 
     def retrieve_model(self) -> None:
-        self.model: Category = self.model_class.objects.get(category=self.category)
+        self.model: Category = self.model_class.objects.get(id=self.id)
 
     def make_new_model(self) -> None:
-        self.model: Category = self.model_class(category=self.category, is_published=False)
+        self.model: Category = self.model_class(category=self.category, is_published=self.is_published)
 
     def __str__(self):
         return '<CategoryWrapper category_name={}>'.format(self.category)

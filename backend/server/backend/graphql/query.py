@@ -1,17 +1,24 @@
-from typing import Iterable
+from typing import Iterable, Type
 
 import graphene
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Model
 from graphene_django import DjangoListField
 from graphql import GraphQLError
 from graphql import ResolveInfo
 
-from .decorators import login_required
+from .decorators import login_required, write_required
 from ..model.filters import show_published_only
 from ..model.translation_collection import translation_tables
 from ..models import Category, Tutorial, Graph, ExecResultJson
 
 from .types import UserType, CategoryType, TutorialType, GraphType, Code, ExecResultJsonType, CodeType
+
+
+def get_or_none(model: Type[Model], **kwargs):
+    try:
+        return model.objects.get(**kwargs)
+    except model.DoesNotExist:
+        return None
 
 
 class Query(graphene.ObjectType):
@@ -24,8 +31,8 @@ class Query(graphene.ObjectType):
     all_code = DjangoListField(CodeType)
     all_exec_result = DjangoListField(ExecResultJsonType)
     all_supported_lang = graphene.List(graphene.String)
-    tutorial_count = graphene.Int()
 
+    category = graphene.Field(CategoryType, pk=graphene.String(required=True))
     tutorial = graphene.Field(TutorialType,
                               url=graphene.String(),
                               id=graphene.String())
@@ -66,9 +73,9 @@ class Query(graphene.ObjectType):
     def resolve_all_supported_lang(self, info: ResolveInfo):
         return translation_tables
 
-    @show_published_only
-    def resolve_tutorial_count(self, info: ResolveInfo, is_published_only: bool, **kwargs):
-        return Tutorial.objects.is_published_only_all(is_published_only=is_published_only).count()
+    @write_required
+    def resolve_category(self, info: ResolveInfo, pk):
+        return get_or_none(Category, pk=pk)
 
     @show_published_only
     def resolve_tutorial(self, info: ResolveInfo, is_published_only: bool, url=None, id=None):
