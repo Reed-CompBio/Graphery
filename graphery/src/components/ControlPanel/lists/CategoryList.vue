@@ -47,7 +47,7 @@
 <script>
   import { apiCaller } from '../../../services/apis';
   import { categoryListQuery } from '../../../services/queries';
-  import { errorDialog } from '../../../services/helpers';
+  import { errorDialog, resolveAndOpenLink } from '../../../services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import AddNewButton from '../parts/AddNewButton';
   import { newModelUUID } from '../../../services/params';
@@ -121,12 +121,10 @@
           });
       },
       createNewCategory() {
-        const { href } = this.$router.resolve({
+        resolveAndOpenLink({
           name: 'Category Editor',
           params: { id: newModelUUID },
         });
-
-        window.open(href, '_blank');
       },
     },
     mounted() {

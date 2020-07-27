@@ -4,6 +4,9 @@ import { apiCaller } from '@/services/apis';
 import { userInfoQuery } from '@/services/queries';
 import store from '@/store/index';
 import { Notify } from 'quasar';
+import { Location } from 'vue-router';
+import router from '@/router/index';
+import { newContentTag } from '@/services/params';
 
 export function successDialog(info: { message: string }) {
   Notify.create({
@@ -109,4 +112,9 @@ export async function pullUser(
   if (data) {
     await store.dispatch('setUser', data['userInfo']);
   }
+}
+
+export function resolveAndOpenLink(routerLinkObj: Location) {
+  const { href } = router.resolve(routerLinkObj);
+  window.open(href, '_blank');
 }

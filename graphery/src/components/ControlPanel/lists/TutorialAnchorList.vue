@@ -16,12 +16,19 @@
       >
         <template v-slot:top>
           <RefreshButton :fetch-func="fetchTutorials"></RefreshButton>
+          <AddNewButton :create-func="createTutorial" />
         </template>
         <template v-slot:body="props">
           <q-tr :props="props">
             <!-- tutorial name -->
             <q-td key="name" :props="props">
-              <OpenInEditorButton :label="props.row.name" />
+              <OpenInEditorButton
+                :label="props.row.name"
+                :routePath="{
+                  name: 'Tutorial Anchor Editor',
+                  params: { url: props.row.url },
+                }"
+              />
             </q-td>
 
             <!-- tutorial published -->
@@ -48,12 +55,15 @@
 <script>
   import { apiCaller } from '../../../services/apis';
   import { tutorialAnchorListQuery } from '../../../services/queries';
-  import { errorDialog } from '../../../services/helpers';
+  import { errorDialog, resolveAndOpenLink } from '../../../services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
+  import AddNewButton from '../parts/AddNewButton';
+  import { newContentTag } from '../../../services/params';
 
   export default {
     mixins: [loadingMixin],
     components: {
+      AddNewButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton.vue'),
@@ -127,6 +137,12 @@
           .finally(() => {
             this.finishedLoading();
           });
+      },
+      createTutorial() {
+        resolveAndOpenLink({
+          name: 'Tutorial Anchor Editor',
+          params: { id: newContentTag },
+        });
       },
     },
     mounted() {
