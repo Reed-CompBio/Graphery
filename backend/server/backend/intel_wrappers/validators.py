@@ -14,7 +14,7 @@ def is_published_validator(val: bool):
         raise ValidationError('`is_published` must be a boolean variable!')
 
 
-category_regex = re.compile(r'^[^-][\w-]*[^-]$')
+category_regex = re.compile(r'^[^-][\w -]*[^-]$')
 
 
 def category_validator(val: str):

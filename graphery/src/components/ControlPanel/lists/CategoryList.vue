@@ -15,7 +15,8 @@
         class="custom-table"
       >
         <template v-slot:top>
-          <RefreshButton :fetch-func="fetchCategories" />
+          <RefreshButton :fetch-func="fetchCategories" class="q-mr-md" />
+          <AddNewButton :create-func="createNewCategory" />
         </template>
         <template v-slot:body="props">
           <q-tr :props="props">
@@ -48,10 +49,13 @@
   import { categoryListQuery } from '../../../services/queries';
   import { errorDialog } from '../../../services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
+  import AddNewButton from '../parts/AddNewButton';
+  import { newModelUUID } from '../../../services/params';
 
   export default {
     mixins: [loadingMixin],
     components: {
+      AddNewButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton.vue'),
@@ -115,6 +119,14 @@
           .finally(() => {
             this.finishedLoading();
           });
+      },
+      createNewCategory() {
+        const { href } = this.$router.resolve({
+          name: 'Category Editor',
+          params: { id: newModelUUID },
+        });
+
+        window.open(href, '_blank');
       },
     },
     mounted() {
