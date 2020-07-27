@@ -26,7 +26,7 @@
                 :label="props.row.name"
                 :routePath="{
                   name: 'Tutorial Anchor Editor',
-                  params: { url: props.row.url },
+                  params: { id: props.row.id },
                 }"
               />
             </q-td>

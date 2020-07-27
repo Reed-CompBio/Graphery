@@ -125,7 +125,7 @@ const routes: Array<RouteConfig> = [
           import('@/components/ControlPanel/lists/TutorialAnchorList.vue'),
       },
       {
-        path: 'tutorial-anchor-editor/:url',
+        path: 'tutorial-anchor-editor/:id',
         name: 'Tutorial Anchor Editor',
         props: true,
         component: () =>

@@ -108,11 +108,13 @@ class TutorialAnchorWrapper(PublishedWrapper):
     model_class: Type[Tutorial] = Tutorial
 
     def __init__(self):
+        self.id: Optional[str] = None
         self.url: Optional[str] = None
         self.name: Optional[str] = None
         self.categories: Optional[Iterable[CategoryWrapper]] = None
 
         PublishedWrapper.__init__(self, {
+            'id': dummy_validator,
             'url': url_validator,
             'name': name_validator,
             'categories': categories_validator,
@@ -120,13 +122,14 @@ class TutorialAnchorWrapper(PublishedWrapper):
 
     def load_model(self, loaded_model: Tutorial) -> 'TutorialAnchorWrapper':
         super().load_model(loaded_model)
+        self.id = loaded_model.id
         self.url = loaded_model.url
         self.name = loaded_model.name
         self.categories = [CategoryWrapper().load_model(cat) for cat in loaded_model.categories.all()]
         return self
 
     def retrieve_model(self) -> None:
-        self.model: Tutorial = self.model_class.objects.get(url=self.url, name=self.name)
+        self.model: Tutorial = self.model_class.objects.get(id=self.id)
 
     def make_new_model(self) -> None:
         self.model: Tutorial = self.model_class(url=self.url, name=self.name, is_published=False)

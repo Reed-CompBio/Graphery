@@ -54,7 +54,7 @@
 </template>
 
 <script>
-  import { newContentTag } from '../../../services/params';
+  import { newModelUUID } from '../../../services/params';
   import { apiCaller } from '../../../services/apis';
   import loadingMixin from '../mixins/LoadingMixin';
   import {
@@ -67,7 +67,7 @@
 
   export default {
     mixins: [loadingMixin],
-    props: ['url'],
+    props: ['id'],
     components: {
       SubmitButton,
       ControlPanelContentFrame: () =>
@@ -77,7 +77,8 @@
     data() {
       return {
         tutorialAnchorObj: {
-          url: this.url,
+          id: this.id,
+          url: '',
           name: '',
           categories: [],
           isPublished: false,
@@ -88,14 +89,14 @@
     },
     computed: {
       isCreatingNewAnchor() {
-        return this.tutorialAnchorObj.url === newContentTag;
+        return this.tutorialAnchorObj.url === newModelUUID;
       },
     },
     methods: {
       fetchValue() {
         if (!this.isCreatingNewAnchor) {
           this.startLoading();
-          apiCaller(tutorialQuery, { url: this.tutorialAnchorObj.url })
+          apiCaller(tutorialQuery, { id: this.tutorialAnchorObj.id })
             .then((data) => {
               if (!data || !('tutorial' in data)) {
                 throw Error('Invalid data returned.');
@@ -136,11 +137,11 @@
             this.loadingCategory = false;
           });
       },
-      pushToNewPlace(url) {
-        if (this.url === newContentTag) {
+      pushToNewPlace(id) {
+        if (this.url === newModelUUID) {
           this.$router.push({
             name: 'Tutorial Anchor Editor',
-            params: { url },
+            params: { id },
           });
         }
       },

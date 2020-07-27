@@ -30,6 +30,7 @@ class UpdateCategory(graphene.Mutation):
 
 class UpdateTutorialAnchor(graphene.Mutation):
     class Arguments:
+        id = graphene.String(required=True)
         url = graphene.String(required=True)
         name = graphene.String(required=True)
         categories = graphene.List(graphene.String)
@@ -38,7 +39,7 @@ class UpdateTutorialAnchor(graphene.Mutation):
     success = graphene.Boolean(required=True)
 
     @write_required
-    def mutate(self, info, url: str, name: str, categories: Sequence[str] = (), is_published: bool = False):
+    def mutate(self, info, id: str, url: str, name: str, categories: Sequence[str] = (), is_published: bool = False):
         if len(categories) == 0:
             categories: Sequence[str] = ('uncategorized', )
 
@@ -48,7 +49,7 @@ class UpdateTutorialAnchor(graphene.Mutation):
         categories: List[CategoryWrapper] = [CategoryWrapper().load_model(Category.objects.get(category=cat))
                                              for cat in categories]
 
-        tutorial_anchor_wrapper = TutorialAnchorWrapper().set_variables(url=url, name=name,
+        tutorial_anchor_wrapper = TutorialAnchorWrapper().set_variables(id=id, url=url, name=name,
                                                                         categories=categories,
                                                                         is_published=is_published)
 

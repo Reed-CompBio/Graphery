@@ -227,8 +227,9 @@ mutation($id: String!, $category: String!, $isPublished: Boolean) {
 }`;
 
 export const tutorialQuery = `
-query($url: String!) {
-  tutorial(url: $url) {
+query($id: String!) {
+  tutorial(id: $id) {
+    url
     name
     categories
     isPublished
@@ -236,8 +237,8 @@ query($url: String!) {
 }`;
 
 export const updateTutorialAnchorMutation = `
-mutation ($url: String!, $name: String!, $categories: [String], $isPublished: Boolean) {
-  updateTutorialAnchor(url: $url, name: $name, categories: $categories, isPublished: $isPublished) {
+mutation ($id: String!, $url: String!, $name: String!, $categories: [String], $isPublished: Boolean) {
+  updateTutorialAnchor(id: $id, url: $url, name: $name, categories: $categories, isPublished: $isPublished) {
     success
   }
 }`;
