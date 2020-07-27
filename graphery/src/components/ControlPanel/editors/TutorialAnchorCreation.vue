@@ -11,7 +11,7 @@
           </template>
           <q-input
             outlined
-            v-model="tutorialUrl"
+            v-model="tutorialAnchorObj.url"
             hint="Please input URL. Do not start or end it with -_."
           />
         </InfoCard>
@@ -20,7 +20,7 @@
           <template v-slot:title>
             Tutorial Name
           </template>
-          <q-input outlined v-model="tutorialName"></q-input>
+          <q-input outlined v-model="tutorialAnchorObj.name"></q-input>
         </InfoCard>
 
         <InfoCard class="half-width-card">
@@ -31,8 +31,9 @@
             multiple
             use-chips
             clearable
-            v-model="categoryChoices"
+            v-model="tutorialAnchorObj.categories"
             :options="categoryOptions"
+            :loading="loadingCategory"
           ></q-select>
         </InfoCard>
 
@@ -41,12 +42,12 @@
             Published
           </template>
           <q-checkbox
-            v-model="tutorialPublished"
-            :label="tutorialPublished ? '✅' : '❌'"
+            v-model="tutorialAnchorObj.isPublished"
+            :label="tutorialAnchorObj.isPublished ? '✅' : '❌'"
           />
         </InfoCard>
 
-        <q-btn class="half-width-card" label="Submit" />
+        <SubmitButton :loading="loadingContent" :action="postTutorial" />
       </div>
     </template>
   </ControlPanelContentFrame>
@@ -54,27 +55,130 @@
 
 <script>
   import { newContentTag } from '../../../services/params';
+  import { apiCaller } from '../../../services/apis';
+  import loadingMixin from '../mixins/LoadingMixin';
+  import {
+    allCategoryQuery,
+    tutorialQuery,
+    updateTutorialAnchorMutation,
+  } from '../../../services/queries';
+  import { errorDialog, successDialog } from '../../../services/helpers';
+  import SubmitButton from '../parts/SubmitButton';
 
   export default {
+    mixins: [loadingMixin],
     props: ['url'],
     components: {
+      SubmitButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       InfoCard: () => import('../parts/InfoCard.vue'),
     },
     data() {
       return {
-        tutorialUrl: '',
-        tutorialName: '',
-        categoryChoices: [],
+        tutorialAnchorObj: {
+          url: this.url,
+          name: '',
+          categories: [],
+          isPublished: false,
+        },
         categoryOptions: [],
-        tutorialPublished: false,
+        loadingCategory: false,
       };
     },
     computed: {
       isCreatingNewAnchor() {
-        return this.url === newContentTag;
+        return this.tutorialAnchorObj.url === newContentTag;
       },
+    },
+    methods: {
+      fetchValue() {
+        if (!this.isCreatingNewAnchor) {
+          this.startLoading();
+          apiCaller(tutorialQuery, { url: this.tutorialAnchorObj.url })
+            .then((data) => {
+              if (!data || !('tutorial' in data)) {
+                throw Error('Invalid data returned.');
+              }
+
+              this.tutorialAnchorObj = {
+                ...this.tutorialAnchorObj,
+                ...data.tutorial,
+              };
+            })
+            .catch((err) => {
+              errorDialog({
+                message: `An error occurs during fetching tutorial anchor detail. ${err}`,
+              });
+            })
+            .finally(() => {
+              this.finishedLoading();
+            });
+        }
+
+        this.loadingCategory = true;
+        apiCaller(allCategoryQuery)
+          .then((data) => {
+            if (!data || !('allCategories' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            this.categoryOptions = data.allCategories.map(
+              (obj) => obj.category
+            );
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during fetching all categories. ${err}`,
+            });
+          })
+          .then(() => {
+            this.loadingCategory = false;
+          });
+      },
+      pushToNewPlace(url) {
+        if (this.url === newContentTag) {
+          this.$router.push({
+            name: 'Tutorial Anchor Editor',
+            params: { url },
+          });
+        }
+      },
+      postTutorial() {
+        if (!this.isCreatingNewAnchor) {
+          this.startLoading();
+          apiCaller(updateTutorialAnchorMutation, this.tutorialAnchorObj)
+            .then((data) => {
+              if (!data || !('updateTutorialAnchor' in data)) {
+                throw Error('Invalid data returned.');
+              }
+
+              if (!data.updateTutorialAnchor.success) {
+                throw Error('Cannot update tutorial anchor at this time.');
+              }
+
+              this.pushToNewPlace(this.tutorialAnchorObj.url);
+              successDialog({
+                message: 'Update Tutorial Anchor Successfully!',
+              });
+            })
+            .catch((err) => {
+              errorDialog({
+                message: `An error occurs during fetching tutorial anchor detail. ${err}`,
+              });
+            })
+            .finally(() => {
+              this.finishedLoading();
+            });
+        } else {
+          errorDialog({
+            message: 'Please change the url.',
+          });
+        }
+      },
+    },
+    mounted() {
+      this.fetchValue();
     },
   };
 </script>

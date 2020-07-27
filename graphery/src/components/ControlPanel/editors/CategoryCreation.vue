@@ -50,7 +50,7 @@
     categoryQuery,
     updateCategoryMutation,
   } from '../../../services/queries';
-  import { errorDialog } from '../../../services/helpers';
+  import { errorDialog, successDialog } from '../../../services/helpers';
   import SubmitButton from '../parts/SubmitButton';
 
   export default {
@@ -134,6 +134,9 @@
             }
 
             this.pushToNewPlace(data.updateCategory.id);
+            successDialog({
+              message: 'Update Category Successfully!',
+            });
           })
           .catch((err) => {
             errorDialog({

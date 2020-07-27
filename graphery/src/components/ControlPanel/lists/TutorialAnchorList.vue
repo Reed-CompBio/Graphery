@@ -141,7 +141,7 @@
       createTutorial() {
         resolveAndOpenLink({
           name: 'Tutorial Anchor Editor',
-          params: { id: newContentTag },
+          params: { url: newContentTag },
         });
       },
     },

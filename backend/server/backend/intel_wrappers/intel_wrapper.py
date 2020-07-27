@@ -1,7 +1,8 @@
 import json
 from typing import Optional, Iterable, Mapping, Type, Union
 
-from backend.intel_wrappers.validators import dummy_validator, category_validator
+from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
+    categories_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson
 from backend.model.UserModel import User
@@ -112,9 +113,9 @@ class TutorialAnchorWrapper(PublishedWrapper):
         self.categories: Optional[Iterable[CategoryWrapper]] = None
 
         PublishedWrapper.__init__(self, {
-            'url': dummy_validator,
-            'name': dummy_validator,
-            'categories': dummy_validator,
+            'url': url_validator,
+            'name': name_validator,
+            'categories': categories_validator,
         })
 
     def load_model(self, loaded_model: Tutorial) -> 'TutorialAnchorWrapper':
