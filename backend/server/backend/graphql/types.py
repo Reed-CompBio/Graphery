@@ -118,6 +118,7 @@ class GraphContentInterface(graphene.Interface):
 class GraphType(PublishedFilterBase, DjangoObjectType):
     priority = graphene.String(required=True)
     authors = graphene.List(graphene.String)
+    categories = graphene.List(graphene.String)
     content = graphene.Field(GraphContentInterface,
                              translation=graphene.String(),
                              default=graphene.String(),
@@ -134,6 +135,11 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
         return self.authors.all().values_list('username', flat=True)
 
     @show_published_only
+    def resolve_categories(self, info, is_published_only: bool):
+        raw_results = self.categories.is_published_only_all(is_published_only=is_published_only)
+        return raw_results.values_list('category', flat=True)
+
+    @show_published_only
     def resolve_content(self,
                         info: ResolveInfo,
                         is_published_only: bool,
@@ -144,7 +150,7 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
         model = Graph
-        fields = ('url', 'name', 'cyjs',
+        fields = ('url', 'name', 'cyjs', 'categories',
                   'tutorials', 'execresultjson_set',
                   'priority')
         description = 'Graph type that contains info of a graph like ' \
