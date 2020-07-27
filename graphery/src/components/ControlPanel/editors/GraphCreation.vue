@@ -117,8 +117,12 @@
   import { errorDialog } from '../../../services/helpers';
   import { newModelUUID } from '../../../services/params';
   import IDCard from '../parts/IDCard';
+  import loadingMixin from '../mixins/LoadingMixin';
+  import pushToMixin from '../mixins/PushToMixin.vue';
+  import { apiCaller } from '../../../services/apis';
 
   export default {
+    mixins: [loadingMixin, pushToMixin],
     props: ['id'],
     components: {
       IDCard,
@@ -146,7 +150,7 @@
       };
     },
     computed: {
-      isCreatingNewGraph() {
+      isCreatingNew() {
         return this.id === newModelUUID;
       },
     },
@@ -159,6 +163,13 @@
         errorDialog({
           message: `${rejectedEntries[0].file.name} is not a JSON file.`,
         });
+      },
+      fetchValue() {
+        if (!this.isCreatingNew) {
+          this.startLoading();
+
+          apiCaller();
+        }
       },
     },
   };

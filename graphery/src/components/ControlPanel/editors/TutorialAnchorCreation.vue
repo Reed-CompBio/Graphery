@@ -58,6 +58,7 @@
   import { newModelUUID } from '../../../services/params';
   import { apiCaller } from '../../../services/apis';
   import loadingMixin from '../mixins/LoadingMixin';
+  import pushToMixin from '../mixins/PushToMixin.vue';
   import {
     allCategoryQuery,
     tutorialQuery,
@@ -68,7 +69,7 @@
   import IDCard from '../parts/IDCard';
 
   export default {
-    mixins: [loadingMixin],
+    mixins: [loadingMixin, pushToMixin],
     props: ['id'],
     components: {
       IDCard,
@@ -91,13 +92,13 @@
       };
     },
     computed: {
-      isCreatingNewAnchor() {
+      isCreatingNew() {
         return this.tutorialAnchorObj.id === newModelUUID;
       },
     },
     methods: {
       fetchValue() {
-        if (!this.isCreatingNewAnchor) {
+        if (!this.isCreatingNew) {
           this.startLoading();
           apiCaller(tutorialQuery, { id: this.tutorialAnchorObj.id })
             .then((data) => {
@@ -140,14 +141,6 @@
             this.loadingCategory = false;
           });
       },
-      pushToNewPlace(id) {
-        if (this.url === newModelUUID) {
-          this.$router.push({
-            name: 'Tutorial Anchor Editor',
-            params: { id },
-          });
-        }
-      },
       postTutorial() {
         this.startLoading();
         apiCaller(updateTutorialAnchorMutation, this.tutorialAnchorObj)
@@ -160,7 +153,7 @@
               throw Error('Cannot update tutorial anchor at this time.');
             }
 
-            this.pushToNewPlace(this.tutorialAnchorObj.url);
+            this.pushToNewPlace(this.tutorialAnchorObj.id);
             successDialog({
               message: 'Update Tutorial Anchor Successfully!',
             });

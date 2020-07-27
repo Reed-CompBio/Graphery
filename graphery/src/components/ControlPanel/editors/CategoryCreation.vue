@@ -37,6 +37,7 @@
 
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
+  import pushToMixin from '../mixins/PushToMixin.vue';
   import { newModelUUID } from '../../../services/params';
   import { apiCaller } from '../../../services/apis';
   import {
@@ -48,7 +49,7 @@
   import IDCard from '../parts/IDCard';
 
   export default {
-    mixins: [loadingMixin],
+    mixins: [loadingMixin, pushToMixin],
     props: {
       id: {
         default: newModelUUID,
@@ -71,13 +72,13 @@
       };
     },
     computed: {
-      newCategory() {
+      isCreatingNew() {
         return this.id === newModelUUID;
       },
     },
     methods: {
       fetchValue() {
-        if (!this.newCategory) {
+        if (!this.isCreatingNew) {
           this.startLoading();
 
           apiCaller(categoryQuery, {
@@ -102,11 +103,6 @@
             });
         }
       },
-      pushToNewPlace(id) {
-        if (this.newCategory) {
-          this.$router.push({ name: 'Category Editor', params: { id } });
-        }
-      },
       postValue() {
         this.startLoading();
         apiCaller(updateCategoryMutation, this.categoryObj)
@@ -120,7 +116,7 @@
             }
 
             this.categoryObj = data.updateCategory.category;
-            this.pushToNewPlace(data.updateCategory.id);
+            this.pushToNewPlace(this.categoryObj.id);
 
             successDialog({
               message: 'Update Category Successfully!',
