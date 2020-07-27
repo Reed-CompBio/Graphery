@@ -5,21 +5,14 @@
     </template>
     <template>
       <div style="display: flex; flex-direction: column;" class="flex-center">
-        <InfoCard class="half-width-card q-mb-md">
-          <template v-slot:title>
-            ID
-          </template>
-          <div class="text-center">
-            {{ displayedId }}
-          </div>
-        </InfoCard>
+        <IDCard class="half-width-card q-mb-md" :id="this.categoryObj.id" />
         <InfoCard class="half-width-card">
           <template v-slot:title>
             Category
           </template>
           <q-input
             outlined
-            v-model="category"
+            v-model="categoryObj.category"
             hint="Please input the name of this category."
           />
         </InfoCard>
@@ -28,8 +21,8 @@
             Published?
           </template>
           <q-checkbox
-            v-model="categoryPublished"
-            :label="categoryPublished ? '✅' : '❌'"
+            v-model="categoryObj.isPublished"
+            :label="categoryObj.isPublished ? '✅' : '❌'"
           />
         </InfoCard>
 
@@ -52,6 +45,7 @@
   } from '../../../services/queries';
   import { errorDialog, successDialog } from '../../../services/helpers';
   import SubmitButton from '../parts/SubmitButton';
+  import IDCard from '../parts/IDCard';
 
   export default {
     mixins: [loadingMixin],
@@ -61,6 +55,7 @@
       },
     },
     components: {
+      IDCard,
       SubmitButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
@@ -68,20 +63,16 @@
     },
     data() {
       return {
-        category: '',
-        categoryPublished: false,
+        categoryObj: {
+          id: this.id,
+          category: '',
+          isPublished: false,
+        },
       };
     },
     computed: {
       newCategory() {
         return this.id === newModelUUID;
-      },
-      displayedId() {
-        if (this.newCategory) {
-          return 'Pending';
-        } else {
-          return this.id;
-        }
       },
     },
     methods: {
@@ -90,7 +81,7 @@
           this.startLoading();
 
           apiCaller(categoryQuery, {
-            id: this.id,
+            id: this.categoryObj.id,
           })
             .then((data) => {
               if (!data || !('category' in data) || !data.category) {
@@ -99,8 +90,7 @@
                 );
               }
 
-              this.category = data.category.category;
-              this.categoryPublished = data.category.isPublished;
+              this.categoryObj = data.category;
             })
             .catch((err) => {
               errorDialog({
@@ -119,11 +109,7 @@
       },
       postValue() {
         this.startLoading();
-        apiCaller(updateCategoryMutation, {
-          id: this.id,
-          category: this.category,
-          isPublished: this.categoryPublished,
-        })
+        apiCaller(updateCategoryMutation, this.categoryObj)
           .then((data) => {
             if (!data || !('updateCategory' in data)) {
               throw Error('Invalid data returned.');
@@ -133,7 +119,9 @@
               throw Error('Cannot modify category for unknown reason');
             }
 
+            this.categoryObj = data.updateCategory.category;
             this.pushToNewPlace(data.updateCategory.id);
+
             successDialog({
               message: 'Update Category Successfully!',
             });
@@ -145,7 +133,6 @@
           })
           .finally(() => {
             this.finishedLoading();
-            this.fetchValue();
           });
       },
     },

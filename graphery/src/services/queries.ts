@@ -212,7 +212,8 @@ export const codeListQuery = `query {
 
 export const categoryQuery = `
 query ($id: String!){
-  category(pk: $id) {
+  category(id: $id) {
+    id
     isPublished
     category
   }
@@ -220,9 +221,13 @@ query ($id: String!){
 
 export const updateCategoryMutation = `
 mutation($id: String!, $category: String!, $isPublished: Boolean) {
-  updateCategory(pk: $id, category: $category, isPublished: $isPublished) {
+  updateCategory(id: $id, category: $category, isPublished: $isPublished) {
     success
-    id
+    category {
+      id
+      isPublished
+      category
+    }
   }
 }`;
 

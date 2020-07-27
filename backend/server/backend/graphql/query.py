@@ -32,7 +32,7 @@ class Query(graphene.ObjectType):
     all_exec_result = DjangoListField(ExecResultJsonType)
     all_supported_lang = graphene.List(graphene.String)
 
-    category = graphene.Field(CategoryType, pk=graphene.String(required=True))
+    category = graphene.Field(CategoryType, id=graphene.String(required=True))
     tutorial = graphene.Field(TutorialType,
                               url=graphene.String(),
                               id=graphene.String())
@@ -74,8 +74,8 @@ class Query(graphene.ObjectType):
         return translation_tables
 
     @write_required
-    def resolve_category(self, info: ResolveInfo, pk):
-        return get_or_none(Category, pk=pk)
+    def resolve_category(self, info: ResolveInfo, id):
+        return get_or_none(Category, id=id)
 
     @show_published_only
     def resolve_tutorial(self, info: ResolveInfo, is_published_only: bool, url=None, id=None):
