@@ -7,11 +7,13 @@ from graphql import GraphQLError
 from graphql import ResolveInfo
 
 from .decorators import login_required, write_required
+from ..model.TutorialRelatedModel import GraphPriority
 from ..model.filters import show_published_only
 from ..model.translation_collection import translation_tables
 from ..models import Category, Tutorial, Graph, ExecResultJson
 
-from .types import UserType, CategoryType, TutorialType, GraphType, Code, ExecResultJsonType, CodeType
+from .types import UserType, CategoryType, TutorialType, GraphType, Code, ExecResultJsonType, CodeType, \
+    GraphPriorityType
 
 
 def get_or_none(model: Type[Model], **kwargs):
@@ -31,6 +33,7 @@ class Query(graphene.ObjectType):
     all_code = DjangoListField(CodeType)
     all_exec_result = DjangoListField(ExecResultJsonType)
     all_supported_lang = graphene.List(graphene.String)
+    all_graph_priority = graphene.List(GraphPriorityType)
 
     category = graphene.Field(CategoryType, id=graphene.String(required=True))
     tutorial = graphene.Field(TutorialType,
@@ -72,6 +75,9 @@ class Query(graphene.ObjectType):
 
     def resolve_all_supported_lang(self, info: ResolveInfo):
         return translation_tables
+
+    def resolve_all_graph_priority(self, info: ResolveInfo):
+        return [GraphPriorityType(priority=priority, label=label) for priority, label in GraphPriority.choices]
 
     @write_required
     def resolve_category(self, info: ResolveInfo, id):
