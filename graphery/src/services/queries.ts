@@ -249,7 +249,7 @@ export const updateCategoryMutation = `
 mutation($id: String!, $category: String!, $isPublished: Boolean) {
   updateCategory(id: $id, category: $category, isPublished: $isPublished) {
     success
-    category {
+    model {
       id
       isPublished
       category
@@ -287,7 +287,6 @@ query ($id: String!) {
     isPublished
     priority {
       priority
-      label
     }
     authors {
       id
@@ -314,5 +313,12 @@ query {
   allAuthors {
     id
     username
+  }
+}`;
+
+export const updateGraphMutation = `
+mutation ($id: String!, $url: String!, $name: String!, $cyjs: JSONString!, $isPublished:Boolean, $priority: Int, $authors: [String], $categories: [String], $tutorials: [String]) {
+  updateGraph(id: $id, url: $url, name: $name, cyjs: $cyjs, isPublished: $isPublished, priority: $priority, authors: $authors, categories: $categories, tutorials: $tutorials) {
+    success
   }
 }`;

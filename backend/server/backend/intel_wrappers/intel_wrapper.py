@@ -2,7 +2,7 @@ import json
 from typing import Optional, Iterable, Mapping, Type, Union
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
-    categories_validator
+    categories_validator, uuid_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson
 from backend.model.UserModel import User
@@ -31,6 +31,7 @@ class UserWrapper(AbstractWrapper):
         self.role: Optional[int] = None
 
         AbstractWrapper.__init__(self, {
+            'id': uuid_validator,
             'email': dummy_validator,
             'username': dummy_validator,
             'password': dummy_validator,
@@ -83,7 +84,7 @@ class CategoryWrapper(PublishedWrapper):
         self.category: Optional[str] = None
 
         PublishedWrapper.__init__(self, {
-            'id': dummy_validator,
+            'id': uuid_validator,
             'category': category_validator
         })
 
@@ -116,7 +117,7 @@ class TutorialAnchorWrapper(PublishedWrapper):
         self.categories: Optional[Iterable[CategoryWrapper]] = None
 
         PublishedWrapper.__init__(self, {
-            'id': dummy_validator,
+            'id': uuid_validator,
             'url': url_validator,
             'name': name_validator,
             'categories': categories_validator,
@@ -158,6 +159,7 @@ class GraphWrapper(PublishedWrapper):
     model_class: Type[Graph] = Graph
 
     def __init__(self):
+        self.id: Optional[str] = None
         self.url: Optional[str] = None
         self.name: Optional[str] = None
         self.categories: Optional[Iterable[CategoryWrapper]] = None
@@ -167,9 +169,10 @@ class GraphWrapper(PublishedWrapper):
         self.tutorials: Optional[Iterable[TutorialAnchorWrapper]] = None
 
         PublishedWrapper.__init__(self, {
-            'url': dummy_validator,
-            'name': dummy_validator,
-            'categories': dummy_validator,
+            'id': uuid_validator,
+            'url': url_validator,
+            'name': name_validator,
+            'categories': categories_validator,
             'authors': dummy_validator,
             'priority': dummy_validator,
             'cyjs': dummy_validator,

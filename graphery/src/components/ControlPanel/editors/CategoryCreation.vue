@@ -26,11 +26,12 @@
           />
         </InfoCard>
 
-        <SubmitButton class="half-width-card" :action="postValue" />
+        <SubmitButton
+          class="half-width-card"
+          :loading="loadingContent"
+          :action="postValue"
+        />
       </div>
-      <q-inner-loading :showing="loadingContent">
-        <q-spinner-pie size="64px" color="primary" />
-      </q-inner-loading>
     </template>
   </ControlPanelContentFrame>
 </template>
@@ -115,7 +116,7 @@
               throw Error('Cannot modify category for unknown reason');
             }
 
-            this.categoryObj = data.updateCategory.category;
+            this.categoryObj = data.updateCategory.model;
             this.pushToNewPlace(this.categoryObj.id);
 
             successDialog({

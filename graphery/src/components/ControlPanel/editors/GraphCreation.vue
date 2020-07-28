@@ -94,13 +94,13 @@
 </template>
 
 <script>
-  import { errorDialog } from '../../../services/helpers';
+  import { errorDialog, successDialog } from '../../../services/helpers';
   import { newModelUUID } from '../../../services/params';
   import IDCard from '../parts/IDCard';
   import loadingMixin from '../mixins/LoadingMixin';
   import pushToMixin from '../mixins/PushToMixin.vue';
   import { apiCaller } from '../../../services/apis';
-  import { graphQuery } from '../../../services/queries';
+  import { graphQuery, updateGraphMutation } from '../../../services/queries';
   import TutorialSelection from '../parts/TutorialSelection';
   import AuthorSelection from '../parts/AuthorSelection';
   import CategorySelection from '../parts/CategorySelection';
@@ -178,6 +178,7 @@
 
               this.graphObj = {
                 ...data.graph,
+                priority: data.graph.priority.priority,
                 authors: data.graph.authors.map((obj) => obj.id),
                 categories: data.graph.categories.map((obj) => obj.id),
                 tutorials: data.graph.tutorials.map((obj) => obj.id),
@@ -194,7 +195,29 @@
         }
       },
       postGraph() {
-        //
+        apiCaller(updateGraphMutation, this.graphObj)
+          .then((data) => {
+            if (!data || !('updateGraph' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            if (!data.updateGraph.success) {
+              throw Error('Cannot modify graph for unknown reason.');
+            }
+
+            this.pushToNewPlace(this.graphObj.id);
+            successDialog({
+              message: 'Update Graph Successfully!',
+            });
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during updating the graph. ${err}`,
+            });
+          })
+          .finally(() => {
+            this.finishedLoading();
+          });
       },
     },
     mounted() {

@@ -1,6 +1,7 @@
-from typing import List, Sequence
+from typing import List, Sequence, Mapping
 
 import graphene
+from graphql import GraphQLError
 
 from backend.graphql.decorators import write_required
 from backend.graphql.types import CategoryType, TutorialType, GraphType
@@ -72,12 +73,14 @@ class UpdateGraph(graphene.Mutation):
     model = graphene.Field(GraphType)
 
     @write_required
-    def mutate(self, info, id: str, url: str, name: str, cyjs: str, is_published: bool = False,
+    def mutate(self, info, id: str, url: str, name: str, cyjs: Mapping, is_published: bool = False,
                priority: int = GraphPriority.TRIV, authors: Sequence[str] = (), categories: Sequence[str] = (),
                tutorials: Sequence[str] = ()):
         url = url.strip()
         name = name.strip()
-        cyjs = cyjs.strip()
+
+        if not isinstance(cyjs, Mapping):
+            raise GraphQLError('CYJS must be a json mapping')
 
         author_wrappers: List[UserWrapper] = get_wrappers_by_ids(UserWrapper, authors)
         category_wrappers: List[CategoryWrapper] = get_wrappers_by_ids(CategoryWrapper, categories)
