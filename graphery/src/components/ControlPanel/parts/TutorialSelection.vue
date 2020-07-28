@@ -5,9 +5,9 @@
     </template>
     <!-- TODO add a confirmation dialog during deleting tutorials -->
     <q-select
-      multiple
-      use-chips
-      v-model="selectedTutorial"
+      :multiple="!singleSelection"
+      :use-chips="!singleSelection"
+      v-model="selection"
       :options="tutorialOptions"
       emit-value
       map-options
@@ -35,12 +35,15 @@
       event: 'getSelectedTutorial',
     },
     props: {
-      selectedTutorial: {
-        type: Array,
+      singleSelection: {
+        type: Boolean,
+        default: false,
       },
+      selectedTutorial: {},
     },
     data() {
       return {
+        selection: this.selectedTutorial,
         tutorialOptions: null,
       };
     },
@@ -66,7 +69,7 @@
           });
       },
       emitValue() {
-        this.$emit('getSelectedTutorial', this.selectedTutorial);
+        this.$emit('getSelectedTutorial', this.selection);
       },
     },
     watch: {
