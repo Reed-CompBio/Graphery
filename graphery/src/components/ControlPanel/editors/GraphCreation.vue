@@ -176,7 +176,12 @@
                 throw Error('Invalid data returned.');
               }
 
-              this.graphObj = data.graph;
+              this.graphObj = {
+                ...data.graph,
+                authors: data.graph.authors.map((obj) => obj.id),
+                categories: data.graph.categories.map((obj) => obj.id),
+                tutorials: data.graph.tutorials.map((obj) => obj.id),
+              };
             })
             .catch((err) => {
               errorDialog({

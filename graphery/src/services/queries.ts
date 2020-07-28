@@ -291,15 +291,12 @@ query ($id: String!) {
     }
     authors {
       id
-      username
     }
     categories {
       id
-      category
     }
     tutorials {
       id
-      name
     }
   }
 }`;
