@@ -24,22 +24,10 @@
           <q-input outlined v-model="tutorialAnchorObj.name"></q-input>
         </InfoCard>
 
-        <InfoCard class="half-width-card">
-          <template v-slot:title>
-            Categories
-          </template>
-          <q-select
-            multiple
-            use-chips
-            v-model="tutorialAnchorObj.categories"
-            :options="categoryOptions"
-            :loading="loadingCategory"
-            emit-value
-            map-options
-            option-label="category"
-            option-value="id"
-          ></q-select>
-        </InfoCard>
+        <CategorySelection
+          v-model="tutorialAnchorObj.categories"
+          class="half-width-card"
+        />
 
         <InfoCard class="half-width-card">
           <template v-slot:title>
@@ -70,11 +58,13 @@
   import { errorDialog, successDialog } from '../../../services/helpers';
   import SubmitButton from '../parts/SubmitButton';
   import IDCard from '../parts/IDCard';
+  import CategorySelection from '../parts/CategorySelection';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
     props: ['id'],
     components: {
+      CategorySelection,
       IDCard,
       SubmitButton,
       ControlPanelContentFrame: () =>
@@ -90,8 +80,6 @@
           categories: [],
           isPublished: false,
         },
-        categoryOptions: [],
-        loadingCategory: false,
       };
     },
     computed: {
@@ -124,24 +112,6 @@
               this.finishedLoading();
             });
         }
-
-        this.loadingCategory = true;
-        apiCaller(allCategoryQuery)
-          .then((data) => {
-            if (!data || !('allCategories' in data)) {
-              throw Error('Invalid data returned.');
-            }
-
-            this.categoryOptions = data.allCategories;
-          })
-          .catch((err) => {
-            errorDialog({
-              message: `An error occurs during fetching all categories. ${err}`,
-            });
-          })
-          .then(() => {
-            this.loadingCategory = false;
-          });
       },
       postTutorial() {
         this.startLoading();

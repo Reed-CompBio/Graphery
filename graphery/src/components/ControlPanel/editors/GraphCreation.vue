@@ -82,21 +82,11 @@
 
           <AuthorSelection v-model="graphObj.authors" />
 
-          <InfoCard>
-            <template v-slot:title>
-              Categories
-            </template>
-            <q-select
-              multiple
-              use-chips
-              v-model="graphObj.categories"
-              :options="categoryOptions"
-            ></q-select>
-          </InfoCard>
+          <CategorySelection v-model="graphObj.categories" />
 
           <TutorialSelection v-model="graphObj.tutorials" />
 
-          <q-btn class="half-width-card" label="Submit"></q-btn>
+          <SubmitButton :loading="loadingContent" :action="postGraph" />
         </template>
       </EditorFrame>
     </template>
@@ -113,11 +103,15 @@
   import { graphQuery } from '../../../services/queries';
   import TutorialSelection from '../parts/TutorialSelection';
   import AuthorSelection from '../parts/AuthorSelection';
+  import CategorySelection from '../parts/CategorySelection';
+  import SubmitButton from '../parts/SubmitButton';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
     props: ['id'],
     components: {
+      SubmitButton,
+      CategorySelection,
       AuthorSelection,
       TutorialSelection,
       IDCard,
@@ -139,7 +133,6 @@
           categories: [],
           tutorials: [],
         },
-        authorOptions: [],
         // TODO hard coded for now
         priorityOptions: [
           {
@@ -155,8 +148,6 @@
             label: 'Trivial Graph',
           },
         ],
-        categoryOptions: [],
-        tutorialOptions: [],
         uploadFile: [],
       };
     },
@@ -196,6 +187,9 @@
               this.finishedLoading();
             });
         }
+      },
+      postGraph() {
+        //
       },
     },
     mounted() {
