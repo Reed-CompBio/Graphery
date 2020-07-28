@@ -10,7 +10,7 @@ from .decorators import login_required, write_required
 from ..model.TutorialRelatedModel import GraphPriority
 from ..model.filters import show_published_only
 from ..model.translation_collection import translation_tables
-from ..models import Category, Tutorial, Graph, ExecResultJson
+from ..models import Category, Tutorial, Graph, ExecResultJson, User, ROLES
 
 from .types import UserType, CategoryType, TutorialType, GraphType, Code, ExecResultJsonType, CodeType, \
     GraphPriorityType
@@ -34,6 +34,7 @@ class Query(graphene.ObjectType):
     all_exec_result = DjangoListField(ExecResultJsonType)
     all_supported_lang = graphene.List(graphene.String)
     all_graph_priority = graphene.List(GraphPriorityType)
+    all_authors = DjangoListField(UserType)
 
     category = graphene.Field(CategoryType, id=graphene.String(required=True))
     tutorial = graphene.Field(TutorialType,
@@ -80,6 +81,10 @@ class Query(graphene.ObjectType):
     @write_required
     def resolve_all_graph_priority(self, info: ResolveInfo):
         return [GraphPriorityType(priority=priority, label=label) for priority, label in GraphPriority.choices]
+
+    @write_required
+    def resolve_all_authors(self, info: ResolveInfo):
+        return User.objects.filter(role__gte=ROLES.TRANSLATOR)
 
     @write_required
     def resolve_category(self, info: ResolveInfo, id):

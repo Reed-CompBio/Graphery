@@ -260,6 +260,7 @@ mutation($id: String!, $category: String!, $isPublished: Boolean) {
 export const tutorialQuery = `
 query($id: String!) {
   tutorial(id: $id) {
+    id
     url
     name
     categories {
@@ -276,4 +277,45 @@ mutation ($id: String!, $url: String!, $name: String!, $categories: [String], $i
   }
 }`;
 
-export const graphQuery = ``;
+export const graphQuery = `
+query ($id: String!) {
+  graph(id: $id) {
+    id
+    url
+    name
+    cyjs
+    isPublished
+    priority {
+      priority
+      label
+    }
+    authors {
+      id
+      username
+    }
+    categories {
+      id
+      category
+    }
+    tutorials {
+      id
+      name
+    }
+  }
+}`;
+
+export const tutorialSelectQuery = `
+query {
+  allTutorialInfo {
+    name
+    id
+  }
+}`;
+
+export const authorSelectQuery = `
+query {
+  allAuthors {
+    id
+    username
+  }
+}`;

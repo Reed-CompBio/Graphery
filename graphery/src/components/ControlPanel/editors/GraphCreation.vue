@@ -89,6 +89,10 @@
               use-chips
               v-model="graphObj.authors"
               :options="authorOptions"
+              emit-value
+              map-options
+              option-label="username"
+              option-value="id"
             ></q-select>
           </InfoCard>
 
@@ -104,18 +108,7 @@
             ></q-select>
           </InfoCard>
 
-          <InfoCard>
-            <template v-slot:title>
-              Tutorials
-            </template>
-            <!-- TODO add a confirmation dialog during deleting tutorials -->
-            <q-select
-              multiple
-              use-chips
-              v-model="graphObj.tutorials"
-              :options="tutorialOptions"
-            ></q-select>
-          </InfoCard>
+          <TutorialSelection v-model="graphObj.tutorials" />
 
           <q-btn class="half-width-card" label="Submit"></q-btn>
         </template>
@@ -131,11 +124,14 @@
   import loadingMixin from '../mixins/LoadingMixin';
   import pushToMixin from '../mixins/PushToMixin.vue';
   import { apiCaller } from '../../../services/apis';
+  import { graphQuery } from '../../../services/queries';
+  import TutorialSelection from '../parts/TutorialSelection';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
     props: ['id'],
     components: {
+      TutorialSelection,
       IDCard,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame'),
@@ -195,9 +191,27 @@
         if (!this.isCreatingNew) {
           this.startLoading();
 
-          apiCaller();
+          apiCaller(graphQuery, { id: this.graphObj.id })
+            .then((data) => {
+              if (!data || !('graph' in data)) {
+                throw Error('Invalid data returned.');
+              }
+
+              this.graphObj = data.graph;
+            })
+            .catch((err) => {
+              errorDialog({
+                message: `An error occurs during fetching graph detail. ${err}`,
+              });
+            })
+            .finally(() => {
+              this.finishedLoading();
+            });
         }
       },
+    },
+    mounted() {
+      this.fetchValue();
     },
   };
 </script>
