@@ -1,17 +1,16 @@
 <template>
   <InfoCard>
     <template v-slot:title>
-      Tutorials
+      Authors
     </template>
-    <!-- TODO add a confirmation dialog during deleting tutorials -->
     <q-select
       multiple
       use-chips
-      v-model="selectedTutorial"
-      :options="tutorialOptions"
+      v-model="authorSelection"
+      :options="authorOptions"
       emit-value
       map-options
-      option-label="name"
+      option-label="username"
       option-value="id"
       :loading="loadingContent"
       @change="emitValue"
@@ -23,7 +22,7 @@
   import InfoCard from '../parts/InfoCard.vue';
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import { apiCaller } from '../../../services/apis';
-  import { tutorialSelectQuery } from '../../../services/queries';
+  import { authorSelectQuery } from '../../../services/queries';
   import { errorDialog } from '../../../services/helpers';
 
   export default {
@@ -32,34 +31,34 @@
       InfoCard,
     },
     model: {
-      prop: 'selectedTutorial',
-      event: 'getSelectedTutorial',
+      prop: 'authorSelection',
+      event: 'getAuthorSelection',
     },
     props: {
-      selectedTutorial: {
+      authorSelection: {
         type: Array,
       },
     },
     data() {
       return {
-        tutorialOptions: null,
+        authorOptions: null,
       };
     },
     methods: {
       fetchValue() {
         this.startLoading();
 
-        apiCaller(tutorialSelectQuery)
+        apiCaller(authorSelectQuery)
           .then((data) => {
-            if (!data || !('allTutorialInfo' in data)) {
+            if (!data || !('allAuthors' in data)) {
               throw Error('Invalid data returned.');
             }
 
-            this.tutorialOptions = data.allTutorialInfo;
+            this.authorOptions = data.allAuthors;
           })
           .catch((err) => {
             errorDialog({
-              message: `An error occurs during fetching tutorial list. ${err}`,
+              message: `An error occurs during fetching author list. ${err}`,
             });
           })
           .finally(() => {
@@ -67,7 +66,7 @@
           });
       },
       emitValue() {
-        this.$emit('getSelectedTutorial', this.selectedTutorial);
+        this.$emit('getAuthorSelection', this.authorSelection);
       },
     },
     mounted() {

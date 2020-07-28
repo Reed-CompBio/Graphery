@@ -80,21 +80,7 @@
             />
           </InfoCard>
 
-          <InfoCard>
-            <template v-slot:title>
-              Authors
-            </template>
-            <q-select
-              multiple
-              use-chips
-              v-model="graphObj.authors"
-              :options="authorOptions"
-              emit-value
-              map-options
-              option-label="username"
-              option-value="id"
-            ></q-select>
-          </InfoCard>
+          <AuthorSelection v-model="graphObj.authors" />
 
           <InfoCard>
             <template v-slot:title>
@@ -126,11 +112,13 @@
   import { apiCaller } from '../../../services/apis';
   import { graphQuery } from '../../../services/queries';
   import TutorialSelection from '../parts/TutorialSelection';
+  import AuthorSelection from '../parts/AuthorSelection';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
     props: ['id'],
     components: {
+      AuthorSelection,
       TutorialSelection,
       IDCard,
       ControlPanelContentFrame: () =>
