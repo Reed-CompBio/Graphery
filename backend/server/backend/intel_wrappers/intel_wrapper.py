@@ -24,6 +24,7 @@ class UserWrapper(AbstractWrapper):
     model_class: Type[User] = User
 
     def __init__(self):
+        self.id: Optional[str] = None
         self.username: Optional[str] = None
         self.email: Optional[str] = None
         self.password: Optional[str] = None
@@ -38,6 +39,7 @@ class UserWrapper(AbstractWrapper):
 
     def load_model(self, loaded_model: User) -> 'UserWrapper':
         super().load_model(loaded_model)
+        self.id = loaded_model.id
         self.username = loaded_model.username
         self.email = loaded_model.email
         self.password = loaded_model.password
@@ -55,7 +57,7 @@ class UserWrapper(AbstractWrapper):
             self.model.set_password(self.password)
 
     def retrieve_model(self) -> None:
-        self.model = User.objects.get(username=self.username, email=self.email)
+        self.model = User.objects.get(id=self.id)
 
     def make_new_model(self) -> None:
         self.model = User.objects.create_user(username=self.username,
