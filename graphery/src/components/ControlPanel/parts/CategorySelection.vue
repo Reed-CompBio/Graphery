@@ -6,7 +6,7 @@
     <q-select
       multiple
       use-chips
-      v-model="categorySelection"
+      v-model="selection"
       :options="categoryOptions"
       emit-value
       map-options
@@ -40,6 +40,7 @@
     },
     data() {
       return {
+        selection: this.categorySelection,
         categoryOptions: null,
       };
     },
@@ -64,7 +65,7 @@
           });
       },
       emitValue() {
-        this.$emit('getCategorySelection', this.categorySelection);
+        this.$emit('getCategorySelection', this.selection);
       },
     },
     watch: {

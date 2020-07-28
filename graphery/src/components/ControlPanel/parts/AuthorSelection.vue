@@ -6,7 +6,7 @@
     <q-select
       multiple
       use-chips
-      v-model="authorSelection"
+      v-model="selection"
       :options="authorOptions"
       emit-value
       map-options
@@ -40,6 +40,7 @@
     },
     data() {
       return {
+        selection: this.authorSelection,
         authorOptions: null,
       };
     },
@@ -65,7 +66,7 @@
           });
       },
       emitValue() {
-        this.$emit('getAuthorSelection', this.authorSelection);
+        this.$emit('getAuthorSelection', this.selection);
       },
     },
     watch: {
