@@ -13,7 +13,6 @@
       option-label="username"
       option-value="id"
       :loading="loadingContent"
-      @change="emitValue"
     ></q-select>
   </InfoCard>
 </template>
@@ -67,6 +66,11 @@
       },
       emitValue() {
         this.$emit('getAuthorSelection', this.authorSelection);
+      },
+    },
+    watch: {
+      authorSelection: function() {
+        this.emitValue();
       },
     },
     mounted() {

@@ -14,7 +14,6 @@
       option-label="name"
       option-value="id"
       :loading="loadingContent"
-      @change="emitValue"
     ></q-select>
   </InfoCard>
 </template>
@@ -68,6 +67,11 @@
       },
       emitValue() {
         this.$emit('getSelectedTutorial', this.selectedTutorial);
+      },
+    },
+    watch: {
+      selectedTutorial: function() {
+        this.emitValue();
       },
     },
     mounted() {

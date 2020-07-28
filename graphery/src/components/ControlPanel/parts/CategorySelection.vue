@@ -13,7 +13,6 @@
       option-label="category"
       option-value="id"
       :loading="loadingContent"
-      @change="emitValue"
     ></q-select>
   </InfoCard>
 </template>
@@ -66,6 +65,11 @@
       },
       emitValue() {
         this.$emit('getCategorySelection', this.categorySelection);
+      },
+    },
+    watch: {
+      categorySelection: function() {
+        this.emitValue();
       },
     },
     mounted() {
