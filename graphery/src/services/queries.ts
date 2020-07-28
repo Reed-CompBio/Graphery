@@ -246,7 +246,7 @@ query ($id: String!){
 }`;
 
 export const updateCategoryMutation = `
-mutation($id: String!, $category: String!, $isPublished: Boolean) {
+mutation($id: UUID!, $category: String!, $isPublished: Boolean) {
   updateCategory(id: $id, category: $category, isPublished: $isPublished) {
     success
     model {
@@ -271,7 +271,7 @@ query($id: String!) {
 }`;
 
 export const updateTutorialAnchorMutation = `
-mutation ($id: String!, $url: String!, $name: String!, $categories: [String], $isPublished: Boolean) {
+mutation ($id: UUID!, $url: String!, $name: String!, $categories: [String], $isPublished: Boolean) {
   updateTutorialAnchor(id: $id, url: $url, name: $name, categories: $categories, isPublished: $isPublished) {
     success
   }
@@ -317,7 +317,7 @@ query {
 }`;
 
 export const updateGraphMutation = `
-mutation ($id: String!, $url: String!, $name: String!, $cyjs: JSONString!, $isPublished:Boolean, $priority: Int, $authors: [String], $categories: [String], $tutorials: [String]) {
+mutation ($id: UUID!, $url: String!, $name: String!, $cyjs: JSONString!, $isPublished:Boolean, $priority: Int, $authors: [String], $categories: [String], $tutorials: [String]) {
   updateGraph(id: $id, url: $url, name: $name, cyjs: $cyjs, isPublished: $isPublished, priority: $priority, authors: $authors, categories: $categories, tutorials: $tutorials) {
     success
   }

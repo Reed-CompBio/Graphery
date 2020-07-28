@@ -13,7 +13,7 @@ from backend.model.TutorialRelatedModel import GraphPriority
 
 class UpdateCategory(graphene.Mutation):
     class Arguments:
-        id = graphene.String(required=True)
+        id = graphene.UUID(required=True)
         category = graphene.String(required=True)
         is_published = graphene.Boolean()
 
@@ -30,7 +30,7 @@ class UpdateCategory(graphene.Mutation):
 
 class UpdateTutorialAnchor(graphene.Mutation):
     class Arguments:
-        id = graphene.String(required=True)
+        id = graphene.UUID(required=True)
         url = graphene.String(required=True)
         name = graphene.String(required=True)
         categories = graphene.List(graphene.String)
@@ -59,7 +59,7 @@ class UpdateTutorialAnchor(graphene.Mutation):
 
 class UpdateGraph(graphene.Mutation):
     class Arguments:
-        id = graphene.String(required=True)
+        id = graphene.UUID(required=True)
         url = graphene.String(required=True)
         name = graphene.String(required=True)
         cyjs = graphene.JSONString(required=True)

@@ -10,14 +10,6 @@ def dummy_validator(info):
     return info
 
 
-uuid_regex = re.compile(r'^[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}$', re.IGNORECASE)
-
-
-def uuid_validator(uuid):
-    if not uuid_regex.match(uuid):
-        raise ValidationError('`uuid` is not valid!')
-
-
 def is_published_validator(val: bool):
     if not isinstance(val, bool):
         raise ValidationError('`is_published` must be a boolean variable!')
@@ -50,6 +42,13 @@ def url_validator(url: str):
 
 def categories_validator(cats: Sequence):
     if not isinstance(cats, Sequence):
-        raise ValidationError('`Categories` wrapped in wrappers.')
+        raise ValidationError('`Categories` must be wrapped in wrappers.')
     for cat in cats:
         cat.validate()
+
+
+def author_validator(authors: Sequence):
+    if not isinstance(authors, Sequence):
+        raise ValidationError('`authors must be wrapped in wrappers')
+    for author in authors:
+        author.validate()
