@@ -96,8 +96,11 @@
 
 <script>
   import { mapState } from 'vuex';
+  import loadingMixin from '../mixins/LoadingMixin';
+  import pushToMixin from '../mixins/PushToMixin';
 
   export default {
+    mixins: [loadingMixin, pushToMixin],
     components: {
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
@@ -120,6 +123,11 @@
       },
       resultLoading() {
         return false;
+      },
+    },
+    methods: {
+      isCreatingNew() {
+        //
       },
     },
     mounted() {

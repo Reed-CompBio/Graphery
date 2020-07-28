@@ -17,6 +17,7 @@
       >
         <template v-slot:top>
           <RefreshButton :fetch-func="fetchCode" />
+          <AddNewButton :create-func="createCode" />
         </template>
         <template v-slot:header="props">
           <q-tr :props="props">
@@ -59,7 +60,14 @@
                 type="textarea"
                 v-model="props.row.code"
               />
-              <OpenInEditorButton label="Edit" class="q-mt-sm" />
+              <OpenInEditorButton
+                label="Edit"
+                class="q-mt-sm"
+                :routePath="{
+                  name: 'Code Editor',
+                  params: { id: props.row.id },
+                }"
+              />
             </q-td>
 
             <q-td key="tutorialUrl" :props="props">
@@ -87,11 +95,14 @@
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import { apiCaller } from '../../../services/apis';
   import { codeListQuery } from '../../../services/queries';
-  import { errorDialog } from '../../../services/helpers';
+  import { errorDialog, resolveAndOpenLink } from '../../../services/helpers';
+  import AddNewButton from '../parts/AddNewButton';
+  import { newModelUUID } from '../../../services/params';
 
   export default {
     mixins: [loadingMixin],
     components: {
+      AddNewButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton'),
@@ -169,6 +180,14 @@
           .finally(() => {
             this.finishedLoading();
           });
+      },
+      createCode() {
+        resolveAndOpenLink({
+          name: 'Code Editor',
+          params: {
+            id: newModelUUID,
+          },
+        });
       },
     },
     mounted() {
