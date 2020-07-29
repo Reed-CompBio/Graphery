@@ -2,7 +2,7 @@ import json
 from typing import Optional, Iterable, Mapping, Type, Union
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
-    categories_validator
+    categories_validator, code_validator, tutorial_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson
 from backend.model.UserModel import User
@@ -231,22 +231,25 @@ class CodeWrapper(AbstractWrapper):
     model_class: Type[Code] = Code
 
     def __init__(self):
+        self.id: Optional[str] = None
         self.tutorial: Optional[TutorialAnchorWrapper] = None
         self.code: Optional[str] = None
 
         AbstractWrapper.__init__(self, {
-            'tutorial': dummy_validator,
-            'code': dummy_validator
+            'id': dummy_validator,
+            'tutorial': tutorial_validator,
+            'code': code_validator
         })
 
     def load_model(self, loaded_model: Code) -> 'CodeWrapper':
         super().load_model(loaded_model=loaded_model)
+        self.id = loaded_model.id
         self.tutorial = TutorialAnchorWrapper().load_model(loaded_model.tutorial)
         self.code = loaded_model.code
         return self
 
     def retrieve_model(self) -> None:
-        self.model: Code = self.model_class.objects.get(tutorial=self.tutorial.model)
+        self.model: Code = self.model_class.objects.get(id=self.id)
 
     def make_new_model(self) -> None:
         self.model: Code = self.model_class(tutorial=self.tutorial.model, code=self.code)

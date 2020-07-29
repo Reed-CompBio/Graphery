@@ -111,4 +111,4 @@ class UpdateCode(graphene.Mutation):
         code_wrapper = process_model_wrapper(CodeWrapper,
                                              id=id, code=code, tutorial=tutorial_wrapper)
 
-        return UpdateCode(success=True, model=code_wrapper)
+        return UpdateCode(success=True, model=code_wrapper.model)

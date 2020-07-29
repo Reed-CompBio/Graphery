@@ -52,3 +52,12 @@ def author_validator(authors: Sequence):
         raise ValidationError('`authors must be wrapped in wrappers')
     for author in authors:
         author.validate()
+
+
+def tutorial_validator(tutorial):
+    tutorial.validate()
+
+
+def code_validator(code: str):
+    if not isinstance(code, str):
+        raise ValidationError('`code` must be string type')
