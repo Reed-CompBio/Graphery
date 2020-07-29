@@ -99,7 +99,7 @@
   import loadingMixin from '../mixins/LoadingMixin.vue';
   export default {
     mixins: [loadingMixin],
-    props: ['url'],
+    props: ['id'],
     components: {
       ControlPageContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),

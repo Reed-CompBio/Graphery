@@ -140,7 +140,7 @@ const routes: Array<RouteConfig> = [
           import('@/components/ControlPanel/lists/TutorialContentList.vue'),
       },
       {
-        path: 'tutorial-content-editor/:url',
+        path: 'tutorial-content-editor/:id',
         name: 'Tutorial Content Editor',
         props: true,
         component: () =>
@@ -168,7 +168,7 @@ const routes: Array<RouteConfig> = [
           import('@/components/ControlPanel/lists/GraphInfoList.vue'),
       },
       {
-        path: 'graph-info-editor/:url',
+        path: 'graph-info-editor/:id',
         name: 'Graph Info Editor',
         props: true,
         component: () =>

@@ -69,7 +69,7 @@
 
 <script>
   export default {
-    props: ['url'],
+    props: ['id'],
     components: {
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
