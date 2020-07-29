@@ -26,65 +26,7 @@
           </div>
         </template>
       </EditorFrame>
-      <EditorFrame>
-        <template v-slot:left>
-          <InfoCard>
-            <template v-slot:title>
-              <div class="q-mb-md">
-                Exec JSON
-              </div>
-              <div class="q-mb-md">
-                <q-select
-                  :options="graphOptions"
-                  v-model="graphChoice"
-                  label="Select Graph"
-                  outlined
-                  clearable
-                />
-              </div>
-              <div>
-                <q-btn
-                  label="Add Graph"
-                  :loading="resultLoading"
-                  class="q-mr-sm"
-                />
-                <q-btn label="Exec" :loading="resultLoading" class="q-mr-sm" />
-                <q-btn
-                  label="Exec Locally"
-                  :loading="resultLoading"
-                  class="q-mr-sm"
-                />
-                <q-btn
-                  label="Exec All"
-                  :loading="resultLoading"
-                  class="q-mr-sm"
-                />
-                <q-btn
-                  label="Exec All Locally"
-                  :loading="resultLoading"
-                  class="q-mr-sm"
-                />
-              </div>
-            </template>
-            <div>
-              <q-input
-                readonly
-                class="half-height-textarea"
-                v-model="resultJson"
-                type="textarea"
-                outlined
-                label="Execution Result Json (Read Only)"
-              />
-              <q-inner-loading :showing="resultLoading">
-                <q-spinner-pie size="48px" color="primary" />
-              </q-inner-loading>
-            </div>
-          </InfoCard>
-        </template>
-        <template v-slot:right>
-          <SubmitButton class="full-width" :action="postExecJson" />
-        </template>
-      </EditorFrame>
+      <JsonCreation :code-id="codeObject.id" />
     </template>
   </ControlPanelContentFrame>
 </template>
@@ -100,18 +42,19 @@
   import { codeQuery, updateCodeMutation } from '../../../services/queries';
   import { errorDialog, successDialog } from '../../../services/helpers';
   import TutorialSelection from '../parts/TutorialSelection';
+  import JsonCreation from './JsonCreation';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
     props: ['id'],
     components: {
+      JsonCreation,
       TutorialSelection,
       IDCard,
       SubmitButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
-      InfoCard: () => import('../parts/InfoCard.vue'),
     },
     data() {
       return {
@@ -121,19 +64,10 @@
           code: '',
           tutorial: '',
         },
-        tutorialOptions: [],
-        graphChoice: '',
-        graphOptions: [],
       };
     },
     computed: {
       ...mapState('settings', ['dark', 'fontSize']),
-      resultJson() {
-        return '';
-      },
-      resultLoading() {
-        return false;
-      },
       isCreatingNew() {
         return this.codeObject.id === newModelUUID;
       },
