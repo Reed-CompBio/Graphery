@@ -25,6 +25,7 @@
         </template>
 
         <template v-slot:right>
+          <URLCard :url="url" class="full-width" />
           <IDCard :id="id" class="full-width" />
 
           <!-- choose published -->
@@ -42,9 +43,7 @@
           </div>
 
           <!-- choose authors -->
-          <div id="author-chooser" class="q-mb-md">
-            <AuthorSelection v-model="tutorialContentObj.authors" />
-          </div>
+          <AuthorSelection v-model="tutorialContentObj.authors" />
 
           <!-- choose language -->
           <div id="lang-chooser" class="q-mb-md">
@@ -52,10 +51,7 @@
               <template v-slot:title>
                 Language
               </template>
-              <q-option-group
-                v-model="langChoice"
-                :options="langOptions"
-              ></q-option-group>
+              {{ lang }}
             </InfoCard>
           </div>
 
@@ -89,8 +85,9 @@
   import loadingMixin from '../mixins/LoadingMixin.vue';
   export default {
     mixins: [loadingMixin],
-    props: ['id', 'url'],
+    props: ['id', 'url', 'lang'],
     components: {
+      URLCard: () => import('../parts/URLCard.vue'),
       AuthorSelection: () => import('../parts/AuthorSelection.vue'),
       IDCard: () => import('../parts/IDCard.vue'),
       ControlPageContentFrame: () =>
@@ -110,17 +107,6 @@
           contentMd: '',
           contentHtml: '',
         },
-        langChoice: '',
-        langOptions: [
-          {
-            label: 'en-us',
-            value: 'en-us',
-          },
-          {
-            label: 'zh-cn',
-            value: 'zh-cn',
-          },
-        ],
       };
     },
   };

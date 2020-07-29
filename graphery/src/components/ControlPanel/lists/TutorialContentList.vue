@@ -31,7 +31,11 @@
                 :label="props.row.title"
                 :routePath="{
                   name: 'Tutorial Content Editor',
-                  params: { id: props.row.id },
+                  params: {
+                    id: props.row.id,
+                    url: props.row.tutorialUrl,
+                    lang: tableLang,
+                  },
                 }"
               />
               <!-- TODO when the title is None, create a new content -->
