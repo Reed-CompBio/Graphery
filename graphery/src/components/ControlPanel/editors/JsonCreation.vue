@@ -42,7 +42,7 @@
             type="textarea"
             outlined
             label="Execution Result Json (Read Only)"
-            :loading="true"
+            :loading="loadingContent"
           />
         </div>
       </InfoCard>
@@ -71,7 +71,7 @@
     },
     computed: {
       resultJson() {
-        return null;
+        return this.graphChoice && this.graphChoice.json;
       },
     },
     methods: {

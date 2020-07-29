@@ -17,7 +17,10 @@
         <template v-slot:right>
           <!-- TODO make this section follow the scrolling -->
           <div id="tutorial-selection">
-            <TutorialSelection v-model="codeObject.tutorial" single-selection />
+            <NoCodeTutorialSelection
+              v-model="codeObject.tutorial"
+              :current-tutorial="codeObject.tutorial"
+            />
           </div>
 
           <div id="submit-section">
@@ -41,15 +44,15 @@
   import { apiCaller } from '../../../services/apis';
   import { codeQuery, updateCodeMutation } from '../../../services/queries';
   import { errorDialog, successDialog } from '../../../services/helpers';
-  import TutorialSelection from '../parts/TutorialSelection';
   import JsonCreation from './JsonCreation';
+  import NoCodeTutorialSelection from '../parts/NoCodeTutorialSelection';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
     props: ['id'],
     components: {
+      NoCodeTutorialSelection,
       JsonCreation,
-      TutorialSelection,
       IDCard,
       SubmitButton,
       ControlPanelContentFrame: () =>

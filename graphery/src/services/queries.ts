@@ -336,6 +336,14 @@ query ($id: UUID!) {
   }
 }`;
 
+export const allTutorialNoCodeQuery = `
+query ($currentTutorial: UUID) {
+  allTutorialInfoNoCode (currentTutorial: $currentTutorial) {
+    id
+    name
+  }
+}`;
+
 export const updateCodeMutation = `
 mutation ($id: UUID!, $code: String!, $tutorial: UUID!){
   updateCode (id:$id, code:$code, tutorial: $tutorial) {
