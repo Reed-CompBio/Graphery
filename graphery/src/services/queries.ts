@@ -322,3 +322,23 @@ mutation ($id: UUID!, $url: String!, $name: String!, $cyjs: JSONString!, $isPubl
     success
   }
 }`;
+
+export const codeQuery = `
+query ($id: UUID!) {
+  code(id: $id) {
+    code
+    tutorial {
+      id
+    }
+  }
+}`;
+
+export const updateCodeMutation = `
+mutation ($id: UUID!, $code: String!, $tutorial: UUID!){
+  updateCode (id:$id, code:$code, tutorial: $tutorial) {
+    success
+    model {
+      id
+    }
+  }
+}`;

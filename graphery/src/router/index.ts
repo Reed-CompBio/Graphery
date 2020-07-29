@@ -182,6 +182,7 @@ const routes: Array<RouteConfig> = [
       {
         path: 'code-editor/:id',
         name: 'Code Editor',
+        props: true,
         component: () =>
           import('@/components/ControlPanel/editors/CodeCreation.vue'),
       },
