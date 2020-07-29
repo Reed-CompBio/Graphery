@@ -29,6 +29,7 @@ class Query(graphene.ObjectType):
     user_info = graphene.Field(UserType)
     all_categories = DjangoListField(CategoryType)
     all_tutorial_info = DjangoListField(TutorialType)
+    all_tutorial_info_no_code = DjangoListField(TutorialType, code=graphene.UUID())
     all_graph_info = DjangoListField(GraphType)
     all_code = DjangoListField(CodeType)
     all_exec_result = DjangoListField(ExecResultJsonType)
@@ -63,6 +64,12 @@ class Query(graphene.ObjectType):
 
     def resolve_all_tutorial_info(self, info: ResolveInfo):
         return Tutorial.objects.all()
+
+    def resolve_all_tutorial_info_no_code(self, info: ResolveInfo, code: str = None):
+        if code:
+            return Tutorial.objects.filter(code__isnull=True) | Tutorial.objects.filter(code__id=code)
+
+        return Tutorial.objects.filter(code__isnull=True)
 
     def resolve_all_graph_info(self, info: ResolveInfo):
         return Graph.objects.all()
