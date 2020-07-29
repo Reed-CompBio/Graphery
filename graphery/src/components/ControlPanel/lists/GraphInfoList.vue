@@ -29,7 +29,11 @@
               :label="props.row.title"
               :routePath="{
                 name: 'Graph Info Editor',
-                params: { id: props.row.id },
+                params: {
+                  id: props.row.id,
+                  url: props.row.graphUrl,
+                  lang: tableLang,
+                },
               }"
             />
           </q-td>

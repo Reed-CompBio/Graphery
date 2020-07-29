@@ -9,12 +9,7 @@
         <div class="col-9 full-height q-pr-sm">
           <!-- title -->
           <div class="row q-mb-lg">
-            <q-input
-              v-model="title"
-              :hint="`Graph URL: ${url}`"
-              outlined
-              class="full-width"
-            >
+            <q-input v-model="graphInfoObject.title" outlined class="full-width">
               <template v-slot:prepend>
                 <q-icon name="title" />
               </template>
@@ -28,30 +23,22 @@
 
         <!-- Meta Section -->
         <div class="col-3 q-pl-sm">
+          <IDCard :id="id" class="full-width" />
+          <URLCard :url="url" class="full-width" />
+          <LangCard :lang="lang" class="full-width" />
+
+          <!-- published -->
           <div id="published-chooser" class="q-mb-md">
-            <!-- published -->
             <InfoCard>
               <template v-slot:title>
                 Published?
               </template>
               <q-checkbox
-                v-model="isPublished"
-                :label="isPublished ? '✅' : '❌'"
+                v-model="graphInfoObject.isPublished"
+                :label="graphInfoObject.isPublished ? '✅' : '❌'"
                 dense
               ></q-checkbox>
             </InfoCard>
-
-            <!-- choose language -->
-            <div id="lang-chooser" class="q-mb-md">
-              <InfoCard>
-                <template v-slot:title>
-                  Language
-                </template>
-                <q-option-group
-                  v-model="langChoice"
-                  :options="langOptions"
-                ></q-option-group>
-              </InfoCard>
 
               <!-- submit section -->
               <div id="submit-section">
@@ -68,9 +55,14 @@
 </template>
 
 <script>
+  import LangCard from '@/components/ControlPanel/parts/LangCard';
   export default {
-    props: ['id'],
+    // TODO add props to router url
+    props: ['id', 'url', 'lang'],
     components: {
+      LangCard,
+      URLCard: () => import('@/components/ControlPanel/parts/URLCard'),
+      IDCard: () => import('@/components/ControlPanel/parts/IDCard'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       EditorSection: () => import('../parts/EditorSection.vue'),
@@ -78,19 +70,12 @@
     },
     data() {
       return {
-        title: '',
-        isPublished: false,
-        langChoice: '',
-        langOptions: [
-          {
-            label: 'en-us',
-            value: 'en-us',
-          },
-          {
-            label: 'zh-cn',
-            value: 'zh-cn',
-          },
-        ],
+        graphInfoObject: {
+          title: '',
+          isPublished: false,
+          abstractMd: '',
+          abstractHtml: '',
+        },
       };
     },
   };

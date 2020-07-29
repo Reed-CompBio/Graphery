@@ -27,6 +27,7 @@
         <template v-slot:right>
           <URLCard :url="url" class="full-width" />
           <IDCard :id="id" class="full-width" />
+          <LangCard :lang="lang" class="full-width" />
 
           <!-- choose published -->
           <div id="published-chooser" class="q-mb-md">
@@ -44,16 +45,6 @@
 
           <!-- choose authors -->
           <AuthorSelection v-model="tutorialContentObj.authors" />
-
-          <!-- choose language -->
-          <div id="lang-chooser" class="q-mb-md">
-            <InfoCard>
-              <template v-slot:title>
-                Language
-              </template>
-              {{ lang }}
-            </InfoCard>
-          </div>
 
           <!-- abstract section -->
           <div id="abstract-section" class="q-mb-md">
@@ -83,10 +74,13 @@
 
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
+  import LangCard from '@/components/ControlPanel/parts/LangCard';
   export default {
     mixins: [loadingMixin],
+    // TODO add props to router url
     props: ['id', 'url', 'lang'],
     components: {
+      LangCard,
       URLCard: () => import('../parts/URLCard.vue'),
       AuthorSelection: () => import('../parts/AuthorSelection.vue'),
       IDCard: () => import('../parts/IDCard.vue'),
