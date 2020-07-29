@@ -15,6 +15,7 @@
     >
       <template v-slot:top>
         <RefreshButton :fetch-func="fetchGraphInfo" class="q-mr-sm" />
+        <AddNewButton :create-func="createGraphInfo" class="q-mr-sm" />
         <LangSelector
           :current-lang="tableLang"
           :change-callback="changeTableLang"
@@ -24,7 +25,13 @@
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="title" :props="props">
-            <OpenInEditorButton :label="props.row.title" />
+            <OpenInEditorButton
+              :label="props.row.title"
+              :routePath="{
+                name: 'Graph Info Editor',
+                params: { id: props.row.id },
+              }"
+            />
           </q-td>
 
           <q-td key="isPublished" :props="props">
@@ -55,13 +62,16 @@
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import tableLangMixin from '../mixins/TableLangMixin.vue';
-  import { apiCaller } from '../../../services/apis';
-  import { graphInfoListQuery } from '../../../services/queries';
-  import { errorDialog } from '../../../services/helpers';
+  import { apiCaller } from '@/services/apis';
+  import { graphInfoListQuery } from '@/services/queries';
+  import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
+  import { newModelUUID } from '@/services/params';
 
   export default {
     mixins: [loadingMixin, tableLangMixin],
     components: {
+      AddNewButton: () =>
+        import('@/components/ControlPanel/parts/AddNewButton'),
       OpenInPageButton: () => import('../parts/OpenInPageButton'),
       OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
       ControlPanelContentFrame: () =>
@@ -155,6 +165,14 @@
           .finally(() => {
             this.finishedLoading();
           });
+      },
+      createGraphInfo() {
+        resolveAndOpenLink({
+          name: 'Graph Info Editor',
+          params: {
+            id: newModelUUID,
+          },
+        });
       },
     },
     mounted() {

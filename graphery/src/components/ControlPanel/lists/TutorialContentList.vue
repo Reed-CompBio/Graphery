@@ -16,6 +16,7 @@
       >
         <template v-slot:top>
           <RefreshButton :fetch-func="fetchTutorialContent" class="q-mr-sm" />
+          <AddNewButton :create-func="createTutorialContent" class="q-mr-sm" />
           <LangSelector
             :current-lang="tableLang"
             :change-callback="changeTableLang"
@@ -26,7 +27,13 @@
           <q-tr :props="props">
             <!-- title -->
             <q-td key="title" :props="props">
-              <OpenInEditorButton :label="props.row.title" />
+              <OpenInEditorButton
+                :label="props.row.title"
+                :routePath="{
+                  name: 'Tutorial Content Editor',
+                  params: { id: props.row.id },
+                }"
+              />
               <!-- TODO when the title is None, create a new content -->
             </q-td>
 
@@ -87,16 +94,18 @@
 </template>
 
 <script>
-  import { apiCaller } from '../../../services/apis';
-  import { tutorialContentListQuery } from '../../../services/queries';
-  import { errorDialog } from '../../../services/helpers';
-  import { emptyTutorialContentTag } from '../../../services/params';
+  import { apiCaller } from '@/services/apis';
+  import { tutorialContentListQuery } from '@/services/queries';
+  import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
+  import { emptyTutorialContentTag, newModelUUID } from '@/services/params';
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import tableLangMixin from '../mixins/TableLangMixin.vue';
 
   export default {
     mixins: [loadingMixin, tableLangMixin],
     components: {
+      AddNewButton: () =>
+        import('@/components/ControlPanel/parts/AddNewButton'),
       LangSelector: () => import('../parts/LangSelector.vue'),
       OpenInPageButton: () => import('../parts/OpenInPageButton.vue'),
       OpenInEditorButton: () => import('../parts/OpenInEditorButton.vue'),
@@ -210,6 +219,14 @@
           .finally(() => {
             this.finishedLoading();
           });
+      },
+      createTutorialContent() {
+        resolveAndOpenLink({
+          name: 'Tutorial Content Editor',
+          params: {
+            id: newModelUUID,
+          },
+        });
       },
       emptyContent(title) {
         return title === emptyTutorialContentTag;
