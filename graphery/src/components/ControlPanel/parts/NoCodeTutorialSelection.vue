@@ -33,9 +33,8 @@
       event: 'getSelectedTutorial',
     },
     props: {
-      currentTutorial: {
+      currentCode: {
         type: String,
-        default: null,
       },
       selectedTutorial: {
         type: String,
@@ -51,7 +50,7 @@
         this.startLoading();
 
         apiCaller(allTutorialNoCodeQuery, {
-          currentTutorial: this.currentTutorial,
+          code: this.currentCode,
         })
           .then((data) => {
             if (!data || !('allTutorialInfoNoCode' in data)) {

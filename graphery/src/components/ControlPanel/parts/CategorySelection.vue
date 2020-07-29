@@ -18,7 +18,6 @@
 </template>
 
 <script>
-  import InfoCard from '../parts/InfoCard.vue';
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import { apiCaller } from '../../../services/apis';
   import { allCategoryQuery } from '../../../services/queries';
@@ -27,7 +26,7 @@
   export default {
     mixins: [loadingMixin],
     components: {
-      InfoCard,
+      InfoCard: () => import('../parts/InfoCard.vue'),
     },
     model: {
       prop: 'categorySelection',

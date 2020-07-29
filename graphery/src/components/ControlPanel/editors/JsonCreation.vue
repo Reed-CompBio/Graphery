@@ -12,6 +12,10 @@
               v-model="graphChoice"
               label="Select Graph"
               outlined
+              emit-value
+              map-options
+              option-label="name"
+              option-value="id"
             />
           </div>
           <div>
@@ -50,8 +54,11 @@
 
 <script>
   import loadingMixin from '../mixins/LoadingMixin';
+  import { resultJsonGetGraphsQuery } from '@/services/queries';
+  import { apiCaller } from '@/services/apis';
+  import { errorDialog, warningDialog } from '@/services/helpers';
   export default {
-    props: ['codeId'],
+    props: ['code', 'tutorial'],
     mixins: [loadingMixin],
     components: {
       InfoCard: () => import('../parts/InfoCard'),
@@ -62,16 +69,82 @@
       return {
         graphChoice: null,
         graphOptions: null,
+        execResults: null,
+        newResults: {},
       };
     },
     computed: {
       resultJson() {
-        return this.graphChoice && this.graphChoice.json;
+        return (
+          this.graphChoice &&
+          this.execResults &&
+          this.execResults.find((x) => x.graph.id === this.graphChoice)
+        );
+      },
+      allowSubmit() {
+        if (this.graphOptions) {
+          if (this.graphOptions.length === 0) {
+            return false;
+          }
+          return true;
+        } else {
+          return false;
+        }
       },
     },
     methods: {
+      fetchTutorialGraphs() {
+        this.startLoading();
+        apiCaller(resultJsonGetGraphsQuery, {
+          id: this.code,
+        })
+          .then((data) => {
+            if (!data || !('code' in data) || !data.code.tutorial) {
+              throw Error('Invalid data returned.');
+            }
+
+            if (!data.code.tutorial.graphSet) {
+              warningDialog({
+                message: 'This tutorial may not have graphs associated.',
+              });
+            }
+
+            this.graphOptions = data.code.tutorial.graphSet;
+
+            if (
+              !data.code.execresultjsonSet ||
+              data.code.execresultjsonSet.length === 0
+            ) {
+              warningDialog({
+                message:
+                  'This tutorial may not have initial execution json results.',
+              });
+            }
+            this.execResults = data.code.execresultjsonSet.map((obj) => {
+              obj[obj.graph.id] = obj.json;
+              return obj;
+            });
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during fetching graphs. ${err}`,
+            });
+          })
+          .finally(() => {
+            this.finishedLoading();
+          });
+      },
+
       postExecJson() {
         //
+      },
+    },
+    mounted() {
+      this.fetchTutorialGraphs();
+    },
+    watch: {
+      tutorial: function() {
+        this.fetchTutorialGraphs();
       },
     },
   };

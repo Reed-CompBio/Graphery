@@ -19,7 +19,7 @@
           <div id="tutorial-selection">
             <NoCodeTutorialSelection
               v-model="codeObject.tutorial"
-              :current-tutorial="codeObject.tutorial"
+              :current-code="codeObject.id"
             />
           </div>
 
@@ -29,7 +29,7 @@
           </div>
         </template>
       </EditorFrame>
-      <JsonCreation :code-id="codeObject.id" />
+      <JsonCreation :code="codeObject.id" :tutorial="codeObject.tutorial" />
     </template>
   </ControlPanelContentFrame>
 </template>

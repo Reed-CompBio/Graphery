@@ -337,8 +337,8 @@ query ($id: UUID!) {
 }`;
 
 export const allTutorialNoCodeQuery = `
-query ($currentTutorial: UUID) {
-  allTutorialInfoNoCode (currentTutorial: $currentTutorial) {
+query ($code: UUID) {
+  allTutorialInfoNoCode (code: $code) {
     id
     name
   }
@@ -350,6 +350,25 @@ mutation ($id: UUID!, $code: String!, $tutorial: UUID!){
     success
     model {
       id
+    }
+  }
+}`;
+
+export const resultJsonGetGraphsQuery = `
+query ($id: UUID!) {
+  code(id: $id) {
+    tutorial {
+      graphSet {
+        id
+        name
+        cyjs
+      }
+    }
+    execresultjsonSet {
+      graph {
+        id
+      }
+      json
     }
   }
 }`;
