@@ -45,6 +45,7 @@ class Query(graphene.ObjectType):
     graph = graphene.Field(GraphType,
                            url=graphene.String(),
                            id=graphene.String())
+    code = graphene.Field(CodeType, id=graphene.UUID(required=True))
 
     # The most efficient method of finding whether a model with a unique field is a member of a QuerySet
     # def resolve_username_exist(self, info, username):
@@ -118,3 +119,7 @@ class Query(graphene.ObjectType):
         elif id:
             return raw_result.get(id=id)
         raise GraphQLError('The graph you requested with url={}, id={} does not exist.'.format(url, id))
+
+    @write_required
+    def resolve_code(self, info: ResolveInfo, id: str):
+        return Code.objects.get(id=id)

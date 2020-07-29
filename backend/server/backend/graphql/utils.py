@@ -24,6 +24,10 @@ def get_wrappers_by_ids(model_wrapper_class: Type[S],
                         model_info: Iterable[str]) -> List[S]:
 
     # noinspection PyArgumentList
-    wrapper_collection = [model_wrapper_class().load_model(model_wrapper_class.model_class.objects.get(id=the_info))
+    wrapper_collection = [get_wrapper_by_id(model_wrapper_class, the_info)
                           for the_info in model_info]
     return wrapper_collection
+
+
+def get_wrapper_by_id(model_wrapper_class: Type[S], model_id: str) -> S:
+    return model_wrapper_class().load_model(model_wrapper_class.model_class.objects.get(id=model_id))

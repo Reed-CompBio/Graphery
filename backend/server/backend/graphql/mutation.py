@@ -2,7 +2,7 @@ import graphene
 from graphql import GraphQLError
 from django.contrib.auth import authenticate, login, logout
 
-from backend.graphql.admin_mutations import UpdateCategory, UpdateTutorialAnchor, UpdateGraph
+from backend.graphql.admin_mutations import UpdateCategory, UpdateTutorialAnchor, UpdateGraph, UpdateCode
 from backend.graphql.types import UserType
 
 
@@ -39,3 +39,4 @@ class Mutation(graphene.ObjectType):
     update_category = UpdateCategory.Field()
     update_tutorial_anchor = UpdateTutorialAnchor.Field()
     update_graph = UpdateGraph.Field()
+    update_code = UpdateCode.Field()

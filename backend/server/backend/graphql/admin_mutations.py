@@ -4,10 +4,10 @@ import graphene
 from graphql import GraphQLError
 
 from backend.graphql.decorators import write_required
-from backend.graphql.types import CategoryType, TutorialType, GraphType
-from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids
+from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeType
+from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, get_wrapper_by_id
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
-    TutorialAnchorWrapper, UserWrapper, GraphWrapper
+    TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper
 from backend.model.TutorialRelatedModel import GraphPriority
 
 
@@ -93,3 +93,22 @@ class UpdateGraph(graphene.Mutation):
                                                             tutorials=tutorial_wrappers)
 
         return UpdateGraph(success=True, model=graph_wrapper.model)
+
+
+class UpdateCode(graphene.Mutation):
+    class Arguments:
+        id = graphene.UUID(required=True)
+        code = graphene.String(required=True)
+        tutorial = graphene.UUID(required=True)
+
+    success = graphene.Boolean(required=True)
+    model = graphene.Field(CodeType, required=True)
+
+    @write_required
+    def mutate(self, info, id: str, code: str, tutorial: str):
+        tutorial_wrapper = get_wrapper_by_id(TutorialAnchorWrapper, tutorial)
+
+        code_wrapper = process_model_wrapper(CodeWrapper,
+                                             id=id, code=code, tutorial=tutorial_wrapper)
+
+        return UpdateCode(success=True, model=code_wrapper)
