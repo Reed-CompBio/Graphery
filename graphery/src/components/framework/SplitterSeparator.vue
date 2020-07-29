@@ -27,7 +27,6 @@
     height: $separator-height
 
   .splitter-separator:hover,
-  /*.q-splitter--active .splitter-separator,*/
   .q-splitter__separator:hover .splitter-separator
     border-color: #fff
 

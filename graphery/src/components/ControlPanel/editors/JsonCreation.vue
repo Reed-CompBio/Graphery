@@ -12,10 +12,8 @@
               v-model="graphChoice"
               label="Select Graph"
               outlined
-              emit-value
               map-options
               option-label="name"
-              option-value="id"
             />
           </div>
           <div>
@@ -78,7 +76,7 @@
         return (
           this.graphChoice &&
           this.execResults &&
-          this.execResults.find((x) => x.graph.id === this.graphChoice)
+          this.execResults[this.graphChoice.id]
         );
       },
       allowSubmit() {
@@ -120,9 +118,9 @@
                   'This tutorial may not have initial execution json results.',
               });
             }
-            this.execResults = data.code.execresultjsonSet.map((obj) => {
-              obj[obj.graph.id] = obj.json;
-              return obj;
+            this.execResults = {};
+            data.code.execresultjsonSet.forEach((obj) => {
+              this.execResults[obj.graph.id] = obj.json;
             });
           })
           .catch((err) => {
