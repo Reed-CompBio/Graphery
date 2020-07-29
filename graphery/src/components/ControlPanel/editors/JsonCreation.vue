@@ -15,11 +15,6 @@
             />
           </div>
           <div>
-            <q-btn
-              label="Add Graph"
-              :loading="loadingContent"
-              class="q-mr-sm"
-            />
             <q-btn label="Exec" :loading="loadingContent" class="q-mr-sm" />
             <q-btn
               label="Exec Locally"
