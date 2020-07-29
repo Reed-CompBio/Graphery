@@ -4,12 +4,14 @@
       Graph Info Editor
     </template>
     <template>
-      <div class="row full-height">
-        <!-- Editor Section -->
-        <div class="col-9 full-height q-pr-sm">
-          <!-- title -->
+      <EditorFrame>
+        <template v-slot:left>
           <div class="row q-mb-lg">
-            <q-input v-model="graphInfoObject.title" outlined class="full-width">
+            <q-input
+              v-model="graphInfoObject.title"
+              outlined
+              class="full-width"
+            >
               <template v-slot:prepend>
                 <q-icon name="title" />
               </template>
@@ -19,10 +21,8 @@
           <div class="row q-my-lg" style="height: 70vh;">
             <EditorSection class="full-width" />
           </div>
-        </div>
-
-        <!-- Meta Section -->
-        <div class="col-3 q-pl-sm">
+        </template>
+        <template v-slot:right>
           <IDCard :id="id" class="full-width" />
           <URLCard :url="url" class="full-width" />
           <LangCard :lang="lang" class="full-width" />
@@ -39,28 +39,27 @@
                 dense
               ></q-checkbox>
             </InfoCard>
-
-              <!-- submit section -->
-              <div id="submit-section">
-                <!-- TODO button action -->
-                <q-btn label="Submit" class="full-width"></q-btn>
-                <!-- TODO align two sections -->
-              </div>
-            </div>
           </div>
-        </div>
-      </div>
+
+          <!-- submit section -->
+          <div id="submit-section">
+            <!-- TODO button action -->
+            <q-btn label="Submit" class="full-width"></q-btn>
+            <!-- TODO align two sections -->
+          </div>
+        </template>
+      </EditorFrame>
     </template>
   </ControlPanelContentFrame>
 </template>
 
 <script>
-  import LangCard from '@/components/ControlPanel/parts/LangCard';
   export default {
     // TODO add props to router url
     props: ['id', 'url', 'lang'],
     components: {
-      LangCard,
+      EditorFrame: () => import('../frames/EditorFrame.vue'),
+      LangCard: () => import('../parts/LangCard'),
       URLCard: () => import('@/components/ControlPanel/parts/URLCard'),
       IDCard: () => import('@/components/ControlPanel/parts/IDCard'),
       ControlPanelContentFrame: () =>
