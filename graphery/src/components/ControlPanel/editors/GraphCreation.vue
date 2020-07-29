@@ -7,7 +7,6 @@
       <EditorFrame>
         <template v-slot:left>
           <div class="row full-width">
-            <IDCard :id="graphObj.id" class="full-width" />
             <div class="col-6 q-pr-sm">
               <q-input
                 outlined
@@ -56,6 +55,8 @@
           </div>
         </template>
         <template v-slot:right>
+          <IDCard :id="graphObj.id" class="full-width" />
+
           <InfoCard>
             <template v-slot:title>
               Published

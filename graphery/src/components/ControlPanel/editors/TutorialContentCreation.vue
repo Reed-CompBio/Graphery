@@ -9,8 +9,7 @@
           <!-- title -->
           <div class="row q-mb-lg">
             <q-input
-              v-model="title"
-              :hint="`Tutorial URL: ${url}`"
+              v-model="tutorialContentObj.title"
               outlined
               class="full-width"
             >
@@ -26,6 +25,8 @@
         </template>
 
         <template v-slot:right>
+          <IDCard :id="id" class="full-width" />
+
           <!-- choose published -->
           <div id="published-chooser" class="q-mb-md">
             <InfoCard>
@@ -33,8 +34,8 @@
                 Published?
               </template>
               <q-checkbox
-                v-model="isPublished"
-                :label="isPublished ? '✅' : '❌'"
+                v-model="tutorialContentObj.isPublished"
+                :label="tutorialContentObj.isPublished ? '✅' : '❌'"
                 dense
               ></q-checkbox>
             </InfoCard>
@@ -42,22 +43,7 @@
 
           <!-- choose authors -->
           <div id="author-chooser" class="q-mb-md">
-            <InfoCard>
-              <template v-slot:title>
-                Authors
-              </template>
-
-              <q-select
-                outlined
-                use-chips
-                multiple
-                dense
-                clearable
-                v-model="authorChoice"
-                :options="authorOptions"
-                label="Authors"
-              />
-            </InfoCard>
+            <AuthorSelection v-model="tutorialContentObj.authors" />
           </div>
 
           <!-- choose language -->
@@ -79,7 +65,11 @@
               <template v-slot:title>
                 Abstract
               </template>
-              <q-input v-model="abstractText" outlined type="textarea" />
+              <q-input
+                v-model="tutorialContentObj.abstract"
+                outlined
+                type="textarea"
+              />
             </InfoCard>
           </div>
 
@@ -99,8 +89,10 @@
   import loadingMixin from '../mixins/LoadingMixin.vue';
   export default {
     mixins: [loadingMixin],
-    props: ['id'],
+    props: ['id', 'url'],
     components: {
+      AuthorSelection: () => import('../parts/AuthorSelection.vue'),
+      IDCard: () => import('../parts/IDCard.vue'),
       ControlPageContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
@@ -109,10 +101,15 @@
     },
     data() {
       return {
-        title: '',
-        isPublished: false,
-        authorChoice: [],
-        authorOptions: [],
+        tutorialContentObj: {
+          title: '',
+          tutorialAnchor: this.url,
+          isPublished: false,
+          authors: [],
+          abstract: '',
+          contentMd: '',
+          contentHtml: '',
+        },
         langChoice: '',
         langOptions: [
           {
@@ -124,7 +121,6 @@
             value: 'zh-cn',
           },
         ],
-        abstractText: '',
       };
     },
   };
