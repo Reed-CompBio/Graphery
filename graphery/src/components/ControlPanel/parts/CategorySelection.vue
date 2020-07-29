@@ -40,7 +40,6 @@
     },
     data() {
       return {
-        selection: this.categorySelection,
         categoryOptions: null,
       };
     },
@@ -64,13 +63,18 @@
             this.finishedLoading();
           });
       },
-      emitValue() {
-        this.$emit('getCategorySelection', this.selection);
+      emitValue(val) {
+        this.$emit('getCategorySelection', val);
       },
     },
-    watch: {
-      categorySelection: function() {
-        this.emitValue();
+    computed: {
+      selection: {
+        set(d) {
+          this.emitValue(d);
+        },
+        get() {
+          return this.categorySelection;
+        },
       },
     },
     mounted() {

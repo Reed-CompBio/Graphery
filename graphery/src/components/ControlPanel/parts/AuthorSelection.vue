@@ -40,9 +40,18 @@
     },
     data() {
       return {
-        selection: this.authorSelection,
         authorOptions: null,
       };
+    },
+    computed: {
+      selection: {
+        set(d) {
+          this.emitValue(d);
+        },
+        get() {
+          return this.authorSelection;
+        },
+      },
     },
     methods: {
       fetchValue() {
@@ -65,13 +74,8 @@
             this.finishedLoading();
           });
       },
-      emitValue() {
-        this.$emit('getAuthorSelection', this.selection);
-      },
-    },
-    watch: {
-      authorSelection: function() {
-        this.emitValue();
+      emitValue(val) {
+        this.$emit('getAuthorSelection', val);
       },
     },
     mounted() {

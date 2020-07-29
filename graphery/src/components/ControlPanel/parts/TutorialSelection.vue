@@ -43,7 +43,6 @@
     },
     data() {
       return {
-        selection: this.selectedTutorial,
         tutorialOptions: null,
       };
     },
@@ -68,13 +67,18 @@
             this.finishedLoading();
           });
       },
-      emitValue() {
-        this.$emit('getSelectedTutorial', this.selection);
+      emitValue(val) {
+        this.$emit('getSelectedTutorial', val);
       },
     },
-    watch: {
-      selectedTutorial: function() {
-        this.emitValue();
+    computed: {
+      selection: {
+        set(d) {
+          this.emitValue(d);
+        },
+        get() {
+          return this.selectedTutorial;
+        },
       },
     },
     mounted() {
