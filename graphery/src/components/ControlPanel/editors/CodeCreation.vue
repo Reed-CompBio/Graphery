@@ -203,7 +203,9 @@
               throw Error('Cannot update code for unknown reason!');
             }
 
-            this.pushToNewPlace(data.updateCode.model.id);
+            this.codeObject.id = data.updateCode.model.id;
+
+            this.pushToNewPlace(this.codeObject.id);
             successDialog({
               message: 'Update Code Successfully!',
             });

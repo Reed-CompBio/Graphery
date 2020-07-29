@@ -205,6 +205,8 @@
               throw Error('Cannot modify graph for unknown reason.');
             }
 
+            this.graphObj.id = data.updateGraph.model.id;
+
             this.pushToNewPlace(this.graphObj.id);
             successDialog({
               message: 'Update Graph Successfully!',
