@@ -179,6 +179,7 @@ const routes: Array<RouteConfig> = [
           anchorId: route.params.anchorId,
           contentId: route.params.contentId,
           lang: route.query.lang,
+          graphUrl: route.query.graphUrl,
         }),
         component: () =>
           import('@/components/ControlPanel/editors/GraphInfoCreation.vue'),

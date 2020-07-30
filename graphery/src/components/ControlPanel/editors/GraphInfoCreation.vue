@@ -23,8 +23,9 @@
           </div>
         </template>
         <template v-slot:right>
-          <IDCard :id="id" class="full-width" />
-          <URLCard :url="url" class="full-width" />
+          <URLCard :url="graphUrl" class="full-width" />
+          <IDCard title="Graph ID" :id="anchorId" class="full-width" />
+          <IDCard title="Content ID" :id="contentId" class="full-width" />
           <LangCard :lang="lang" class="full-width" />
 
           <!-- published -->
@@ -56,7 +57,7 @@
 <script>
   export default {
     // TODO add props to router url
-    props: ['id', 'url', 'lang'],
+    props: ['anchorId', 'contentId', 'graphUrl', 'lang'],
     components: {
       EditorFrame: () => import('../frames/EditorFrame.vue'),
       LangCard: () => import('../parts/LangCard'),

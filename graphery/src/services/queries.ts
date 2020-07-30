@@ -215,6 +215,7 @@ query ($translation: String, $default: String = "") {
 export const graphInfoListQuery = `
 query ($translation: String, $default: String = "") {
   allGraphInfo {
+    id
     name 
     url
     content (translation: $translation, default:$default) {

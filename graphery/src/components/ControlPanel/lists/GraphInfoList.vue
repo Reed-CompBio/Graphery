@@ -15,7 +15,6 @@
     >
       <template v-slot:top>
         <RefreshButton :fetch-func="fetchGraphInfo" class="q-mr-sm" />
-        <AddNewButton :create-func="createGraphInfo" class="q-mr-sm" />
         <LangSelector
           :current-lang="tableLang"
           :change-callback="changeTableLang"
@@ -30,11 +29,12 @@
               :routePath="{
                 name: 'Graph Info Editor',
                 params: {
-                  id: props.row.id,
+                  anchorId: props.row.graphId,
+                  contentId: props.row.id,
                 },
                 query: {
                   lang: tableLang,
-                  url: props.row.graphUrl,
+                  graphUrl: props.row.graphUrl,
                 },
               }"
             />
@@ -76,8 +76,6 @@
   export default {
     mixins: [loadingMixin, tableLangMixin],
     components: {
-      AddNewButton: () =>
-        import('@/components/ControlPanel/parts/AddNewButton'),
       OpenInPageButton: () => import('../parts/OpenInPageButton'),
       OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
       ControlPanelContentFrame: () =>
@@ -158,6 +156,7 @@
             }
 
             this.tableContent = data['allGraphInfo'].map((obj) => {
+              obj.content.graphId = obj.id;
               obj.content.graphName = obj.name;
               obj.content.graphUrl = obj.url;
               return obj.content;
