@@ -44,7 +44,9 @@
         return this.rawText;
       },
       initText(text) {
-        this.initValue = text;
+        if (this.initValue) {
+          this.initValue = text;
+        }
       },
       onChangeAction(value, render) {
         this.$emit('changes', value, render);

@@ -27,6 +27,7 @@
               :initValue="tutorialContentObj.contentMd"
               :imgAddAction="imgAddCallback"
               :imgDelAction="imgDelCallback"
+              @changes="handleEditorChanges"
             ></EditorSection>
           </div>
         </template>
@@ -123,6 +124,10 @@
       },
     },
     methods: {
+      handleEditorChanges(raw, rendered) {
+        this.tutorialContentObj.contentMd = raw;
+        this.tutorialContentObj.contentHtml = rendered;
+      },
       imgAddCallback(fileName, file) {
         // TODO post lang with axios
         console.log(fileName, file);
