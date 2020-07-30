@@ -1,7 +1,7 @@
 <template>
   <InfoCard>
     <template v-slot:title>
-      ID
+      {{ title }}
     </template>
     <div class="text-center">
       {{ displayedId }}
@@ -11,9 +11,17 @@
 
 <script>
   import InfoCard from '../parts/InfoCard.vue';
-  import { newModelUUID } from '../../../services/params';
+  import { newModelUUID } from '@/services/params';
   export default {
-    props: ['id'],
+    props: {
+      id: {
+        type: String,
+      },
+      title: {
+        type: String,
+        default: 'ID',
+      },
+    },
     components: {
       InfoCard,
     },

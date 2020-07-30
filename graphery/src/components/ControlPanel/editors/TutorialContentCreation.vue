@@ -28,8 +28,9 @@
         </template>
 
         <template v-slot:right>
-          <URLCard :url="url" class="full-width" />
-          <IDCard :id="id" class="full-width" />
+          <URLCard :url="tutorialUrl" class="full-width" />
+          <IDCard title="Tutorial ID" :id="anchorId" class="full-width" />
+          <IDCard title="Content ID" :id="contentId" class="full-width" />
           <LangCard :lang="lang" class="full-width" />
 
           <!-- choose published -->
@@ -81,7 +82,7 @@
   export default {
     mixins: [loadingMixin],
     // TODO add props to router url
-    props: ['id', 'url', 'lang'],
+    props: ['anchorId', 'contentId', 'tutorialUrl', 'lang'],
     components: {
       LangCard,
       URLCard: () => import('../parts/URLCard.vue'),

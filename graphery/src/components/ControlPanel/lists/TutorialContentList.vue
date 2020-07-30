@@ -16,7 +16,6 @@
       >
         <template v-slot:top>
           <RefreshButton :fetch-func="fetchTutorialContent" class="q-mr-sm" />
-          <AddNewButton :create-func="createTutorialContent" class="q-mr-sm" />
           <LangSelector
             :current-lang="tableLang"
             :change-callback="changeTableLang"
@@ -32,11 +31,12 @@
                 :routePath="{
                   name: 'Tutorial Content Editor',
                   params: {
-                    id: props.row.id,
+                    anchorId: props.row.tutorialId,
+                    contentId: props.row.id,
                   },
                   query: {
                     lang: tableLang,
-                    url: props.row.tutorialUrl,
+                    tutorialUrl: props.row.tutorialUrl,
                   },
                 }"
               />
@@ -110,8 +110,6 @@
   export default {
     mixins: [loadingMixin, tableLangMixin],
     components: {
-      AddNewButton: () =>
-        import('@/components/ControlPanel/parts/AddNewButton'),
       LangSelector: () => import('../parts/LangSelector.vue'),
       OpenInPageButton: () => import('../parts/OpenInPageButton.vue'),
       OpenInEditorButton: () => import('../parts/OpenInEditorButton.vue'),
@@ -212,6 +210,7 @@
               obj.content.authors = obj.content.authors.map(
                 (obj) => obj.username
               );
+              obj.content.tutorialId = obj.id;
               obj.content.tutorialName = obj.name;
               obj.content.tutorialUrl = obj.url;
               return obj.content;

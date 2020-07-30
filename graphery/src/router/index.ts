@@ -140,12 +140,13 @@ const routes: Array<RouteConfig> = [
           import('@/components/ControlPanel/lists/TutorialContentList.vue'),
       },
       {
-        path: 'tutorial-content-editor/:id',
+        path: 'tutorial-content-editor/:anchorId/:contentId',
         name: 'Tutorial Content Editor',
         props: (route) => ({
-          id: route.params.id,
+          anchorId: route.params.anchorId,
+          contentId: route.params.contentId,
           lang: route.query.lang,
-          url: route.query.url,
+          tutorialUrl: route.query.tutorialUrl,
         }),
         component: () =>
           import(
@@ -172,12 +173,12 @@ const routes: Array<RouteConfig> = [
           import('@/components/ControlPanel/lists/GraphInfoList.vue'),
       },
       {
-        path: 'graph-info-editor/:id',
+        path: 'graph-info-editor/:anchorId/:contentId',
         name: 'Graph Info Editor',
         props: (route) => ({
-          id: route.params.id,
+          anchorId: route.params.anchorId,
+          contentId: route.params.contentId,
           lang: route.query.lang,
-          url: route.query.url,
         }),
         component: () =>
           import('@/components/ControlPanel/editors/GraphInfoCreation.vue'),
