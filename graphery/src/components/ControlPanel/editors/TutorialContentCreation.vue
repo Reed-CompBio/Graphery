@@ -20,7 +20,10 @@
           </div>
           <!-- editor -->
           <div class="row q-my-lg" style="height: 70vh;">
-            <EditorSection class="full-width"></EditorSection>
+            <EditorSection
+              class="full-width"
+              :imgAddAction="imgAddCallback"
+            ></EditorSection>
           </div>
         </template>
 
@@ -102,6 +105,11 @@
           contentHtml: '',
         },
       };
+    },
+    methods: {
+      imgAddCallback(fileName, file) {
+        console.log(fileName, file);
+      },
     },
   };
 </script>

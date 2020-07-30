@@ -6,6 +6,9 @@
       ref="mdEditor"
       :value="initValue"
       class="full-height"
+      @change="onChangeAction"
+      @imgAdd="imgAddAction"
+      @imgDel="imgDelAction"
     ></mavonEditor>
   </div>
 </template>
@@ -15,6 +18,14 @@
   import 'mavon-editor/dist/css/index.css';
 
   export default {
+    props: {
+      imgAddAction: {
+        type: Function,
+      },
+      imgDelAction: {
+        type: Function,
+      },
+    },
     components: {
       mavonEditor,
     },
@@ -28,6 +39,12 @@
     methods: {
       getRawText() {
         return this.rawText;
+      },
+      initText(text) {
+        this.initValue = text;
+      },
+      onChangeAction(value, render) {
+        this.$emit('changes', value, render);
       },
       getProcessedHtml() {
         return this.$refs.markdownSection.getProcessedHtml();
