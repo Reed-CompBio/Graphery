@@ -142,7 +142,11 @@ const routes: Array<RouteConfig> = [
       {
         path: 'tutorial-content-editor/:id',
         name: 'Tutorial Content Editor',
-        props: true,
+        props: (route) => ({
+          id: route.params.id,
+          lang: route.query.lang,
+          url: route.query.url,
+        }),
         component: () =>
           import(
             '@/components/ControlPanel/editors/TutorialContentCreation.vue'
@@ -170,7 +174,11 @@ const routes: Array<RouteConfig> = [
       {
         path: 'graph-info-editor/:id',
         name: 'Graph Info Editor',
-        props: true,
+        props: (route) => ({
+          id: route.params.id,
+          lang: route.query.lang,
+          url: route.query.url,
+        }),
         component: () =>
           import('@/components/ControlPanel/editors/GraphInfoCreation.vue'),
       },

@@ -31,8 +31,10 @@
                 name: 'Graph Info Editor',
                 params: {
                   id: props.row.id,
-                  url: props.row.graphUrl,
+                },
+                query: {
                   lang: tableLang,
+                  url: props.row.graphUrl,
                 },
               }"
             />

@@ -33,8 +33,10 @@
                   name: 'Tutorial Content Editor',
                   params: {
                     id: props.row.id,
-                    url: props.row.tutorialUrl,
+                  },
+                  query: {
                     lang: tableLang,
+                    url: props.row.tutorialUrl,
                   },
                 }"
               />
