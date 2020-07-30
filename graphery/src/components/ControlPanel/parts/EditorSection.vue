@@ -19,6 +19,10 @@
 
   export default {
     props: {
+      initValue: {
+        type: String,
+        default: '',
+      },
       imgAddAction: {
         type: Function,
       },
@@ -33,7 +37,6 @@
       return {
         rawText: '',
         splitPos: 50,
-        initValue: '',
       };
     },
     methods: {

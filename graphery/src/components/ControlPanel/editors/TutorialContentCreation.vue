@@ -10,6 +10,7 @@
           <div class="row q-mb-lg">
             <q-input
               v-model="tutorialContentObj.title"
+              hint="Tutorial Title"
               outlined
               class="full-width"
             >
@@ -22,7 +23,10 @@
           <div class="row q-my-lg" style="height: 70vh;">
             <EditorSection
               class="full-width"
+              ref="mdEditor"
+              :initValue="tutorialContentObj.contentMd"
               :imgAddAction="imgAddCallback"
+              :imgDelAction="imgDelCallback"
             ></EditorSection>
           </div>
         </template>
@@ -78,13 +82,18 @@
 
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
-  import LangCard from '@/components/ControlPanel/parts/LangCard';
+  import pushToMixin from '../mixins/PushToMixin.vue';
+  import { apiCaller } from '@/services/apis';
+  import { tutorialContentQuery } from '@/services/queries';
+  import { newModelUUID } from '@/services/params';
+  import { errorDialog } from '@/services/helpers';
+
   export default {
-    mixins: [loadingMixin],
+    mixins: [loadingMixin, pushToMixin],
     // TODO add props to router url
     props: ['anchorId', 'contentId', 'tutorialUrl', 'lang'],
     components: {
-      LangCard,
+      LangCard: () => import('@/components/ControlPanel/parts/LangCard'),
       URLCard: () => import('../parts/URLCard.vue'),
       AuthorSelection: () => import('../parts/AuthorSelection.vue'),
       IDCard: () => import('../parts/IDCard.vue'),
@@ -97,20 +106,75 @@
     data() {
       return {
         tutorialContentObj: {
+          id: this.contentId,
           title: '',
-          tutorialAnchor: this.url,
           isPublished: false,
           authors: [],
           abstract: '',
           contentMd: '',
           contentHtml: '',
+          tutorialAnchor: this.url,
         },
       };
     },
+    computed: {
+      isCreatingNew() {
+        return this.tutorialContentObj.id === newModelUUID;
+      },
+    },
     methods: {
       imgAddCallback(fileName, file) {
+        // TODO post lang with axios
         console.log(fileName, file);
       },
+      imgDelCallback(filename, file) {
+        console.log(filename, file);
+      },
+      fetchValue() {
+        this.startLoading();
+        apiCaller(tutorialContentQuery, {
+          id: this.anchorId,
+          translation: this.lang,
+        })
+          .then((data) => {
+            if (!data || !('tutorial' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            if (!data.tutorial) {
+              throw Error(`No tutorial for ID ${this.anchorId}.`);
+            }
+
+            if (data.tutorial.content.id !== this.contentId) {
+              if (this.tutorialContentObj.id === newModelUUID) {
+                data.tutorial.content.id = newModelUUID;
+              } else {
+                throw Error(`Invalid content ID specified: ${this.contentId}`);
+              }
+            }
+
+            data.tutorial.content.tutorialAnchor = data.tutorial.url;
+            Object.assign(this.tutorialContentObj, data.tutorial.content);
+            this.tutorialContentObj.authors = this.tutorialContentObj.authors.map(
+              (obj) => obj.id
+            );
+
+            if (this.$refs.mdEditor) {
+              this.$refs.mdEditor.initValue(this.tutorialContentObj.contentMd);
+            }
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during fetching tutorial content. ${err}`,
+            });
+          })
+          .finally(() => {
+            this.finishedLoading();
+          });
+      },
+    },
+    mounted() {
+      this.fetchValue();
     },
   };
 </script>

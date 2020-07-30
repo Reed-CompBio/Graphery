@@ -11,10 +11,19 @@
 
 <script>
   import InfoCard from '../parts/InfoCard.vue';
+  import { langList } from '@/services/params';
   export default {
     props: ['lang'],
     components: {
       InfoCard,
+    },
+    computed: {
+      displayedLang() {
+        if (this.lang || !(this.lang in langList)) {
+          return `Language "${this.lang}" NOT supported!`;
+        }
+        return this.lang;
+      },
     },
   };
 </script>
