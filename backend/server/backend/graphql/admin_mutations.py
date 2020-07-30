@@ -1,6 +1,7 @@
 from typing import List, Sequence, Mapping
 
 import graphene
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from graphql import GraphQLError
 
 from backend.graphql.decorators import write_required
@@ -112,3 +113,20 @@ class UpdateCode(graphene.Mutation):
                                              id=id, code=code, tutorial=tutorial_wrapper)
 
         return UpdateCode(success=True, model=code_wrapper.model)
+
+
+class UpdateStatics(graphene.Mutation):
+    success = graphene.Boolean(required=True)
+
+    @write_required
+    def mutate(self, info):
+        files: Mapping[InMemoryUploadedFile] = info.context.FILES
+
+        if len(files) == 0 or not all('image' in file.content_type for file in files.values()):
+            raise GraphQLError('No files are added.')
+
+        for upload_name, file in files.items():
+            # do something
+            pass
+
+        return UpdateStatics(success=True)

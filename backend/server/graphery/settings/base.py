@@ -128,3 +128,5 @@ CORS_ALLOW_METHODS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+MEDIA_ROOT = '/var/www/graphery/media/'
