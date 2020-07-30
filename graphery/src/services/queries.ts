@@ -374,3 +374,20 @@ query ($id: UUID!) {
     }
   }
 }`;
+
+export const tutorialContentQuery = `
+query ($id: String!, $translation: String!, $default: String = "en-us") {
+  tutorial(id: $id) {
+    url
+    content(translation: $translation, default: $default) {
+      id
+      title
+      isPublished
+      authors {
+        id
+      }
+      abstract
+      contentMd
+    }
+  }
+}`;
