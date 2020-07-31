@@ -430,3 +430,13 @@ query ($id: String!, $translation: String!, $default: String = "en-us") {
     }
   }
 }`;
+
+export const graphInfoContentMutation = `
+mutation ($lang: String!, $content: GraphContentInputType!) {
+  updateGraphInfoContent(lang: $lang, content: $content) {
+    success
+    model {
+      id
+    }
+  }
+}`;

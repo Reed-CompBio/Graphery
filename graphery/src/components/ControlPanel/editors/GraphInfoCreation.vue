@@ -57,8 +57,7 @@
 
           <!-- submit section -->
           <div id="submit-section">
-            <!-- TODO button action -->
-            <q-btn label="Submit" class="full-width"></q-btn>
+            <SubmitButton :action="postValue" :loading="loadingContent" />
             <!-- TODO align two sections -->
           </div>
         </template>
@@ -73,14 +72,19 @@
   import imageHandleMixin from '@/components/ControlPanel/mixins/ImageHandleMixin';
   import { newModelUUID } from '@/services/params';
   import { apiCaller } from '@/services/apis';
-  import { graphInfoContentQuery } from '@/services/queries';
-  import { errorDialog } from '@/services/helpers';
+  import {
+    graphInfoContentMutation,
+    graphInfoContentQuery,
+  } from '@/services/queries';
+  import { errorDialog, successDialog } from '@/services/helpers';
+  import SubmitButton from '@/components/ControlPanel/parts/SubmitButton';
 
   export default {
     // TODO add props to router url
     mixins: [loadingMixin, pushToMixin, imageHandleMixin],
     props: ['anchorId', 'contentId', 'graphUrl', 'lang'],
     components: {
+      SubmitButton,
       EditorHowTo: () => import('@/components/ControlPanel/parts/EditorHowTo'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
       LangCard: () => import('../parts/LangCard'),
@@ -168,8 +172,52 @@
             this.finishedLoading();
           });
       },
+      pushToNewPlace(id) {
+        if (this.isCreatingNew) {
+          this.$router.push({
+            name: this.$route.name,
+            params: {
+              anchorId: this.graphInfoObject.graphAnchor,
+              contentId: id,
+            },
+            query: {
+              lang: this.lang,
+              graphUrl: this.graphUrl,
+            },
+          });
+        }
+      },
       postValue() {
-        //
+        this.startLoading();
+
+        apiCaller(graphInfoContentMutation, {
+          lang: this.lang,
+          content: this.graphInfoObject,
+        })
+          .then((data) => {
+            if (!data || !('updateGraphInfoContent' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            if (!data.updateGraphInfoContent.success) {
+              throw Error('Cannot update graph info for unknown reason.');
+            }
+
+            this.graphInfoObject.id = data.updateGraphInfoContent.model.id;
+
+            this.pushToNewPlace(this.graphInfoObject.id);
+            successDialog({
+              message: 'Update Graph Content Successfully!',
+            });
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `Cannot update graph info content. ${err}`,
+            });
+          })
+          .finally(() => {
+            this.finishedLoading();
+          });
       },
       saveUploadCallback() {
         this.postValue();

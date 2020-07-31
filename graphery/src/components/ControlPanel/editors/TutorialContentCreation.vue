@@ -208,10 +208,13 @@
         if (this.isCreatingNew) {
           this.$router.push({
             name: this.$route.name,
-            params: { anchorId: this.anchorId, contentId: id },
+            params: {
+              anchorId: this.tutorialContentObj.tutorialAnchor,
+              contentId: id,
+            },
             query: {
               lang: this.lang,
-              tutorialUrl: this.tutorialContentObj.tutorialAnchor,
+              tutorialUrl: this.tutorialUrl,
             },
           });
         }
