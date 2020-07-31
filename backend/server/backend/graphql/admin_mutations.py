@@ -217,4 +217,4 @@ class UpdateGraphInfoContent(graphene.Mutation):
                                                            model_class=graph_info_translation_table,
                                                            **content)
 
-        return UpdateGraphInfoContent(success=True, model=graph_info_content_wrapper)
+        return UpdateGraphInfoContent(success=True, model=graph_info_content_wrapper.model)
