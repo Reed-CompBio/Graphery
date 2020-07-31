@@ -1,5 +1,6 @@
 from typing import List, Sequence, Mapping, Type, Optional, MutableMapping
 from os.path import join
+from uuid import UUID
 
 import graphene
 from graphql import GraphQLError
@@ -134,9 +135,7 @@ class UploadStatics(graphene.Mutation):
         return join('/', settings.UPLOAD_STATICS_ENTRY, url)
 
     @write_required
-    def mutate(self, info, link_id: str, where: str = UploadWhere.TUTORIAL):
-
-        print(type(info.context.FILES))
+    def mutate(self, info, link_id: UUID, where: str = UploadWhere.TUTORIAL):
 
         files: Mapping[str, InMemoryUploadedFile] = info.context.FILES
 
@@ -146,10 +145,10 @@ class UploadStatics(graphene.Mutation):
         if len(files) > 1:
             raise GraphQLError('You can only upload one file at a time')
 
-        upload = Uploads(where=where, link_id=link_id, file=files[link_id])
+        upload = Uploads(where=where, link_id=link_id, file=files[str(link_id)])
         upload.save()
 
-        return UploadStatics(success=True, url=self.get_full_url(upload.file.url))
+        return UploadStatics(success=True, url=UploadStatics.get_full_url(upload.file.url))
 
 
 class DeleteStatics(graphene.Mutation):
