@@ -97,6 +97,7 @@
   import {
     tutorialContentMutation,
     tutorialContentQuery,
+    uploadImage,
   } from '@/services/queries';
   import { newModelUUID } from '@/services/params';
   import { errorDialog, successDialog } from '@/services/helpers';
@@ -160,7 +161,31 @@
       },
       imgAddCallback(fileName, file) {
         // TODO post lang with axios
-        console.log(fileName, file);
+        const form = new FormData();
+        form.append('query', uploadImage);
+        form.append(
+          'variables',
+          JSON.stringify({ linkId: this.anchorId, where: 'TUTORIAL' })
+        );
+        form.append(this.anchorId, file);
+
+        apiCaller(null, null, form)
+          .then((data) => {
+            if (!data || !('uploadStatics' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            if (!data.uploadStatics.success) {
+              throw Error('Uploading image is failed.');
+            }
+
+            this.$refs.mdEditor.replaceUrl(fileName, data.uploadStatics.url);
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during upload image. ${err}`,
+            });
+          });
       },
       imgDelCallback(filename, file) {
         console.log(filename, file);

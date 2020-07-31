@@ -52,8 +52,9 @@ apiClient.interceptors.response.use(
 // const csrfTokenCookieName = 'csrftoken';
 
 export async function apiCaller(
-  query: string,
-  variables: object | null = null
+  query: string | null,
+  variables: object | null = null,
+  formData: FormData | null = null
 ) {
   if (vuex.state.csrfToken === null) {
     await apiClient.get('/csrf').then((re) => {
@@ -62,10 +63,12 @@ export async function apiCaller(
   }
   const response = await apiClient.post(
     '/graphql',
-    {
-      query,
-      variables,
-    },
+    formData === null
+      ? {
+          query,
+          variables,
+        }
+      : formData,
     {
       headers: {
         'X-CSRFToken': vuex.state.csrfToken,

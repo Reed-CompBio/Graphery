@@ -54,6 +54,9 @@
       getProcessedHtml() {
         return this.$refs.markdownSection.getProcessedHtml();
       },
+      replaceUrl(pos, value) {
+        this.$refs.mdEditor.$img2Url(pos, value);
+      },
     },
   };
 </script>
