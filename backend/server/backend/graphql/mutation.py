@@ -3,7 +3,8 @@ from graphql import GraphQLError
 from django.contrib.auth import authenticate, login, logout
 
 from backend.graphql.admin_mutations import UpdateCategory, UpdateTutorialAnchor, UpdateGraph, UpdateCode, \
-    UploadStatics, UpdateTutorialContent, DeleteStatics
+    UploadStatics, UpdateTutorialContent, DeleteStatics, UpdateGraphInfoContent
+from backend.graphql.decorators import login_required
 from backend.graphql.types import UserType
 
 
@@ -25,6 +26,7 @@ class Login(graphene.Mutation):
 class Logout(graphene.Mutation):
     success = graphene.Boolean(required=True)
 
+    @login_required
     def mutate(self, info):
         user = info.context.user
         if user.is_authenticated:
@@ -44,3 +46,4 @@ class Mutation(graphene.ObjectType):
     upload_statics = UploadStatics.Field()
     delete_statics = DeleteStatics.Field()
     update_tutorial_content = UpdateTutorialContent.Field()
+    update_graph_info_content = UpdateGraphInfoContent.Field()

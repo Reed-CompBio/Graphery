@@ -61,6 +61,17 @@ class TutorialInterface(graphene.Interface):
         return self.authors.all()
 
 
+class TutorialContentInputType(graphene.InputObjectType):
+    id = graphene.UUID(required=True)
+    title = graphene.String(required=True)
+    tutorial_anchor = graphene.UUID(required=True)
+    authors = graphene.List(graphene.UUID, required=True)
+    abstract = graphene.String(required=True)
+    content_md = graphene.String(required=True)
+    content_html = graphene.String(required=True)
+    is_published = graphene.Boolean(required=True)
+
+
 class CategoryType(PublishedFilterBase, DjangoObjectType):
     @field_adder(uuid_mixin_field, published_mixin_field)
     class Meta:
@@ -115,6 +126,15 @@ class GraphContentInterface(graphene.Interface):
     abstract_md = graphene.String()
     abstract = graphene.String()
     is_published = graphene.Boolean()
+
+
+class GraphContentInputType(graphene.InputObjectType):
+    id = graphene.UUID(required=True)
+    title = graphene.String(required=True)
+    abstract_md = graphene.String(required=True)
+    abstract = graphene.String(required=True)
+    is_published = graphene.Boolean(required=True)
+    graph_anchor = graphene.UUID(required=True)
 
 
 class GraphPriorityType(graphene.ObjectType):
@@ -212,17 +232,6 @@ def model_class_constructor(base_meta: type, attributes: Iterable[Tuple[str, Any
     for attribute in attributes:
         setattr(meta_cls, attribute[0], attribute[1])
     return meta_cls
-
-
-class TutorialContentInputType(graphene.InputObjectType):
-    id = graphene.UUID(required=True)
-    title = graphene.String(required=True)
-    tutorial_anchor = graphene.UUID(required=True)
-    authors = graphene.List(graphene.UUID, required=True)
-    abstract = graphene.String(required=True)
-    content_md = graphene.String(required=True)
-    content_html = graphene.String(required=True)
-    is_published = graphene.Boolean(required=True)
 
 
 @add_trans_type

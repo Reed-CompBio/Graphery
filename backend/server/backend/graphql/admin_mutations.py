@@ -10,13 +10,14 @@ from django.conf import settings
 
 from backend.graphql.decorators import write_required
 from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeType, TutorialInterface, \
-    TutorialContentInputType
+    TutorialContentInputType, GraphContentInputType, GraphContentInterface
 from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, get_wrapper_by_id
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
-    TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper
-from backend.model.TranslationModels import TranslationBase
+    TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper, \
+    GraphTranslationContentWrapper
+from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import GraphPriority, UploadWhere, Uploads
-from backend.model.translation_collection import get_translation_table
+from backend.model.translation_collection import get_translation_table, get_graph_info_trans_table
 
 
 class UpdateCategory(graphene.Mutation):
@@ -171,7 +172,6 @@ class DeleteStatics(graphene.Mutation):
         return DeleteStatics(success=True)
 
 
-
 class UpdateTutorialContent(graphene.Mutation):
     class Arguments:
         lang = graphene.String(required=True)
@@ -194,3 +194,27 @@ class UpdateTutorialContent(graphene.Mutation):
                                                          model_class=translation_table, **content)
 
         return UpdateTutorialContent(success=True, model=tutorial_content_wrapper.model)
+
+
+class UpdateGraphInfoContent(graphene.Mutation):
+    class Arguments:
+        lang = graphene.String(required=True)
+        content = GraphContentInputType()
+
+    success = graphene.Boolean(required=True)
+    model = graphene.Field(GraphContentInterface, required=True)
+
+    @write_required
+    def mutate(self, info, lang: str, content: MutableMapping):
+        graph_info_translation_table: Optional[Type[GraphTranslationBase]] = get_graph_info_trans_table(lang.strip())
+
+        if not graph_info_translation_table:
+            raise GraphQLError(f'Language {lang} is not supported.')
+
+        content['graph_anchor'] = get_wrapper_by_id(GraphWrapper, content['graph_anchor'])
+
+        graph_info_content_wrapper = process_model_wrapper(GraphTranslationContentWrapper,
+                                                           model_class=graph_info_translation_table,
+                                                           **content)
+
+        return UpdateGraphInfoContent(success=True, model=graph_info_content_wrapper)
