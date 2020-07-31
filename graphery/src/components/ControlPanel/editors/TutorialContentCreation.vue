@@ -72,7 +72,7 @@
           <!-- submit section -->
           <div id="submit-section">
             <!-- TODO button action -->
-            <q-btn label="Submit" class="full-width"></q-btn>
+            <SubmitButton :action="postValue" class="full-width" />
             <!-- TODO align two sections -->
           </div>
         </template>
@@ -85,15 +85,20 @@
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import pushToMixin from '../mixins/PushToMixin.vue';
   import { apiCaller } from '@/services/apis';
-  import { tutorialContentQuery } from '@/services/queries';
+  import {
+    tutorialContentMutation,
+    tutorialContentQuery,
+  } from '@/services/queries';
   import { newModelUUID } from '@/services/params';
-  import { errorDialog } from '@/services/helpers';
+  import { errorDialog, successDialog } from '@/services/helpers';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
     // TODO add props to router url
     props: ['anchorId', 'contentId', 'tutorialUrl', 'lang'],
     components: {
+      SubmitButton: () =>
+        import('@/components/ControlPanel/parts/SubmitButton'),
       LangCard: () => import('@/components/ControlPanel/parts/LangCard'),
       URLCard: () => import('../parts/URLCard.vue'),
       AuthorSelection: () => import('../parts/AuthorSelection.vue'),
@@ -114,7 +119,7 @@
           abstract: '',
           contentMd: '',
           contentHtml: '',
-          tutorialAnchor: this.url,
+          tutorialAnchor: this.anchorId,
         },
       };
     },
@@ -158,14 +163,14 @@
               }
             }
 
-            data.tutorial.content.tutorialAnchor = data.tutorial.url;
+            this.tutorialUrl = data.tutorial.url;
             Object.assign(this.tutorialContentObj, data.tutorial.content);
             this.tutorialContentObj.authors = this.tutorialContentObj.authors.map(
               (obj) => obj.id
             );
 
             if (this.$refs.mdEditor) {
-              this.$refs.mdEditor.initValue(this.tutorialContentObj.contentMd);
+              this.$refs.mdEditor.initText(this.tutorialContentObj.contentMd);
             }
           })
           .catch((err) => {
@@ -175,6 +180,46 @@
           })
           .finally(() => {
             this.finishedLoading();
+          });
+      },
+      pushToNewPlace(id) {
+        if (this.isCreatingNew) {
+          this.$router.push({
+            name: this.$route.name,
+            params: { anchorId: this.anchorId, contentId: id },
+            query: {
+              lang: this.lang,
+              tutorialUrl: this.tutorialContentObj.tutorialAnchor,
+            },
+          });
+        }
+      },
+      postValue() {
+        this.startLoading();
+        apiCaller(tutorialContentMutation, {
+          lang: this.lang,
+          content: this.tutorialContentObj,
+        })
+          .then((data) => {
+            if (!data || !('updateTutorialContent' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            if (!data.updateTutorialContent.success) {
+              throw Error('Cannot update tutorial content for unknown reason.');
+            }
+
+            this.tutorialContentObj.id = data.updateTutorialContent.model.id;
+
+            this.pushToNewPlace(this.tutorialContentObj.id);
+            successDialog({
+              message: 'Update Tutorial Content Successfully!',
+            });
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `Cannot update tutorial content. ${err}`,
+            });
           });
       },
     },

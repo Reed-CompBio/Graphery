@@ -391,3 +391,13 @@ query ($id: String!, $translation: String!, $default: String = "en-us") {
     }
   }
 }`;
+
+export const tutorialContentMutation = `
+mutation ($lang:String!, $content: TutorialContentInputType!){
+  updateTutorialContent(lang: $lang, content: $content) {
+    success
+    model {
+      id
+    }
+  }
+}`;
