@@ -94,18 +94,17 @@
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import pushToMixin from '../mixins/PushToMixin.vue';
+  import imageHandleMixin from '../mixins/ImageHandleMixin';
   import { apiCaller } from '@/services/apis';
   import {
-    deleteImage,
     tutorialContentMutation,
     tutorialContentQuery,
-    uploadImage,
   } from '@/services/queries';
   import { newModelUUID } from '@/services/params';
   import { errorDialog, successDialog } from '@/services/helpers';
 
   export default {
-    mixins: [loadingMixin, pushToMixin],
+    mixins: [loadingMixin, pushToMixin, imageHandleMixin],
     // TODO add props to router url
     props: ['anchorId', 'contentId', 'tutorialUrl', 'lang'],
     components: {
@@ -161,64 +160,10 @@
         this.updateContentObj(raw, rendered);
         this.updateLocalStorage(raw, rendered);
       },
-      imgAddCallback(fileName, file) {
-        // TODO post lang with axios
-        const form = new FormData();
-        form.append('query', uploadImage);
-        form.append(
-          'variables',
-          JSON.stringify({ linkId: this.anchorId, where: 'TUTORIAL' })
-        );
-        form.append(this.anchorId, file);
-
-        apiCaller(null, null, form)
-          .then((data) => {
-            if (!data || !('uploadStatics' in data)) {
-              throw Error('Invalid data returned.');
-            }
-
-            if (!data.uploadStatics.success) {
-              throw Error('Uploading image is failed.');
-            }
-
-            this.$refs.mdEditor.replaceUrl(fileName, data.uploadStatics.url);
-            successDialog({
-              message: 'Upload Image Successfully!',
-            });
-          })
-          .catch((err) => {
-            errorDialog({
-              message: `An error occurs during upload image. ${err}`,
-            });
-          });
-      },
-      imgDelCallback([filename]) {
-        apiCaller(deleteImage, {
-          url: filename,
-        })
-          .then((data) => {
-            if (!data || !('deleteStatics' in data)) {
-              throw Error('Invalid data returned');
-            }
-
-            if (!data.deleteStatics.success) {
-              throw Error(`Deleting ${filename} is failed.`);
-            }
-
-            successDialog({
-              message: 'Delete Image Successfully!',
-            });
-          })
-          .catch((err) => {
-            errorDialog({
-              message: `An error occurs during deleting uploaded image. ${err}`,
-            });
-          });
-      },
       fetchValue() {
         this.startLoading();
         apiCaller(tutorialContentQuery, {
-          id: this.anchorId,
+          id: this.tutorialContentObj.tutorialAnchor,
           translation: this.lang,
         })
           .then((data) => {
@@ -230,11 +175,13 @@
               throw Error(`No tutorial for ID ${this.anchorId}.`);
             }
 
-            if (data.tutorial.content.id !== this.contentId) {
+            if (data.tutorial.content.id !== this.tutorialContentObj.id) {
               if (this.tutorialContentObj.id === newModelUUID) {
                 data.tutorial.content.id = newModelUUID;
               } else {
-                throw Error(`Invalid content ID specified: ${this.contentId}`);
+                throw Error(
+                  `Invalid content ID specified: ${this.tutorialContentObj.id}`
+                );
               }
             }
 
