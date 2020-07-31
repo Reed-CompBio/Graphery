@@ -1,8 +1,11 @@
 from typing import List, Sequence, Mapping, Type, Optional, MutableMapping
+from os.path import join
 
 import graphene
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from graphql import GraphQLError
+
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.conf import settings
 
 from backend.graphql.decorators import write_required
 from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeType, TutorialInterface, \
@@ -11,7 +14,7 @@ from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, ge
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper
 from backend.model.TranslationModels import TranslationBase
-from backend.model.TutorialRelatedModel import GraphPriority
+from backend.model.TutorialRelatedModel import GraphPriority, UploadWhere, Uploads
 from backend.model.translation_collection import get_translation_table
 
 
@@ -118,21 +121,56 @@ class UpdateCode(graphene.Mutation):
         return UpdateCode(success=True, model=code_wrapper.model)
 
 
-class UpdateStatics(graphene.Mutation):
+class UploadStatics(graphene.Mutation):
+    class Arguments:
+        where = graphene.Argument(graphene.Enum.from_enum(UploadWhere), required=True)
+        link_id = graphene.UUID(required=True)
+
     success = graphene.Boolean(required=True)
+    url = graphene.String(required=True)
+
+    @staticmethod
+    def get_full_url(url: str) -> str:
+        return join('/', settings.UPLOAD_STATICS_ENTRY, url)
 
     @write_required
-    def mutate(self, info):
-        files: Mapping[InMemoryUploadedFile] = info.context.FILES
+    def mutate(self, info, link_id: str, where: str = UploadWhere.TUTORIAL):
+
+        print(type(info.context.FILES))
+
+        files: Mapping[str, InMemoryUploadedFile] = info.context.FILES
 
         if len(files) == 0 or not all('image' in file.content_type for file in files.values()):
             raise GraphQLError('No files are added.')
 
-        for upload_name, file in files.items():
-            # do something
-            pass
+        if len(files) > 1:
+            raise GraphQLError('You can only upload one file at a time')
 
-        return UpdateStatics(success=True)
+        upload = Uploads(where=where, link_id=link_id, file=files[link_id])
+        upload.save()
+
+        return UploadStatics(success=True, url=self.get_full_url(upload.file.url))
+
+
+class DeleteStatics(graphene.Mutation):
+    class Arguments:
+        url = graphene.String(required=True)
+
+    success = graphene.Boolean(required=True)
+
+    @write_required
+    def mutate(self, info, url: str):
+        if url.startswith('/statics/'):
+            url = url.replace('/statics/', '').strip()
+
+        try:
+            upload = Uploads.objects.get(file=url)
+            upload.delete()
+        except Uploads.DoesNotExist:
+            raise GraphQLError('The file you want to delete does not exist.')
+
+        return DeleteStatics(success=True)
+
 
 
 class UpdateTutorialContent(graphene.Mutation):

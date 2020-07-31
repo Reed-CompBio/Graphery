@@ -140,10 +140,16 @@ class ExecResultJson(UUIDMixin, TimeDateMixin, models.Model):
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/MEDIA_FOLDER_NAME/<tutorial_name>_<tutorial_id>/<filename>
     return join(settings.MEDIA_FOLDER_NAME,
-                f'{instance.tutorial.name}_{instance.tutorial.id}',
+                f'{instance.link_id}',
                 filename)
 
 
+class UploadWhere(models.TextChoices):
+    TUTORIAL = ('TR', 'Tutorial')
+    GRAPH = ('GR', 'Graph')
+
+
 class Uploads(PublishedMixin, UUIDMixin, models.Model):
-    tutorial_anchor = models.ForeignKey(Tutorial, on_delete=models.CASCADE, blank=False, null=False)
+    where = models.CharField(max_length=2, choices=UploadWhere.choices, default=UploadWhere.TUTORIAL)
+    link_id = models.UUIDField(blank=False, null=False)
     file = models.FileField(upload_to=user_directory_path)
