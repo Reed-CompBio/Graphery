@@ -409,3 +409,10 @@ mutation ($linkId: UUID!, $where: UploadWhere!){
     url
   }
 }`;
+
+export const deleteImage = `
+mutation ($url: String!){
+  deleteStatics(url: $url) {
+    success
+  }
+}`;

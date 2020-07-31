@@ -95,6 +95,7 @@
   import pushToMixin from '../mixins/PushToMixin.vue';
   import { apiCaller } from '@/services/apis';
   import {
+    deleteImage,
     tutorialContentMutation,
     tutorialContentQuery,
     uploadImage,
@@ -180,6 +181,9 @@
             }
 
             this.$refs.mdEditor.replaceUrl(fileName, data.uploadStatics.url);
+            successDialog({
+              message: 'Upload Image Successfully!',
+            });
           })
           .catch((err) => {
             errorDialog({
@@ -187,8 +191,28 @@
             });
           });
       },
-      imgDelCallback(filename, file) {
-        console.log(filename, file);
+      imgDelCallback([filename]) {
+        apiCaller(deleteImage, {
+          url: filename,
+        })
+          .then((data) => {
+            if (!data || !('deleteStatics' in data)) {
+              throw Error('Invalid data returned');
+            }
+
+            if (!data.deleteStatics.success) {
+              throw Error(`Deleting ${filename} is failed.`);
+            }
+
+            successDialog({
+              message: 'Delete Image Successfully!',
+            });
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during deleting uploaded image. ${err}`,
+            });
+          });
       },
       fetchValue() {
         this.startLoading();
