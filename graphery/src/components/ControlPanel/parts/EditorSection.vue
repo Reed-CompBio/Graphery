@@ -7,6 +7,7 @@
       :value="initValue"
       class="full-height"
       @change="onChangeAction"
+      @save="onSaveAction"
       @imgAdd="imgAddAction"
       @imgDel="imgDelAction"
     ></mavonEditor>
@@ -51,8 +52,8 @@
       onChangeAction(value, render) {
         this.$emit('changes', value, render);
       },
-      getProcessedHtml() {
-        return this.$refs.markdownSection.getProcessedHtml();
+      onSaveAction() {
+        this.$emit('saves');
       },
       replaceUrl(pos, value) {
         this.$refs.mdEditor.$img2Url(pos, value);

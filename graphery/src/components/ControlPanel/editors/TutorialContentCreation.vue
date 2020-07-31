@@ -28,6 +28,7 @@
               :imgAddAction="imgAddCallback"
               :imgDelAction="imgDelCallback"
               @changes="handleEditorChanges"
+              @saves="saveUploadCallback"
             ></EditorSection>
 
             <div id="md-editor-how-to" class="q-mt-md q-pb-xl full-width">
@@ -298,6 +299,9 @@
           .finally(() => {
             this.finishedLoading();
           });
+      },
+      saveUploadCallback() {
+        this.postValue();
       },
     },
     mounted() {
