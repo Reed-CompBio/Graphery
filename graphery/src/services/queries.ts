@@ -416,3 +416,17 @@ mutation ($url: String!){
     success
   }
 }`;
+
+export const graphInfoContentQuery = `
+query ($id: String!, $translation: String!, $default: String = "en-us") {
+  graph(id: $id) {
+    url
+    content(translation: $translation, default: $default) {
+      id
+      title
+      abstractMd
+      abstract
+      isPublished
+    }
+  }
+}`;
