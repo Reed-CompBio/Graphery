@@ -161,9 +161,6 @@
           this.editor.setValue(this.codeObject.code);
         }
       },
-      postExecJson() {
-        //
-      },
     },
     mounted() {
       this.initCodeEditor();

@@ -21,12 +21,14 @@
             <q-btn
               label="Exec Locally"
               :loading="loadingContent"
+              @click="execCodeOnCurrentGraph"
               class="q-mr-sm"
             />
             <q-btn label="Exec All" :loading="loadingContent" class="q-mr-sm" />
             <q-btn
               label="Exec All Locally"
               :loading="loadingContent"
+              @click="execCodeOnAllGraphs"
               class="q-mr-sm"
             />
           </div>
@@ -56,7 +58,7 @@
   import { apiCaller } from '@/services/apis';
   import { errorDialog, warningDialog } from '@/services/helpers';
   export default {
-    props: ['code', 'tutorial'],
+    props: ['code'],
     mixins: [loadingMixin],
     components: {
       InfoCard: () => import('../parts/InfoCard'),
@@ -132,7 +134,12 @@
             this.finishedLoading();
           });
       },
-
+      execCodeOnCurrentGraph() {
+        //
+      },
+      execCodeOnAllGraphs() {
+        //
+      },
       postExecJson() {
         //
       },
