@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url
+from django.conf import settings
 
 import backend.views as backend_view
 
@@ -25,5 +26,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url('graphql', GraphQLView.as_view(graphiql=True)),
     path('csrf', backend_view.csrf),
-    path('statics/<path:url>', backend_view.media_request)
+    path(f'{settings.UPLOAD_STATICS_ENTRY}/<path:url>', backend_view.media_request)
 ]

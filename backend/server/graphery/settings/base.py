@@ -133,3 +133,5 @@ CORS_ALLOW_CREDENTIALS = True
 MEDIA_ROOT = '/Users/flicker_soul/Downloads/'
 
 MEDIA_FOLDER_NAME = 'media'
+
+UPLOAD_STATICS_ENTRY = 'statics'
