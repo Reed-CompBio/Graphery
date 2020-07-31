@@ -385,11 +385,13 @@ class GraphTranslationContentWrapper(PublishedWrapper):
         self.model_class: Optional[Type[GraphTranslationBase]] = None
 
         self.title: Optional[str] = None
+        self.abstract_md: Optional[str] = None
         self.abstract: Optional[str] = None
         self.graph_anchor: Optional[GraphWrapper] = None
 
         PublishedWrapper.__init__(self, {
             'title': dummy_validator,
+            'abstract_md': dummy_validator,
             'abstract': dummy_validator,
             'graph_anchor': dummy_validator,
         })
@@ -397,6 +399,7 @@ class GraphTranslationContentWrapper(PublishedWrapper):
     def load_model(self, loaded_model: GraphTranslationBase) -> 'GraphTranslationContentWrapper':
         super().load_model(loaded_model=loaded_model)
         self.title = loaded_model.title
+        self.abstract_md = loaded_model.abstract_md
         self.abstract = loaded_model.abstract
         self.graph_anchor = GraphWrapper().load_model(loaded_model.graph_anchor)
         return self

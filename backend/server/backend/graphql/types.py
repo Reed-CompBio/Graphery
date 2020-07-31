@@ -112,6 +112,7 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
 class GraphContentInterface(graphene.Interface):
     id = graphene.UUID()
     title = graphene.String()
+    abstract_md = graphene.String()
     abstract = graphene.String()
     is_published = graphene.Boolean()
 
@@ -240,7 +241,7 @@ class ZHCNTransType(PublishedFilterBase, DjangoObjectType):
     ))
 
 
-GraphTransBaseFields = ('title', 'abstract')
+GraphTransBaseFields = ('title', 'abstract_md', 'abstract')
 
 
 @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)

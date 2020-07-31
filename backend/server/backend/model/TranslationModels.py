@@ -43,6 +43,7 @@ class ZHCN(TranslationBase):
 
 class GraphTranslationBase(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
     title = models.CharField(max_length=100, unique=True, blank=False, null=False)
+    abstract_md = models.TextField()
     abstract = models.TextField()
     graph_anchor = models.OneToOneField(Graph, on_delete=models.CASCADE)
 
