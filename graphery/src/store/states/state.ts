@@ -218,3 +218,22 @@ export interface WorkSpaceState {
   tutorialSpace: WorkSpaceBaseState;
   playgroundSpace: WorkSpaceBaseState;
 }
+
+export interface ContentStoreType {
+  [key: string]: {
+    raw: string;
+    rendered: string;
+  };
+}
+
+export interface EditState {
+  content: {
+    tutorialContent: ContentStoreType;
+    graphInfoContent: ContentStoreType;
+  };
+}
+
+export interface ContentRequestType {
+  contentId: string;
+  content: { raw: string; rendered: string };
+}

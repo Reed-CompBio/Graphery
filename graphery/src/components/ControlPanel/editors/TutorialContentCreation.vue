@@ -69,10 +69,15 @@
             </InfoCard>
           </div>
 
+          <StoreLocation location="Cloud" />
+
           <!-- submit section -->
           <div id="submit-section">
-            <!-- TODO button action -->
-            <SubmitButton :action="postValue" class="full-width" />
+            <SubmitButton
+              :action="postValue"
+              :loading="loadingContent"
+              class="full-width"
+            />
             <!-- TODO align two sections -->
           </div>
         </template>
@@ -91,12 +96,14 @@
   } from '@/services/queries';
   import { newModelUUID } from '@/services/params';
   import { errorDialog, successDialog } from '@/services/helpers';
+  import StoreLocation from '@/components/ControlPanel/parts/StoreLocation';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
     // TODO add props to router url
     props: ['anchorId', 'contentId', 'tutorialUrl', 'lang'],
     components: {
+      StoreLocation,
       SubmitButton: () =>
         import('@/components/ControlPanel/parts/SubmitButton'),
       LangCard: () => import('@/components/ControlPanel/parts/LangCard'),
@@ -129,9 +136,22 @@
       },
     },
     methods: {
-      handleEditorChanges(raw, rendered) {
+      updateContentObj(raw, rendered) {
         this.tutorialContentObj.contentMd = raw;
         this.tutorialContentObj.contentHtml = rendered;
+      },
+      updateLocalStorage(raw, rendered) {
+        this.$store.commit('edits/UPDATE_TUTORIAL_CONTENT', {
+          contentId: this.tutorialContentObj.id,
+          content: {
+            raw,
+            rendered,
+          },
+        });
+      },
+      handleEditorChanges(raw, rendered) {
+        this.updateContentObj(raw, rendered);
+        this.updateLocalStorage(raw, rendered);
       },
       imgAddCallback(fileName, file) {
         // TODO post lang with axios
@@ -220,6 +240,9 @@
             errorDialog({
               message: `Cannot update tutorial content. ${err}`,
             });
+          })
+          .finally(() => {
+            this.finishedLoading();
           });
       },
     },
