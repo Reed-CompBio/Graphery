@@ -14,6 +14,8 @@
               outlined
               map-options
               option-label="name"
+              :disable="loadingContent"
+              :loading="loadingContent"
             />
           </div>
           <div>
@@ -47,7 +49,11 @@
       </InfoCard>
     </template>
     <template v-slot:right>
-      <SubmitButton class="full-width" :action="postExecJson" />
+      <SubmitButton
+        class="full-width"
+        :loading="loadingContent"
+        :action="postExecJson"
+      />
     </template>
   </EditorFrame>
 </template>
@@ -57,9 +63,11 @@
   import { resultJsonGetGraphsQuery } from '@/services/queries';
   import { apiCaller } from '@/services/apis';
   import { errorDialog, warningDialog } from '@/services/helpers';
+  import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
+
   export default {
-    props: ['code'],
-    mixins: [loadingMixin],
+    props: ['codeId', 'codeContent'],
+    mixins: [loadingMixin, pushCodeToLocalMixin],
     components: {
       InfoCard: () => import('../parts/InfoCard'),
       SubmitButton: () => import('../parts/SubmitButton'),
@@ -77,6 +85,7 @@
       resultJson() {
         return (
           this.graphChoice &&
+          this.newResults[this.graphChoice.id] &&
           this.execResults &&
           this.execResults[this.graphChoice.id]
         );
@@ -96,7 +105,7 @@
       fetchTutorialGraphs() {
         this.startLoading();
         apiCaller(resultJsonGetGraphsQuery, {
-          id: this.code,
+          id: this.codeId,
         })
           .then((data) => {
             if (!data || !('code' in data) || !data.code.tutorial) {
@@ -134,8 +143,29 @@
             this.finishedLoading();
           });
       },
+      localExec(graphJson, graphId) {
+        this.pushToLocal(
+          this.codeContent,
+          graphJson,
+          this.startLoading,
+          (codeHash, execResult) => {
+            console.log(graphId, execResult);
+            this.newResults[graphId] = execResult;
+          },
+          this.finishedLoading
+        );
+      },
       execCodeOnCurrentGraph() {
-        //
+        if (this.graphChoice) {
+          const graphJson = JSON.parse(this.graphChoice.cyjs);
+          const graphId = this.graphChoice.id;
+
+          this.localExec(graphJson, graphId);
+        } else {
+          errorDialog({
+            message: 'Please choose a graph to run code.',
+          });
+        }
       },
       execCodeOnAllGraphs() {
         //

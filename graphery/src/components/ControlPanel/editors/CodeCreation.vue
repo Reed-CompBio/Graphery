@@ -29,7 +29,10 @@
           </div>
         </template>
       </EditorFrame>
-      <JsonCreation :code="codeObject.id" :tutorial="codeObject.tutorial" />
+      <JsonCreation
+        :codeId="codeObject.id"
+        :codeContent="this.codeObject.code"
+      />
     </template>
   </ControlPanelContentFrame>
 </template>

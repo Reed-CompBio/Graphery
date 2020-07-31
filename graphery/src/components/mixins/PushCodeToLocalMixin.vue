@@ -1,11 +1,11 @@
 <script>
   import { localServerCaller } from '@/services/apis';
-  import { errorDialog } from '@/services/helpers';
+  import { errorDialog, successDialog } from '@/services/helpers';
 
   export default {
     methods: {
-      pushToLocal(code, graph, startCallback, finalCallback) {
-        localServerCaller(code, graph)
+      pushToLocal(code, graph, startCallback, successCallback, finalCallback) {
+        return localServerCaller(code, graph)
           .then((data) => {
             if (data['error']) {
               throw Error(data['error']);
@@ -18,8 +18,11 @@
             const { codeHash, execResult } = data['data'];
             // TODO link this with workspace
 
-            console.debug(codeHash, execResult);
-            this.loadCustomJson(execResult);
+            successCallback(codeHash, execResult);
+
+            successDialog({
+              message: 'Exec Successfully!',
+            });
 
             // TODO use it to pass the actual content
           })

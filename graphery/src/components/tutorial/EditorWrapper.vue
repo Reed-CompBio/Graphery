@@ -368,6 +368,9 @@
           this.getCurrentCode(),
           this.$store.getters['tutorials/currentGraphJsonObj'],
           () => null,
+          (codeHash, execResult) => {
+            this.loadCustomJson(execResult);
+          },
           this.reloadStepper
         );
       },
