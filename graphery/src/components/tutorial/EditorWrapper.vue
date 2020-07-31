@@ -79,7 +79,7 @@
         <q-btn
           dense
           :disable="!enableEditing"
-          @click.prevent="pushCodeToExecute"
+          @click.prevent="pushCodeToLocalExec"
         >
           <q-icon name="mdi-cloud-download" />
           <SwitchTooltip :text="$t('tooltips.runCodeLocally')"></SwitchTooltip>
@@ -186,8 +186,10 @@
   import { errorDialog, successDialog } from '../../services/helpers';
   import Editor from '@/components/tutorial/Editor.vue';
   import SplitterSeparator from '../framework/SplitterSeparator';
+  import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
 
   export default {
+    mixins: [pushCodeToLocalMixin],
     components: {
       SplitterSeparator,
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
@@ -332,6 +334,7 @@
       reloadStepper() {
         this.sliderPos = 1;
         this.loadVariableObj(null);
+        // TODO reload line decoration
       },
       getCurrentCode() {
         return this.$refs.editorComponent.content;
@@ -360,36 +363,13 @@
             });
           });
       },
-      pushCodeToExecute() {
-        localServerCaller(
+      pushCodeToLocalExec() {
+        this.pushToLocal(
           this.getCurrentCode(),
-          this.$store.getters['tutorials/currentGraphJsonObj']
-        )
-          .then((data) => {
-            if (data['error']) {
-              throw Error(data['error']);
-            }
-
-            if (!('data' in data)) {
-              throw Error('No valid data returned from local server');
-            }
-
-            const { codeHash, execResult } = data['data'];
-            // TODO link this with workspace
-
-            console.debug(codeHash, execResult);
-            this.loadCustomJson(execResult);
-
-            // TODO use it to pass the actual content
-          })
-          .catch((err) => {
-            errorDialog({
-              message: 'An error occurs when talking to local server. ' + err,
-            });
-          })
-          .finally(() => {
-            this.reloadStepper();
-          });
+          this.$store.getters['tutorials/currentGraphJsonObj'],
+          () => null,
+          this.reloadStepper
+        );
       },
       openWorkSpaceSelection() {
         this.isWorkSpaceSelectionOpen = true;
