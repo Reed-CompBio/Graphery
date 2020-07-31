@@ -29,6 +29,10 @@
               :imgDelAction="imgDelCallback"
               @changes="handleEditorChanges"
             ></EditorSection>
+
+            <div id="md-editor-how-to" class="q-mt-md q-pb-xl full-width">
+              <EditorHowTo />
+            </div>
           </div>
         </template>
 
@@ -96,14 +100,15 @@
   } from '@/services/queries';
   import { newModelUUID } from '@/services/params';
   import { errorDialog, successDialog } from '@/services/helpers';
-  import StoreLocation from '@/components/ControlPanel/parts/StoreLocation';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
     // TODO add props to router url
     props: ['anchorId', 'contentId', 'tutorialUrl', 'lang'],
     components: {
-      StoreLocation,
+      StoreLocation: () =>
+        import('@/components/ControlPanel/parts/StoreLocationCard'),
+      EditorHowTo: () => import('@/components/ControlPanel/parts/EditorHowTo'),
       SubmitButton: () =>
         import('@/components/ControlPanel/parts/SubmitButton'),
       LangCard: () => import('@/components/ControlPanel/parts/LangCard'),

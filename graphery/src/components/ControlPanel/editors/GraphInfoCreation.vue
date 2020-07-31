@@ -21,6 +21,10 @@
           <div class="row q-my-lg" style="height: 70vh;">
             <EditorSection class="full-width" />
           </div>
+
+          <div id="md-editor-how-to" class="q-mt-md q-pb-xl full-width">
+            <EditorHowTo />
+          </div>
         </template>
         <template v-slot:right>
           <URLCard :url="graphUrl" class="full-width" />
@@ -59,6 +63,7 @@
     // TODO add props to router url
     props: ['anchorId', 'contentId', 'graphUrl', 'lang'],
     components: {
+      EditorHowTo: () => import('@/components/ControlPanel/parts/EditorHowTo'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
       LangCard: () => import('../parts/LangCard'),
       URLCard: () => import('@/components/ControlPanel/parts/URLCard'),
