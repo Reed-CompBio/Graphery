@@ -324,6 +324,8 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
 
     def load_model(self, loaded_model: TranslationBase) -> 'TutorialTranslationContentWrapper':
         super().load_model(loaded_model=loaded_model)
+        self.model_class = type(loaded_model)
+
         self.title = loaded_model.title
         self.authors = [UserWrapper().load_model(user_model) for user_model in loaded_model.authors.all()]
         self.tutorial_anchor = TutorialAnchorWrapper().load_model(loaded_model.tutorial_anchor)

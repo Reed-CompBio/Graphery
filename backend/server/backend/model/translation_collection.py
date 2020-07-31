@@ -58,11 +58,11 @@ def has_graph_info_translation(trans_code: str) -> bool:
     return process_graph_info_trans_name(trans_code) in translation_tables
 
 
-def get_translation_table(trans_code: str) -> Optional[Model]:
+def get_translation_table(trans_code: str) -> Optional[Type[Model]]:
     table_name = process_trans_name(trans_code)
     return translation_table_mapping.get(table_name, None)
 
 
-def get_graph_info_trans_table(trans_code: str) -> Optional[Model]:
+def get_graph_info_trans_table(trans_code: str) -> Optional[Type[Model]]:
     table_name = process_graph_info_trans_name(trans_code)
     return graph_info_translation_table_mapping.get(table_name, None)
