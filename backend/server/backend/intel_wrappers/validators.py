@@ -61,3 +61,9 @@ def tutorial_validator(tutorial):
 def code_validator(code: str):
     if not isinstance(code, str):
         raise ValidationError('`code` must be string type')
+
+
+def non_empty_text_validator(text: str):
+    if not isinstance(text, str) or not text.strip():
+        raise ValidationError('`abstract` must be a non-empty string.')
+

@@ -213,6 +213,17 @@ def model_class_constructor(base_meta: type, attributes: Iterable[Tuple[str, Any
     return meta_cls
 
 
+class TutorialContentInputType(graphene.InputObjectType):
+    id = graphene.UUID(required=True)
+    title = graphene.String(required=True)
+    tutorial_anchor = graphene.UUID(required=True)
+    authors = graphene.List(graphene.UUID, required=True)
+    abstract = graphene.String(required=True)
+    content_md = graphene.String(required=True)
+    content_html = graphene.String(required=True)
+    is_published = graphene.Boolean(required=True)
+
+
 @add_trans_type
 class ENUSTransType(PublishedFilterBase, DjangoObjectType):
     Meta = model_class_constructor(TutorialTransMetaBase, (

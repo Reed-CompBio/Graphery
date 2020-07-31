@@ -2,7 +2,7 @@ import json
 from typing import Optional, Iterable, Mapping, Type, Union
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
-    categories_validator, code_validator, tutorial_validator
+    categories_validator, code_validator, tutorial_validator, author_validator, non_empty_text_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson
 from backend.model.UserModel import User
@@ -173,7 +173,7 @@ class GraphWrapper(PublishedWrapper):
             'url': url_validator,
             'name': name_validator,
             'categories': categories_validator,
-            'authors': dummy_validator,
+            'authors': author_validator,
             'priority': dummy_validator,
             'cyjs': dummy_validator,
             'tutorials': dummy_validator
@@ -306,6 +306,7 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
     def __init__(self):
         self.model_class: Optional[Type[TranslationBase]] = None
 
+        self.id: Optional[str] = None
         self.title: Optional[str] = None
         self.authors: Optional[Iterable[UserWrapper]] = None
         self.tutorial_anchor: Optional[TutorialAnchorWrapper] = None
@@ -314,12 +315,13 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
         self.content_html: Optional[str] = None
 
         PublishedWrapper.__init__(self, {
+            'id': dummy_validator,
             'title': dummy_validator,
-            'authors': dummy_validator,
-            'tutorial_anchor': dummy_validator,
-            'abstract': dummy_validator,
-            'content_md': dummy_validator,
-            'content_html': dummy_validator,
+            'authors': author_validator,
+            'tutorial_anchor': tutorial_validator,
+            'abstract': non_empty_text_validator,
+            'content_md': non_empty_text_validator,
+            'content_html': non_empty_text_validator,
         })
 
     def load_model(self, loaded_model: TranslationBase) -> 'TutorialTranslationContentWrapper':

@@ -5,7 +5,8 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from graphql import GraphQLError
 
 from backend.graphql.decorators import write_required
-from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeType, TutorialInterface
+from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeType, TutorialInterface, \
+    TutorialContentInputType
 from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, get_wrapper_by_id
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper
@@ -136,22 +137,23 @@ class UpdateStatics(graphene.Mutation):
 
 class UpdateTutorialContent(graphene.Mutation):
     class Arguments:
-        language = graphene.String(required=True)
-        tutorial_content = graphene.Argument(TutorialInterface, required=True)
+        lang = graphene.String(required=True)
+        content = TutorialContentInputType()
 
     success = graphene.Boolean(required=True)
     model = graphene.Field(TutorialInterface, required=True)
 
     @write_required
-    def mutate(self, info, language: str, tutorial_content: MutableMapping):
-        translation_table: Optional[Type[TranslationBase]] = get_translation_table(language.strip())
+    def mutate(self, info, lang: str, content: MutableMapping):
+        translation_table: Optional[Type[TranslationBase]] = get_translation_table(lang.strip())
 
         if not translation_table:
-            raise GraphQLError(f'Language {language} is no supported.')
+            raise GraphQLError(f'Language {lang} is no supported.')
 
-        tutorial_content['authors'] = get_wrappers_by_ids(UserWrapper, tutorial_content['authors'])
+        content['authors'] = get_wrappers_by_ids(UserWrapper, content['authors'])
+        content['tutorial_anchor'] = get_wrapper_by_id(TutorialAnchorWrapper, content['tutorial_anchor'])
 
         tutorial_content_wrapper = process_model_wrapper(TutorialTranslationContentWrapper,
-                                                         model_class=translation_table, **tutorial_content)
+                                                         model_class=translation_table, **content)
 
         return UpdateTutorialContent(success=True, model=tutorial_content_wrapper.model)
