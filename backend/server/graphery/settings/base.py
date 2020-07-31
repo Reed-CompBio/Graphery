@@ -129,4 +129,7 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-MEDIA_ROOT = '/var/www/graphery/media/'
+# To be overridden
+MEDIA_ROOT = '/Users/flicker_soul/Downloads/'
+
+MEDIA_FOLDER_NAME = 'media'

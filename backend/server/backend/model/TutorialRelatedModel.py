@@ -1,7 +1,9 @@
 from typing import Callable, Optional
+from os.path import join
 
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.conf import settings
 
 from .UserModel import User
 from .mixins import PublishedMixin, TimeDateMixin, UUIDMixin
@@ -133,3 +135,15 @@ class ExecResultJson(UUIDMixin, TimeDateMixin, models.Model):
 
     def __str__(self):
         return f'<exec result json {self.code} | {self.graph}>'
+
+
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/MEDIA_FOLDER_NAME/<tutorial_name>_<tutorial_id>/<filename>
+    return join(settings.MEDIA_FOLDER_NAME,
+                f'{instance.tutorial.name}_{instance.tutorial.id}',
+                filename)
+
+
+class Uploads(PublishedMixin, UUIDMixin, models.Model):
+    tutorial_anchor = models.ForeignKey(Tutorial, on_delete=models.CASCADE, blank=False, null=False)
+    file = models.FileField(upload_to=user_directory_path)

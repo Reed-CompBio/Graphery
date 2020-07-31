@@ -24,5 +24,6 @@ from graphene_django.views import GraphQLView
 urlpatterns = [
     path('admin/', admin.site.urls),
     url('graphql', GraphQLView.as_view(graphiql=True)),
-    path('csrf', backend_view.csrf)
+    path('csrf', backend_view.csrf),
+    path('statics/<path:url>', backend_view.media_request)
 ]
