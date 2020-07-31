@@ -55,9 +55,15 @@
             </InfoCard>
           </div>
 
+          <StoreLocation location="Cloud" />
+
           <!-- submit section -->
           <div id="submit-section">
-            <SubmitButton :action="postValue" :loading="loadingContent" />
+            <SubmitButton
+              :action="postValue"
+              :loading="loadingContent"
+              class="full-width"
+            />
             <!-- TODO align two sections -->
           </div>
         </template>
@@ -77,14 +83,16 @@
     graphInfoContentQuery,
   } from '@/services/queries';
   import { errorDialog, successDialog } from '@/services/helpers';
-  import SubmitButton from '@/components/ControlPanel/parts/SubmitButton';
 
   export default {
     // TODO add props to router url
     mixins: [loadingMixin, pushToMixin, imageHandleMixin],
     props: ['anchorId', 'contentId', 'graphUrl', 'lang'],
     components: {
-      SubmitButton,
+      StoreLocation: () =>
+        import('@/components/ControlPanel/parts/StoreLocationCard'),
+      SubmitButton: () =>
+        import('@/components/ControlPanel/parts/SubmitButton'),
       EditorHowTo: () => import('@/components/ControlPanel/parts/EditorHowTo'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
       LangCard: () => import('../parts/LangCard'),
@@ -173,7 +181,7 @@
           });
       },
       pushToNewPlace(id) {
-        if (this.isCreatingNew) {
+        if (this.$route.params.contentId === newModelUUID) {
           this.$router.push({
             name: this.$route.name,
             params: {

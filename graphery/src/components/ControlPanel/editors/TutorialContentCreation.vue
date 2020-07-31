@@ -205,7 +205,7 @@
           });
       },
       pushToNewPlace(id) {
-        if (this.isCreatingNew) {
+        if (this.$route.params.contentId === newModelUUID) {
           this.$router.push({
             name: this.$route.name,
             params: {
