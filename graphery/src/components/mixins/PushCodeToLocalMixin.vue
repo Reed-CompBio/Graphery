@@ -5,6 +5,9 @@
   export default {
     methods: {
       pushToLocal(code, graph, startCallback, successCallback, finalCallback) {
+        if (startCallback) {
+          startCallback();
+        }
         return localServerCaller(code, graph)
           .then((data) => {
             if (data['error']) {
@@ -18,7 +21,9 @@
             const { codeHash, execResult } = data['data'];
             // TODO link this with workspace
 
-            successCallback(codeHash, execResult);
+            if (successCallback) {
+              successCallback(codeHash, execResult);
+            }
 
             successDialog({
               message: 'Exec Successfully!',
@@ -32,7 +37,9 @@
             });
           })
           .finally(() => {
-            finalCallback();
+            if (finalCallback) {
+              finalCallback();
+            }
           });
       },
     },

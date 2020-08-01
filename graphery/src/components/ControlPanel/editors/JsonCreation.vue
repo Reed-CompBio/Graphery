@@ -85,7 +85,6 @@
       resultJson() {
         return (
           this.graphChoice &&
-          this.newResults[this.graphChoice.id] &&
           this.execResults &&
           this.execResults[this.graphChoice.id]
         );
@@ -149,8 +148,11 @@
           graphJson,
           this.startLoading,
           (codeHash, execResult) => {
-            console.log(graphId, execResult);
-            this.newResults[graphId] = execResult;
+            this.execResults = {
+              ...this.execResults,
+            };
+            // TODO by creating a new object, the computed property will work. Waste performance?
+            this.execResults[graphId] = JSON.stringify(execResult);
           },
           this.finishedLoading
         );
@@ -168,10 +170,24 @@
         }
       },
       execCodeOnAllGraphs() {
-        //
+        this.graphOptions.forEach((obj) => {
+          this.localExec(
+            this.codeContent,
+            JSON.parse(obj.cyjs),
+            null,
+            (codeHash, execResult) => {
+              this.execResults = {
+                ...this.execResults,
+              };
+              // TODO by creating a new object, the computed property will work. Waste performance?
+              this.execResults[obj.id] = JSON.stringify(execResult);
+            },
+            null
+          );
+        });
       },
       postExecJson() {
-        //
+        apiCaller();
       },
     },
     mounted() {
