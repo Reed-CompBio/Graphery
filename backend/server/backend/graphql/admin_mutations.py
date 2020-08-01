@@ -32,7 +32,7 @@ class UpdateCategory(graphene.Mutation):
     model = graphene.Field(CategoryType, required=True)
 
     @write_required
-    def mutate(self, info, id: str, category: str, is_published: bool = False):
+    def mutate(self, _, id: str, category: str, is_published: bool = False):
         category_wrapper = process_model_wrapper(CategoryWrapper,
                                                  id=id, category=category.strip(), is_published=is_published)
 
@@ -51,7 +51,7 @@ class UpdateTutorialAnchor(graphene.Mutation):
     model = graphene.Field(TutorialType, required=True)
 
     @write_required
-    def mutate(self, info, id: str, url: str, name: str, categories: Sequence[str] = (), is_published: bool = False):
+    def mutate(self, _, id: str, url: str, name: str, categories: Sequence[str] = (), is_published: bool = False):
         if len(categories) == 0:
             categories: Sequence[str] = ('uncategorized',)
 
@@ -84,7 +84,7 @@ class UpdateGraph(graphene.Mutation):
     model = graphene.Field(GraphType)
 
     @write_required
-    def mutate(self, info, id: str, url: str, name: str, cyjs: Mapping, is_published: bool = False,
+    def mutate(self, _, id: str, url: str, name: str, cyjs: Mapping, is_published: bool = False,
                priority: int = GraphPriority.TRIV, authors: Sequence[str] = (), categories: Sequence[str] = (),
                tutorials: Sequence[str] = ()):
         url = url.strip()
@@ -116,7 +116,7 @@ class UpdateCode(graphene.Mutation):
     model = graphene.Field(CodeType, required=True)
 
     @write_required
-    def mutate(self, info, id: str, code: str, tutorial: str):
+    def mutate(self, _, id: str, code: str, tutorial: str):
         tutorial_wrapper = get_wrapper_by_id(TutorialAnchorWrapper, tutorial)
 
         code_wrapper = process_model_wrapper(CodeWrapper,
@@ -161,7 +161,7 @@ class DeleteStatics(graphene.Mutation):
     success = graphene.Boolean(required=True)
 
     @write_required
-    def mutate(self, info, url: str):
+    def mutate(self, _, url: str):
         if url.startswith('/statics/'):
             url = url.replace('/statics/', '').strip()
 
@@ -183,7 +183,7 @@ class UpdateTutorialContent(graphene.Mutation):
     model = graphene.Field(TutorialInterface, required=True)
 
     @write_required
-    def mutate(self, info, lang: str, content: MutableMapping):
+    def mutate(self, _, lang: str, content: MutableMapping):
         translation_table: Optional[Type[TranslationBase]] = get_translation_table(lang.strip())
 
         if not translation_table:
@@ -207,7 +207,7 @@ class UpdateGraphInfoContent(graphene.Mutation):
     model = graphene.Field(GraphContentInterface, required=True)
 
     @write_required
-    def mutate(self, info, lang: str, content: MutableMapping):
+    def mutate(self, _, lang: str, content: MutableMapping):
         graph_info_translation_table: Optional[Type[GraphTranslationBase]] = get_graph_info_trans_table(lang.strip())
 
         if not graph_info_translation_table:
@@ -231,7 +231,7 @@ class UpdateResultJson(graphene.Mutation):
     models = graphene.List(ExecResultJsonType, required=True)
 
     @write_required
-    def mutate(self, info, code_id, result_json_dict: MutableMapping):
+    def mutate(self, _, code_id, result_json_dict: MutableMapping):
         if not isinstance(result_json_dict, Mapping):
             raise GraphQLError('`result_json_dict` must be a mapping of graph ids and result jsons')
 
