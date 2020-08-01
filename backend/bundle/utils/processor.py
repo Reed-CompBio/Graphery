@@ -1,5 +1,6 @@
 from copy import copy
-from typing import Tuple, Mapping, List, Any, Iterable, MutableMapping, Optional, Set
+from random import randint
+from typing import Tuple, Mapping, List, Any, Iterable, MutableMapping, Optional, Set, Union
 import json
 
 from bundle.GraphObjects.Edge import Edge
@@ -40,7 +41,27 @@ class Processor:
 
         self.create_color_map(variables)
 
+    @staticmethod
+    def generate_hex() -> str:
+        random_number = randint(0, 16777215)
+        hex_number = str(hex(random_number))
+        return '#' + hex_number[2:]
+
+    @staticmethod
+    def generate_hex_list(number_of_hex: int, color_list: List[str]) -> List[str]:
+        for i in range(number_of_hex):
+            hex_color = Processor.generate_hex()
+            while hex_color in color_list:
+                hex_color = Processor.generate_hex()
+
+            color_list.append(hex_color)
+        return color_list
+
     def create_color_map(self, variables: Set[Tuple[str, str]]) -> None:
+        diff = len(variables) - len(self.COLOR_PALETTE)
+        if diff > 0:
+            Processor.generate_hex_list(diff, self.COLOR_PALETTE)
+
         for variable, color in zip(variables, self.COLOR_PALETTE):
             self.variable_color_map[variable] = color
 
@@ -110,24 +131,28 @@ class Processor:
         if isinstance(variable_changes, Mapping):
             # only update the changes by looping through variable change list
             for key, value in variable_changes.items():
-                representation = repr(value)
-                # TODO use graph elements' parent class
-                # TODO add `displayed` properties to var obj
-                if isinstance(value, (Node, Edge)):
-                    variable_value = {
-                        'id': value.identity,
-                        'color': self.variable_color_map[key],
-                        'label': representation
-                    }
-                else:
-                    variable_value = representation
-
-                record_mapping[identifier_to_name(key)] = variable_value
+                record_mapping[identifier_to_name(key)] = self.resolve_variable(key, value)
 
         record_mapping[self.ACCESSED_ID_NAME] = self.resolve_accessed(accessed_variables=accessed_variables)
 
         # only save a copy of the dict or all the `variables` will point to one thing
         return {'line': line, 'variables': copy(record_mapping)}
+
+    def resolve_variable(self, name: Tuple[str, str], value: Any) -> Union[str, Mapping]:
+        representation = repr(value)
+        # TODO use graph elements' parent class
+        # TODO add `displayed` properties to var obj
+        if isinstance(value, (Node, Edge)):
+            # TODO create an interface here. Using str and dict is not a long-term solution
+            variable_value = {
+                'id': value.identity,
+                'color': self.variable_color_map[name],
+                'label': representation
+            }
+        else:
+            variable_value = representation
+
+        return variable_value
 
     @classmethod
     def resolve_accessed(cls, accessed_variables) -> Optional[List]:
