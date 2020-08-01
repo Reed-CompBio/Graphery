@@ -24,14 +24,12 @@ class UserWrapper(AbstractWrapper):
     model_class: Type[User] = User
 
     def __init__(self):
-        self.id: Optional[str] = None
         self.username: Optional[str] = None
         self.email: Optional[str] = None
         self.password: Optional[str] = None
         self.role: Optional[int] = None
 
         AbstractWrapper.__init__(self, {
-            'id': dummy_validator,
             'email': dummy_validator,
             'username': dummy_validator,
             'password': dummy_validator,
@@ -40,7 +38,6 @@ class UserWrapper(AbstractWrapper):
 
     def load_model(self, loaded_model: User) -> 'UserWrapper':
         super().load_model(loaded_model)
-        self.id = loaded_model.id
         self.username = loaded_model.username
         self.email = loaded_model.email
         self.password = loaded_model.password
@@ -80,17 +77,14 @@ class CategoryWrapper(PublishedWrapper):
     model_class: Type[Category] = Category
 
     def __init__(self):
-        self.id: Optional[str] = None
         self.category: Optional[str] = None
 
         PublishedWrapper.__init__(self, {
-            'id': dummy_validator,
             'category': category_validator
         })
 
     def load_model(self, loaded_model: Category) -> 'CategoryWrapper':
         super().load_model(loaded_model)
-        self.id = loaded_model.id
         self.category = loaded_model.category
         return self
 
@@ -111,13 +105,11 @@ class TutorialAnchorWrapper(PublishedWrapper):
     model_class: Type[Tutorial] = Tutorial
 
     def __init__(self):
-        self.id: Optional[str] = None
         self.url: Optional[str] = None
         self.name: Optional[str] = None
         self.categories: Optional[Iterable[CategoryWrapper]] = None
 
         PublishedWrapper.__init__(self, {
-            'id': dummy_validator,
             'url': url_validator,
             'name': name_validator,
             'categories': categories_validator,
@@ -125,7 +117,6 @@ class TutorialAnchorWrapper(PublishedWrapper):
 
     def load_model(self, loaded_model: Tutorial) -> 'TutorialAnchorWrapper':
         super().load_model(loaded_model)
-        self.id = loaded_model.id
         self.url = loaded_model.url
         self.name = loaded_model.name
         self.categories = [CategoryWrapper().load_model(cat) for cat in loaded_model.categories.all()]
@@ -159,7 +150,6 @@ class GraphWrapper(PublishedWrapper):
     model_class: Type[Graph] = Graph
 
     def __init__(self):
-        self.id: Optional[str] = None
         self.url: Optional[str] = None
         self.name: Optional[str] = None
         self.categories: Optional[Iterable[CategoryWrapper]] = None
@@ -169,7 +159,6 @@ class GraphWrapper(PublishedWrapper):
         self.tutorials: Optional[Iterable[TutorialAnchorWrapper]] = None
 
         PublishedWrapper.__init__(self, {
-            'id': dummy_validator,
             'url': url_validator,
             'name': name_validator,
             'categories': categories_validator,
@@ -231,19 +220,16 @@ class CodeWrapper(AbstractWrapper):
     model_class: Type[Code] = Code
 
     def __init__(self):
-        self.id: Optional[str] = None
         self.tutorial: Optional[TutorialAnchorWrapper] = None
         self.code: Optional[str] = None
 
         AbstractWrapper.__init__(self, {
-            'id': dummy_validator,
             'tutorial': tutorial_validator,
             'code': code_validator
         })
 
     def load_model(self, loaded_model: Code) -> 'CodeWrapper':
         super().load_model(loaded_model=loaded_model)
-        self.id = loaded_model.id
         self.tutorial = TutorialAnchorWrapper().load_model(loaded_model.tutorial)
         self.code = loaded_model.code
         return self
@@ -306,7 +292,6 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
     def __init__(self):
         self.model_class: Optional[Type[TranslationBase]] = None
 
-        self.id: Optional[str] = None
         self.title: Optional[str] = None
         self.authors: Optional[Iterable[UserWrapper]] = None
         self.tutorial_anchor: Optional[TutorialAnchorWrapper] = None
@@ -315,7 +300,6 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
         self.content_html: Optional[str] = None
 
         PublishedWrapper.__init__(self, {
-            'id': dummy_validator,
             'title': dummy_validator,
             'authors': author_validator,
             'tutorial_anchor': tutorial_validator,
@@ -384,14 +368,12 @@ class GraphTranslationContentWrapper(PublishedWrapper):
     def __init__(self):
         self.model_class: Optional[Type[GraphTranslationBase]] = None
 
-        self.id: Optional[str] = None
         self.title: Optional[str] = None
         self.abstract_md: Optional[str] = None
         self.abstract: Optional[str] = None
         self.graph_anchor: Optional[GraphWrapper] = None
 
         PublishedWrapper.__init__(self, {
-            'id': dummy_validator,
             'title': dummy_validator,
             'abstract_md': dummy_validator,
             'abstract': dummy_validator,
@@ -400,7 +382,6 @@ class GraphTranslationContentWrapper(PublishedWrapper):
 
     def load_model(self, loaded_model: GraphTranslationBase) -> 'GraphTranslationContentWrapper':
         super().load_model(loaded_model=loaded_model)
-        self.id = loaded_model.id
         self.title = loaded_model.title
         self.abstract_md = loaded_model.abstract_md
         self.abstract = loaded_model.abstract
@@ -443,13 +424,11 @@ class UploadsWrapper(PublishedWrapper):
     model_class: Type[Uploads] = Uploads
 
     def __init__(self):
-        self.id: Optional[str] = None
         self.where: Optional[str] = None
         self.url: Optional[str] = None
         self.file: Optional[Union[str, Any]] = None
 
         super(UploadsWrapper, self).__init__({
-            'id': dummy_validator,
             'where': dummy_validator,
             'url': dummy_validator,
             'file': dummy_validator,
@@ -460,7 +439,6 @@ class UploadsWrapper(PublishedWrapper):
     def load_model(self, loaded_model: Uploads) -> 'UploadsWrapper':
         super().load_model(loaded_model=loaded_model)
 
-        self.id = loaded_model.id
         self.where = loaded_model.where
         self.url = loaded_model.where
         self.file = loaded_model.file

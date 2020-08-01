@@ -5,7 +5,8 @@ from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, Muta
 from django.core.exceptions import ValidationError
 from django.db import models, IntegrityError
 
-from backend.intel_wrappers.validators import is_published_validator
+from backend.intel_wrappers.validators import is_published_validator, dummy_validator
+from backend.model.mixins import PublishedMixin
 
 
 class IntelWrapperBase(ABC):
@@ -86,12 +87,20 @@ class SettableBase(ABC):
 
 
 class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
-    def __init__(self, validators: Mapping[str, Callable]):
+    def __init__(self, validators: MutableMapping[str, Callable]):
+        self.id: Optional[str] = None
+        validators['id'] = dummy_validator
+
         IntelWrapperBase.__init__(self, validators)
         ModelWrapperBase.__init__(self)
         SettableBase.__init__(self)
 
         self.field_names = [*self.validators.keys()]
+
+    def load_model(self, loaded_model: models.Model) -> 'AbstractWrapper':
+        super().load_model(loaded_model=loaded_model)
+        self.id = loaded_model.id
+        return self
 
     def set_variables(self, **kwargs) -> 'AbstractWrapper':
         for key, value in kwargs.items():
@@ -154,6 +163,11 @@ class PublishedWrapper(AbstractWrapper, ABC):
         self.is_published: bool = False
         validators['is_published'] = is_published_validator
         super(PublishedWrapper, self).__init__(validators)
+
+    def load_model(self, loaded_model: PublishedMixin) -> 'PublishedWrapper':
+        super().load_model(loaded_model=loaded_model)
+        self.is_published = loaded_model.is_published
+        return self
 
     def set_published(self):
         if self.model_exists():
