@@ -56,6 +56,10 @@
               <OpenInPageButton
                 :label="props.row.tutorialUrl"
                 :disabled="emptyContent(props.row.title)"
+                :routePath="{
+                  name: 'Tutorial',
+                  params: { url: props.row.tutorialUrl },
+                }"
               />
             </q-td>
 

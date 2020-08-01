@@ -71,7 +71,13 @@
             </q-td>
 
             <q-td key="tutorialUrl" :props="props">
-              <OpenInPageButton :label="props.row.tutorialUrl" />
+              <OpenInPageButton
+                :label="props.row.tutorialUrl"
+                :routePath="{
+                  name: 'Tutorial',
+                  params: { url: props.row.tutorialUrl },
+                }"
+              />
             </q-td>
 
             <q-td key="id" :props="props">
@@ -93,16 +99,15 @@
 
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
-  import { apiCaller } from '../../../services/apis';
-  import { codeListQuery } from '../../../services/queries';
-  import { errorDialog, resolveAndOpenLink } from '../../../services/helpers';
-  import AddNewButton from '../parts/AddNewButton';
-  import { newModelUUID } from '../../../services/params';
+  import { apiCaller } from '@/services/apis';
+  import { codeListQuery } from '@/services/queries';
+  import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
+  import { newModelUUID } from '@/services/params';
 
   export default {
     mixins: [loadingMixin],
     components: {
-      AddNewButton,
+      AddNewButton: () => import('../parts/AddNewButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton'),

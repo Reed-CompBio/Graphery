@@ -53,7 +53,13 @@
           </q-td>
 
           <q-td key="graphUrl" :props="props">
-            <OpenInPageButton :label="props.row.graphUrl" />
+            <OpenInPageButton
+              :label="props.row.graphUrl"
+              :routePath="{
+                name: 'Graph',
+                params: { url: props.row.graphUrl },
+              }"
+            />
           </q-td>
 
           <q-td key="id" :props="props">
