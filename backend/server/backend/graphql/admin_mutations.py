@@ -1,8 +1,10 @@
+import json
 from typing import List, Sequence, Mapping, Type, Optional, MutableMapping
 from os.path import join
 from uuid import UUID
 
 import graphene
+from graphene.types.generic import GenericScalar
 from graphql import GraphQLError
 
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -10,11 +12,11 @@ from django.conf import settings
 
 from backend.graphql.decorators import write_required
 from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeType, TutorialInterface, \
-    TutorialContentInputType, GraphContentInputType, GraphContentInterface
+    TutorialContentInputType, GraphContentInputType, GraphContentInterface, ExecResultJsonType
 from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, get_wrapper_by_id
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper, \
-    GraphTranslationContentWrapper
+    GraphTranslationContentWrapper, ExecResultJsonWrapper
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import GraphPriority, UploadWhere, Uploads
 from backend.model.translation_collection import get_translation_table, get_graph_info_trans_table
@@ -32,7 +34,7 @@ class UpdateCategory(graphene.Mutation):
     @write_required
     def mutate(self, info, id: str, category: str, is_published: bool = False):
         category_wrapper = process_model_wrapper(CategoryWrapper,
-                                                 id=id,  category=category.strip(), is_published=is_published)
+                                                 id=id, category=category.strip(), is_published=is_published)
 
         return UpdateCategory(success=True, model=category_wrapper.model)
 
@@ -51,7 +53,7 @@ class UpdateTutorialAnchor(graphene.Mutation):
     @write_required
     def mutate(self, info, id: str, url: str, name: str, categories: Sequence[str] = (), is_published: bool = False):
         if len(categories) == 0:
-            categories: Sequence[str] = ('uncategorized', )
+            categories: Sequence[str] = ('uncategorized',)
 
         url = url.strip()
         name = name.strip()
@@ -218,3 +220,30 @@ class UpdateGraphInfoContent(graphene.Mutation):
                                                            **content)
 
         return UpdateGraphInfoContent(success=True, model=graph_info_content_wrapper.model)
+
+
+class UpdateResultJson(graphene.Mutation):
+    class Arguments:
+        code_id = graphene.UUID(required=True)
+        result_json_dict = GenericScalar(required=True)
+
+    success = graphene.Boolean(required=True)
+    models = graphene.List(ExecResultJsonType, required=True)
+
+    @write_required
+    def mutate(self, info, code_id, result_json_dict: MutableMapping):
+        if not isinstance(result_json_dict, Mapping):
+            raise GraphQLError('`result_json_dict` must be a mapping of graph ids and result jsons')
+
+        code_wrapper: CodeWrapper = get_wrapper_by_id(CodeWrapper, code_id)
+
+        result_json_models = []
+        for key, value in result_json_dict.items():
+            graph_wrapper: GraphWrapper = get_wrapper_by_id(GraphWrapper, key)
+            json_obj = json.loads(value) if isinstance(value, str) else value
+            result_wrapper: ExecResultJsonWrapper = process_model_wrapper(ExecResultJsonWrapper,
+                                                                          code=code_wrapper, graph=graph_wrapper,
+                                                                          json=json_obj)
+            result_json_models.append(result_wrapper.model)
+
+        return UpdateResultJson(success=True, models=result_json_models)
