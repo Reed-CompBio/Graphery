@@ -38,7 +38,13 @@
 
             <!-- tutorial url -->
             <q-td key="url" :props="props">
-              <OpenInPageButton :label="props.row.url" />
+              <OpenInPageButton
+                :label="props.row.url"
+                :routePath="{
+                  name: 'Tutorial',
+                  params: { url: props.row.url },
+                }"
+              />
             </q-td>
 
             <!-- tutorial id -->
@@ -53,12 +59,12 @@
 </template>
 
 <script>
-  import { apiCaller } from '../../../services/apis';
-  import { tutorialAnchorListQuery } from '../../../services/queries';
-  import { errorDialog, resolveAndOpenLink } from '../../../services/helpers';
+  import { apiCaller } from '@/services/apis';
+  import { tutorialAnchorListQuery } from '@/services/queries';
+  import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import AddNewButton from '../parts/AddNewButton';
-  import { newModelUUID } from '../../../services/params';
+  import { newModelUUID } from '@/services/params';
 
   export default {
     mixins: [loadingMixin],
