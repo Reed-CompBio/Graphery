@@ -1,4 +1,4 @@
-import MonacoEditorWebpackPlugin from 'monaco-editor-webpack-plugin';
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = {
   transpileDependencies: ['quasar'],
@@ -6,7 +6,7 @@ module.exports = {
     disableHostCheck: true,
   },
   configureWebpack: {
-    plugins: [new MonacoEditorWebpackPlugin({ languages: ['python'] })],
+    plugins: [new MonacoWebpackPlugin({ languages: ['python'] })],
   },
   pluginOptions: {
     quasar: {
