@@ -2,7 +2,8 @@ import json
 from typing import Optional, Iterable, Mapping, Type, Union, Any
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
-    categories_validator, code_validator, tutorial_validator, author_validator, non_empty_text_validator
+    categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
+    graph_priority_validator, json_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
 from backend.model.UserModel import User
@@ -162,10 +163,10 @@ class GraphWrapper(PublishedWrapper):
             'url': url_validator,
             'name': name_validator,
             'categories': categories_validator,
-            'authors': author_validator,
-            'priority': dummy_validator,
-            'cyjs': dummy_validator,
-            'tutorials': dummy_validator
+            'authors': authors_validator,
+            'priority': graph_priority_validator,
+            'cyjs': json_validator,
+            'tutorials': wrapper_validator
         })
 
     def load_model(self, loaded_model: Graph) -> 'GraphWrapper':
@@ -224,7 +225,7 @@ class CodeWrapper(AbstractWrapper):
         self.code: Optional[str] = None
 
         AbstractWrapper.__init__(self, {
-            'tutorial': tutorial_validator,
+            'tutorial': wrapper_validator,
             'code': code_validator
         })
 
@@ -258,9 +259,9 @@ class ExecResultJsonWrapper(AbstractWrapper):
         self.json: Optional[Mapping] = None
 
         AbstractWrapper.__init__(self, {
-            'code': dummy_validator,
-            'graph': dummy_validator,
-            'json': dummy_validator,
+            'code': wrapper_validator,
+            'graph': wrapper_validator,
+            'json': json_validator,
         })
 
     def load_model(self, loaded_model: ExecResultJson) -> 'ExecResultJsonWrapper':
@@ -300,9 +301,9 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
         self.content_html: Optional[str] = None
 
         PublishedWrapper.__init__(self, {
-            'title': dummy_validator,
-            'authors': author_validator,
-            'tutorial_anchor': tutorial_validator,
+            'title': non_empty_text_validator,
+            'authors': authors_validator,
+            'tutorial_anchor': wrapper_validator,
             'abstract': non_empty_text_validator,
             'content_md': non_empty_text_validator,
             'content_html': non_empty_text_validator,
@@ -374,10 +375,10 @@ class GraphTranslationContentWrapper(PublishedWrapper):
         self.graph_anchor: Optional[GraphWrapper] = None
 
         PublishedWrapper.__init__(self, {
-            'title': dummy_validator,
-            'abstract_md': dummy_validator,
-            'abstract': dummy_validator,
-            'graph_anchor': dummy_validator,
+            'title': non_empty_text_validator,
+            'abstract_md': non_empty_text_validator,
+            'abstract': non_empty_text_validator,
+            'graph_anchor': wrapper_validator,
         })
 
     def load_model(self, loaded_model: GraphTranslationBase) -> 'GraphTranslationContentWrapper':
