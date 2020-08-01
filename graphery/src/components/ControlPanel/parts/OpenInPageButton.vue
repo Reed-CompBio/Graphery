@@ -1,10 +1,10 @@
 <template>
   <q-btn
     :label="label"
-    @click.prevent="acton"
     :to="routePath"
     flat
     :disable="disabled"
+    style="text-transform: none; "
   >
     <SwitchTooltip text="Open Page"></SwitchTooltip>
   </q-btn>
@@ -12,7 +12,7 @@
 <script>
   import SwitchTooltip from '../../framework/SwitchTooltip.vue';
   export default {
-    props: ['label', 'acton', 'routePath', 'disabled'],
+    props: ['label', 'routePath', 'disabled'],
     components: { SwitchTooltip },
   };
 </script>

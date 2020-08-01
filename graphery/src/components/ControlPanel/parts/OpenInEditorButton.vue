@@ -1,5 +1,5 @@
 <template>
-  <q-btn :label="label" @click="action" :to="routePath" flat>
+  <q-btn :label="label" :to="routePath" flat style="text-transform: none; ">
     <SwitchTooltip text="Open In Editor"></SwitchTooltip>
   </q-btn>
 </template>
@@ -11,9 +11,6 @@
     props: {
       label: {
         default: '',
-      },
-      action: {
-        default: () => () => null,
       },
       routePath: {
         default: null,
