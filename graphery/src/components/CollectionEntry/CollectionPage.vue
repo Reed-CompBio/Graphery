@@ -217,6 +217,11 @@
     mounted() {
       this.loadInfo();
     },
+    watch: {
+      '$i18n.locale': function() {
+        this.loadInfo();
+      },
+    },
   };
 </script>
 
