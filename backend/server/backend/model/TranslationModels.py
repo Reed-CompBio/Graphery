@@ -16,7 +16,7 @@ class TranslationBase(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
     title = models.CharField(max_length=100, unique=True, blank=False, null=False, db_index=True)
     # meta
     authors = models.ManyToManyField(User)
-    tutorial_anchor = models.OneToOneField(Tutorial, on_delete=models.CASCADE)
+    tutorial_anchor = models.OneToOneField(Tutorial, on_delete=models.PROTECT)
     abstract = models.TextField()
     # content
     content_md = models.TextField()
@@ -45,7 +45,7 @@ class GraphTranslationBase(PublishedMixin, TimeDateMixin, UUIDMixin, models.Mode
     title = models.CharField(max_length=100, unique=True, blank=False, null=False)
     abstract_md = models.TextField()
     abstract = models.TextField()
-    graph_anchor = models.OneToOneField(Graph, on_delete=models.CASCADE)
+    graph_anchor = models.OneToOneField(Graph, on_delete=models.PROTECT)
 
     class Meta:
         abstract = True

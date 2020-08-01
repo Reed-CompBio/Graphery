@@ -16,7 +16,7 @@ graph_info_translation_tables: List[str] = []
 graph_info_translation_table_mapping: MutableMapping[str, Type['GraphTranslationBase']] = {}
 
 
-def add_trans_type(cls: Type[ObjectType]) -> ObjectType:
+def add_trans_type(cls: Type[ObjectType]) -> Type[ObjectType]:
     translation_types.append(cls)
     return cls
 
