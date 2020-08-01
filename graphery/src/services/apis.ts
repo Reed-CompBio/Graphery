@@ -108,5 +108,8 @@ export async function localServerCaller(
     code,
     graph,
   });
-  return response.data;
+  if (response.data.errors) {
+    throw Error(response.data.errors[0].message);
+  }
+  return response.data.data;
 }

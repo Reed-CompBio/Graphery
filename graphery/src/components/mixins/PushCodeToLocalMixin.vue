@@ -10,11 +10,7 @@
         }
         return localServerCaller(code, graph)
           .then((data) => {
-            if (data['error']) {
-              throw Error(data['error']);
-            }
-
-            if (!('data' in data)) {
+            if (!data) {
               throw Error('No valid data returned from local server');
             }
 
