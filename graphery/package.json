@@ -17,6 +17,7 @@
     "cytoscape-dagre": "^2.2.2",
     "cytoscape-panzoom": "^2.5.3",
     "cytoscape-popper": "^1.0.7",
+    "highlight.js": "^10.1.2",
     "markdown-it": "^11.0.0",
     "markdown-it-abbr": "^1.0.4",
     "markdown-it-container": "^3.0.0",
