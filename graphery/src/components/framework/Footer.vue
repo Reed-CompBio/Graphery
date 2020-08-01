@@ -5,7 +5,7 @@
       <div>
         2020 © Graphery |
         <a
-          href="https://github.com/poppy-poppy/Graphery"
+          href="https://github.com/FlickerSoul/Graphery"
           target="_blank"
           rel="noreferrer"
         >

@@ -44,7 +44,7 @@
             <q-list>
               <q-item
                 tag="a"
-                href="https://github.com/poppy-poppy/Graphery/issues"
+                href="https://github.com/FlickerSoul/Graphery/issues"
                 target="_blank"
               >
                 <q-item-section>

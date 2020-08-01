@@ -48,7 +48,7 @@
           'color: #A70E16'
         );
         console.log('Welcome to Graphery, a graph tutorial website');
-        console.log('GitHub: https://github.com/poppy-poppy/Graphery');
+        console.log('GitHub: https://github.com/FlickerSoul/Graphery');
       },
       loadLang() {
         // Load language
