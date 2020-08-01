@@ -19,14 +19,24 @@
             />
           </div>
           <div>
-            <q-btn label="Exec" :loading="loadingContent" class="q-mr-sm" />
+            <q-btn
+              label="Exec"
+              :loading="loadingContent"
+              @click="notAvailableMessage"
+              class="q-mr-sm"
+            />
             <q-btn
               label="Exec Locally"
               :loading="loadingContent"
               @click="execCodeOnCurrentGraph"
               class="q-mr-sm"
             />
-            <q-btn label="Exec All" :loading="loadingContent" class="q-mr-sm" />
+            <q-btn
+              label="Exec All"
+              :loading="loadingContent"
+              @click="notAvailableMessage"
+              class="q-mr-sm"
+            />
             <q-btn
               label="Exec All Locally"
               :loading="loadingContent"
@@ -69,6 +79,7 @@
     errorDialog,
     successDialog,
     warningDialog,
+    notAvailableMessage,
   } from '@/services/helpers';
   import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
 
@@ -153,7 +164,7 @@
         await this.pushToLocal(
           this.codeContent,
           graphJson,
-          this.startLoading,
+          null,
           (codeHash, execResult) => {
             this.execResults = {
               ...this.execResults,
@@ -161,15 +172,16 @@
             // TODO by creating a new object, the computed property will work. Waste performance?
             this.execResults[graphId] = JSON.stringify(execResult);
           },
-          this.finishedLoading
+          null
         );
       },
-      execCodeOnCurrentGraph() {
+      async execCodeOnCurrentGraph() {
         if (this.graphChoice) {
           const graphJson = JSON.parse(this.graphChoice.cyjs);
           const graphId = this.graphChoice.id;
-
-          this.localExec(graphJson, graphId);
+          this.startLoading();
+          await this.localExec(graphJson, graphId);
+          this.finishedLoading();
         } else {
           errorDialog({
             message: 'Please choose a graph to run code.',
@@ -179,19 +191,7 @@
       async execCodeOnAllGraphs() {
         this.startLoading();
         for (const obj of this.graphOptions) {
-          await this.localExec(
-            this.codeContent,
-            JSON.parse(obj.cyjs),
-            null,
-            (codeHash, execResult) => {
-              this.execResults = {
-                ...this.execResults,
-              };
-              // TODO by creating a new object, the computed property will work. Waste performance?
-              this.execResults[obj.id] = JSON.stringify(execResult);
-            },
-            null
-          );
+          await this.localExec(JSON.parse(obj.cyjs), obj.id);
         }
         this.finishedLoading();
       },
@@ -223,6 +223,7 @@
             this.finishedLoading();
           });
       },
+      notAvailableMessage,
     },
     mounted() {
       this.fetchTutorialGraphs();

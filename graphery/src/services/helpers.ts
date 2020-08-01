@@ -6,6 +6,7 @@ import store from '@/store/index';
 import { Notify } from 'quasar';
 import { Location } from 'vue-router';
 import router from '@/router/index';
+import i18n from '@/i18n';
 
 export function successDialog(info: { message: string }) {
   Notify.create({
@@ -120,4 +121,10 @@ export function resolveLink(routerLinkObj: Location) {
 
 export function resolveAndOpenLink(routerLinkObj: Location) {
   window.open(resolveLink(routerLinkObj), '_blank');
+}
+
+export function notAvailableMessage() {
+  errorDialog({
+    message: i18n.tc('tooltips.notAvailableCurrently'),
+  });
 }
