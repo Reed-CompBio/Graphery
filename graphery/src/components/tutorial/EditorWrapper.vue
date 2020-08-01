@@ -181,9 +181,8 @@
 
 <script>
   import { mapActions, mapGetters, mapState } from 'vuex';
-  import { saveTextToClipboard } from '../../services/helpers.ts';
-  import { localServerCaller } from '../../services/apis';
-  import { errorDialog, successDialog } from '../../services/helpers';
+  import { saveTextToClipboard } from '@/services/helpers';
+  import { errorDialog, successDialog } from '@/services/helpers';
   import Editor from '@/components/tutorial/Editor.vue';
   import SplitterSeparator from '../framework/SplitterSeparator';
   import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';

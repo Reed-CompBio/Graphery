@@ -92,7 +92,7 @@
         return null;
       },
       changeDecoration(...decoration) {
-        if (this.editor && decoration) {
+        if (this.editor) {
           this.decorations = this.editor.deltaDecorations(
             this.decorations,
             decoration

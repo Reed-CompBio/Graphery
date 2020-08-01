@@ -5,7 +5,6 @@ import {
   RootState,
   WorkSpaceState,
 } from '@/store/states/state';
-import get = Reflect.get;
 
 const state: WorkSpaceState = {
   tutorialSpace: {

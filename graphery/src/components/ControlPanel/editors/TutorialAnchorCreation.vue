@@ -46,16 +46,15 @@
 </template>
 
 <script>
-  import { newModelUUID } from '../../../services/params';
-  import { apiCaller } from '../../../services/apis';
+  import { newModelUUID } from '@/services/params';
+  import { apiCaller } from '@/services/apis';
   import loadingMixin from '../mixins/LoadingMixin';
   import pushToMixin from '../mixins/PushToMixin.vue';
   import {
-    allCategoryQuery,
     tutorialQuery,
     updateTutorialAnchorMutation,
-  } from '../../../services/queries';
-  import { errorDialog, successDialog } from '../../../services/helpers';
+  } from '@/services/queries';
+  import { errorDialog, successDialog } from '@/services/helpers';
   import SubmitButton from '../parts/SubmitButton';
   import IDCard from '../parts/IDCard';
   import CategorySelection from '../parts/CategorySelection';

@@ -8,7 +8,6 @@
   import markdown from 'mavon-editor/src/lib/core/markdown';
   import hljs from 'highlight.js/lib/core';
   import python from 'highlight.js/lib/languages/python.js';
-  import github from 'highlight.js/styles/github.css';
 
   export default {
     props: {
@@ -29,7 +28,7 @@
     },
     methods: {
       loadLink(src, callback) {
-        if (!(typeof callback === 'function')) {
+        if (typeof callback !== 'function') {
           callback = function() {
             return null;
           };
@@ -63,7 +62,7 @@
         head.appendChild(link);
       },
       loadScript(src, callback) {
-        if (!(typeof callback === 'function')) {
+        if (typeof callback !== 'function') {
           callback = function() {
             return null;
           };
@@ -156,6 +155,7 @@
 </script>
 
 <style lang="sass">
+  @import "~highlight.js/styles/github.css"
   pre
     box-shadow: 0 1px 5px rgba(0,0,0,0.2), 0 2px 2px rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12)
   pre > .hljs
