@@ -149,8 +149,8 @@
             this.finishedLoading();
           });
       },
-      localExec(graphJson, graphId) {
-        this.pushToLocal(
+      async localExec(graphJson, graphId) {
+        await this.pushToLocal(
           this.codeContent,
           graphJson,
           this.startLoading,
@@ -176,9 +176,10 @@
           });
         }
       },
-      execCodeOnAllGraphs() {
-        this.graphOptions.forEach((obj) => {
-          this.localExec(
+      async execCodeOnAllGraphs() {
+        this.startLoading();
+        for (const obj of this.graphOptions) {
+          await this.localExec(
             this.codeContent,
             JSON.parse(obj.cyjs),
             null,
@@ -191,7 +192,8 @@
             },
             null
           );
-        });
+        }
+        this.finishedLoading();
       },
       postExecJson() {
         this.startLoading();

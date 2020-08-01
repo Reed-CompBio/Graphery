@@ -4,17 +4,23 @@
 
   export default {
     methods: {
-      pushToLocal(code, graph, startCallback, successCallback, finalCallback) {
+      async pushToLocal(
+        code,
+        graph,
+        startCallback,
+        successCallback,
+        finalCallback
+      ) {
         if (startCallback) {
           startCallback();
         }
-        return localServerCaller(code, graph)
+        await localServerCaller(code, graph)
           .then((data) => {
             if (!data) {
               throw Error('No valid data returned from local server');
             }
 
-            const { codeHash, execResult } = data['data'];
+            const { codeHash, execResult } = data;
             // TODO link this with workspace
 
             if (successCallback) {
