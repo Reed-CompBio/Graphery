@@ -3,6 +3,7 @@ import { BASE_URL } from '@/services/api_entry';
 import vuex from '../store/index';
 
 import { Dialog } from 'quasar';
+import { errorDialog } from '@/services/helpers';
 
 export const apiClient: AxiosInstance = axios.create({
   withCredentials: true,
@@ -12,23 +13,38 @@ export const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.response.use(
   (resp) => resp,
   (resp) => {
-    if (resp.response.status >= 500) {
-      Dialog.create({
-        title: 'Maintenance',
-        message:
-          '<p>We are currently under maintenance. </p>' +
-          '<p>Please come back later and refresh this page. </p>' +
-          '<p>We are so sorry for the inconvenience! </p>',
-        html: true,
-        persistent: true,
-        ok: false,
-        cancel: false,
-        noEscDismiss: true,
-        noBackdropDismiss: true,
-        noRouteDismiss: true,
-        seamless: false,
+    if (resp.response) {
+      errorDialog({
+        message: 'Unknown response!',
       });
+    } else {
+      if (resp.response.status >= 500) {
+        Dialog.create({
+          title: 'Maintenance',
+          message:
+            '<p>We are currently under maintenance. </p>' +
+            '<p>Please come back later and refresh this page. </p>' +
+            '<p>We are so sorry for the inconvenience! </p>',
+          html: true,
+          persistent: true,
+          ok: true,
+          cancel: false,
+          noEscDismiss: true,
+          noBackdropDismiss: true,
+          noRouteDismiss: true,
+          seamless: false,
+        });
+      } else if (resp.response.status > 400) {
+        let message = 'Client Error. ';
+        if (resp.response.data.errors) {
+          message += resp.response.data.errors[0].message;
+        }
+        errorDialog({
+          message: message,
+        });
+      }
     }
+
     return Promise.reject(resp);
   }
 );
