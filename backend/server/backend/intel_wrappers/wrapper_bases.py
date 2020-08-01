@@ -168,8 +168,3 @@ class PublishedWrapper(AbstractWrapper, ABC):
         super().load_model(loaded_model=loaded_model)
         self.is_published = loaded_model.is_published
         return self
-
-    def set_published(self):
-        if self.model_exists():
-            self.model.is_published = self.is_published
-            self.save_model()
