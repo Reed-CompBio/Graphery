@@ -16,19 +16,19 @@ graph_info_translation_tables: List[str] = []
 graph_info_translation_table_mapping: MutableMapping[str, Type['GraphTranslationBase']] = {}
 
 
-def add_trans_type(cls: Type[ObjectType]):
+def add_trans_type(cls: Type[ObjectType]) -> ObjectType:
     translation_types.append(cls)
     return cls
 
 
-def add_trans_table(cls: Type):
+def add_trans_table(cls: Type) -> Type:
     cls_name: str = cls.__name__.lower()
     translation_tables.append(cls_name)
     translation_table_mapping[cls_name] = cls
     return cls
 
 
-def add_graph_info_trans_table(cls: Type):
+def add_graph_info_trans_table(cls: Type) -> Type:
     cls_name: str = cls.__name__.lower()
     graph_info_translation_tables.append(cls_name)
     graph_info_translation_table_mapping[cls_name] = cls
