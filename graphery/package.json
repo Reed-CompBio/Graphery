@@ -1,7 +1,17 @@
 {
   "name": "graphery",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FlickerSoul/Graphery"
+  },
+  "author": {"name":  "Heyuan Zeng", "email": "zengl@reed.edu"},
+  "contributors": [{"name": "Jinbiao Zhang"}],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FlickerSoul/Graphery/issues"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
