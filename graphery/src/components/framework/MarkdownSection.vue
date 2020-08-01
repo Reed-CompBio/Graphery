@@ -6,6 +6,9 @@
   // TODO use custom css
   import 'mavon-editor/src/lib/css/md.css';
   import markdown from 'mavon-editor/src/lib/core/markdown';
+  import hljs from 'highlight.js/lib/core';
+  import python from 'highlight.js/lib/languages/python.js';
+  import github from 'highlight.js/styles/github.css';
 
   export default {
     props: {
@@ -99,20 +102,6 @@
 
         head.appendChild(script);
       },
-      hljsLang: function(lang) {
-        return (
-          'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/' +
-          lang +
-          '.min.js'
-        );
-      },
-      hljsCss(css) {
-        return (
-          'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/' +
-          css +
-          '.min.css'
-        );
-      },
       loadExternalResources() {
         // katex
         this.loadScript(
@@ -121,24 +110,10 @@
             this.renderHtml();
           }
         );
-
-        // highlight js
-        this.loadScript(
-          'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js',
-          () => {
-            this.renderHtml();
-          }
-        );
-
-        this.loadScript(this.hljsLang('python'), this.renderHtml());
-
         // Markdown css
         this.loadLink(
-          'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css'
+          'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css'
         );
-
-        // Highlighting css
-        this.loadLink(this.hljsCss('github'));
 
         // Katex css
         this.loadLink(
@@ -147,10 +122,7 @@
       },
       highlightCode() {
         document.querySelectorAll('pre div.hljs code').forEach((block) => {
-          const hljs = window.hljs;
-          if (hljs) {
-            hljs.highlightBlock(block);
-          }
+          hljs.highlightBlock(block);
         });
       },
       renderHtml() {
@@ -171,6 +143,7 @@
       },
     },
     mounted() {
+      hljs.registerLanguage('python', python);
       this.loadExternalResources();
     },
     watch: {
@@ -181,3 +154,11 @@
     },
   };
 </script>
+
+<style lang="sass">
+  pre
+    box-shadow: 0 1px 5px rgba(0,0,0,0.2), 0 2px 2px rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12)
+  pre > .hljs
+    font-size: 1rem !important
+    background-color: #f6f8fa
+</style>
