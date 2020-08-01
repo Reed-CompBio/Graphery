@@ -28,10 +28,8 @@ def user_passes_test(test_func, exc=GraphQLError('You do not have permission to 
     return decorator
 
 
-login_required = user_passes_test(lambda u: u.is_authenticated, GraphQLError("You haven't logged in."))
+login_required = user_passes_test(lambda u: u.is_authenticated)
 
-write_required = user_passes_test(lambda u: u.is_authenticated and u.role > ROLES.TRANSLATOR,
-                                  GraphQLError("You don't have the privilege to perform this action."))
+write_required = user_passes_test(lambda u: u.is_authenticated and u.role > ROLES.TRANSLATOR)
 
-admin_required = user_passes_test(lambda u: u.is_authenticated and u.role == ROLES.ADMINISTRATOR,
-                                  GraphQLError("You are not an administrator."))
+admin_required = user_passes_test(lambda u: u.is_authenticated and u.role == ROLES.ADMINISTRATOR)
