@@ -60,9 +60,16 @@
 
 <script>
   import loadingMixin from '../mixins/LoadingMixin';
-  import { resultJsonGetGraphsQuery } from '@/services/queries';
+  import {
+    resultJsonGetGraphsQuery,
+    resultJsonsMutation,
+  } from '@/services/queries';
   import { apiCaller } from '@/services/apis';
-  import { errorDialog, warningDialog } from '@/services/helpers';
+  import {
+    errorDialog,
+    successDialog,
+    warningDialog,
+  } from '@/services/helpers';
   import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
 
   export default {
@@ -187,7 +194,32 @@
         });
       },
       postExecJson() {
-        apiCaller();
+        this.startLoading();
+        apiCaller(resultJsonsMutation, {
+          codeId: this.codeId,
+          resultJsonDict: this.execResults,
+        })
+          .then((data) => {
+            if (!data || !('updateResultJson' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            if (!data.updateResultJson.success) {
+              throw Error('Cannot update result JSONs for unknown reason.');
+            }
+
+            successDialog({
+              message: 'Update Result JSONs Successfully!',
+            });
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during updating result JSONs. ${err}`,
+            });
+          })
+          .finally(() => {
+            this.finishedLoading();
+          });
       },
     },
     mounted() {

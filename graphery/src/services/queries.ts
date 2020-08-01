@@ -440,3 +440,10 @@ mutation ($lang: String!, $content: GraphContentInputType!) {
     }
   }
 }`;
+
+export const resultJsonsMutation = `
+mutation ($codeId: UUID!, $resultJsonDict: GenericScalar!) {
+  updateResultJson (codeId: $codeId, resultJsonDict: $resultJsonDict) {
+    success
+  }
+}`;

@@ -3,7 +3,7 @@ from graphql import GraphQLError
 from django.contrib.auth import authenticate, login, logout
 
 from backend.graphql.admin_mutations import UpdateCategory, UpdateTutorialAnchor, UpdateGraph, UpdateCode, \
-    UploadStatics, UpdateTutorialContent, DeleteStatics, UpdateGraphInfoContent
+    UploadStatics, UpdateTutorialContent, DeleteStatics, UpdateGraphInfoContent, UpdateResultJson
 from backend.graphql.decorators import login_required
 from backend.graphql.types import UserType
 
@@ -47,3 +47,4 @@ class Mutation(graphene.ObjectType):
     delete_statics = DeleteStatics.Field()
     update_tutorial_content = UpdateTutorialContent.Field()
     update_graph_info_content = UpdateGraphInfoContent.Field()
+    update_result_json = UpdateResultJson.Field()
