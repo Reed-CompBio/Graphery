@@ -11,6 +11,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.conf import settings
 
 from backend.graphql.decorators import write_required
+from backend.graphql.mutation_base import SuccessMutationBase
 from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeType, TutorialInterface, \
     TutorialContentInputType, GraphContentInputType, GraphContentInterface, ExecResultJsonType
 from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, get_wrapper_by_id
@@ -22,13 +23,12 @@ from backend.model.TutorialRelatedModel import GraphPriority, UploadWhere, Uploa
 from backend.model.translation_collection import get_translation_table, get_graph_info_trans_table
 
 
-class UpdateCategory(graphene.Mutation):
+class UpdateCategory(SuccessMutationBase):
     class Arguments:
         id = graphene.UUID(required=True)
         category = graphene.String(required=True)
         is_published = graphene.Boolean()
 
-    success = graphene.Boolean(required=True)
     model = graphene.Field(CategoryType, required=True)
 
     @write_required
@@ -39,7 +39,7 @@ class UpdateCategory(graphene.Mutation):
         return UpdateCategory(success=True, model=category_wrapper.model)
 
 
-class UpdateTutorialAnchor(graphene.Mutation):
+class UpdateTutorialAnchor(SuccessMutationBase):
     class Arguments:
         id = graphene.UUID(required=True)
         url = graphene.String(required=True)
@@ -47,7 +47,6 @@ class UpdateTutorialAnchor(graphene.Mutation):
         categories = graphene.List(graphene.String)
         is_published = graphene.Boolean()
 
-    success = graphene.Boolean(required=True)
     model = graphene.Field(TutorialType, required=True)
 
     @write_required
@@ -68,7 +67,7 @@ class UpdateTutorialAnchor(graphene.Mutation):
         return UpdateTutorialAnchor(success=True, model=tutorial_anchor_wrapper.model)
 
 
-class UpdateGraph(graphene.Mutation):
+class UpdateGraph(SuccessMutationBase):
     class Arguments:
         id = graphene.UUID(required=True)
         url = graphene.String(required=True)
@@ -80,8 +79,7 @@ class UpdateGraph(graphene.Mutation):
         categories = graphene.List(graphene.String)
         tutorials = graphene.List(graphene.String)
 
-    success = graphene.Boolean()
-    model = graphene.Field(GraphType)
+    model = graphene.Field(GraphType, required=True)
 
     @write_required
     def mutate(self, _, id: str, url: str, name: str, cyjs: Mapping, is_published: bool = False,
@@ -106,13 +104,12 @@ class UpdateGraph(graphene.Mutation):
         return UpdateGraph(success=True, model=graph_wrapper.model)
 
 
-class UpdateCode(graphene.Mutation):
+class UpdateCode(SuccessMutationBase):
     class Arguments:
         id = graphene.UUID(required=True)
         code = graphene.String(required=True)
         tutorial = graphene.UUID(required=True)
 
-    success = graphene.Boolean(required=True)
     model = graphene.Field(CodeType, required=True)
 
     @write_required
@@ -125,12 +122,11 @@ class UpdateCode(graphene.Mutation):
         return UpdateCode(success=True, model=code_wrapper.model)
 
 
-class UploadStatics(graphene.Mutation):
+class UploadStatics(SuccessMutationBase):
     class Arguments:
         where = graphene.Argument(graphene.Enum.from_enum(UploadWhere), required=True)
         link_id = graphene.UUID(required=True)
 
-    success = graphene.Boolean(required=True)
     url = graphene.String(required=True)
 
     @staticmethod
@@ -154,11 +150,9 @@ class UploadStatics(graphene.Mutation):
         return UploadStatics(success=True, url=UploadStatics.get_full_url(upload.file.url))
 
 
-class DeleteStatics(graphene.Mutation):
+class DeleteStatics(SuccessMutationBase):
     class Arguments:
         url = graphene.String(required=True)
-
-    success = graphene.Boolean(required=True)
 
     @write_required
     def mutate(self, _, url: str):
@@ -174,12 +168,11 @@ class DeleteStatics(graphene.Mutation):
         return DeleteStatics(success=True)
 
 
-class UpdateTutorialContent(graphene.Mutation):
+class UpdateTutorialContent(SuccessMutationBase):
     class Arguments:
         lang = graphene.String(required=True)
         content = TutorialContentInputType()
 
-    success = graphene.Boolean(required=True)
     model = graphene.Field(TutorialInterface, required=True)
 
     @write_required
@@ -198,12 +191,11 @@ class UpdateTutorialContent(graphene.Mutation):
         return UpdateTutorialContent(success=True, model=tutorial_content_wrapper.model)
 
 
-class UpdateGraphInfoContent(graphene.Mutation):
+class UpdateGraphInfoContent(SuccessMutationBase):
     class Arguments:
         lang = graphene.String(required=True)
         content = GraphContentInputType()
 
-    success = graphene.Boolean(required=True)
     model = graphene.Field(GraphContentInterface, required=True)
 
     @write_required
@@ -222,12 +214,11 @@ class UpdateGraphInfoContent(graphene.Mutation):
         return UpdateGraphInfoContent(success=True, model=graph_info_content_wrapper.model)
 
 
-class UpdateResultJson(graphene.Mutation):
+class UpdateResultJson(SuccessMutationBase):
     class Arguments:
         code_id = graphene.UUID(required=True)
         result_json_dict = GenericScalar(required=True)
 
-    success = graphene.Boolean(required=True)
     models = graphene.List(ExecResultJsonType, required=True)
 
     @write_required

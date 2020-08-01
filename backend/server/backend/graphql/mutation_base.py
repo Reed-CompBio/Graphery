@@ -1,7 +1,7 @@
 import graphene
 
 
-class SuccessBase(graphene.Mutation):
+class SuccessMutationBase(graphene.Mutation):
     success = graphene.Boolean(required=True)
 
     def mutate(self, info, *args, **kwargs):
