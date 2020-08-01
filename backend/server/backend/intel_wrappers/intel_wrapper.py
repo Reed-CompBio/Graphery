@@ -333,7 +333,7 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
         return self
 
     def retrieve_model(self) -> None:
-        self.model: TranslationBase = self.model_class.objects.get(tutorial_anchor=self.tutorial_anchor.model)
+        self.model: TranslationBase = self.model_class.objects.get(id=self.id)
 
     def make_new_model(self) -> None:
         self.model: TranslationBase = self.model_class(title=self.title,
