@@ -13,7 +13,7 @@ export const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.response.use(
   (resp) => resp,
   (resp) => {
-    if (resp.response) {
+    if (!resp.response) {
       errorDialog({
         message: 'Unknown response!',
       });

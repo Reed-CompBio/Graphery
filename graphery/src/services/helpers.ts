@@ -113,7 +113,11 @@ export async function pullUser(
   }
 }
 
-export function resolveAndOpenLink(routerLinkObj: Location) {
+export function resolveLink(routerLinkObj: Location) {
   const { href } = router.resolve(routerLinkObj);
-  window.open(href, '_blank');
+  return href;
+}
+
+export function resolveAndOpenLink(routerLinkObj: Location) {
+  window.open(resolveLink(routerLinkObj), '_blank');
 }

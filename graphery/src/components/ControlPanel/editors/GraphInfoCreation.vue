@@ -36,7 +36,11 @@
           </div>
         </template>
         <template v-slot:right>
-          <URLCard :url="graphUrl" class="full-width" />
+          <URLCard
+            :url="graphUrl"
+            :routePath="resolvedPath"
+            class="full-width"
+          />
           <IDCard title="Graph ID" :id="anchorId" class="full-width" />
           <IDCard title="Content ID" :id="contentId" class="full-width" />
           <LangCard :lang="lang" class="full-width" />
@@ -82,7 +86,7 @@
     graphInfoContentMutation,
     graphInfoContentQuery,
   } from '@/services/queries';
-  import { errorDialog, successDialog } from '@/services/helpers';
+  import { errorDialog, resolveLink, successDialog } from '@/services/helpers';
 
   export default {
     // TODO add props to router url
@@ -118,6 +122,9 @@
     computed: {
       isCreatingNew() {
         return this.graphInfoObject.graphAnchor === newModelUUID;
+      },
+      resolvedPath() {
+        return resolveLink({ name: 'Graph', params: { url: this.graphUrl } });
       },
     },
     methods: {

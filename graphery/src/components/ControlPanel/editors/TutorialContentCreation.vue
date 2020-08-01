@@ -38,7 +38,11 @@
         </template>
 
         <template v-slot:right>
-          <URLCard :url="tutorialUrl" class="full-width" />
+          <URLCard
+            :url="tutorialUrl"
+            :routePath="resolvedPath"
+            class="full-width"
+          />
           <IDCard title="Tutorial ID" :id="anchorId" class="full-width" />
           <IDCard title="Content ID" :id="contentId" class="full-width" />
           <LangCard :lang="lang" class="full-width" />
@@ -101,7 +105,7 @@
     tutorialContentQuery,
   } from '@/services/queries';
   import { newModelUUID } from '@/services/params';
-  import { errorDialog, successDialog } from '@/services/helpers';
+  import { errorDialog, resolveLink, successDialog } from '@/services/helpers';
 
   export default {
     mixins: [loadingMixin, pushToMixin, imageHandleMixin],
@@ -140,6 +144,12 @@
     computed: {
       isCreatingNew() {
         return this.tutorialContentObj.id === newModelUUID;
+      },
+      resolvedPath() {
+        return resolveLink({
+          name: 'Tutorial',
+          params: { url: this.tutorialUrl },
+        });
       },
     },
     methods: {
