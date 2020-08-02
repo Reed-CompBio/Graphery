@@ -29,7 +29,6 @@ before_script:
 
 script:
   - npm run build
-  - cd ../backend && sudo pipenv install && sudo pipenv sync && sudo pipenv graph
-  - pipenv shell
+  - cd ../backend && sudo pipenv install -e && sudo pipenv sync && sudo pipenv graph
   - cd ./bundle && pytest -vv -ra -s
   - cd ../server && pytest -vv -ra -s
