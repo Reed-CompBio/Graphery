@@ -77,6 +77,9 @@
     "ControlPanel": "控制面板",
     "DjangoAdminPage": "Django 管理员页面",
     "noNewAccount": "我们暂时不支持注册新用户",
-    "notEmpty": "它不能为空"
+    "notEmpty": "它不能为空",
+    "twoPwdNotMatch": "两次输入不一致",
+    "ConfirmPassword": "确认密码",
+    "InvitationCode": "邀请码"
   }
 }

@@ -70,12 +70,9 @@
                       :label="$t('account.ConfirmPassword')"
                       :type="showPwd ? 'text' : 'password'"
                       :rules="[
+                        (val) => !!val || $t('account.notEmpty'),
                         (val) =>
-                          !!val ||
-                          (val === password
-                            ? 'Two passwords must match!'
-                            : null) ||
-                          $t('account.notEmpty'),
+                          val === password || $t('account.twoPwdNotMatch'),
                       ]"
                       :lazy-rules="true"
                       :loading="loading"
