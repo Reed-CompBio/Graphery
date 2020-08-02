@@ -1,5 +1,5 @@
 <template>
-  <div class="q-mx-sm q-my-lg">
+  <div class="q-my-lg">
     <q-intersection once transition="scale" class="expandable-helper">
       <q-card class="article-card-wrapper">
         <section>
@@ -89,9 +89,9 @@
 
 <style lang="sass">
   .article-card-wrapper
-    padding: 3px 20px
+    padding: 10px 20px 7px
     h5
-      margin: 10px 0px
+      margin: 10px 0
     .article-abstract-section
       margin-top: 15px
 </style>
