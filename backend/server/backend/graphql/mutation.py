@@ -3,10 +3,11 @@ import graphene
 
 from backend.graphql.admin_mutations import UpdateCategory, UpdateTutorialAnchor, UpdateGraph, UpdateCode, \
     UploadStatics, UpdateTutorialContent, DeleteStatics, UpdateGraphInfoContent, UpdateResultJson
-from backend.graphql.user_mutations import Login, Logout, Register
+from backend.graphql.user_mutations import Login, Logout, Register, RefreshInvitationCode
 
 
 class Mutation(graphene.ObjectType):
+    refresh_invitation_code = RefreshInvitationCode.Field()
     register = Register.Field()
     login = Login.Field()
     logout = Logout.Field()

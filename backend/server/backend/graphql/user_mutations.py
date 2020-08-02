@@ -16,11 +16,13 @@ from backend.model.UserModel import User
 
 
 class RefreshInvitationCode(SuccessMutationBase):
+    invitation_codes = graphene.JSONString(required=True)
+
     @admin_required
     @graphene.resolve_only_args
     def mutate(self):
         InvitationCode.refresh_all_code()
-        return RefreshInvitationCode(success=True)
+        return RefreshInvitationCode(success=True, invitation_codes=InvitationCode.code_collection)
 
 
 class Register(SuccessMutationBase):
