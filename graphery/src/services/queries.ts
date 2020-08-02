@@ -447,3 +447,16 @@ mutation ($codeId: UUID!, $resultJsonDict: GenericScalar!) {
     success
   }
 }`;
+
+export const invitationKeyQuery = `
+query {
+  invitationCodes
+}`;
+
+export const refreshInvitationMutation = `
+mutation {
+  refreshInvitationCode {
+    success
+    invitationCodes
+  }
+}`;
