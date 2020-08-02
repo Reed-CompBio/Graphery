@@ -35,7 +35,7 @@
           }"
         >
           <div
-            id="filter-section"
+            id="left-side-section"
             :class="[
               'col-4',
               'flex-center',
@@ -43,30 +43,32 @@
               $q.screen.lt.sm ? 'row' : '',
             ]"
           >
-            <div class="q-mr-lg">
-              <h5>
-                {{ $t('collectionPage.Filter') }}
-              </h5>
-            </div>
-            <div style="flex: 1 1 auto">
-              <q-select
-                filled
-                v-model="categoryFilterSelections"
-                multiple
-                :options="categoryFilterOptions"
-                use-chips
-                stack-label
-                :label="$t('collectionPage.Categories')"
-                dropdown-icon="mdi-menu-down"
-              >
-                <template v-slot:no-option>
-                  <q-item>
-                    <q-item-section class="text-grey">
-                      No Items
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-select>
+            <div id="filter-section" class="q-pt-md">
+              <div class="q-mr-lg">
+                <h5>
+                  {{ $t('collectionPage.Filter') }}
+                </h5>
+              </div>
+              <div style="flex: 1 1 auto">
+                <q-select
+                  filled
+                  v-model="categoryFilterSelections"
+                  multiple
+                  :options="categoryFilterOptions"
+                  use-chips
+                  stack-label
+                  :label="$t('collectionPage.Categories')"
+                  dropdown-icon="mdi-menu-down"
+                >
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey">
+                        No Items
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+              </div>
             </div>
           </div>
 
