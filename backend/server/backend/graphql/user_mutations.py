@@ -5,7 +5,7 @@ import graphene
 from graphql import GraphQLError
 from django.contrib.auth import authenticate, login, logout
 
-from backend.graphql.decorators import admin_required
+from backend.graphql.decorators import admin_required, anonymous_required
 from backend.graphql.mutation_base import SuccessMutationBase
 from backend.graphql.utils import process_model_wrapper
 from backend.intel_wrappers.intel_wrapper import UserWrapper
@@ -39,6 +39,7 @@ class Register(SuccessMutationBase):
         if User.objects.filter(username=username).exists():
             raise GraphQLError('The username % is already registered.' % email)
 
+    @anonymous_required
     @graphene.resolve_only_args
     def mutate(self, email: str, username: str, password: str, invitation_code: str):
         email = email.strip()
@@ -73,6 +74,7 @@ class Login(graphene.Mutation):
     success = graphene.Boolean(required=True)
     user = graphene.Field(UserType)
 
+    @anonymous_required
     def mutate(self, info, username, password):
         user = authenticate(username=username, password=password)
         if user is not None:
