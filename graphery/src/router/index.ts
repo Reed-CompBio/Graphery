@@ -88,6 +88,21 @@ const routes: Array<RouteConfig> = [
     },
   },
   {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/Register.vue'),
+    async beforeEnter(to, from, next) {
+      if (store.getters.noUser) {
+        await pullUser().catch(() => null);
+        if (store.getters.noUser) {
+          next();
+          return;
+        }
+      }
+      next('/account');
+    },
+  },
+  {
     path: '/settings',
     name: 'Settings',
     component: () => import('@/views/Settings.vue'),

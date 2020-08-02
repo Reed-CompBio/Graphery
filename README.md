@@ -1,8 +1,8 @@
 # Graphery
 
-Dev: [![Build Status](https://travis-ci.com/poppy-poppy/Graphery.svg?token=iGoqjTdG7SFLHQyLfgoz&branch=dev)](https://travis-ci.com/poppy-poppy/Graphery)
+Dev: [![Build Status](https://travis-ci.com/FlickerSoul/Graphery.svg?token=iGoqjTdG7SFLHQyLfgoz&branch=dev)](https://travis-ci.com/FlickerSoul/Graphery)
 
-Master: [![Build Status](https://travis-ci.com/poppy-poppy/Graphery.svg?token=iGoqjTdG7SFLHQyLfgoz&branch=master)](https://travis-ci.com/poppy-poppy/Graphery)
+Master: [![Build Status](https://travis-ci.com/FlickerSoul/Graphery.svg?token=iGoqjTdG7SFLHQyLfgoz&branch=master)](https://travis-ci.com/FlickerSoul/Graphery)
 
 Graphery is a web-based graph algorithm tutorial that is designed for biological researchers. It is organized around the concept of a tutorial, which describes and provides code for a classic graph algorithm (Figure 1). A tutorial contains three parts: text-based content, interactive graphs, and a code editor. The editor enables users to step forward and back in the code and see changes applied to the corresponding graph. The editor also allows more programming-savvy users to edit the existing code and see their modifications applied on the graphs. Users can run code in the editor locally or in the cloud. Together, these three panels allow users to gain a deeper understanding of the algorithm described.
 

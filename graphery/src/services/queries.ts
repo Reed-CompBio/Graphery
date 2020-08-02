@@ -447,3 +447,23 @@ mutation ($codeId: UUID!, $resultJsonDict: GenericScalar!) {
     success
   }
 }`;
+
+export const invitationKeyQuery = `
+query {
+  invitationCodes
+}`;
+
+export const refreshInvitationMutation = `
+mutation {
+  refreshInvitationCode {
+    success
+    invitationCodes
+  }
+}`;
+
+export const registerMutation = `
+mutation ($email: String!, $username: String!, $password: String!, $invitationCode: String!) {
+  register(email: $email, username: $username, password: $password, invitationCode:$invitationCode) {
+    success
+  }
+}`;

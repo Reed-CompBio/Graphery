@@ -8,7 +8,7 @@
     <div>
       <div id="user-info" class="row">
         <div id="user-info-wrapper" class="col-12 flex-center q-my-md">
-          <UserInfoCard :userObj="userObj" @logout="logout"></UserInfoCard>
+          <UserInfoCards :userObj="userObj" @logout="logout"></UserInfoCards>
         </div>
       </div>
     </div>
@@ -16,15 +16,15 @@
 </template>
 
 <script>
-  import { apiCaller } from '../services/apis.ts';
-  import { logoutMutation } from '../services/queries';
+  import { apiCaller } from '@/services/apis';
+  import { logoutMutation } from '@/services/queries';
   import { mapState, mapActions } from 'vuex';
-  import { errorDialog } from '../services/helpers';
+  import { errorDialog } from '@/services/helpers';
 
   export default {
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
-      UserInfoCard: () => import('@/components/user/UserInfoCard.vue'),
+      UserInfoCards: () => import('@/components/user/UserInfoCards.vue'),
     },
     computed: {
       ...mapState({

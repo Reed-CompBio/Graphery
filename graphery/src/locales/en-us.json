@@ -77,6 +77,9 @@
     "ControlPanel": "Control Panel",
     "DjangoAdminPage": "Django Admin Page",
     "noNewAccount": "We don't accept new accounts for now.",
-    "notEmpty": "It cannot be empty"
+    "notEmpty": "It cannot be empty",
+    "twoPwdNotMatch": "Two passwords must match!",
+    "ConfirmPassword": "Confirm Password",
+    "InvitationCode": "Invitation Code"
   }
 }

@@ -15,7 +15,7 @@
           v-model="searchText"
           name="search-input"
           :rules="[]"
-          :loading="searchLoading"
+          :loading="loadingContent"
           @keydown.enter="search"
         >
           <template v-slot:prepend>
@@ -35,38 +35,40 @@
           }"
         >
           <div
-            id="filter-section"
+            id="left-side-section"
             :class="[
               'col-4',
               'flex-center',
-              'q-pr-xs',
+              'q-px-xs',
               $q.screen.lt.sm ? 'row' : '',
             ]"
           >
-            <div class="q-mr-lg">
-              <h5>
-                {{ $t('collectionPage.Filter') }}
-              </h5>
-            </div>
-            <div style="flex: 1 1 auto">
-              <q-select
-                filled
-                v-model="categoryFilterSelections"
-                multiple
-                :options="categoryFilterOptions"
-                use-chips
-                stack-label
-                :label="$t('collectionPage.Categories')"
-                dropdown-icon="mdi-menu-down"
-              >
-                <template v-slot:no-option>
-                  <q-item>
-                    <q-item-section class="text-grey">
-                      No Items
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-select>
+            <div id="filter-section" class="q-pt-md">
+              <div class="q-mr-lg">
+                <h5>
+                  {{ $t('collectionPage.Filter') }}
+                </h5>
+              </div>
+              <div style="flex: 1 1 auto">
+                <q-select
+                  filled
+                  v-model="categoryFilterSelections"
+                  multiple
+                  :options="categoryFilterOptions"
+                  use-chips
+                  stack-label
+                  :label="$t('collectionPage.Categories')"
+                  dropdown-icon="mdi-menu-down"
+                >
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey">
+                        No Items
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+              </div>
             </div>
           </div>
 
@@ -91,15 +93,18 @@
               >
               </q-pagination>
             </div>
-            <div>
+            <div class="q-mx-sm q-mt-lg">
               <div
                 class="relative-position"
                 id="inner-loader"
-                v-show="!infos.length"
+                v-show="loadingContent"
               >
-                <q-inner-loading :showing="!infos.length">
+                <q-inner-loading :showing="loadingContent">
                   <q-spinner-pie size="64"></q-spinner-pie>
                 </q-inner-loading>
+              </div>
+              <div id="empty-indicator" v-show="infos.length === 0">
+                <EmptyEntryCard />
               </div>
               <ArticleCard
                 v-for="info in displayedInfos"
@@ -128,13 +133,17 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { apiCaller } from '../../services/apis';
-  import { errorDialog } from '../../services/helpers';
+  import { apiCaller } from '@/services/apis';
+  import { errorDialog } from '@/services/helpers';
+  import loadingMixin from '@/components/ControlPanel/mixins/LoadingMixin';
 
   export default {
+    mixins: [loadingMixin],
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       ArticleCard: () => import('@/components/CollectionEntry/ArticleCard.vue'),
+      EmptyEntryCard: () =>
+        import('@/components/CollectionEntry/EmptyEntryCard.vue'),
     },
     props: [
       'title',
@@ -147,7 +156,6 @@
     data() {
       return {
         searchText: '',
-        searchLoading: false,
         categoryFilterSelections: [],
         categoryFilterOptions: [],
         infos: [], // Served as a filtered input
@@ -171,14 +179,8 @@
       },
     },
     methods: {
-      toggleLoading() {
-        this.searchLoading = true;
-      },
-      finishLoading() {
-        this.searchLoading = false;
-      },
       loadInfo() {
-        this.toggleLoading();
+        this.startLoading();
 
         apiCaller(this.query, this.variables)
           .then((data) => {
@@ -194,11 +196,11 @@
             // TODO translate errors
           })
           .finally(() => {
-            this.finishLoading();
+            this.finishedLoading();
           });
       },
       search() {
-        if (this.searchLoading) {
+        if (this.loadingContent) {
           console.log('Is searching, cancel current searching');
           // TODO notify and cancel axios's request
         }
