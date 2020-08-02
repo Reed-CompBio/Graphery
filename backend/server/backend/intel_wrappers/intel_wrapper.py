@@ -25,17 +25,18 @@ class UserWrapper(AbstractWrapper):
     model_class: Type[User] = User
 
     def __init__(self):
-        self.username: Optional[str] = None
-        self.email: Optional[str] = None
-        self.password: Optional[str] = None
-        self.role: Optional[int] = None
-
         AbstractWrapper.__init__(self, {
             'email': email_validator,
             'username': username_validator,
             'password': password_validator,
             'role': dummy_validator,
         })
+
+        self.id = FAKE_UUID
+        self.username: Optional[str] = None
+        self.email: Optional[str] = None
+        self.password: Optional[str] = None
+        self.role: Optional[int] = None
 
     def load_model(self, loaded_model: User) -> 'UserWrapper':
         super().load_model(loaded_model)
@@ -56,7 +57,7 @@ class UserWrapper(AbstractWrapper):
             self.model.set_password(self.password)
 
     def retrieve_model(self) -> None:
-        self.model = User.objects.get(id=self.id)
+        self.model = User.objects.get(username=self.username, email=self.email)
 
     def make_new_model(self) -> None:
         self.model = User.objects.create_user(username=self.username,

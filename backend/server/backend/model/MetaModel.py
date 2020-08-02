@@ -1,6 +1,8 @@
 from typing import Type, Container
+from pathlib import Path
 
 from django.core.management.utils import get_random_secret_key
+from django.conf import settings
 from .UserModel import ROLES
 
 
@@ -23,6 +25,9 @@ class InvitationCode:
     def refresh_all_code(cls) -> Type['InvitationCode']:
         for label in ROLES.labels:
             cls.code_collection[label] = cls.generate_invitation_code()
+
+        with open(Path(settings.BASE_DIR) / 'invitation_codes.txt', 'w') as file:
+            file.write(str(cls.code_collection))
 
         return cls
 
