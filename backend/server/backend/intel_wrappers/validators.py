@@ -89,7 +89,7 @@ email_regex = re.compile(r'^[\w.-]+@[\w.-]+.\w{2,}$')
 
 def email_validator(email: str):
     if not isinstance(email, str) or not email_regex.match(email):
-        raise ValidationError('Email % is not valid.' % email)
+        raise ValidationError('Email %s is not valid.' % email)
 
 
 username_regex = re.compile(r'^[^0-9][\w-]{4,}[^-_]\Z')
@@ -97,7 +97,7 @@ username_regex = re.compile(r'^[^0-9][\w-]{4,}[^-_]\Z')
 
 def username_validator(username: str):
     if not isinstance(username, str) or not username_regex.match(username):
-        raise ValidationError('Username % is not valid.' % username)
+        raise ValidationError('Username %s is not valid.' % username)
 
 
 password_regex = re.compile(r'^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$^&*])[\w\d!@#$^&*]{6,12}$')
@@ -105,6 +105,6 @@ password_regex = re.compile(r'^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$^&*])[\
 
 def password_validator(password: str):
     if not isinstance(password, str) or not password_regex.match(password):
-        raise ValidationError('Password % is not valid. A valid password must contain '
+        raise ValidationError('Password %s is not valid. A valid password must contain '
                               'least one upper case, lower case of letters, '
                               'one number, AND one special character (!@#$^&*).' % password)

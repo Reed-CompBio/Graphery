@@ -35,9 +35,9 @@ class Register(SuccessMutationBase):
     @staticmethod
     def check_existence(email: str, username: str):
         if User.objects.filter(email=email).exists():
-            raise GraphQLError('The email % is already registered.' % email)
+            raise GraphQLError('The email %s is already registered.' % email)
         if User.objects.filter(username=username).exists():
-            raise GraphQLError('The username % is already registered.' % email)
+            raise GraphQLError('The username %s is already registered.' % username)
 
     @anonymous_required
     @graphene.resolve_only_args
@@ -47,7 +47,7 @@ class Register(SuccessMutationBase):
         password = password.strip()
         invitation_code = invitation_code.strip()
 
-        self.check_existence(email, username)
+        Register.check_existence(email, username)
 
         if not invitation_code:
             raise GraphQLError("You have to enter an invitation code!")
@@ -56,7 +56,7 @@ class Register(SuccessMutationBase):
                                           if value == invitation_code), None)
 
         if role_string is None:
-            raise GraphQLError("You don't have the permission to register!")
+            raise GraphQLError("Invitation code %s is not valid." % invitation_code)
 
         role: int = InvitationCode.role_mapping[role_string]
 
@@ -66,12 +66,11 @@ class Register(SuccessMutationBase):
         return Register(success=True, user=user_wrapper.model)
 
 
-class Login(graphene.Mutation):
+class Login(SuccessMutationBase):
     class Arguments:
         username = graphene.String(required=True)
         password = graphene.String(required=True)
 
-    success = graphene.Boolean(required=True)
     user = graphene.Field(UserType)
 
     @anonymous_required
@@ -82,9 +81,7 @@ class Login(graphene.Mutation):
         return Login(success=user is not None, user=user)
 
 
-class Logout(graphene.Mutation):
-    success = graphene.Boolean(required=True)
-
+class Logout(SuccessMutationBase):
     @login_required
     def mutate(self, info):
         user = info.context.user
