@@ -3,6 +3,7 @@ import VueI18n, { LocaleMessages } from 'vue-i18n';
 
 Vue.use(VueI18n);
 
+// TODO load translations async
 function loadLocaleMessages(): LocaleMessages {
   const locales = require.context(
     './locales',

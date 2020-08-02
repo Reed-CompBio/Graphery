@@ -24,27 +24,103 @@ export interface NotificationState {
   details: string;
 }
 
+export interface PriorityType {
+  priority: number;
+  label: string;
+}
+
 export interface Graph {
   id: string;
-  name: string;
+  isPublished: boolean;
+  content: {
+    title: string;
+    abstract: string;
+    isPublished: boolean;
+  };
+  priority: PriorityType;
   cyjs: object | string;
-  layoutEngine: GraphLayoutEngines;
-  info: string;
+}
+
+export interface ResultJsonType {
+  json: string;
+  graphId: string;
+  codeId: string;
+}
+
+export interface TutorialMetaState {
+  articleId: string | null;
+  isAnchorPublished: boolean;
+  isTransPublished: boolean;
+  authors: string[];
+  categories: string[];
+  modifiedTime: string;
+}
+
+export interface TutorialArticleContent {
+  title: string;
+  contentHtml: string;
 }
 
 export interface TutorialState {
-  articleId: string | null;
-  article: {
-    title: string;
-    content: string;
-    authors: string[];
-    categories: string[];
-    time: string;
-  } | null;
-  graphIDs: string[] | null;
+  metaState: TutorialMetaState | null;
+  articleContent: TutorialArticleContent | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
+  currentGraphId: string | null;
+  currentCodeId: string | null;
   graphs: Graph[] | null;
-  codes: { [id: string]: { graphId: string; codes: string } } | null;
+  codes: string | null;
+  resultJsonList: ResultJsonType[] | null;
+  variableObj: object | null;
+  customJson: object | null;
+}
+
+export interface UserType {
+  username: string;
+}
+
+export interface TutorialContent {
+  title: string;
+  authors: UserType[];
+  contentHtml: string;
+  isPublished: boolean;
+  modifiedTime: string;
+}
+
+export interface TutorialGraph {
+  id: string;
+  isPublished: boolean;
+  content: {
+    title: string;
+    abstract: string;
+    isPublished: boolean;
+  };
+  priority: PriorityType;
+  cyjs: string;
+}
+
+export interface TutorialExecResultJson {
+  json: string;
+  graph: { id: string };
+}
+
+export interface TutorialCode {
+  id: string;
+  code: string;
+  execresultjsonSet: TutorialExecResultJson[];
+}
+
+export interface CategoryType {
+  id: string;
+  category: string;
+}
+
+export interface TutorialDetailResponse {
+  id: string;
+  isPublished: boolean;
+  categories: CategoryType[];
+  content: TutorialContent;
+  graphSet: TutorialGraph[];
+  code: TutorialCode;
 }
 
 export const enum GraphLayoutEngines {
@@ -53,18 +129,21 @@ export const enum GraphLayoutEngines {
 }
 
 export interface TutorialRequestState {
-  articleId?: string;
-  article?: {
+  articleUrl?: string;
+  isPublished?: boolean;
+  articleContent?: {
     title: string;
-    content: string;
+    contentHtml: string;
     authors: string[];
     categories: string[];
-    time: string;
+    modifiedTime: string;
+    isPublished: boolean;
   } | null;
-  graphIDs?: string[] | null;
   // use v-for to spread graphs and make :key bind to id (or serial code?)
   graphs?: Graph[] | null;
   codes?: { [id: string]: { graphId: string; codes: string } } | null;
+  resultJson?: string | null;
+  variableObj?: object | null;
 }
 
 export interface SettingInfos {
@@ -81,10 +160,12 @@ export interface SettingInfos {
   // TODO maybe add a motion sensitivity?
 
   // editor settings
+  enableEditing: boolean;
   tabNum: number;
   softTab: boolean;
   fontSize: number;
   codeWrap: boolean;
+  variableListHorizontal: boolean;
 
   // display
   pageDisplayNum: number;
@@ -94,4 +175,65 @@ export interface SettingInfos {
 
 export interface SettingState extends SettingInfos {
   settingVer: '1.0.0';
+}
+
+export interface UserType {
+  username: string;
+  email: string;
+  role: string;
+}
+
+export interface BaseState {
+  drawer: boolean;
+  csrfToken: string | null;
+  user: UserType | null;
+}
+
+export interface CodeHistoryState {
+  code: string;
+  execResult: string;
+}
+
+export interface CodeHistoryCollectionState {
+  [key: string]: CodeHistoryState;
+}
+
+export interface WorkSpaceInstance {
+  name: string;
+  code: string;
+  lastModified: Date;
+  execHistories: CodeHistoryCollectionState;
+  // add a `from` field
+}
+
+export interface WorkSpaceBaseState {
+  workspaces: WorkSpaceInstance[];
+}
+//
+// export interface TutorialWorkSpaceState extends WorkSpaceBaseState {}
+//
+// export interface PlaygroundWorkSpace extends WorkSpaceBaseState {}
+
+export interface WorkSpaceState {
+  tutorialSpace: WorkSpaceBaseState;
+  playgroundSpace: WorkSpaceBaseState;
+}
+
+export interface ContentStoreType {
+  [key: string]: {
+    raw: string;
+    rendered: string;
+  };
+}
+
+export interface EditState {
+  content: {
+    tutorialContent: ContentStoreType;
+    graphInfoContent: ContentStoreType;
+  };
+}
+
+export interface ContentRequestType {
+  contentId: string;
+  content: { raw: string; rendered: string };
 }

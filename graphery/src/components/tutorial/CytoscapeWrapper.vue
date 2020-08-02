@@ -5,10 +5,15 @@
         <q-select
           class="graph-selector"
           :options="getGraphList"
-          :value="graphChoice"
-          label="Loading Graphs..."
+          v-model="graphChoice"
+          label="Graph"
           :multiple="false"
           dropdown-icon="mdi-menu-down"
+          :loading="graphsEmpty"
+          :option-label="inputSectionLabelMapper"
+          option-value="id"
+          emit-value
+          map-options
         >
           <template v-slot:no-option>
             <q-item>
@@ -24,21 +29,42 @@
       </div>
       <div class="menu-button-group-wrapper">
         <q-btn-group rounded class="menu-button-group q-mx-auto">
-          <q-btn>
-            <q-icon name="mdi-file-table-box" />
-            <SwitchTooltip :text="$t('tooltips.graphInfo')"></SwitchTooltip>
-          </q-btn>
           <q-btn-dropdown>
             <template v-slot:label>
               <q-icon name="mdi-share-variant" />
               <SwitchTooltip :text="$t('tooltips.Share')"></SwitchTooltip>
             </template>
+            <q-list>
+              <!-- share graph json -->
+              <q-item clickable v-close-popup @click="shareGraphJson">
+                <q-item-section avatar>
+                  <q-avatar icon="mdi-code-json" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Share Json</q-item-label>
+                  <q-item-label caption>
+                    Copy the json of this graph
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+              <!-- share graph screen shot -->
+              <q-item clickable v-close-popup @click="shareGraphScreenshot">
+                <q-item-section avatar>
+                  <q-avatar icon="photo" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Share Screenshot</q-item-label>
+                  <q-item-label caption>
+                    Copy the screenshot of this graph
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
           </q-btn-dropdown>
         </q-btn-group>
       </div>
     </q-bar>
     <div id="cy-wrapper" :style="heightStyle">
-      <!--      <q-resize-observer @resize="" />-->
       <div id="cy" class="full-height" :style="graphStyle" ref="cy"></div>
     </div>
     <div>
@@ -57,16 +83,24 @@
   let cytoscape;
   let panzoom;
   let dagre;
+  let Tippy;
+  let popper;
 
   import { graphMenuHeaderSize } from '../../store/states/meta';
-  import { mapState, mapGetters, mapActions } from 'vuex';
+  import { mapState, mapGetters } from 'vuex';
   import {
     panzoomDefaults,
     dagreOptions,
     hierarchicalOptions,
   } from './config.js';
 
-  import example from './example';
+  import {
+    saveToFile,
+    jpegMIMEType,
+    jsonMIMEType,
+    errorDialog,
+    successDialog,
+  } from '../../services/helpers';
 
   export default {
     components: {
@@ -75,9 +109,14 @@
     data() {
       return {
         cyInstance: null,
-        graphChoice: '', // used in drop menu to select graphs
         moduleLoadedNum: 0,
-        moduleTargetNum: 3,
+        moduleTargetNum: 5,
+        tippy: null,
+        testValue: 0,
+        lastVarObj: {},
+        choseGraphObj: null,
+        currentGraphLayoutEngine: 'dagre',
+        // TODO remember to clear this out
       };
     },
     computed: {
@@ -88,29 +127,32 @@
         'motionSensitivityLevel',
       ]),
       // TODO watch to every cy options
+      ...mapState('tutorials', ['currentGraphId']),
       ...mapGetters('tutorials', [
         'getGraphList',
         'getGraphById',
         'getGraphByIndex',
-        'articleEmpty',
         'graphsEmpty',
-        'codesEmpty',
+        'currentGraph',
+        'currentGraphJsonObj',
       ]),
       ...mapGetters('settings', ['graphBackgroundColor']),
+      graphChoice: {
+        get() {
+          return this.choseGraphObj;
+        },
+        set(choseGraphObj) {
+          if (choseGraphObj && choseGraphObj !== this.choseGraphObj) {
+            this.choseGraphObj = choseGraphObj;
+            this.$store.commit(
+              'tutorials/LOAD_CURRENT_GRAPH_ID',
+              choseGraphObj
+            );
+          }
+        },
+      },
       libLoading() {
         return this.moduleLoadedNum < this.moduleTargetNum;
-      },
-      currentGraph() {
-        return this.getGraphByIndex(this.selector);
-      },
-      currentGraphId() {
-        return this.currentGraph && this.currentGraph.id;
-      },
-      currentGraphJson() {
-        return this.currentGraph && this.currentGraph.cyjs;
-      },
-      currentGraphLayoutEngine() {
-        return this.currentGraph && this.currentGraph.layoutEngine;
       },
       graphStyle() {
         return {
@@ -123,78 +165,17 @@
         };
       },
     },
-    mounted() {
-      import('cytoscape')
-        .then((cy) => {
-          // async load cytoscape
-          cytoscape = cy.default;
-
-          console.debug('cytoscape module: ', cy);
-
-          // start init
-          {
-            const element = document.createElement('div');
-            element.setAttribute('id', 'cy-mounting-point');
-            element.setAttribute('class', 'cytoscape');
-            element.setAttribute('class', 'full-height');
-
-            this.$refs.cy.appendChild(element);
-
-            // When passing objects to Cytoscape.js for creating elements, animations, layouts, etc.,
-            // the objects are considered owned by Cytoscape. __** this may cause conflicts when workint with vuex **__
-            // When desired, the programmer can copy objects manually before passing them to Cytoscape. However,
-            // copying is not necessary for most programmers most of the time.
-            //
-            // cannot use get element by id
-            // NOTE: Vue will try to create observers for each property in this nested cytoscape object
-            //       and it crashed my browser several times. By freezing it, we tell Vue to not bother
-            //       about it. This isn't a reactive property anyway, just a variable in the component.
-
-            this.cyInstance = Object.freeze(
-              cytoscape({
-                container: element,
-                // animation settings
-                textureOnViewport: this.renderViewportOnly,
-                hideEdgesOnViewport: this.hideEdgeWhenRendering,
-                motionBlur: this.motionBlurEnabled,
-                zoom: 1,
-                styleEnabled: true,
-                ...example,
-              })
-            );
-            console.debug('cy obj is mounted', this.cyInstance);
-
-            // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph
-            this.$nextTick(() => {
-              this.resizeGraph();
-            });
-
-            this.moduleLoad();
-          }
-
-          this.registerExtensions();
-        })
-        .catch((error) => {
-          console.debug('error occur', error);
-        });
-    },
     methods: {
       moduleLoad() {
         this.moduleLoadedNum += 1;
       },
-      ...mapActions('tutorials', ['clearAll']),
-      /**
-       * Triggers a graph resize, forcing it to repaint itself. Useful when the graph nodes and edges have been
-       * modified, or when an older browser doesn't render the graph until it is resized.
-       * @see https://github.com/cytoscape/cytoscape.js/issues/1748
-       */
       registerExtensions() {
         import('cytoscape-panzoom').then((pz) => {
           console.debug('cytoscape panzoom module: ', pz);
           panzoom = pz.default;
 
           if (typeof cytoscape('core', 'panzoom') !== 'function') {
-            panzoom(cytoscape);
+            cytoscape.use(panzoom);
           }
 
           this.cyInstance.panzoom(panzoomDefaults);
@@ -215,12 +196,161 @@
           this.updateLayout();
           this.moduleLoad();
         });
+
+        import('cytoscape-popper')
+          .then((pp) => {
+            console.debug('cytoscape popper module: ', pp);
+
+            popper = pp.default;
+            if (typeof cytoscape('core', 'popper') !== 'function') {
+              cytoscape.use(popper);
+            }
+            this.moduleLoad();
+          })
+          .then(() => {
+            import('tippy.js')
+              .then((tp) => {
+                console.debug('Tippy module: ', tp);
+                Tippy = tp.default;
+                this.moduleLoad();
+              })
+              .then(() => {
+                this.setupTooltips(this.cyInstance);
+              });
+          });
       },
-      /**
-       * copied from
-       * @see {@link https://github.com/cylc/cylc-ui/blob/master/src/components/cylc/graph/Graph.vue}
-       */
+      makeTippy(node, text) {
+        const ref = node.popperRef();
+        const dummyDomEle = document.createElement('div');
+        return Tippy(dummyDomEle, {
+          onCreate: function(instance) {
+            instance.popperInstance.reference = ref;
+          },
+          lazy: false, // mandatory
+          trigger: 'manual', // mandatory
+
+          // dom element inside the tippy:
+          content: function() {
+            // function can be better for performance
+            const div = document.createElement('div');
+
+            div.innerHTML = text;
+
+            return div;
+          },
+
+          // your own preferences:
+          arrow: true,
+          placement: 'bottom',
+          theme: 'material',
+          hideOnClick: 'true',
+          delay: [0, 2000],
+          animation: 'fade',
+          multiple: false,
+          flip: true,
+          flipOnUpdate: true,
+          duration: [250, 275],
+          allowHTML: true,
+          touch: true,
+          // sticky: 'popper', // don't need it
+
+          // if interactive:
+          interactive: true,
+          appendTo: document.body, // or append dummyDomEle to document.body
+        });
+      },
+      closeTippy() {
+        if (this.tippy !== null) {
+          this.tippy.hide();
+        }
+      },
+      setupTooltips(instance) {
+        // show node tooltips
+        instance.on('mouseover', 'node', (event) => {
+          const node = event.target;
+          this.tippy = this.makeTippy(node, `test content ${this.testValue}`);
+          this.tippy.show();
+        });
+        instance.on('mouseout', 'node', (_) => {
+          this.closeTippy();
+        });
+
+        // show edge tooltips
+        instance.on('mouseover', 'edge', (event) => {
+          const node = event.target;
+          this.tippy = this.makeTippy(node, `test content ${this.testValue}`);
+          this.tippy.show();
+        });
+
+        instance.on('mouseout', 'edge', (_) => {
+          this.closeTippy();
+        });
+      },
+      reloadCyWithFullJson(json) {
+        if (this.cyInstance && json) {
+          this.cyInstance.elements().remove();
+          this.cyInstance.add(json.elements);
+          if (json.style) {
+            this.cyInstance
+              .style()
+              .resetToDefault()
+              .fromJson(json.style)
+              .update();
+          }
+        }
+      },
+      // highlight helper function
+      highlightElement(id, color) {
+        if (!this.cyInstance) {
+          return;
+        }
+        this.cyInstance.getElementById(id).style({
+          'overlay-color': color,
+          'overlay-opacity': 0.5,
+          'overlay-padding': 5,
+        });
+      },
+      unhighlightElement(id) {
+        if (!this.cyInstance) {
+          return;
+        }
+        this.cyInstance.getElementById(id).removeStyle('overlay-opacity');
+      },
+      // highlight interface
+      highlightVarObj(varObj) {
+        if (varObj) {
+          for (const [varName, varValue] of Object.entries(varObj)) {
+            if (typeof varValue === 'object') {
+              if (varValue) {
+                if (this.lastVarObj[varName] !== varValue['id']) {
+                  this.unhighlightElement(this.lastVarObj[varName]);
+                  this.lastVarObj[varName] = varValue['id'];
+                }
+
+                this.highlightElement(varValue['id'], varValue['color']);
+              } else {
+                this.unhighlightElement(this.lastVarObj[varName]);
+                this.lastVarObj[varName] = varValue;
+              }
+            }
+          }
+        }
+      },
+      reloadGraph() {
+        if (this.cyInstance) {
+          this.cyInstance.style().resetToDefault();
+          this.reloadCyWithFullJson(this.currentGraphJsonObj);
+          this.updateLayout();
+        }
+      },
       updateLayout() {
+        if (!this.cyInstance) {
+          return;
+        }
+        /**
+         * copied from
+         * @see {@link https://github.com/cylc/cylc-ui/blob/master/src/components/cylc/graph/Graph.vue}
+         */
         switch (this.currentGraphLayoutEngine) {
           case 'dagre':
             this.layoutOptions = dagreOptions;
@@ -251,15 +381,15 @@
             break;
         }
       },
-      /**
-       * Runs the current layout.
-       * @param {cytoscape} instance - the cytoscape instance
-       * @param {*} [layoutOptions=null] - the layout options
-       * @return {boolean} true if the layout ran successfully, false otherwise (e.g. manually stopped, temperature drop, etc)
-       * @see {@link https://js.cytoscape.org/#cy.layout}
-       * @see {@link https://github.com/cylc/cylc-ui/blob/master/src/components/cylc/graph/Graph.vue}
-       */
       runLayout(instance, layoutOptions = null) {
+        /**
+         * Runs the current layout.
+         * @param {cytoscape} instance - the cytoscape instance
+         * @param {*} [layoutOptions=null] - the layout options
+         * @return {boolean} true if the layout ran successfully, false otherwise (e.g. manually stopped, temperature drop, etc)
+         * @see {@link https://js.cytoscape.org/#cy.layout}
+         * @see {@link https://github.com/cylc/cylc-ui/blob/master/src/components/cylc/graph/Graph.vue}
+         */
         try {
           return instance
             .elements()
@@ -275,22 +405,141 @@
         }
         return false;
       },
+      /**
+       * Triggers a graph resize, forcing it to repaint itself. Useful when the graph nodes and edges have been
+       * modified, or when an older browser doesn't render the graph until it is resized.
+       * @see https://github.com/cytoscape/cytoscape.js/issues/1748
+       */
       resizeGraph() {
         if (this.cyInstance) {
           this.cyInstance.resize();
         }
       },
+      shareGraphJson() {
+        if (this.cyInstance) {
+          saveToFile(
+            'graph.json',
+            JSON.stringify(this.cyInstance.json(), null, 2),
+            jsonMIMEType
+          );
+          successDialog({ message: 'Json downloaded.' });
+        } else {
+          errorDialog({
+            message: 'The Cytoscape instance is not ready. Nothing is saved.',
+          });
+        }
+      },
+      shareGraphScreenshot() {
+        if (this.cyInstance) {
+          saveToFile(
+            'graph.jpg',
+            this.cyInstance.jpg({ output: 'blob' }),
+            jpegMIMEType
+          );
+          successDialog({ message: 'Image downloaded.' });
+        } else {
+          errorDialog({
+            message: 'The Cytoscape instance is not ready. Nothing is saved.',
+          });
+        }
+      },
+      loadFirstGraph() {
+        if (this.getGraphList && this.getGraphList.length > 0) {
+          this.graphChoice = this.getGraphList[0].id;
+        }
+
+        this.graphChoice = null;
+      },
+      inputSectionLabelMapper(obj) {
+        return Object(obj) === obj && 'content' in obj
+          ? obj.content.title === '<None>'
+            ? 'No Title'
+            : obj.content.title
+          : null;
+      },
     },
-    destroyed() {
-      // TODO destroy raises errors
-      this.clearAll();
-      // TODO restore states in vuex
+    watch: {
+      getGraphList: function() {
+        this.loadFirstGraph();
+      },
+      currentGraph: function() {
+        this.reloadGraph();
+      },
+    },
+    mounted() {
+      import('cytoscape')
+        .then((cy) => {
+          // async load cytoscape
+          cytoscape = cy.default;
+
+          console.debug('cytoscape module: ', cy);
+        })
+        .then(() => {
+          // start init
+
+          const element = document.createElement('div');
+          element.setAttribute('id', 'cy-mounting-point');
+          element.setAttribute('class', 'cytoscape');
+          element.setAttribute('class', 'full-height');
+
+          this.$refs.cy.appendChild(element);
+
+          /*
+           * When passing objects to Cytoscape.js for creating elements, animations, layouts, etc.,
+           * the objects are considered owned by Cytoscape. __** this may cause conflicts when working with vuex **__
+           * When desired, the programmer can copy objects manually before passing them to Cytoscape. However,
+           * copying is not necessary for most programmers most of the time.
+           *
+           * cannot use get element by id
+           * NOTE: Vue will try to create observers for each property in this nested cytoscape object
+           *       and it crashed my browser several times. By freezing it, we tell Vue to not bother
+           *       about it. This isn't a reactive property anyway, just a variable in the component.
+           *
+           */
+
+          this.cyInstance = Object.freeze(
+            cytoscape({
+              container: element,
+              // animation settings
+              textureOnViewport: this.renderViewportOnly,
+              hideEdgesOnViewport: this.hideEdgeWhenRendering,
+              motionBlur: this.motionBlurEnabled,
+              zoom: 1,
+              styleEnabled: true,
+            })
+          );
+          console.debug('cy obj is mounted', this.cyInstance);
+
+          this.loadFirstGraph();
+          this.reloadGraph();
+
+          // Force it to be painted again, so that when added to the DOM it doesn't show a blank graph
+          this.$nextTick(() => {
+            this.resizeGraph();
+          });
+
+          this.moduleLoad();
+        })
+        .then(() => {
+          this.registerExtensions();
+        })
+        .catch((error) => {
+          errorDialog({
+            message:
+              'An error occurs during initializing Cytoscape (Graph Section). ' +
+              error,
+          });
+        });
+    },
+    beforeDestroy() {
+      this.closeTippy();
     },
   };
 </script>
 
 <style lang="sass">
   @import '~@/styles/panzoom.css'
+  @import '~tippy.js/dist/tippy.css'
 
   .graph-menu-bar
     min-height: 56px
@@ -298,8 +547,8 @@
     display: flex
     flex-direction: row
     .graph-menu-wrapper
-      padding: 0px 5px
-      margin: 0px 15px
+      padding: 0 5px
+      margin: 0 15px
       min-width: 50%
       max-height: inherit
 

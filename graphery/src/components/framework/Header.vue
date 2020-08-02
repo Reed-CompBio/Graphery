@@ -1,26 +1,16 @@
 <template>
-  <q-header class="q-py-sm q-px-xs" elevated>
+  <q-header class="q-py-sm q-px-xs">
     <!--    TODO change the color in dark mode    -->
     <q-toolbar>
-      <router-link to="/" class="q-ml-sm">
-        <q-img
-          alt="Reed Logo"
-          class="shrink mr-2"
-          contain
-          transition="scale-transition"
-          width="40px"
-          :src="siteLogo"
-        >
-          <!-- Logo section on the top left corner -->
-        </q-img>
-      </router-link>
+      <!-- TODO Make it clickable -->
 
-      <!-- TODO Make it on click -->
-      <q-toolbar-title style="text-transform: uppercase; font-size: 20px">
-        {{ siteName }}
+      <q-toolbar-title id="site-name-section" class="q-ml-lg">
+        <router-link :to="{ name: 'Home' }" style="color: inherit">
+          {{ siteName }}
+        </router-link>
       </q-toolbar-title>
 
-      <div class="gt-sm">
+      <div v-if="$q.screen.gt.sm">
         <!-- page buttons -->
         <q-btn
           flat
@@ -29,37 +19,19 @@
           :key="button.name"
           :to="{ name: button.name }"
           class="q-ml-sm"
-          size="18px"
+          size="20px"
           exact
         >
           {{ $t(`nav.${button.name}`) }}
         </q-btn>
       </div>
       <div id="language-switcher">
-        <q-btn-dropdown flat dense icon="mdi-translate">
-          <q-list>
-            <!-- TODO you may need to use a custom list of lang here -->
-            <q-item
-              v-for="lang in $i18n.availableLocales"
-              :key="lang"
-              clickable
-              v-close-popup
-              @click="changeLocal(lang)"
-            >
-              <q-item-section thumbnail>
-                <q-icon
-                  v-if="$i18n.locale === lang"
-                  name="keyboard_arrow_right"
-                />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label class="lang-label">{{ lang }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-btn-dropdown>
+        <LangSelector
+          :change-callback="changeLocal"
+          :current-lang="$i18n.locale"
+        />
       </div>
-      <q-btn flat round dense class="lt-md" size="20px">
+      <q-btn flat round dense v-if="$q.screen.lt.md" size="20px">
         <q-icon name="mdi-menu" @click="showDrawer" />
       </q-btn>
     </q-toolbar>
@@ -68,19 +40,16 @@
 
 <script>
   import { siteName, navigationButtons } from '../../store/states/meta';
-  import { mapState } from 'vuex';
+  import LangSelector from '../ControlPanel/parts/LangSelector';
 
   export default {
     name: 'Header',
+    components: { LangSelector },
     data() {
       return {
         siteName,
-        siteLogo: require('@/assets/images/reed-compbio-logo.png'),
         buttons: navigationButtons,
       };
-    },
-    computed: {
-      ...mapState('settings', ['dark']),
     },
     methods: {
       showDrawer() {
@@ -91,20 +60,15 @@
         this.$store.dispatch('settings/changeLanguage', lang);
       },
     },
-    watch: {
-      dark: function() {
-        this.$q.dark.set(this.dark);
-      },
-    },
-    mounted() {
-      this.$q.dark.set(this.dark);
-    },
   };
 </script>
 
 <style lang="sass">
-  .lang-label
-    text-align: center
+  #site-name-section
+    font-family: 'Amiri', serif
     text-transform: uppercase
-    font-weight: bold
+    font-size: 28px
+    padding-top: 5px
+  .bg-header
+    background: #870400
 </style>

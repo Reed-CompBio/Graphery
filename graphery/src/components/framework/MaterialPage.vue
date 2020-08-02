@@ -1,12 +1,10 @@
 <template>
   <q-page class="page">
-    <div class="container q-mx-auto shadow-4">
+    <div class="container q-mx-auto shadow-12">
       <div class="content-container-wrapper">
-        <!-- TODO add a title section -->
         <slot></slot>
       </div>
     </div>
-    <!-- TODO add protocol section -->
   </q-page>
 </template>
 
@@ -17,7 +15,6 @@
     clear: both
 
   .page
-    /* TODO use quasar sass variables */
     @media (max-width: $breakpoint-xs-max)
       padding-left: 0px
       padding-right: 0px
@@ -44,15 +41,18 @@
 
   .container
     @media (max-width: $breakpoint-xs-max)
-      padding: 16px 10% 20px
+      padding: 16px 7% 50px
     @media (min-width: $breakpoint-sm-min) and (max-width: $breakpoint-md-max)
       margin-bottom: 24px
-      padding: 16px 6% 20px
+      padding: 16px 6% 50px
     @media (min-width: $breakpoint-lg-min)
       margin-bottom: 24px
-      padding: 16px 0 20px
+      padding: 16px 0 50px
 
   .content-container-wrapper
     margin: 0 auto
     max-width: 900px
+
+  .material-page-shorter-h3
+    margin-bottom: 20px
 </style>

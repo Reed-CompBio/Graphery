@@ -13,3 +13,6 @@ dist/
 # gh-page site
 site/
 
+*.xd
+schema.json
+

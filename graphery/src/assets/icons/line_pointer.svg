@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <clipPath id="clip-Arrow_SVG">
+      <rect width="32" height="32"/>
+    </clipPath>
+  </defs>
+  <g id="Arrow_SVG" data-name="Arrow SVG" clip-path="url(#clip-Arrow_SVG)">
+    <rect width="32" height="32" fill="rgba(0,0,0,0)"/>
+    <path id="Path_1" data-name="Path 1" d="M8,8H24l8,8-8,8H8Z" transform="translate(-4)" fill="none" stroke="#ff6200" stroke-linejoin="round" stroke-width="2"/>
+  </g>
+</svg>

@@ -1,7 +1,6 @@
 import { RootState, SettingInfos, SettingState } from '@/store/states/state';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 
-// TODO remove this and use web storage instead
 const state: SettingState = {
   settingVer: '1.0.0',
   // color
@@ -16,10 +15,12 @@ const state: SettingState = {
   graphSplitPos: 50,
 
   // editor settings
+  enableEditing: false,
   tabNum: 4,
   softTab: false,
   fontSize: 14,
   codeWrap: false,
+  variableListHorizontal: false,
 
   // display
   pageDisplayNum: 5,
@@ -49,6 +50,9 @@ const mutations: MutationTree<SettingState> = {
   CHANGE_GRAPH_SPLIT_POS(state, value: number) {
     state.graphSplitPos = value;
   },
+  CHANGE_ENABLE_EDITING(state, value: boolean) {
+    state.enableEditing = value;
+  },
   CHANGE_TAB_NUM(state, value: number) {
     state.tabNum = value;
   },
@@ -60,6 +64,9 @@ const mutations: MutationTree<SettingState> = {
   },
   CHANGE_CODE_WRAP(state, value: boolean) {
     state.codeWrap = value;
+  },
+  CHANGE_VARIABLE_LIST_ORIENTATION(state, value: boolean) {
+    state.variableListHorizontal = value;
   },
   CHANGE_PAGE_DISPLAY_NUM(state, value: number) {
     state.pageDisplayNum = value;
@@ -94,6 +101,9 @@ const actions: ActionTree<SettingState, RootState> = {
   changeGraphSplitPos({ commit }, value: number) {
     commit('CHANGE_GRAPH_SPLIT_POS', value);
   },
+  changeEnableEditing({ commit }, value: boolean) {
+    commit('CHANGE_ENABLE_EDITING', value);
+  },
   changeTabNum({ commit }, value: number) {
     commit('CHANGE_TAB_NUM', value);
   },
@@ -105,6 +115,9 @@ const actions: ActionTree<SettingState, RootState> = {
   },
   changeCodeWrap({ commit }, value: boolean) {
     commit('CHANGE_CODE_WRAP', value);
+  },
+  changeVariableListOrientation({ commit }, value: boolean) {
+    commit('CHANGE_VARIABLE_LIST_ORIENTATION', value);
   },
   changePageDisplayNum({ commit }, value: number) {
     commit('CHANGE_PAGE_DISPLAY_NUM', value);

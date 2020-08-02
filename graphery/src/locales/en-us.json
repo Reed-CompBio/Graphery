@@ -6,7 +6,20 @@
     "runCodeLocally": "Run code locally",
     "copyCodes": "Copy codes",
     "pasteCodes": "Paste codes",
-    "showEditorAndMore": "Show editor"
+    "showEditorAndMore": "Show editor and more",
+    "oneStepBack": "One Step Back",
+    "oneStepForward": "One Step Forward",
+    "fiveStepsBack": "Five Steps Back",
+    "fiveStepsForward": "Five Steps Forward",
+    "autoRun": "Auto Run",
+    "showLabelAlways": "Show Slider Always",
+    "notShowLabelAlways": "Not Always Show Slider Label",
+    "editor": "Editor",
+    "howTo": "How To",
+    "notAvailableCurrently": "Not Available Currently",
+    "goToSettingsToChangeEditingPermission": "Please Go To Settings To Change Editing Permission",
+    "changeVariableListOrientation": "Change Variable List Orientation",
+    "openWorkSpace": "Open Work Space"
   },
   "nav": {
     "Home": "Home",
@@ -14,7 +27,10 @@
     "Graphs": "Graphs",
     "About": "About",
     "Account": "Account",
-    "Settings": "Settings"
+    "Settings": "Settings",
+    "Feedback": "Feedback",
+    "Login": "Login",
+    "EmailMe": "Email Me"
   },
   "collectionPage": {
     "Filter": "Filter",
@@ -38,7 +54,8 @@
     "tabNum": "Tab Space Number",
     "fontSize": "Font Size",
     "showTooltips": "Show Tooltips",
-    "cardsDisplayedNum": "Number of Search Results in Each Page"
+    "cardsDisplayedNum": "Number of Search Results in Each Page",
+    "enableEditing": "Enable Editing"
   },
   "notify": {
     "editorEntry": "Open code editor using {...} button",
@@ -48,5 +65,18 @@
   "license": {
     "licenseInfo1": "All the articles without special specification are licensed under a",
     "licenseInfo2": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License"
+  },
+  "account": {
+    "Username": "Username",
+    "Email": "Email",
+    "Password": "Password",
+    "Role": "Role",
+    "Login": "Login",
+    "LogOut": "Log out",
+    "Register": "Register",
+    "ControlPanel": "Control Panel",
+    "DjangoAdminPage": "Django Admin Page",
+    "noNewAccount": "We don't accept new accounts for now.",
+    "notEmpty": "It cannot be empty"
   }
 }

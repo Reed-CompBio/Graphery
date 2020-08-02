@@ -1,3 +1,3 @@
 # About
 
-comming soon~
+Coming Soon~

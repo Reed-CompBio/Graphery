@@ -1,7 +1,7 @@
 <template>
-  <q-footer elevated reveal class="q-pa-md">
+  <div id="footer-wrapper" class="q-pa-md full-width">
     <!--    TODO change the color in the dark mode    -->
-    <div class="text-center white-a" id="footer">
+    <div class="text-center grey-a" id="footer">
       <div>
         2020 © Graphery |
         <a
@@ -20,15 +20,16 @@
         <a href="https://vuejs.org" target="_blank" rel="noreferrer">Vue</a>
       </div>
     </div>
-  </q-footer>
+  </div>
 </template>
 
-<style>
-  .white-a a,
-  .white-a a:visited {
-    color: #fff !important;
-  }
-  #footer a:hover {
-    color: #cfcfcf !important;
-  }
+<style lang="sass">
+  .grey-a a
+    color: grey
+    text-decoration: underline
+  #footer-wrapper
+    /* TODO change the font color */
+    color: grey
+    margin-top: 32px
+    margin-bottom: 48px
 </style>

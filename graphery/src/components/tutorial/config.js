@@ -2,7 +2,7 @@ export const panzoomDefaults = {
   zoomFactor: 0.1, // zoom factor per zoom tick
   zoomDelay: 45, // how many ms between zoom ticks
   minZoom: 0.1, // min zoom level
-  maxZoom: 2, // max zoom level
+  maxZoom: 10, // max zoom level
   fitPadding: 50, // padding when fitting
   panSpeed: 10, // how many ms in between pan ticks
   panDistance: 100, // max pan distance per tick
@@ -26,9 +26,9 @@ export const panzoomDefaults = {
 export const dagreOptions = {
   name: 'dagre',
   // dagre algorithm options, uses default value on undefined
-  nodeSep: 100, // the separation between adjacent nodes in the same rank
-  edgeSep: 30, // the separation between adjacent edges in the same rank
-  rankSep: 140, // the separation between adjacent nodes in the same rank
+  nodeSep: 15, // the separation between adjacent nodes in the same rank
+  edgeSep: 10, // the separation between adjacent edges in the same rank
+  rankSep: 30, // the separation between adjacent nodes in the same rank
   rankDir: 'TB', // 'TB' for top to bottom flow, 'LR' for left to right
   minLen: function(_) {
     return 1;

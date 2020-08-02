@@ -1,30 +1,7 @@
-from abc import ABCMeta, abstractmethod
-from typing import Union, Iterable, Mapping, Type
+from abc import ABCMeta
+from typing import Union, Iterable, Mapping, Type, MutableMapping
 import json
 import logging
-
-
-class Highlightable(metaclass=ABCMeta):
-    """
-    Highlight interface
-    """
-    @abstractmethod
-    def highlight(self, cls: str):
-        """
-        make this object highlighted
-        @param cls: the color of which this object should be highlighted
-        @raise: NotImplementedError
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def unhighlight(self, cls: str):
-        """
-        unhighlight this object
-        @param cls: the color of which this object should be highlighted
-        @raise: NotImplementedError
-        """
-        raise NotImplementedError
 
 
 class Comparable(metaclass=ABCMeta):
@@ -40,6 +17,8 @@ class Comparable(metaclass=ABCMeta):
         @param identity: unique id for this object
         @param name: displayed name for this object
         """
+        # TODO read SUID if id is not present.
+        # TODO think of an naming convention for id
         assert identity is not None
         self.identity = identity
         self.name = name if name else self._PREFIX + str(identity)
@@ -130,7 +109,7 @@ class Stylable(metaclass=ABCMeta):
         @param classes:
         """
         # TODO I don't think I need styles
-        self.styles = {}
+        self.styles: MutableMapping[str, str] = {}
         self.classes = []
 
         if isinstance(style, str):
@@ -156,16 +135,19 @@ class ElementSet:
         @param elements:
         @param element_type:
         """
-        self.elements = []
+        self.elements = set()
         self.element_type = element_type
         if isinstance(elements, Iterable) and all(isinstance(element, self.element_type) for element in elements):
-            self.elements.extend(set(elements))
+            self.elements.update(elements)
         else:
             raise KeyError('elements are not all %s type' % self.element_type)
 
     def _rm_element(self, element):
         if isinstance(element, self.element_type) and element in self.elements:
             self.elements.remove(element)
+
+    def is_empty(self):
+        return len(self.elements) == 0
 
     def __len__(self):
         """
@@ -185,15 +167,6 @@ class ElementSet:
                 return element
 
         return None
-
-    def __setitem__(self, key, value):
-        """
-        prevent changes through subscripts
-        @param key:
-        @param value:
-        @return:
-        """
-        raise NotImplementedError('You cannot set elements in a immutable object')
 
     def __iter__(self):
         """

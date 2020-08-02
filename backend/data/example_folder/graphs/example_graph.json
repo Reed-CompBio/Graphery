@@ -1,0 +1,53 @@
+{
+  "elements":{
+    "nodes":[
+      {
+        "data":{
+          "id":"v2",
+          "displayed":{
+
+          }
+        }
+      },
+      {
+        "data":{
+          "id":"v1",
+          "displayed":{
+
+          }
+        }
+      }
+    ],
+    "edges":[
+      {
+        "data":{
+          "id":"e1",
+          "source":"v1",
+          "target":"v2",
+          "displayed":{
+
+          }
+        }
+      }
+    ]
+  },
+  "style":[
+    {
+      "selector":"node",
+      "style":{
+        "label":"data(id)",
+        "text-valign":"center",
+        "text-halign":"center",
+        "text-outline-color":"white",
+        "text-outline-opacity":1,
+        "text-outline-width":1,
+        "height":"10px",
+        "width":"10px",
+        "font-size":"5px",
+        "border-color":"black",
+        "border-opacity":1,
+        "border-width":1
+      }
+    }
+  ]
+}

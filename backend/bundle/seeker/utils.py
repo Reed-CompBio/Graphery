@@ -1,9 +1,9 @@
 import abc
 import re
 
-from typing import Mapping, Any, Callable, Union
+from typing import Mapping, Any, Callable, Union, Iterable
 
-from .pycompat import ABC, string_types, collections_abc
+from .pycompat import ABC, string_types
 
 
 def _check_methods(C, *methods):
@@ -97,8 +97,7 @@ def truncate(string, max_length):
 
 
 def ensure_tuple(x):
-    if isinstance(x, collections_abc.Iterable) and \
-                                               not isinstance(x, string_types):
+    if isinstance(x, Iterable) and not isinstance(x, string_types):
         return tuple(x)
     else:
         return x,

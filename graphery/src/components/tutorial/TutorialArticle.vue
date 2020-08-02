@@ -1,59 +1,66 @@
 <template>
-  <div>
+  <div id="articleWrapper" style="overflow-y: auto;">
     <div
+      id="tutorial-container"
       ref="tc"
       v-show="!articleEmpty"
-      class="full-height q-px-lg"
-      style="overflow-y: auto; overflow-x: hidden;"
-      @scroll="updatePosPercentage"
+      class="q-px-lg q-pb-xl"
     >
-      <div class="q-mt-xl">
-        <div id="tutorial-title" class="text-h2">{{ title }}</div>
+      <div id="tutorial-wrapper" class="q-mt-xl">
+        <div id="tutorial-title" class="text-h2 q-mb-md">{{ title }}</div>
         <div id="tutorial-info" class="q-mb-lg">
-          <q-breadcrumbs>
-            <q-breadcrumbs-el v-if="authors">
-              <q-chip
-                clickable
-                v-for="author in authors"
-                :key="author"
-                icon="mdi-card-account-details"
-                @click="$emit('author-filter', author)"
-              >
-                <!-- may be I don't need the author filter -->
-                {{ author }}
-              </q-chip>
-            </q-breadcrumbs-el>
-            <q-breadcrumbs-el v-if="categories">
-              <q-chip
-                clickable
-                v-for="category in categories"
-                :key="category"
-                icon="category"
-                @click="$emit('category-filter', category)"
-              >
-                {{ category }}
-              </q-chip>
-            </q-breadcrumbs-el>
-            <q-breadcrumbs-el v-if="articleTime">
-              <q-chip icon="mdi-calendar-month"> {{ articleTime }}</q-chip>
-            </q-breadcrumbs-el>
-            <q-breadcrumbs-el>
-              <q-btn flat rounded dense @click="share">
-                <SwitchTooltip :text="$t('tooltips.Share')"></SwitchTooltip>
-                <q-icon name="mdi-share-variant"></q-icon>
-              </q-btn>
-            </q-breadcrumbs-el>
-          </q-breadcrumbs>
+          <div>
+            <q-chip clickable v-if="!isAnchorPublished" icon="mdi-book-lock">
+              Tutorial Not Published
+            </q-chip>
+            <q-chip clickable v-if="!isTransPublished" icon="mdi-book-lock">
+              Translation Not Published
+            </q-chip>
+          </div>
+          <q-chip
+            clickable
+            v-for="author in authors"
+            :key="author"
+            icon="mdi-card-account-details"
+            @click="$emit('author-filter', author)"
+          >
+            <!-- may be I don't need the author filter -->
+            {{ author }}
+          </q-chip>
+          <q-chip
+            clickable
+            v-for="category in categories"
+            :key="category"
+            icon="category"
+            @click="$emit('category-filter', category)"
+          >
+            {{ category }}
+          </q-chip>
+          <q-chip icon="mdi-calendar-month">
+            {{ toLocalDateString($i18n.locale, articleModTime) }}</q-chip
+          >
+          <q-btn flat rounded dense @click="share">
+            <SwitchTooltip :text="$t('tooltips.Share')"></SwitchTooltip>
+            <q-icon name="mdi-share-variant"></q-icon>
+          </q-btn>
         </div>
+
+        <!-- actual contents goes into here -->
+        <div id="tutorial-content">
+          <MarkdownSection :input-html="htmlContent"></MarkdownSection>
+        </div>
+
+        <LicenseCard></LicenseCard>
       </div>
-      <!-- what about xss attacks? -->
-      <div id="tutorial-content" v-html="content"></div>
-
-      <LicenseCard></LicenseCard>
-
-      <div class="q-mb-xl"></div>
     </div>
-    <!-- add a protocol info section -->
+
+    <q-inner-loading
+      :showing="articleEmpty"
+      transition-show="fade"
+      transition-hide="fade"
+    >
+      <q-spinner-pie size="64px" color="primary"></q-spinner-pie>
+    </q-inner-loading>
 
     <q-page-sticky position="bottom-right" :offset="[30, 30]">
       <transition
@@ -61,11 +68,10 @@
         enter-active-class="animated zoomIn"
         leave-active-class="animated zoomOut"
       >
-        <!-- TODO fix this? -->
+        <!-- TODO use quasar native utils to get percentage and replace the scroll func I wrote  -->
         <q-circular-progress
-          v-show="articleViewPercentage !== 0"
           size="42px"
-          :value="articleViewPercentage"
+          :value="1"
           :max="1"
           color="primary"
           :thickness="0.1"
@@ -83,57 +89,54 @@
         </q-circular-progress>
       </transition>
     </q-page-sticky>
-    <q-inner-loading
-      :showing="articleEmpty"
-      transition-show="fade"
-      transition-hide="fade"
-    >
-      <q-spinner-radio size="64px" color="primary"></q-spinner-radio>
-    </q-inner-loading>
   </div>
 </template>
 
 <script>
-  import { mapState, mapGetters, mapActions } from 'vuex';
+  import { mapGetters, mapActions } from 'vuex';
+  import {
+    toLocalDateString,
+    saveTextToClipboard,
+    successDialog,
+  } from '../../services/helpers';
 
   export default {
     components: {
+      MarkdownSection: () => import('../framework/MarkdownSection'),
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
       LicenseCard: () => import('@/components/framework/LicenseCard.vue'),
     },
     data() {
       return {
-        articleViewPercentage: 0,
+        // articleViewPercentage: 0,
       };
     },
     computed: {
-      ...mapState('tutorials', ['article']),
       ...mapGetters('tutorials', [
         'articleEmpty',
         'title',
-        'content',
+        'htmlContent',
         'authors',
         'categories',
-        'articleTime',
+        'articleModTime',
+        'isAnchorPublished',
+        'isTransPublished',
       ]),
     },
     methods: {
       ...mapActions('tutorials', ['loadTutorial']),
+      toLocalDateString,
       share() {
-        // TODO copy to clipboard
-      },
-      updatePosPercentage({ verticalPercentage }) {
-        this.articleViewPercentage = parseFloat(verticalPercentage);
+        saveTextToClipboard(window.location.href);
+        // TODO use uniform notify
+        successDialog({ message: 'The URL of this tutorial is copied.' });
       },
       scrollToTop() {
-        this.$refs.tc.setScrollPosition(0, 500);
+        document.getElementById('articleWrapper').scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
       },
-    },
-    mounted() {
-      // this.loadTutorial();
-      // TODO when you access the page from tutorials or graphs, the article is not shown.
-      //    SINCE there is not real api call!!!
-      // TODO when should I load the text hmmmmm
     },
   };
 </script>
@@ -144,4 +147,8 @@
 
   #scroll-up-icon:hover
     cursor: pointer
+  #tutorial-content h2
+    font-size: 28px
+    margin: 8px 0
+    font-style: oblique
 </style>

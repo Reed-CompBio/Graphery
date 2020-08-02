@@ -11,4 +11,4 @@ export const navigationButtons = [
 
 export const headerSize = 66;
 export const graphMenuHeaderSize = 56;
-export const editorTabHeight = 48;
+export const editorTabHeight = 48 + 48;

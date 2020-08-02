@@ -1,20 +1,64 @@
 <template>
   <MaterialPage>
     <div>
-      <h3 class="shorter-h">
+      <h3 class="material-page-shorter-h3">
         {{ $t('nav.Account') }}
       </h3>
     </div>
     <div>
-      <p>Not implemented</p>
+      <div id="user-info" class="row">
+        <div id="user-info-wrapper" class="col-12 flex-center q-my-md">
+          <UserInfoCard :userObj="userObj" @logout="logout"></UserInfoCard>
+        </div>
+      </div>
     </div>
   </MaterialPage>
 </template>
 
 <script>
+  import { apiCaller } from '../services/apis.ts';
+  import { logoutMutation } from '../services/queries';
+  import { mapState, mapActions } from 'vuex';
+  import { errorDialog } from '../services/helpers';
+
   export default {
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
+      UserInfoCard: () => import('@/components/user/UserInfoCard.vue'),
+    },
+    computed: {
+      ...mapState({
+        userObj: (state) => state.user,
+      }),
+    },
+    methods: {
+      ...mapActions(['setUser']),
+      logout() {
+        apiCaller(logoutMutation)
+          .then((data) => {
+            if (!data) {
+              throw Error('Failed to talk to server. Failed to logout.');
+            }
+
+            if (data['logout']['success']) {
+              this.setUser(null);
+            } else {
+              throw Error('Cannot logout at this time. Reason unknown.');
+            }
+          })
+          .catch((err) => {
+            errorDialog({
+              message: 'A error occurs during logging out. ' + err,
+            });
+          });
+      },
+    },
+    watch: {
+      userObj: function() {
+        if (this.userObj === null) {
+          this.$router.push('/login');
+        }
+      },
     },
   };
 </script>

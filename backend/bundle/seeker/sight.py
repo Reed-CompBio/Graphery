@@ -10,10 +10,12 @@ import datetime as datetime_module
 import itertools
 import threading
 import traceback
+import logging
+from copy import copy
 from types import FrameType, FunctionType
 from typing import Iterable, Tuple, Any, Mapping, Optional, List, Callable, Union
 
-from .recorder import Recorder
+from bundle.utils.recorder import Recorder
 from .variables import CommonVariable, Exploding, BaseVariable
 from . import utils, pycompat
 
@@ -44,7 +46,7 @@ def get_local_values(frame: FrameType,
 
     for variable in watch:
         result.update((key, (value, utils.get_shortish_repr(value, custom_repr, max_length)))
-                       for key, value in sorted(variable.values(frame)))
+                      for key, value in sorted(variable.values(frame)))
 
     return result
 
@@ -79,21 +81,13 @@ def get_path_and_source_from_frame(frame):
     if source is None:
         ipython_filename_match = ipython_filename_pattern.match(file_name)
         if ipython_filename_match:
-            entry_number = int(ipython_filename_match.group(1))
-            try:
-                import IPython
-                ipython_shell = IPython.get_ipython()
-                ((_, _, source_chunk),) = ipython_shell.history_manager. \
-                    get_range(0, entry_number, entry_number + 1)
-                source = source_chunk.splitlines()
-            except Exception:
-                pass
+            raise ValueError('Ipython is not supported yet.')
         else:
             try:
                 with open(file_name, 'rb') as fp:
                     source = fp.read().splitlines()
-            except utils.file_reading_errors:
-                pass
+            except utils.file_reading_errors as e:
+                logging.warning(f'Cannot Read Files And Determine Source. Error: {e}')
     if not source:
         # We used to check `if source is None` but I found a rare bug where it
         # was empty, but not `None`, so now we check `if not source`.
@@ -158,11 +152,10 @@ class FileWriter(object):
 
 
 thread_global = threading.local()
-DISABLED = bool(os.getenv('PYSNOOPER_DISABLED', ''))
+DISABLED = bool(os.getenv('SEEKER_DISABLED', ''))
 
 
 class Tracer:
-
     _recorder: Recorder = None
     _log_file_name: Optional[pathlib.Path] = None
     _log_file_dir: Optional[str] = None
@@ -191,6 +184,7 @@ class Tracer:
                          v if isinstance(v, BaseVariable) else Exploding(v)
                          for v in utils.ensure_tuple(watch_explode)
                      ]
+
         self.frame_to_local_reprs = {}
         self.start_times = {}
         self.depth = depth
@@ -202,7 +196,7 @@ class Tracer:
         self.target_frames = set()
         self.thread_local = threading.local()
         if len(custom_repr) == 2 and \
-                not all(isinstance(x, pycompat.collections_abc.Iterable) for x in custom_repr):
+                not all(isinstance(x, Iterable) for x in custom_repr):
             custom_repr = (custom_repr,)
         self.custom_repr = custom_repr
         self.last_source_path = None
@@ -214,12 +208,13 @@ class Tracer:
     @classmethod
     def get_recorder(cls) -> Recorder:
         if not cls._recorder:
-            cls.new_recorder()
+            # For testing, Tracer should not create recorder by itself
+            cls.set_new_recorder(Recorder())
         return cls._recorder
 
     @classmethod
-    def new_recorder(cls) -> None:
-        cls._recorder = Recorder()
+    def set_new_recorder(cls, recorder: Recorder) -> None:
+        cls._recorder = recorder
 
     @classmethod
     def get_recorder_change_list(cls) -> List[dict]:
@@ -237,6 +232,9 @@ class Tracer:
         if DISABLED:
             return function_or_class
 
+        # add prefix
+        self.prefix = function_or_class.__name__
+
         if inspect.isclass(function_or_class):
             return self._wrap_class(function_or_class)
         else:
@@ -249,11 +247,13 @@ class Tracer:
         @param func: wrapped function
         @return: wrapper function
         """
+
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
             # cls._recorder.add_ac_to_last_record('get value %s' % result)
             cls._recorder.add_ac_to_last_record(result)
             return result
+
         return wrapper
 
     def _wrap_class(self, cls):
@@ -269,6 +269,8 @@ class Tracer:
 
     def _wrap_function(self, function):
         self.target_codes.add(function.__code__)
+
+        # function.__name__ = 'graphery_{}'.format(function.__name__)
 
         @functools.wraps(function)
         def simple_wrapper(*args, **kwargs):
@@ -300,7 +302,7 @@ class Tracer:
             return simple_wrapper
 
     def write(self, s):
-        s = u'{self.prefix}{s}\n'.format(**locals())
+        s = u'{input}\n'.format(input=s)
         self._write(s)
 
     def __enter__(self):
@@ -327,19 +329,20 @@ class Tracer:
         self.target_frames.discard(calling_frame)
         self.frame_to_local_reprs.pop(calling_frame, None)
 
-        ### Writing elapsed time: #############################################
+        # Writing elapsed time: ###############################################
         #                                                                     #
         start_time = self.start_times.pop(calling_frame)
         duration = datetime_module.datetime.now() - start_time
         elapsed_time_string = pycompat.timedelta_format(duration)
         indent = ' ' * 4 * (thread_global.depth + 1)
         self.write(
-            '{indent}Elapsed time: {elapsed_time_string}'.format(**locals())
+            f'{indent}Elapsed time: {elapsed_time_string}'
         )
         #                                                                     #
-        ### Finished writing elapsed time. ####################################
+        # Finished writing elapsed time. ######################################
 
-    def _is_internal_frame(self, frame):
+    @staticmethod
+    def _is_internal_frame(frame):
         return frame.f_code.co_filename == Tracer.__enter__.__code__.co_filename
 
     def set_thread_info_padding(self, thread_info):
@@ -350,7 +353,7 @@ class Tracer:
 
     def trace(self, frame, event, arg):
 
-        ### Checking whether we should trace this line: #######################
+        # Checking whether we should trace this line: #########################
         #                                                                     #
         # We should trace this line either if it's in the decorated function,
         # or the user asked to go a few levels deeper and we're within that
@@ -381,7 +384,7 @@ class Tracer:
         indent = ' ' * 4 * thread_global.depth
 
         #                                                                     #
-        ### Finished checking whether we should trace this line. ##############
+        # Finished checking whether we should trace this line. ################
 
         # simplified time stamp
         timestamp = ' ' * 16
@@ -401,7 +404,7 @@ class Tracer:
                 ident=current_thread.ident, name=current_thread.getName())
         thread_info = self.set_thread_info_padding(thread_info)
 
-        ### Dealing with misplaced function definition: #######################
+        # Dealing with misplaced function definition: #########################
         #                                                                     #
         if event == 'call' and source_line.lstrip().startswith('@'):
             # If a function decorator is found, skip lines until an actual
@@ -420,12 +423,12 @@ class Tracer:
                     source_line = candidate_source_line
                     break
         #                                                                     #
-        ### Finished dealing with misplaced function definition. ##############
+        # Finished dealing with misplaced function definition. ################
 
         if event != 'return':
             self.recorder.add_record(line_no)
 
-        ### Reporting newish and modified variables: ##########################
+        # Reporting newish and modified variables: ############################
         #                                                                     #
 
         old_local_reprs = self.frame_to_local_reprs.get(frame, {})
@@ -440,22 +443,25 @@ class Tracer:
                          'New var:....... ')
 
         for name, (value, value_repr) in local_reprs.items():
-
+            identifier = (self.prefix, name)
+            copied_value = copy(value)
             if name not in old_local_reprs:
+                self.recorder.register_variable(identifier)
+
                 if event == 'call':
                     # TODO it seems to work but I am not sure about this
-                    self.recorder.add_vc_to_last_record((name, value))
+                    self.recorder.add_vc_to_last_record(identifier, copied_value)
                 else:
-                    self.recorder.add_vc_to_previous_record((name, value))
+                    self.recorder.add_vc_to_previous_record(identifier, copied_value)
                 self.write('{indent}{newish_string}{name} = {value_repr}'.format(
                     **locals()))
             elif old_local_reprs[name][1] != value_repr:
-                self.recorder.add_vc_to_previous_record((name, value))
+                self.recorder.add_vc_to_previous_record(identifier, copied_value)
                 self.write('{indent}Modified var:.. {name} = {value_repr}'.format(
                     **locals()))
 
         #                                                                     #
-        ### Finished newish and modified variables. ###########################
+        # Finished newish and modified variables. #############################
 
         # If a call ends due to an exception, we still get a 'return' event
         # with arg = None. This seems to be the only way to tell the difference
@@ -485,8 +491,7 @@ class Tracer:
             if not ended_by_exception:
                 return_value_repr = utils.get_shortish_repr(arg,
                                                             custom_repr=self.custom_repr,
-                                                            max_length=self.max_variable_length,
-                                                            )
+                                                            max_length=self.max_variable_length, )
                 self.write('{indent}Return value:.. {return_value_repr}'.
                            format(**locals()))
 

@@ -44,38 +44,24 @@ else:
 try:
     iscoroutinefunction = inspect.iscoroutinefunction
 except AttributeError:
-    iscoroutinefunction = lambda whatever: False # Lolz
+    iscoroutinefunction = lambda whatever: False  # Lolz
 
 try:
     isasyncgenfunction = inspect.isasyncgenfunction
 except AttributeError:
-    isasyncgenfunction = lambda whatever: False # Lolz
+    isasyncgenfunction = lambda whatever: False  # Lolz
 
 
 if PY3:
     string_types = (str,)
     text_type = str
 else:
-    string_types = (basestring,)
-    text_type = unicode
-
-try:
-    from collections import abc as collections_abc
-except ImportError: # Python 2.7
-    import collections as collections_abc
+    raise EnvironmentError('You must use python3')
 
 if sys.version_info[:2] >= (3, 6):
     time_isoformat = datetime_module.time.isoformat
 else:
-    def time_isoformat(time, timespec='microseconds'):
-        assert isinstance(time, datetime_module.time)
-        if timespec != 'microseconds':
-            raise NotImplementedError
-        result = '{:02d}:{:02d}:{:02d}.{:06d}'.format(
-            time.hour, time.minute, time.second, time.microsecond
-        )
-        assert len(result) == 15
-        return result
+    raise EnvironmentError('You must use python 3.6 or above')
 
 
 def timedelta_format(timedelta):

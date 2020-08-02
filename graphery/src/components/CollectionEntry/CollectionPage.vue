@@ -2,7 +2,7 @@
   <MaterialPage>
     <div>
       <div id="title-section">
-        <h3 class="shorter-h">
+        <h3 class="material-page-shorter-h3">
           {{ title }}
         </h3>
       </div>
@@ -36,11 +36,12 @@
         >
           <div
             id="filter-section"
-            :class="{
-              'col-4': true,
-              'flex-center': true,
-              row: $q.screen.lt.sm,
-            }"
+            :class="[
+              'col-4',
+              'flex-center',
+              'q-pr-xs',
+              $q.screen.lt.sm ? 'row' : '',
+            ]"
           >
             <div class="q-mr-lg">
               <h5>
@@ -50,9 +51,9 @@
             <div style="flex: 1 1 auto">
               <q-select
                 filled
-                v-model="filterSelections"
+                v-model="categoryFilterSelections"
                 multiple
-                :options="filterOptions"
+                :options="categoryFilterOptions"
                 use-chips
                 stack-label
                 :label="$t('collectionPage.Categories')"
@@ -69,7 +70,10 @@
             </div>
           </div>
 
-          <div id="content-list" class="col-8">
+          <div
+            id="content-list"
+            :class="['col-8', $q.screen.lt.sm ? 'full-width' : '']"
+          >
             <div id="page-manager" class="flex flex-center">
               <q-pagination
                 :max="paginationMax"
@@ -87,7 +91,7 @@
               >
               </q-pagination>
             </div>
-            <div class="q-px-sm">
+            <div>
               <div
                 class="relative-position"
                 id="inner-loader"
@@ -99,15 +103,19 @@
               </div>
               <ArticleCard
                 v-for="info in displayedInfos"
-                :key="info.id"
+                :key="info.url"
+                :url="info.url"
+                :categories="info.categories"
+                :isAnchorPublished="info.isAnchorPublished"
                 :title="info.title"
                 :authors="info.authors"
-                :categories="info.categories"
-                :time="info.time"
+                :modifiedTime="info.modifiedTime"
                 :abstract="info.abstract"
-                :id="info.id"
+                :isTransPublished="info.isTransPublished"
                 @category-filter="addToCategoryFilter"
                 @author-filter="addToAuthorFilter"
+                :moreButtonText="moreButtonText"
+                :notClickableWhenNoContent="notClickableWhenNoContent"
               ></ArticleCard>
               <!-- TODO why do you want to filter authors? -->
             </div>
@@ -120,26 +128,29 @@
 
 <script>
   import { mapState } from 'vuex';
+  import { apiCaller } from '../../services/apis';
+  import { errorDialog } from '../../services/helpers';
+
   export default {
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       ArticleCard: () => import('@/components/CollectionEntry/ArticleCard.vue'),
     },
-    props: {
-      api: String,
-      title: String,
-    },
+    props: [
+      'title',
+      'query',
+      'variables',
+      'mappingFunction',
+      'moreButtonText',
+      'notClickableWhenNoContent',
+    ],
     data() {
       return {
         searchText: '',
         searchLoading: false,
-        filterSelections: [],
-        filterOptions: [],
-        // TODO page separation
-        // TODO link it with api calls
-        rawInfos: [],
+        categoryFilterSelections: [],
+        categoryFilterOptions: [],
         infos: [], // Served as a filtered input
-        // pageDisplayNum: 5,
         current: 1,
         currentPage: 1,
       };
@@ -166,58 +177,55 @@
       finishLoading() {
         this.searchLoading = false;
       },
-      getInfoList() {
-        console.debug('api call path: ', this.api);
-        // TODO API calls to get tutorial lists
-        console.debug('start getting tutorial infos');
+      loadInfo() {
         this.toggleLoading();
-        setTimeout(() => {
-          for (let i = 0; i < 10; i++) {
-            this.infos.push({
-              title: 'Example',
-              authors: ['me', 'her'],
-              categories: ['1', '2'],
-              time: new Date().toLocaleString(),
-              abstract:
-                'This is an example article card. And this part is an abstract section that contains the basic info of this example tutorial.',
-              id: i.toString(),
+
+        apiCaller(this.query, this.variables)
+          .then((data) => {
+            if (!data) {
+              throw Error('Invalid data returned.');
+            }
+            this.infos = this.mappingFunction(data);
+          })
+          .catch((err) => {
+            errorDialog({
+              message: 'An error occurs in ' + this.title + ' page. ' + err,
             });
-          }
-          // TODO modify this to accommodate the real apis
-          this.finishLoading();
-          console.debug('finished loading tutorial infos');
-        }, 1000);
+            // TODO translate errors
+          })
+          .finally(() => {
+            this.finishLoading();
+          });
       },
       search() {
         if (this.searchLoading) {
           console.log('Is searching, cancel current searching');
-          // TODO notify
+          // TODO notify and cancel axios's request
         }
         console.log('search');
         // this.toggleLoading();
       },
       addToAuthorFilter(author) {
-        // TODO apply author filter
+        // TODO apply author filter I don't need this
         console.debug(`add ${author} to author filter`);
       },
       addToCategoryFilter(category) {
         // TODO apply category filters
         console.debug(`add ${category} to category filter`);
       },
-      useTimeFilter(option) {
-        console.debug(`using time filter with option ${option}.`);
-      },
     },
     mounted() {
-      this.getInfoList();
+      this.loadInfo();
     },
-    // TODO maybe add a watch which emits an event once the info list is updated
+    watch: {
+      '$i18n.locale': function() {
+        this.loadInfo();
+      },
+    },
   };
 </script>
 
 <style lang="sass">
-  .shorter-h
-    margin-bottom: 20px
   #inner-loader
     min-height: 100px
 </style>

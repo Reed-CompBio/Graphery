@@ -1,52 +1,155 @@
 <template>
+  <!-- TODO change list and app bar color -->
   <div style="overflow: hidden;">
-    <q-resize-observer @resize="resizeAction"></q-resize-observer>
     <q-splitter
-      v-if="$q.screen.gt.xs"
+      v-if="notTortureSmallScreen"
       v-model="splitPos"
       :style="tutorialStyle"
       :horizontal="$q.screen.lt.md"
-      separator-class="bg-light-blue"
-      separator-style="width: 4px"
+      :separator-class="
+        $q.screen.lt.md
+          ? 'resizable-h-separator-splitter'
+          : 'resizable-v-separator-splitter'
+      "
+      class="overflow-hidden-splitter"
     >
       <template v-slot:before>
-        <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
+        <q-splitter
+          id="graph-code-section"
+          v-model="editorSplitPos"
+          horizontal
+          separator-class="resizable-h-separator-splitter zero-z-index-separator"
+          class="overflow-visible-splitter"
+        >
+          <template v-slot:before>
+            <CytoscapeWrapper
+              ref="cytoscapeWrapper"
+              style="overflow-y: hidden;"
+            ></CytoscapeWrapper>
+          </template>
+          <template v-slot:separator>
+            <SplitterSeparator :horizontal="true" />
+          </template>
+          <template v-slot:after>
+            <EditorWrapper
+              v-show="currentTab === 'editor'"
+              ref="editorWrapper"
+              class="full-height"
+              @updateCyWithVarObj="updateCytoscapeWithVarObj"
+            ></EditorWrapper>
+            <GraphInfo
+              v-show="currentTab === 'graph-info'"
+              :graphName="graphTitle"
+              :isPublished="isGraphPublished"
+              :abstract="graphAbstract"
+            ></GraphInfo>
+            <HowToHelper v-show="currentTab === 'how-to'"></HowToHelper>
+            <!-- page sticky -->
+            <q-page-sticky
+              v-if="$q.screen.gt.xs"
+              position="bottom-left"
+              :offset="[30, 30]"
+            >
+              <q-fab
+                direction="up"
+                color="primary"
+                icon="more_horiz"
+                padding="10px"
+              >
+                <q-fab-action
+                  color="accent"
+                  icon="mdi-code-json"
+                  padding="10px"
+                  @click.prevent="switchTabView('editor')"
+                >
+                  <SwitchTooltip
+                    :text="$t('tooltips.editor')"
+                    self="center left"
+                    anchor="center right"
+                  />
+                </q-fab-action>
+                <q-fab-action
+                  color="positive"
+                  icon="info"
+                  padding="10px"
+                  @click.prevent="switchTabView('graph-info')"
+                >
+                  <SwitchTooltip
+                    :text="$t('tooltips.graphInfo')"
+                    self="center left"
+                    anchor="center right"
+                  />
+                </q-fab-action>
+                <q-fab-action
+                  color="orange"
+                  icon="help"
+                  padding="10px"
+                  @click.prevent="switchTabView('how-to')"
+                >
+                  <SwitchTooltip
+                    :text="$t('tooltips.howTo')"
+                    self="center left"
+                    anchor="center right"
+                  />
+                </q-fab-action>
+                <!-- TODO added graph info and how to use editor here -->
+                <template v-slot:tooltip>
+                  <SwitchTooltip
+                    :text="$t('tooltips.showEditorAndMore')"
+                    self="center left"
+                    anchor="center right"
+                  ></SwitchTooltip>
+                </template>
+              </q-fab>
+            </q-page-sticky>
+          </template>
+        </q-splitter>
       </template>
       <template v-slot:separator>
-        <q-avatar
-          color="primary"
-          text-color="white"
-          size="32px"
-          icon="mdi-drag"
-        />
+        <SplitterSeparator :horizontal="$q.screen.lt.md" />
       </template>
       <template v-slot:after>
         <TutorialArticle class="full-height"></TutorialArticle>
       </template>
     </q-splitter>
+    <!-- view for small screen -->
     <TutorialArticle v-else></TutorialArticle>
-    <EditorWrapper ref="editorWrapper"></EditorWrapper>
   </div>
 </template>
 
 <script>
   import { headerSize } from '../store/states/meta';
-  import { mapState } from 'vuex';
+  import { mapState, mapActions, mapGetters } from 'vuex';
+  import { apiCaller } from '../services/apis';
+  import {
+    pullTutorialArticle,
+    pullTutorialDetailQuery,
+  } from '../services/queries';
+  import { errorDialog } from '../services/helpers';
+  import SplitterSeparator from '../components/framework/SplitterSeparator';
 
   export default {
-    props: ['name'],
+    props: ['url'],
     components: {
+      SplitterSeparator,
       CytoscapeWrapper: () =>
         import('@/components/tutorial/CytoscapeWrapper.vue'),
       TutorialArticle: () =>
         import('@/components/tutorial/TutorialArticle.vue'),
       EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
+      GraphInfo: () => import('@/components/tutorial/GraphInfo.vue'),
+      HowToHelper: () => import('@/components/tutorial/HowToHelper.vue'),
+      SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
     },
     data() {
-      return {};
+      return {
+        editorSplitPos: 60,
+        currentTab: 'editor',
+      };
     },
     computed: {
       ...mapState('settings', ['graphSplitPos']),
+      ...mapGetters('tutorials', ['currentGraphContent']),
       splitPos: {
         set(d) {
           this.$store.dispatch(
@@ -63,29 +166,85 @@
           height: `calc(100vh - ${headerSize}px)`,
         };
       },
+      notTortureSmallScreen() {
+        return this.$q.screen.gt.xs;
+      },
+      graphTitle() {
+        if (this.currentGraphContent) {
+          return this.currentGraphContent.title;
+        }
+        return '';
+      },
+      isGraphPublished() {
+        if (this.currentGraphContent) {
+          return this.currentGraphContent.isPublished;
+        }
+        return false;
+      },
+      graphAbstract() {
+        if (this.currentGraphContent) {
+          return this.currentGraphContent.abstract;
+        }
+        return '';
+      },
+      currentLang() {
+        return this.$i18n.locale;
+      },
     },
     methods: {
+      ...mapActions('tutorials', ['clearAll', 'loadTutorial']),
       updateTutorialContent() {
-        console.log('API calls to get details of the tutorial');
-        // TODO
-        // 1. API calls to get page conentent
-        // 2. Extract articles and graph info, turn off loading for the article section and load article
-        // 3. API calls using graph info to get graphs
-        // 4. Extract graphs details , turn off loading for the graph section and load graphs
-        // 5. (think about mini editor, how to manage the data in the backend)
+        console.debug(
+          'API calls to get details of the tutorial with url',
+          this.url
+        );
+        apiCaller(pullTutorialDetailQuery, {
+          url: this.url,
+          translation: this.currentLang,
+          default: 'en-us',
+        })
+          .then((data) => {
+            if (!data) {
+              throw Error('Invalid data returned.');
+            }
+            this.loadTutorial(data.tutorial);
+          })
+          .catch((err) => {
+            errorDialog({
+              message: 'An error occurs during pulling tutorials. ' + err,
+            });
+          });
       },
-      resizeAction() {
-        // suppress an error with if here
-        if (this.$refs.editorWrapper) {
-          this.$refs.editorWrapper.resizeEditorPos();
-        }
+      updateCytoscapeWithVarObj(varObj) {
+        this.$refs.cytoscapeWrapper.highlightVarObj(varObj);
+      },
+      switchTabView(tab) {
+        this.currentTab = tab;
       },
     },
     watch: {
-      name: function(newVal, oldVal) {
-        // ensures page updating when the url is changed
-        console.log(`route change from ${oldVal} to ${newVal}`);
-        this.updateTutorialContent();
+      currentLang: function(newVal) {
+        this.$store.commit('tutorials/CLEAR_ARTICLE_CONTENT');
+
+        apiCaller(pullTutorialArticle, {
+          url: this.url,
+          translation: newVal,
+          default: 'en-us',
+        })
+          .then((data) => {
+            if (!data || !('tutorial' in data)) {
+              throw Error('Invalid data returned.');
+            }
+            this.$store.commit(
+              'tutorials/LOAD_ARTICLE_CONTENT',
+              data.tutorial.content
+            );
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during switching languages. ${err}`,
+            });
+          });
       },
     },
     mounted() {
@@ -117,5 +276,18 @@
       // pull tutorials
       this.updateTutorialContent();
     },
+    destroyed() {
+      this.clearAll();
+      // TODO restore states in vuex
+    },
   };
 </script>
+
+<style lang="sass">
+  .zero-z-index-separator
+    z-index: 0
+  .overflow-visible-splitter > .q-splitter__after
+    overflow: visible
+  .overflow-hidden-splitter > .q-splitter__before
+    overflow: hidden
+</style>
