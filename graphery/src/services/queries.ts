@@ -460,3 +460,10 @@ mutation {
     invitationCodes
   }
 }`;
+
+export const registerMutation = `
+mutation ($email: String!, $username: String!, $password: String!, $invitationCode: String!) {
+  register(email: $email, username: $username, password: $password, invitationCode:$invitationCode) {
+    success
+  }
+}`;

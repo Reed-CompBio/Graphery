@@ -18,11 +18,23 @@
               ]"
             >
               <div id="login-content">
-                <q-form @submit="login" @reset="resetForm">
-                  <div id="account" class="q-mb-md">
+                <q-form @submit="register" @reset="resetForm">
+                  <div id="email" class="q-mb-md">
                     <q-input
                       outlined
-                      v-model="account"
+                      v-model="email"
+                      :label="$t('account.Email')"
+                      type="email"
+                      :rules="[(val) => !!val || $t('account.notEmpty')]"
+                      :lazy-rules="true"
+                      :loading="loading"
+                      :disable="loading"
+                    />
+                  </div>
+                  <div id="username" class="q-my-md">
+                    <q-input
+                      outlined
+                      v-model="username"
                       :label="$t('account.Username')"
                       type="text"
                       :rules="[(val) => !!val || $t('account.notEmpty')]"
@@ -51,6 +63,43 @@
                       </template>
                     </q-input>
                   </div>
+                  <div id="confirm-password" class="q-my-md">
+                    <q-input
+                      outlined
+                      v-model="confirmPassword"
+                      :label="$t('account.ConfirmPassword')"
+                      :type="showPwd ? 'text' : 'password'"
+                      :rules="[
+                        (val) =>
+                          !!val ||
+                          (val === password
+                            ? 'Two passwords must match!'
+                            : null) ||
+                          $t('account.notEmpty'),
+                      ]"
+                      :lazy-rules="true"
+                      :loading="loading"
+                      :disable="loading"
+                    >
+                      <template v-slot:append>
+                        <q-icon
+                          :name="showPwd ? 'visibility' : 'visibility_off'"
+                          class="cursor-pointer"
+                          @click="showPwd = !showPwd"
+                        />
+                      </template>
+                    </q-input>
+                  </div>
+                  <div id="invitation-code" class="q-my-md">
+                    <q-input
+                      outlined
+                      v-model="invitationCode"
+                      :label="$t('account.InvitationCode')"
+                      type="text"
+                      :loading="loading"
+                      :disable="loading"
+                    />
+                  </div>
                   <div
                     id="login-actions"
                     style="display: flex; flex-direction: row-reverse; flex-wrap: wrap;"
@@ -60,7 +109,7 @@
                       <q-btn
                         flat
                         :label="$t('account.Login')"
-                        type="submit"
+                        @click="login"
                         :loading="loading"
                         :disable="loading"
                       ></q-btn>
@@ -68,8 +117,8 @@
                     <div class="q-ma-sm">
                       <q-btn
                         flat
+                        type="submit"
                         :label="$t('account.Register')"
-                        @click.prevent="register"
                         :loading="loading"
                         :disable="loading"
                       ></q-btn>
@@ -96,26 +145,25 @@
 </template>
 
 <script>
-  import { apiCaller } from '../services/apis';
-  import { loginMutation } from '../services/queries';
-  import { mapActions, mapState } from 'vuex';
-  import { errorDialog, successDialog } from '../services/helpers';
+  import { apiCaller } from '@/services/apis';
+  import { registerMutation } from '@/services/queries';
+  import { errorDialog, successDialog } from '@/services/helpers';
 
   export default {
     components: {},
     data() {
       return {
-        account: '',
+        email: '',
+        username: '',
         password: '',
+        confirmPassword: '',
+        invitationCode: '',
         showPwd: false,
         loading: false,
         logoSrc: require('@/assets/images/compbio-lab.png'),
       };
     },
     computed: {
-      ...mapState({
-        userObj: (state) => state.user,
-      }),
       responsiveStyle() {
         return {
           'max-width': '900px',
@@ -128,23 +176,49 @@
       },
     },
     methods: {
-      ...mapActions(['setUser']),
       login() {
-        const loginCredential = {};
-        if (this.account && this.password) {
-          loginCredential['username'] = this.account;
-          loginCredential['password'] = this.password;
+        this.$router.push({
+          name: 'Login',
+        });
+      },
+      register() {
+        if (
+          !this.email ||
+          !this.username ||
+          !this.password ||
+          !this.confirmPassword ||
+          !this.invitationCode
+        ) {
+          errorDialog({
+            message: 'Info cannot be empty!',
+          });
+          return;
+        }
+
+        if (this.confirmPassword !== this.password) {
+          errorDialog({
+            message: 'Two passwords must match!',
+          });
+          return;
         }
 
         this.loading = true;
-        apiCaller(loginMutation, loginCredential)
+
+        const registerInfo = {
+          email: this.email,
+          username: this.username,
+          password: this.confirmPassword,
+          invitationCode: this.invitationCode,
+        };
+
+        apiCaller(registerMutation, registerInfo)
           .then((data) => {
-            if (data && data.login.success) {
-              // TODO change this
-              this.setUser(data['login']['user']);
-              successDialog({ message: 'Successfully Logged In!' });
-              this.$store.commit('SET_CSRF_TOKEN', null);
+            if (data && data.register.success) {
+              successDialog({ message: 'Successfully Registered!' });
               this.resetForm();
+              this.$router.push({
+                name: 'Login',
+              });
             } else {
               throw Error(
                 'Login Failed. Please check your username and password.'
@@ -160,23 +234,12 @@
             this.loading = false;
           });
       },
-      register() {
-        errorDialog({
-          message: this.$t('account.noNewAccount'),
-        });
-      },
       resetForm() {
-        this.account = '';
+        this.username = '';
         this.password = '';
+        this.confirmPassword = '';
         this.showPwd = false;
         this.loading = false;
-      },
-    },
-    watch: {
-      userObj: function() {
-        if (this.userObj !== null) {
-          this.$router.push('/account');
-        }
       },
     },
   };
