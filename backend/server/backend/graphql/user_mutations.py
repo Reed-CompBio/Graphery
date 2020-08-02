@@ -32,12 +32,21 @@ class Register(SuccessMutationBase):
 
     user = graphene.Field(UserType, required=True)
 
+    @staticmethod
+    def check_existence(email: str, username: str):
+        if User.objects.filter(email=email).exists():
+            raise GraphQLError('The email % is already registered.' % email)
+        if User.objects.filter(username=username).exists():
+            raise GraphQLError('The username % is already registered.' % email)
+
     @graphene.resolve_only_args
     def mutate(self, email: str, username: str, password: str, invitation_code: str):
         email = email.strip()
         username = username.strip()
         password = password.strip()
         invitation_code = invitation_code.strip()
+
+        self.check_existence(email, username)
 
         if not invitation_code:
             raise GraphQLError("You have to enter an invitation code!")
