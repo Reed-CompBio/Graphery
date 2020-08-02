@@ -25,6 +25,7 @@ install:
 before_script:
   - psql -c 'create database graphery;' -U postgres
   - psql -c "create user graphery with encrypted password 'graphery';" -U postgres
+  - psql -c 'ALTER USER graphery WITH SUPERUSER;' -U postgres
   - psql -c 'grant all privileges on database graphery to graphery;' -U postgres
 
 script:
