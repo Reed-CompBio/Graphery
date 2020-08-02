@@ -8,6 +8,7 @@
         :key="label"
       />
     </q-card-section>
+    <q-separator />
     <q-card-actions align="center">
       <q-btn flat @click="refreshInvitationCode" label="Refresh Code" />
     </q-card-actions>
