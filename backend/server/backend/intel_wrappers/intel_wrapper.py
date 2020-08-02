@@ -3,7 +3,7 @@ from typing import Optional, Iterable, Mapping, Type, Union, Any
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
     categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
-    graph_priority_validator, json_validator
+    graph_priority_validator, json_validator, email_validator, username_validator, password_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
 from backend.model.UserModel import User
@@ -31,9 +31,9 @@ class UserWrapper(AbstractWrapper):
         self.role: Optional[int] = None
 
         AbstractWrapper.__init__(self, {
-            'email': dummy_validator,
-            'username': dummy_validator,
-            'password': dummy_validator,
+            'email': email_validator,
+            'username': username_validator,
+            'password': password_validator,
             'role': dummy_validator,
         })
 
