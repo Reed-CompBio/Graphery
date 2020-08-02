@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Type, Container
 
 from django.core.management.utils import get_random_secret_key
 from .UserModel import ROLES
@@ -13,6 +13,7 @@ class MetaData:
 
 class InvitationCode:
     code_collection = {}
+    role_mapping = {label: value for label, value in (reversed(pair) for pair in ROLES.choices)}
 
     @staticmethod
     def generate_invitation_code() -> str:
@@ -24,3 +25,7 @@ class InvitationCode:
             cls.code_collection[label] = cls.generate_invitation_code()
 
         return cls
+
+    @classmethod
+    def codes(cls) -> Container:
+        return cls.code_collection.values()
