@@ -6,10 +6,7 @@ from backend.model.translation_collection import translation_types
 
 
 class Query(backend_query, graphene.ObjectType):
-    hello = graphene.Field(graphene.String)
-
-    def resolve_hello(self, info, **kwargs):
-        return 'hello world :)'
+    pass
 
 
 class Mutation(backend_mutation, graphene.ObjectType):

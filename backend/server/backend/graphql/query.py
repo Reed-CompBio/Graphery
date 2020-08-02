@@ -6,7 +6,8 @@ from graphene_django import DjangoListField
 from graphql import GraphQLError
 from graphql import ResolveInfo
 
-from .decorators import login_required, write_required
+from .decorators import login_required, write_required, admin_required
+from ..model.MetaModel import InvitationCode
 from ..model.TutorialRelatedModel import GraphPriority
 from ..model.filters import show_published_only
 from ..model.translation_collection import translation_tables
@@ -41,12 +42,12 @@ class Query(graphene.ObjectType):
     tutorial = graphene.Field(TutorialType,
                               url=graphene.String(),
                               id=graphene.String())
-    tutorials = DjangoListField(TutorialType,
-                                         categoryies=graphene.List(graphene.String))
+    tutorials = DjangoListField(TutorialType, categoryies=graphene.List(graphene.String))
     graph = graphene.Field(GraphType,
                            url=graphene.String(),
                            id=graphene.String())
     code = graphene.Field(CodeType, id=graphene.UUID(required=True))
+    invitation_codes = graphene.JSONString(required=True)
 
     # The most efficient method of finding whether a model with a unique field is a member of a QuerySet
     # def resolve_username_exist(self, info, username):
@@ -130,3 +131,8 @@ class Query(graphene.ObjectType):
     @write_required
     def resolve_code(self, info: ResolveInfo, id: str):
         return Code.objects.get(id=id)
+
+    @admin_required
+    @graphene.resolve_only_args
+    def resolve_invitation_codes(self):
+        return InvitationCode.code_collection
