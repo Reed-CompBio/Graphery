@@ -28,7 +28,7 @@ def user_passes_test(test_func, exc=GraphQLError('You do not have permission to 
     return decorator
 
 
-anonymous_required = user_passes_test(lambda u: u.is_anonymous)
+anonymous_required = user_passes_test(lambda u: not u.is_authenticated)
 
 login_required = user_passes_test(lambda u: u.is_authenticated)
 
