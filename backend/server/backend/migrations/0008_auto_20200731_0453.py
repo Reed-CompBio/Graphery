@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('is_published', models.BooleanField(default=True)),
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('file', models.FileField(upload_to=backend.model.TutorialRelatedModel.user_directory_path)),
+                ('file', models.FileField(upload_to='%Y/%m/')),
             ],
             options={
                 'abstract': False,

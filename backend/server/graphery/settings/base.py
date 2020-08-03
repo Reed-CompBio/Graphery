@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-
+from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+FILE_STORE_ROOT = Path('/var/www/')
 
 AUTH_USER_MODEL = 'backend.User'
 
@@ -117,6 +119,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_URL = '/static/'
 
+STATIC_FOLDER_NAME = 'graphery_static'
+
+# To be changed
+STATIC_ROOT = str(FILE_STORE_ROOT / STATIC_FOLDER_NAME)
+
 # CORS_ORIGIN_WHITELIST = ['http://localhost:8080']
 
 CORS_ALLOW_METHODS = [
@@ -126,9 +133,10 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-# To be overridden
-MEDIA_ROOT = '/Users/flicker_soul/Downloads/'
+UPLOAD_STATICS_ENTRY = 'upload'
 
-MEDIA_FOLDER_NAME = 'media'
+UPLOAD_FOLDER_NAME = 'graphery_upload'
 
-UPLOAD_STATICS_ENTRY = 'statics'
+MEDIA_ROOT = str(FILE_STORE_ROOT / UPLOAD_FOLDER_NAME)
+
+INVITATION_CODE_FOLDER = str(FILE_STORE_ROOT)

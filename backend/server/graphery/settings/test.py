@@ -3,6 +3,7 @@ from .base import *
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
+MEDIA_ROOT = str(Path.home() / 'Downloads' / 'graphery_media')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'this-is-a-test-key'

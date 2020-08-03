@@ -40,12 +40,13 @@
               'col-4',
               'flex-center',
               'q-px-xs',
+              'q-my-md',
               $q.screen.lt.sm ? 'row' : '',
             ]"
           >
-            <div id="filter-section" class="q-pt-md">
+            <div id="filter-section" class=" full-width">
               <div class="q-mr-lg">
-                <h5>
+                <h5 style="margin-bottom: 16px;">
                   {{ $t('collectionPage.Filter') }}
                 </h5>
               </div>

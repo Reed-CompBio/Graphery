@@ -9,10 +9,6 @@
         // TODO post lang with axios
         const form = new FormData();
         form.append('query', uploadImage);
-        form.append(
-          'variables',
-          JSON.stringify({ linkId: this.anchorId, where: 'TUTORIAL' })
-        );
         form.append(this.anchorId, file);
 
         apiCaller(null, null, form)
