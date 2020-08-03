@@ -403,8 +403,8 @@ mutation ($lang:String!, $content: TutorialContentInputType!){
 }`;
 
 export const uploadImage = `
-mutation ($linkId: UUID!, $where: UploadWhere!){
-  uploadStatics(linkId: $linkId, where: $where) {
+mutation {
+  uploadStatics {
     success
     url
   }
