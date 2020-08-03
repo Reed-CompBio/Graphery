@@ -1,7 +1,6 @@
 import json
 from typing import List, Sequence, Mapping, Type, Optional, MutableMapping
 from os.path import join
-from uuid import UUID
 
 import graphene
 from graphene.types.generic import GenericScalar
@@ -19,7 +18,7 @@ from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper, \
     GraphTranslationContentWrapper, ExecResultJsonWrapper
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
-from backend.model.TutorialRelatedModel import GraphPriority, UploadWhere, Uploads
+from backend.model.TutorialRelatedModel import GraphPriority, Uploads
 from backend.model.translation_collection import get_translation_table, get_graph_info_trans_table
 
 
@@ -123,10 +122,6 @@ class UpdateCode(SuccessMutationBase):
 
 
 class UploadStatics(SuccessMutationBase):
-    class Arguments:
-        where = graphene.Argument(graphene.Enum.from_enum(UploadWhere), required=True)
-        link_id = graphene.UUID(required=True)
-
     url = graphene.String(required=True)
 
     @staticmethod
@@ -134,7 +129,7 @@ class UploadStatics(SuccessMutationBase):
         return join('/', settings.UPLOAD_STATICS_ENTRY, url)
 
     @write_required
-    def mutate(self, info, link_id: UUID, where: str = UploadWhere.TUTORIAL):
+    def mutate(self, info):
 
         files: Mapping[str, InMemoryUploadedFile] = info.context.FILES
 
@@ -144,20 +139,23 @@ class UploadStatics(SuccessMutationBase):
         if len(files) > 1:
             raise GraphQLError('You can only upload one file at a time')
 
-        upload = Uploads(where=where, link_id=link_id, file=files[str(link_id)])
+        file = list(files.values())[0]
+        upload = Uploads(file=file)
         upload.save()
 
         return UploadStatics(success=True, url=UploadStatics.get_full_url(upload.file.url))
 
 
 class DeleteStatics(SuccessMutationBase):
+    upload_url_prefix = f'/{settings.UPLOAD_STATICS_ENTRY}/'
+
     class Arguments:
         url = graphene.String(required=True)
 
     @write_required
     def mutate(self, _, url: str):
-        if url.startswith('/statics/'):
-            url = url.replace('/statics/', '').strip()
+        if url.startswith(DeleteStatics.upload_url_prefix):
+            url = url.replace(DeleteStatics.upload_url_prefix, '').strip()
 
         try:
             upload = Uploads.objects.get(file=url)
