@@ -26,7 +26,7 @@ class InvitationCode:
         for label in ROLES.labels:
             cls.code_collection[label] = cls.generate_invitation_code()
 
-        with open(Path(settings.BASE_DIR) / 'invitation_codes.txt', 'w') as file:
+        with open(Path(settings.INVITATION_CODE_FOLDER) / 'invitation_codes.txt', 'w') as file:
             file.write(str(cls.code_collection))
 
         return cls

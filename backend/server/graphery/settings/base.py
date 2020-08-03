@@ -13,9 +13,10 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from pathlib import Path
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+FILE_STORE_ROOT = Path('/var/www/')
 
 AUTH_USER_MODEL = 'backend.User'
 
@@ -118,10 +119,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_URL = '/static/'
 
-STATIC_FOLDER_NAME = 'graphery_static_root'
+STATIC_FOLDER_NAME = 'graphery_static'
 
 # To be changed
-STATIC_ROOT = str(Path('/var/www/') / STATIC_FOLDER_NAME)
+STATIC_ROOT = str(FILE_STORE_ROOT / STATIC_FOLDER_NAME)
 
 # CORS_ORIGIN_WHITELIST = ['http://localhost:8080']
 
@@ -136,4 +137,6 @@ UPLOAD_STATICS_ENTRY = 'upload'
 
 UPLOAD_FOLDER_NAME = 'graphery_upload'
 
-MEDIA_ROOT = str(Path('/var/www/') / UPLOAD_FOLDER_NAME)
+MEDIA_ROOT = str(FILE_STORE_ROOT / UPLOAD_FOLDER_NAME)
+
+INVITATION_CODE_FOLDER = str(FILE_STORE_ROOT)
