@@ -8,13 +8,13 @@ from graphql import ResolveInfo
 
 from .decorators import login_required, write_required, admin_required
 from ..model.MetaModel import InvitationCode
-from ..model.TutorialRelatedModel import GraphPriority
+from ..model.TutorialRelatedModel import GraphPriority, Uploads
 from ..model.filters import show_published_only
 from ..model.translation_collection import translation_tables
 from ..models import Category, Tutorial, Graph, ExecResultJson, User, ROLES
 
 from .types import UserType, CategoryType, TutorialType, GraphType, Code, ExecResultJsonType, CodeType, \
-    GraphPriorityType
+    GraphPriorityType, UploadsType
 
 
 def get_or_none(model: Type[Model], **kwargs):
@@ -38,6 +38,8 @@ class Query(graphene.ObjectType):
     all_graph_priority = graphene.List(GraphPriorityType)
     all_authors = DjangoListField(UserType)
 
+    all_uploads = DjangoListField(UploadsType)
+
     category = graphene.Field(CategoryType, id=graphene.String(required=True))
     tutorial = graphene.Field(TutorialType,
                               url=graphene.String(),
@@ -60,43 +62,59 @@ class Query(graphene.ObjectType):
     def resolve_user_info(self, info: ResolveInfo):
         return info.context.user
 
-    def resolve_all_categories(self, info: ResolveInfo):
+    @graphene.resolve_only_args
+    def resolve_all_categories(self):
         return Category.objects.all()
 
-    def resolve_all_tutorial_info(self, info: ResolveInfo):
+    @graphene.resolve_only_args
+    def resolve_all_tutorial_info(self):
         return Tutorial.objects.all()
 
-    def resolve_all_tutorial_info_no_code(self, info: ResolveInfo, code: str = None):
+    @write_required
+    @graphene.resolve_only_args
+    def resolve_all_tutorial_info_no_code(self, code: str = None):
         if code:
             return Tutorial.objects.filter(code__isnull=True) | Tutorial.objects.filter(code__id=code)
 
         return Tutorial.objects.filter(code__isnull=True)
 
-    def resolve_all_graph_info(self, info: ResolveInfo):
+    @graphene.resolve_only_args
+    def resolve_all_graph_info(self):
         return Graph.objects.all()
 
     @login_required
-    def resolve_all_code(self, info: ResolveInfo):
+    @graphene.resolve_only_args
+    def resolve_all_code(self):
         return Code.objects.all()
 
     @login_required
-    def resolve_all_exec_result(self, info: ResolveInfo):
+    @graphene.resolve_only_args
+    def resolve_all_exec_result(self):
         return ExecResultJson.objects.all()
 
     @write_required
-    def resolve_all_supported_lang(self, info: ResolveInfo):
+    @graphene.resolve_only_args
+    def resolve_all_supported_lang(self):
         return translation_tables
 
     @write_required
-    def resolve_all_graph_priority(self, info: ResolveInfo):
+    @graphene.resolve_only_args
+    def resolve_all_graph_priority(self):
         return [GraphPriorityType(priority=priority, label=label) for priority, label in GraphPriority.choices]
 
     @write_required
-    def resolve_all_authors(self, info: ResolveInfo):
+    @graphene.resolve_only_args
+    def resolve_all_authors(self):
         return User.objects.filter(role__gte=ROLES.TRANSLATOR)
 
     @write_required
-    def resolve_category(self, info: ResolveInfo, id):
+    @graphene.resolve_only_args
+    def resolve_all_uploads(self):
+        return Uploads.objects.all()
+
+    @write_required
+    @graphene.resolve_only_args
+    def resolve_category(self, id):
         return get_or_none(Category, id=id)
 
     @show_published_only

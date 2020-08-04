@@ -4,7 +4,7 @@ from django.db.models import QuerySet
 from graphene_django import DjangoListField
 from graphql import ResolveInfo
 
-from ..model.TutorialRelatedModel import FAKE_UUID, GraphPriority
+from ..model.TutorialRelatedModel import FAKE_UUID, GraphPriority, Uploads
 from ..model.UserModel import ROLES
 from ..model.filters import show_published_only
 from ..model.mixins import field_adder, time_date_mixin_field, published_mixin_field, uuid_mixin_field
@@ -219,6 +219,14 @@ class ExecResultJsonType(DjangoObjectType):
         fields = ('code', 'graph', 'json',)
         description = 'The execution result of a piece of code on ' \
                       'a graph. '
+
+
+class UploadsType(PublishedFilterBase, DjangoObjectType):
+    @field_adder(published_mixin_field, uuid_mixin_field)
+    class Meta:
+        model = Uploads
+        fields = ('file', )
+        description = 'Uploaded files'
 
 
 TutorialTransBaseFields = ('tutorial_anchor', 'authors',
