@@ -5,14 +5,15 @@
       color="negative"
       round
       dense
-      @click="deleteContent"
+      @click="showDeleteDialog"
       icon="delete"
     />
   </q-td>
 </template>
 
 <script>
+  import deleteMixin from '../../mixins/DeleteMixin.vue';
   export default {
-    props: { deleteContent: { default: () => () => null } },
+    mixins: [deleteMixin],
   };
 </script>

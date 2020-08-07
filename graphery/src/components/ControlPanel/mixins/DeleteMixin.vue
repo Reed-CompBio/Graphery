@@ -16,6 +16,10 @@
       contentType: {
         type: String,
       },
+      finalCallback: {
+        type: Function,
+        default: null,
+      },
     },
     methods: {
       checkDelete() {
@@ -40,7 +44,7 @@
         this.$q
           .dialog({
             title: 'Confirm',
-            message: this.message,
+            message: this.message + ' This action CAN NOT be redo!',
             cancel: true,
             persistent: true,
             noEscDismiss: true,
@@ -74,6 +78,11 @@
             errorDialog({
               message: `An error occurs during deleting ${this.contentType} with id ${this.id}. ${err}`,
             });
+          })
+          .finally(() => {
+            if (this.finalCallback) {
+              this.finalCallback();
+            }
           });
       },
     },
