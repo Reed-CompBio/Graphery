@@ -9,10 +9,10 @@ from graphql import GraphQLError
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.conf import settings
 
-from backend.graphql.decorators import write_required
+from backend.graphql.decorators import write_required, admin_required
 from backend.graphql.mutation_base import SuccessMutationBase
 from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeType, TutorialInterface, \
-    TutorialContentInputType, GraphContentInputType, GraphContentInterface, ExecResultJsonType
+    TutorialContentInputType, GraphContentInputType, GraphContentInterface, ExecResultJsonType, DeletionEnum
 from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, get_wrapper_by_id
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper, \
@@ -121,7 +121,7 @@ class UpdateCode(SuccessMutationBase):
         return UpdateCode(success=True, model=code_wrapper.model)
 
 
-class UploadStatics(SuccessMutationBase):
+class UploadStatic(SuccessMutationBase):
     url = graphene.String(required=True)
 
     @staticmethod
@@ -143,10 +143,10 @@ class UploadStatics(SuccessMutationBase):
         upload = Uploads(file=file)
         upload.save()
 
-        return UploadStatics(success=True, url=UploadStatics.get_full_url(upload.file.url))
+        return UploadStatic(success=True, url=UploadStatic.get_full_url(upload.file.url))
 
 
-class DeleteStatics(SuccessMutationBase):
+class DeleteStatic(SuccessMutationBase):
     upload_url_prefix = f'/{settings.UPLOAD_STATICS_ENTRY}/'
 
     class Arguments:
@@ -154,8 +154,8 @@ class DeleteStatics(SuccessMutationBase):
 
     @write_required
     def mutate(self, _, url: str):
-        if url.startswith(DeleteStatics.upload_url_prefix):
-            url = url.replace(DeleteStatics.upload_url_prefix, '').strip()
+        if url.startswith(DeleteStatic.upload_url_prefix):
+            url = url.replace(DeleteStatic.upload_url_prefix, '').strip()
 
         try:
             upload = Uploads.objects.get(file=url)
@@ -163,7 +163,7 @@ class DeleteStatics(SuccessMutationBase):
         except Uploads.DoesNotExist:
             raise GraphQLError('The file you want to delete does not exist.')
 
-        return DeleteStatics(success=True)
+        return DeleteStatic(success=True)
 
 
 class UpdateTutorialContent(SuccessMutationBase):
@@ -236,3 +236,13 @@ class UpdateResultJson(SuccessMutationBase):
             result_json_models.append(result_wrapper.model)
 
         return UpdateResultJson(success=True, models=result_json_models)
+
+
+class DeleteContent(SuccessMutationBase):
+    class Arguments:
+        content_type = graphene.Argument(DeletionEnum, required=True)
+        id = graphene.Argument(graphene.UUID, required=True)
+
+    @admin_required
+    def mutate(self, info, content_type, id):
+        print(content_type, id)

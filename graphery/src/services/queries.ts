@@ -404,7 +404,7 @@ mutation ($lang:String!, $content: TutorialContentInputType!){
 
 export const uploadImage = `
 mutation {
-  uploadStatics {
+  uploadStatic {
     success
     url
   }
@@ -412,7 +412,7 @@ mutation {
 
 export const deleteImage = `
 mutation ($url: String!){
-  deleteStatics(url: $url) {
+  deleteStatic(url: $url) {
     success
   }
 }`;

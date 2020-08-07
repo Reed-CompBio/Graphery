@@ -31,7 +31,7 @@ def user_passes_test(test_func, exc=GraphQLError('You do not have permission to 
 anonymous_required = user_passes_test(lambda u: not u.is_authenticated,
                                       GraphQLError('You can not perform this action while logged in.'))
 
-login_required = user_passes_test(lambda u: u.is_authenticatedk,
+login_required = user_passes_test(lambda u: u.is_authenticated,
                                   GraphQLError('Login required to perform this action.'))
 
 write_required = user_passes_test(lambda u: u.is_authenticated and u.role > ROLES.TRANSLATOR,
