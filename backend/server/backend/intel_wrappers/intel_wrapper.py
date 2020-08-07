@@ -56,6 +56,10 @@ class UserWrapper(AbstractWrapper):
         for field in field_list:
             setattr(self.model, field, getattr(self, field))
 
+        if self.password == FAKE_PASSWORD:
+            # TODO change this framework, added a exist/not modify flag
+            raise ValueError('Internal Error: password cannot be set to placeholder.')
+
         if len(self.password) <= 25:
             self.model.set_password(self.password)
 
@@ -434,8 +438,6 @@ class UploadsWrapper(PublishedWrapper):
         super(UploadsWrapper, self).__init__({
             'file': dummy_validator,
         })
-
-        raise DeprecationWarning
 
     def load_model(self, loaded_model: Uploads) -> 'UploadsWrapper':
         super().load_model(loaded_model=loaded_model)

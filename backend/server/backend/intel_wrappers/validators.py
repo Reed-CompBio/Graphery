@@ -106,7 +106,7 @@ FAKE_PASSWORD = 'Password1!'
 
 
 def password_validator(password: str):
-    if not isinstance(password, str) or not password_regex.match(password) or password == FAKE_PASSWORD:
+    if not isinstance(password, str) or not password_regex.match(password):
         raise ValidationError('Password %s is not valid. A valid password must contain '
                               'least one upper case, lower case of letters, '
                               'one number, AND one special character (!@#$^&*). '
