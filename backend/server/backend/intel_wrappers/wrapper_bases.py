@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC
 
-from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, MutableMapping
+from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, MutableMapping, TypeVar, Generic
 
 from django.core.exceptions import ValidationError
 from django.db import models, IntegrityError
@@ -26,20 +26,23 @@ class IntelWrapperBase(ABC):
                 raise
 
 
-class ModelWrapperBase(ABC):
-    model_class: Optional[Type[models.Model]] = None
+T = TypeVar('T')
+
+
+class ModelWrapperBase(Generic[T], ABC):
+    model_class: Optional[Type[T]] = None
 
     def __init__(self):
-        self.model: Optional[models.Model] = None
+        self.model: Optional[T] = None
 
     def model_exists(self) -> bool:
         return self.model and isinstance(self.model, models.Model)
 
     @classmethod
-    def set_model_class(cls, model_class: Type[models.Model]) -> None:
+    def set_model_class(cls, model_class: Type[T]) -> None:
         cls.model_class = model_class
 
-    def load_model(self, loaded_model: models.Model) -> 'ModelWrapperBase':
+    def load_model(self, loaded_model: T) -> 'ModelWrapperBase':
         self.model = loaded_model
         return self
         # TODO load override and load all the info to fields
