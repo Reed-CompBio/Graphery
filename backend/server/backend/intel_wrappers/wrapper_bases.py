@@ -18,8 +18,7 @@ class IntelWrapperBase(ABC):
             # TODO change error class
             field = getattr(self, field_name, None)
             if field is None:
-                raise AssertionError('Cannot find the field {} during validation'
-                                     .format(field_name))
+                raise AssertionError('Cannot find the field `%s` during validation' % field_name)
             try:
                 validator(field)
             except AssertionError as e:

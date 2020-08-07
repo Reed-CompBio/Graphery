@@ -16,7 +16,7 @@ from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeTyp
 from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, get_wrapper_by_id
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper, \
-    GraphTranslationContentWrapper, ExecResultJsonWrapper
+    GraphTranslationContentWrapper, ExecResultJsonWrapper, UploadsWrapper
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import GraphPriority, Uploads
 from backend.model.translation_collection import get_translation_table, get_graph_info_trans_table
@@ -140,10 +140,9 @@ class UploadStatic(SuccessMutationBase):
             raise GraphQLError('You can only upload one file at a time')
 
         file = list(files.values())[0]
-        upload = Uploads(file=file)
-        upload.save()
+        upload_wrapper: UploadsWrapper = process_model_wrapper(UploadsWrapper, file=file)
 
-        return UploadStatic(success=True, url=UploadStatic.get_full_url(upload.file.url))
+        return UploadStatic(success=True, url=UploadStatic.get_full_url(upload_wrapper.model.file.url))
 
 
 class DeleteStatic(SuccessMutationBase):

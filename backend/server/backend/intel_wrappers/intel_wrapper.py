@@ -439,6 +439,8 @@ class UploadsWrapper(PublishedWrapper):
             'file': dummy_validator,
         })
 
+        self.id: str = FAKE_UUID
+
     def load_model(self, loaded_model: Uploads) -> 'UploadsWrapper':
         super().load_model(loaded_model=loaded_model)
         self.file = loaded_model.file
