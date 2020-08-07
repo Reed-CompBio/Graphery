@@ -77,6 +77,14 @@ class ModelWrapperBase(Generic[T], ABC):
             except IntegrityError as e:
                 raise AssertionError('A exception occurs during saving the model {}. Error: {}'
                                      .format(self.model, e))
+        else:
+            raise AssertionError('Cannot save %s since model does not exist.' % self)
+
+    def delete_model(self) -> T:
+        if self.model_exists():
+            return self.model.delete()
+        else:
+            raise AssertionError('Cannot delete %s since model does not exist.' % self)
 
 
 class SettableBase(ABC):
