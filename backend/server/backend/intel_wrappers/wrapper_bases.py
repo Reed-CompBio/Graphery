@@ -178,3 +178,13 @@ class PublishedWrapper(AbstractWrapper, ABC):
         super().load_model(loaded_model=loaded_model)
         self.is_published = loaded_model.is_published
         return self
+
+
+S = TypeVar('S')
+
+
+class VariedContentWrapper(PublishedWrapper, Generic[S], ABC):
+    def __init__(self, validators: MutableMapping[str, Callable]):
+        super(VariedContentWrapper, self).__init__(validators)
+
+        self.model_class: S = self.model_class

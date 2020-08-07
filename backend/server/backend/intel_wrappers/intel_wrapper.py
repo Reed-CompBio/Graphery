@@ -10,7 +10,7 @@ from backend.model.TranslationModels import TranslationBase, GraphTranslationBas
     ZHCNGraphContent
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
 from backend.model.UserModel import User
-from backend.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper
+from backend.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper, VariedContentWrapper
 
 
 def finalize_prerequisite_wrapper(model_wrapper: AbstractWrapper, overwrite: bool = False) -> None:
@@ -333,10 +333,8 @@ class UploadsWrapper(PublishedWrapper):
             raise ValueError(f'Cannot create upload since `file` {self.file} is not a File instance.')
 
 
-class TutorialTranslationContentWrapper(PublishedWrapper):
+class TutorialTranslationContentWrapper(VariedContentWrapper[Type[TranslationBase]]):
     def __init__(self):
-        self.model_class: Optional[Type[TranslationBase]] = self.model_class
-
         self.title: Optional[str] = None
         self.authors: Optional[Iterable[UserWrapper]] = None
         self.tutorial_anchor: Optional[TutorialAnchorWrapper] = None
@@ -344,7 +342,7 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
         self.content_md: Optional[str] = None
         self.content_html: Optional[str] = None
 
-        PublishedWrapper.__init__(self, {
+        super(TutorialTranslationContentWrapper, self).__init__({
             'title': non_empty_text_validator,
             'authors': authors_validator,
             'tutorial_anchor': wrapper_validator,
@@ -417,16 +415,14 @@ class ZHCNTutorialContentWrapper(TutorialTranslationContentWrapper):
     model_class = ZHCN
 
 
-class GraphTranslationContentWrapper(PublishedWrapper):
+class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationBase]]):
     def __init__(self):
-        self.model_class: Optional[Type[GraphTranslationBase]] = self.model_class
-
         self.title: Optional[str] = None
         self.abstract_md: Optional[str] = None
         self.abstract: Optional[str] = None
         self.graph_anchor: Optional[GraphWrapper] = None
 
-        PublishedWrapper.__init__(self, {
+        super(GraphTranslationContentWrapper, self).__init__({
             'title': non_empty_text_validator,
             'abstract_md': non_empty_text_validator,
             'abstract': non_empty_text_validator,
