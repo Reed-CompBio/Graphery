@@ -5,7 +5,8 @@ from graphene_django import DjangoListField
 from graphql import ResolveInfo
 
 from ..intel_wrappers.intel_wrapper import CategoryWrapper, TutorialAnchorWrapper, GraphWrapper, CodeWrapper, \
-    ExecResultJsonWrapper, TutorialTranslationContentWrapper, GraphTranslationContentWrapper
+    ExecResultJsonWrapper, ENUSGraphContentWrapper, ZHCNTutorialContentWrapper, ENUSTutorialContentWrapper, \
+    ZHCNGraphContentWrapper
 from ..model.TutorialRelatedModel import FAKE_UUID, GraphPriority, Uploads
 from ..model.UserModel import ROLES
 from ..model.filters import show_published_only
@@ -232,15 +233,15 @@ class UploadsType(PublishedFilterBase, DjangoObjectType):
 
 
 class DeletionEnum(graphene.Enum):
-    CATEGORY = Category, CategoryWrapper
-    TUTORIAL_ANCHOR = Tutorial, TutorialAnchorWrapper
-    GRAPH_ANCHOR = Graph, GraphWrapper
-    CODE = Code, CodeWrapper
-    EXEC_RESULT_JSON = ExecResultJson, ExecResultJsonWrapper
-    ENUS_TUTORIAL_CONTENT = ENUS, TutorialTranslationContentWrapper
-    ZHCN_TUTORIAL_CONTENT = ZHCN, TutorialTranslationContentWrapper
-    ENUS_GRAPH_CONTENT = ENUSGraphContent, GraphTranslationContentWrapper
-    ZHCN_GRAPH_CONTENT = ZHCNGraphContent, GraphTranslationContentWrapper
+    CATEGORY = CategoryWrapper
+    TUTORIAL_ANCHOR = TutorialAnchorWrapper
+    GRAPH_ANCHOR = GraphWrapper
+    CODE = CodeWrapper
+    EXEC_RESULT_JSON = ExecResultJsonWrapper
+    ENUS_TUTORIAL_CONTENT = ENUSTutorialContentWrapper
+    ZHCN_TUTORIAL_CONTENT = ZHCNTutorialContentWrapper
+    ENUS_GRAPH_CONTENT = ENUSGraphContentWrapper
+    ZHCN_GRAPH_CONTENT = ZHCNGraphContentWrapper
 
 
 TutorialTransBaseFields = ('tutorial_anchor', 'authors',

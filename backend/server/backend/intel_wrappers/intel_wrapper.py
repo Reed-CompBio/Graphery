@@ -6,7 +6,8 @@ from django.core.files import File
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
     categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
     graph_priority_validator, json_validator, email_validator, username_validator, password_validator, FAKE_PASSWORD
-from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
+from backend.model.TranslationModels import TranslationBase, GraphTranslationBase, ENUS, ZHCN, ENUSGraphContent, \
+    ZHCNGraphContent
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
 from backend.model.UserModel import User
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper
@@ -297,6 +298,41 @@ class ExecResultJsonWrapper(AbstractWrapper):
         return self.__str__()
 
 
+class UploadsWrapper(PublishedWrapper):
+    model_class: Type[Uploads] = Uploads
+
+    def __init__(self):
+        self.file: Optional[Union[str, Any]] = None
+
+        super(UploadsWrapper, self).__init__({
+            'file': dummy_validator,
+        })
+
+        self.id: str = FAKE_UUID
+
+    def load_model(self, loaded_model: Uploads) -> 'UploadsWrapper':
+        super().load_model(loaded_model=loaded_model)
+        self.file = loaded_model.file
+        return self
+
+    def retrieve_model(self) -> None:
+        if self.id is not None or self.id != FAKE_UUID:
+            self.model: Uploads = Uploads.objects.get(id=self.id)
+        elif isinstance(self.file, str):
+            self.model: Uploads = Uploads.objects.get(file=self.file)
+        elif isinstance(self.file, File):
+            self.model: Uploads = Uploads.objects.get(file=self.file.name)
+        else:
+            raise ValueError(f'Cannot find file model since `id` {self.id} and `file` {self.file}  '
+                             f'are either empty or not valid..')
+
+    def make_new_model(self) -> None:
+        if isinstance(self.file, File):
+            self.model: Uploads = Uploads(file=self.file)
+        else:
+            raise ValueError(f'Cannot create upload since `file` {self.file} is not a File instance.')
+
+
 class TutorialTranslationContentWrapper(PublishedWrapper):
     def __init__(self):
         self.model_class: Optional[Type[TranslationBase]] = None
@@ -373,6 +409,18 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
         return self.__str__()
 
 
+class ENUSTutorialContentWrapper(TutorialTranslationContentWrapper):
+    def __init__(self):
+        super(ENUSTutorialContentWrapper, self).__init__()
+        self.model_class: Type[ENUS] = ENUS
+
+
+class ZHCNTutorialContentWrapper(TutorialTranslationContentWrapper):
+    def __init__(self):
+        super(ZHCNTutorialContentWrapper, self).__init__()
+        self.model_class: Type[ZHCN] = ZHCN
+
+
 class GraphTranslationContentWrapper(PublishedWrapper):
     def __init__(self):
         self.model_class: Optional[Type[GraphTranslationBase]] = None
@@ -429,39 +477,16 @@ class GraphTranslationContentWrapper(PublishedWrapper):
         return self.__str__()
 
 
-class UploadsWrapper(PublishedWrapper):
-    model_class: Type[Uploads] = Uploads
-
+class ENUSGraphContentWrapper(GraphTranslationContentWrapper):
     def __init__(self):
-        self.file: Optional[Union[str, Any]] = None
+        super(ENUSGraphContentWrapper, self).__init__()
+        self.model_class: Type[ENUSGraphContent] = ENUSGraphContent
 
-        super(UploadsWrapper, self).__init__({
-            'file': dummy_validator,
-        })
 
-        self.id: str = FAKE_UUID
-
-    def load_model(self, loaded_model: Uploads) -> 'UploadsWrapper':
-        super().load_model(loaded_model=loaded_model)
-        self.file = loaded_model.file
-        return self
-
-    def retrieve_model(self) -> None:
-        if self.id is not None or self.id != FAKE_UUID:
-            self.model: Uploads = Uploads.objects.get(id=self.id)
-        elif isinstance(self.file, str):
-            self.model: Uploads = Uploads.objects.get(file=self.file)
-        elif isinstance(self.file, File):
-            self.model: Uploads = Uploads.objects.get(file=self.file.name)
-        else:
-            raise ValueError(f'Cannot find file model since `id` {self.id} and `file` {self.file}  '
-                             f'are either empty or not valid..')
-
-    def make_new_model(self) -> None:
-        if isinstance(self.file, File):
-            self.model: Uploads = Uploads(file=self.file)
-        else:
-            raise ValueError(f'Cannot create upload since `file` {self.file} is not a File instance.')
+class ZHCNGraphContentWrapper(GraphTranslationContentWrapper):
+    def __init__(self):
+        super(ZHCNGraphContentWrapper, self).__init__()
+        self.model_class: Type[ZHCNGraphContent] = ZHCNGraphContent
 
 
 FixedTypeWrapper = Union[UserWrapper,
