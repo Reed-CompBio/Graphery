@@ -34,6 +34,7 @@
             >
               {{ col.label }}
             </q-th>
+            <DeleteTableHeader />
           </q-tr>
         </template>
         <template v-slot:body="props">
@@ -83,6 +84,16 @@
             <q-td key="id" :props="props">
               {{ props.row.id }}
             </q-td>
+
+            <DeleteTableCell
+              :message="
+                `Do you want to delete code with id
+                '${props.row.id}' and ALL of its result json?`
+              "
+              :id="props.row.id"
+              content-type="CODE"
+              :final-callback="fetchCode"
+            />
           </q-tr>
 
           <!-- Expand info -->
@@ -103,10 +114,13 @@
   import { codeListQuery } from '@/services/queries';
   import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import { newModelUUID } from '@/services/params';
+  import DeleteTableCell from '@/components/ControlPanel/parts/table/DeleteTableCell';
 
   export default {
     mixins: [loadingMixin],
     components: {
+      DeleteTableCell,
+      DeleteTableHeader: () => import('../parts/table/DeleteTableHeader.vue'),
       AddNewButton: () => import('../parts/AddNewButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
