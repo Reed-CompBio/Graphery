@@ -335,7 +335,7 @@ class UploadsWrapper(PublishedWrapper):
 
 class TutorialTranslationContentWrapper(PublishedWrapper):
     def __init__(self):
-        self.model_class: Optional[Type[TranslationBase]] = None
+        self.model_class: Optional[Type[TranslationBase]] = self.model_class
 
         self.title: Optional[str] = None
         self.authors: Optional[Iterable[UserWrapper]] = None
@@ -410,20 +410,16 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
 
 
 class ENUSTutorialContentWrapper(TutorialTranslationContentWrapper):
-    def __init__(self):
-        super(ENUSTutorialContentWrapper, self).__init__()
-        self.model_class: Type[ENUS] = ENUS
+    model_class = ENUS
 
 
 class ZHCNTutorialContentWrapper(TutorialTranslationContentWrapper):
-    def __init__(self):
-        super(ZHCNTutorialContentWrapper, self).__init__()
-        self.model_class: Type[ZHCN] = ZHCN
+    model_class = ZHCN
 
 
 class GraphTranslationContentWrapper(PublishedWrapper):
     def __init__(self):
-        self.model_class: Optional[Type[GraphTranslationBase]] = None
+        self.model_class: Optional[Type[GraphTranslationBase]] = self.model_class
 
         self.title: Optional[str] = None
         self.abstract_md: Optional[str] = None
@@ -478,15 +474,11 @@ class GraphTranslationContentWrapper(PublishedWrapper):
 
 
 class ENUSGraphContentWrapper(GraphTranslationContentWrapper):
-    def __init__(self):
-        super(ENUSGraphContentWrapper, self).__init__()
-        self.model_class: Type[ENUSGraphContent] = ENUSGraphContent
+    model_class = ENUSGraphContent
 
 
 class ZHCNGraphContentWrapper(GraphTranslationContentWrapper):
-    def __init__(self):
-        super(ZHCNGraphContentWrapper, self).__init__()
-        self.model_class: Type[ZHCNGraphContent] = ZHCNGraphContent
+    model_class = ZHCNGraphContent
 
 
 FixedTypeWrapper = Union[UserWrapper,
