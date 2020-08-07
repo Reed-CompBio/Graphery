@@ -19,12 +19,7 @@
           <AddNewButton :create-func="createNewCategory" />
         </template>
         <template v-slot:header="props">
-          <q-tr :props="props">
-            <q-th v-for="col in props.cols" :key="col.name" :props="props">
-              {{ col.label }}
-            </q-th>
-            <DeleteTableHeader />
-          </q-tr>
+          <AllTableHeader :passed-props="props" />
         </template>
         <template v-slot:body="props">
           <q-tr :props="props">
@@ -51,7 +46,7 @@
                 `Do you want to delete category '${props.row.category} with id '${props.row.id}'?`
               "
               :id="props.row.id"
-              :contentType="'CATEGORY'"
+              contentType="CATEGORY"
               :finalCallback="fetchCategories"
             />
           </q-tr>
@@ -71,9 +66,9 @@
   export default {
     mixins: [loadingMixin],
     components: {
+      AllTableHeader: () => import('../parts/table/AllTableHeader'),
       DeleteTableCell: () => import('../parts/table/DeleteTableCell'),
       AddNewButton: () => import('../parts/AddNewButton'),
-      DeleteTableHeader: () => import('../parts/table/DeleteTableHeader.vue'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton.vue'),

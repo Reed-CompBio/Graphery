@@ -114,12 +114,12 @@
   import { codeListQuery } from '@/services/queries';
   import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import { newModelUUID } from '@/services/params';
-  import DeleteTableCell from '@/components/ControlPanel/parts/table/DeleteTableCell';
 
   export default {
     mixins: [loadingMixin],
     components: {
-      DeleteTableCell,
+      DeleteTableCell: () =>
+        import('@/components/ControlPanel/parts/table/DeleteTableCell'),
       DeleteTableHeader: () => import('../parts/table/DeleteTableHeader.vue'),
       AddNewButton: () => import('../parts/AddNewButton'),
       ControlPanelContentFrame: () =>

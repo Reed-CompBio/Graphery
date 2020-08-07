@@ -4,7 +4,7 @@
     :to="routePath"
     flat
     :disable="disabled"
-    style="text-transform: none; "
+    style="text-transform: none;"
   >
     <SwitchTooltip text="Open Page"></SwitchTooltip>
   </q-btn>

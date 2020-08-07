@@ -71,7 +71,7 @@
 
           <DeleteTableCell
             :message="
-              `Do you want to delete graph '${props.row.graphName} with id '${props.row.id}'?`
+              `Do you want to delete graph translation '${props.row.title} that belongs to graph '${props.row.graphName}' with id '${props.row.id}'?`
             "
             :id="props.row.id"
             :content-type="currentDeletionContentType"
@@ -90,14 +90,14 @@
   import { graphInfoListQuery } from '@/services/queries';
   import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import { newModelUUID } from '@/services/params';
-  import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
-  import DeleteTableCell from '@/components/ControlPanel/parts/table/DeleteTableCell';
 
   export default {
     mixins: [loadingMixin, tableLangMixin],
     components: {
-      DeleteTableCell,
-      AllTableHeader,
+      DeleteTableCell: () =>
+        import('@/components/ControlPanel/parts/table/DeleteTableCell'),
+      AllTableHeader: () =>
+        import('@/components/ControlPanel/parts/table/AllTableHeader'),
       OpenInPageButton: () => import('../parts/OpenInPageButton'),
       OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
       ControlPanelContentFrame: () =>
