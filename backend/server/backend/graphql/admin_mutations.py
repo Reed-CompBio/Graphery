@@ -17,6 +17,7 @@ from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, ge
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper, \
     GraphTranslationContentWrapper, ExecResultJsonWrapper, UploadsWrapper
+from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import GraphPriority, Uploads
 from backend.model.translation_collection import get_translation_table, get_graph_info_trans_table
@@ -243,5 +244,8 @@ class DeleteContent(SuccessMutationBase):
         id = graphene.Argument(graphene.UUID, required=True)
 
     @admin_required
-    def mutate(self, info, content_type, id):
-        print(content_type, id)
+    def mutate(self, info, content_type: Type[AbstractWrapper], id: str):
+        wrapper = get_wrapper_by_id(content_type, id)
+        wrapper.delete_model()
+
+        return DeleteContent(success=True, )
