@@ -18,6 +18,9 @@
           <RefreshButton :fetch-func="fetchGraphs" />
           <AddNewButton :create-func="createGraph" />
         </template>
+        <template v-slot:header="props">
+          <AllTableHeader :passed-props="props" />
+        </template>
         <template v-slot:body="props">
           <q-tr :props="props">
             <!-- name -->
@@ -81,6 +84,15 @@
             <q-td key="id" :props="props">
               {{ props.row.id }}
             </q-td>
+
+            <DeleteTableCell
+              :message="
+                `Do you want to delete graph '${props.row.name} which belongs to tutorial '${props.row.tutorialName}' and has id '${props.row.id}'?`
+              "
+              :id="props.row.id"
+              content-type="GRAPH_ANCHOR"
+              :final-callback="fetchGraphs"
+            />
           </q-tr>
         </template>
       </q-table>
@@ -89,16 +101,20 @@
 </template>
 
 <script>
-  import { apiCaller } from '../../../services/apis';
-  import { graphListQuery } from '../../../services/queries';
-  import { errorDialog, resolveAndOpenLink } from '../../../services/helpers';
+  import { apiCaller } from '@/services/apis';
+  import { graphListQuery } from '@/services/queries';
+  import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import AddNewButton from '../parts/AddNewButton';
-  import { newModelUUID } from '../../../services/params';
+  import { newModelUUID } from '@/services/params';
+  import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
+  import DeleteTableCell from '@/components/ControlPanel/parts/table/DeleteTableCell';
 
   export default {
     mixins: [loadingMixin],
     components: {
+      DeleteTableCell,
+      AllTableHeader,
       AddNewButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
@@ -172,7 +188,7 @@
         ],
         pagination: {
           sortBy: 'name',
-          rowsPerPage: 10,
+          rowsPerPage: 5,
         },
         tableContent: [],
       };
