@@ -467,3 +467,10 @@ mutation ($email: String!, $username: String!, $password: String!, $invitationCo
     success
   }
 }`;
+
+export const deleteMutation = `
+mutation ($contentType: DeletionEnum!, $id: UUID!) {
+  deleteContent (contentType: $contentType, id: $id) {
+    success
+  }
+}`;
