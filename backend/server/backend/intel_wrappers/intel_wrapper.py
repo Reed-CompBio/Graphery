@@ -1,9 +1,11 @@
 import json
 from typing import Optional, Iterable, Mapping, Type, Union, Any
 
+from django.core.files import File
+
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
     categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
-    graph_priority_validator, json_validator, email_validator, username_validator, password_validator
+    graph_priority_validator, json_validator, email_validator, username_validator, password_validator, FAKE_PASSWORD
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
 from backend.model.UserModel import User
@@ -42,7 +44,7 @@ class UserWrapper(AbstractWrapper):
         super().load_model(loaded_model)
         self.username = loaded_model.username
         self.email = loaded_model.email
-        self.password = loaded_model.password
+        self.password = FAKE_PASSWORD
         self.role = loaded_model.role
         return self
 
@@ -53,6 +55,7 @@ class UserWrapper(AbstractWrapper):
         field_list = [field for field in self.validators.keys() if field != 'password']
         for field in field_list:
             setattr(self.model, field, getattr(self, field))
+
         if len(self.password) <= 20:
             self.model.set_password(self.password)
 
@@ -426,13 +429,9 @@ class UploadsWrapper(PublishedWrapper):
     model_class: Type[Uploads] = Uploads
 
     def __init__(self):
-        self.where: Optional[str] = None
-        self.url: Optional[str] = None
         self.file: Optional[Union[str, Any]] = None
 
         super(UploadsWrapper, self).__init__({
-            'where': dummy_validator,
-            'url': dummy_validator,
             'file': dummy_validator,
         })
 
@@ -440,9 +439,6 @@ class UploadsWrapper(PublishedWrapper):
 
     def load_model(self, loaded_model: Uploads) -> 'UploadsWrapper':
         super().load_model(loaded_model=loaded_model)
-
-        self.where = loaded_model.where
-        self.url = loaded_model.where
         self.file = loaded_model.file
         return self
 
@@ -451,12 +447,17 @@ class UploadsWrapper(PublishedWrapper):
             self.model: Uploads = Uploads.objects.get(id=self.id)
         elif isinstance(self.file, str):
             self.model: Uploads = Uploads.objects.get(file=self.file)
+        elif isinstance(self.file, File):
+            self.model: Uploads = Uploads.objects.get(file=self.file.name)
         else:
-            get_method = getattr(self.file, 'path', None)
-            raise ValueError('')
+            raise ValueError(f'Cannot find file model since `id` {self.id} and `file` {self.file}  '
+                             f'are either empty or not valid..')
 
     def make_new_model(self) -> None:
-        pass
+        if isinstance(self.file, File):
+            self.model: Uploads = Uploads(file=self.file)
+        else:
+            raise ValueError(f'Cannot create upload since `file` {self.file} is not a File instance.')
 
 
 FixedTypeWrapper = Union[UserWrapper,
