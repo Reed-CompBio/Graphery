@@ -100,11 +100,14 @@ def username_validator(username: str):
         raise ValidationError('Username %s is not valid.' % username)
 
 
-password_regex = re.compile(r'^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$^&*])[\w\d!@#$^&*]{6,12}$')
+password_regex = re.compile(r'^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$^&*])[\w\d!@#$^&*]{6,25}$')
+
+FAKE_PASSWORD = 'Password1!'
 
 
 def password_validator(password: str):
-    if not isinstance(password, str) or not password_regex.match(password):
+    if not isinstance(password, str) or not password_regex.match(password) or password == FAKE_PASSWORD:
         raise ValidationError('Password %s is not valid. A valid password must contain '
                               'least one upper case, lower case of letters, '
-                              'one number, AND one special character (!@#$^&*).' % password)
+                              'one number, AND one special character (!@#$^&*). '
+                              'The length should be between 8 to 25' % password)

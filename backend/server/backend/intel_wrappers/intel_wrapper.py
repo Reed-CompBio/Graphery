@@ -56,7 +56,7 @@ class UserWrapper(AbstractWrapper):
         for field in field_list:
             setattr(self.model, field, getattr(self, field))
 
-        if len(self.password) <= 20:
+        if len(self.password) <= 25:
             self.model.set_password(self.password)
 
     def retrieve_model(self) -> None:
