@@ -82,6 +82,7 @@
     notAvailableMessage,
   } from '@/services/helpers';
   import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
+  import { newModelUUID } from '@/services/params';
 
   export default {
     props: ['codeId', 'codeContent'],
@@ -120,6 +121,10 @@
     },
     methods: {
       fetchTutorialGraphs() {
+        if (this.codeId === newModelUUID) {
+          return;
+        }
+
         this.startLoading();
         apiCaller(resultJsonGetGraphsQuery, {
           id: this.codeId,

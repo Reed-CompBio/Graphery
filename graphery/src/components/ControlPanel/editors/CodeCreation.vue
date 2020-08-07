@@ -43,10 +43,10 @@
   import pushToMixin from '../mixins/PushToMixin';
   import SubmitButton from '../parts/SubmitButton';
   import IDCard from '../parts/IDCard';
-  import { newModelUUID } from '../../../services/params';
-  import { apiCaller } from '../../../services/apis';
-  import { codeQuery, updateCodeMutation } from '../../../services/queries';
-  import { errorDialog, successDialog } from '../../../services/helpers';
+  import { newModelUUID } from '@/services/params';
+  import { apiCaller } from '@/services/apis';
+  import { codeQuery, updateCodeMutation } from '@/services/queries';
+  import { errorDialog, successDialog } from '@/services/helpers';
   import JsonCreation from './JsonCreation';
   import NoCodeTutorialSelection from '../parts/NoCodeTutorialSelection';
 
