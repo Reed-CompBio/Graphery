@@ -45,18 +45,23 @@ def wrapper_validator(wrapper):
     wrapper.validate()
 
 
+def wrappers_validator(wrappers: Sequence, wrapper_name: str):
+    if not isinstance(wrappers, Sequence):
+        raise ValidationError('`%s` must be wrapped in wrappers.' % wrapper_name)
+    for wrapper in wrappers:
+        wrapper_validator(wrapper)
+
+
 def categories_validator(cats: Sequence):
-    if not isinstance(cats, Sequence):
-        raise ValidationError('`Categories` must be wrapped in wrappers.')
-    for cat in cats:
-        wrapper_validator(cat)
+    wrappers_validator(cats, 'categories')
 
 
 def authors_validator(authors: Sequence):
-    if not isinstance(authors, Sequence):
-        raise ValidationError('`authors must be wrapped in wrappers')
-    for author in authors:
-        wrapper_validator(author)
+    wrappers_validator(authors, 'authors')
+
+
+def tutorial_anchors_validator(anchors: Sequence):
+    wrappers_validator(anchors, 'tutorial_anchors')
 
 
 def code_validator(code: str):

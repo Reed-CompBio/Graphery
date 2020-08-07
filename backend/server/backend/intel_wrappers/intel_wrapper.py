@@ -5,7 +5,8 @@ from django.core.files import File
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
     categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
-    graph_priority_validator, json_validator, email_validator, username_validator, password_validator, FAKE_PASSWORD
+    graph_priority_validator, json_validator, email_validator, username_validator, password_validator, FAKE_PASSWORD, \
+    tutorial_anchors_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase, ENUS, ZHCN, ENUSGraphContent, \
     ZHCNGraphContent
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
@@ -175,7 +176,7 @@ class GraphWrapper(PublishedWrapper):
             'authors': authors_validator,
             'priority': graph_priority_validator,
             'cyjs': json_validator,
-            'tutorials': wrapper_validator
+            'tutorials': tutorial_anchors_validator
         })
 
     def load_model(self, loaded_model: Graph) -> 'GraphWrapper':
