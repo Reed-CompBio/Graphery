@@ -13,15 +13,15 @@
 
         apiCaller(null, null, form)
           .then((data) => {
-            if (!data || !('uploadStatics' in data)) {
+            if (!data || !('uploadStatic' in data)) {
               throw Error('Invalid data returned.');
             }
 
-            if (!data.uploadStatics.success) {
+            if (!data.uploadStatic.success) {
               throw Error('Uploading image is failed.');
             }
 
-            this.$refs.mdEditor.replaceUrl(fileName, data.uploadStatics.url);
+            this.$refs.mdEditor.replaceUrl(fileName, data.uploadStatic.url);
             successDialog({
               message: 'Upload Image Successfully!',
             });
@@ -37,11 +37,11 @@
           url: filename,
         })
           .then((data) => {
-            if (!data || !('deleteStatics' in data)) {
+            if (!data || !('deleteStatic' in data)) {
               throw Error('Invalid data returned');
             }
 
-            if (!data.deleteStatics.success) {
+            if (!data.deleteStatic.success) {
               throw Error(`Deleting ${filename} is failed.`);
             }
 
