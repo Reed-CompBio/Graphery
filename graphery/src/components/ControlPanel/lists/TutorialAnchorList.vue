@@ -18,6 +18,9 @@
           <RefreshButton :fetch-func="fetchTutorials"></RefreshButton>
           <AddNewButton :create-func="createTutorial" />
         </template>
+        <template v-slot:header="props">
+          <AllTableHeader :passed-props="props" />
+        </template>
         <template v-slot:body="props">
           <q-tr :props="props">
             <!-- tutorial name -->
@@ -51,6 +54,15 @@
             <q-td key="id" :props="props">
               {{ props.row.id }}
             </q-td>
+
+            <DeleteTableCell
+              :message="
+                `Do you want to delete tutorial anchor '${props.row.name} with id '${props.row.id}'?`
+              "
+              :id="props.row.id"
+              content-type="TUTORIAL_ANCHOR"
+              :final-callback="fetchTutorials"
+            />
           </q-tr>
         </template>
       </q-table>
@@ -63,13 +75,16 @@
   import { tutorialAnchorListQuery } from '@/services/queries';
   import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
-  import AddNewButton from '../parts/AddNewButton';
   import { newModelUUID } from '@/services/params';
 
   export default {
     mixins: [loadingMixin],
     components: {
-      AddNewButton,
+      DeleteTableCell: () =>
+        import('@/components/ControlPanel/parts/table/DeleteTableCell'),
+      AllTableHeader: () =>
+        import('@/components/ControlPanel/parts/table/AllTableHeader'),
+      AddNewButton: () => import('../parts/AddNewButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/RefreshButton.vue'),
