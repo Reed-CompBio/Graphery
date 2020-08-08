@@ -9,7 +9,12 @@
             </div>
           </template>
           <!-- TODO use on hover -->
-          <q-chip clickable dense size="sm">
+          <q-chip
+            clickable
+            dense
+            size="sm"
+            @click="$emit('showUploadInfo', this.resourceLink)"
+          >
             <q-icon name="info" size="sm" color="white" />
           </q-chip>
         </q-img>
@@ -17,7 +22,7 @@
     </q-card-section>
     <q-separator />
     <q-card-actions align="center">
-      <q-btn flat label="Relative Link" />
+      <UploadActionButton label="Relative Link" />
     </q-card-actions>
   </q-card>
 </template>
@@ -27,7 +32,10 @@
   import videoPlaceholder from '@/assets/icons/video.svg';
   import filePlaceholder from '@/assets/icons/file.svg';
   import { BASE_URL } from '@/services/api_entry';
+  import UploadActionButton from '@/components/ControlPanel/parts/buttons/UploadActionButton';
+
   export default {
+    components: { UploadActionButton },
     props: {
       resourceLink: {
         type: String,
@@ -61,6 +69,11 @@
           : this.isVideo
           ? videoPlaceholder
           : filePlaceholder;
+      },
+    },
+    methods: {
+      testFunc() {
+        console.log('test');
       },
     },
   };

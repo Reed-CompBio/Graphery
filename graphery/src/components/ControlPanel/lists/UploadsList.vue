@@ -53,7 +53,7 @@
         ],
         pagination: {
           sortBy: '',
-          rowsPerPage: 10,
+          rowsPerPage: 20,
         },
         tableContent: [],
       };
