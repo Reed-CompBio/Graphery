@@ -1,6 +1,7 @@
 from os.path import join
 from typing import Callable, Optional
 
+from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
@@ -138,3 +139,8 @@ class ExecResultJson(UUIDMixin, TimeDateMixin, models.Model):
 
 class Uploads(PublishedMixin, UUIDMixin, models.Model):
     file = models.FileField(upload_to='%Y/%m/')
+    alias = models.TextField(unique=True)
+
+    @property
+    def relative_url(self) -> str:
+        return join('/', settings.UPLOAD_STATICS_ENTRY, self.file.name)

@@ -1,4 +1,5 @@
 import json
+from random import random
 from typing import Optional, Iterable, Mapping, Type, Union, Any
 
 from django.core.files import File
@@ -304,9 +305,11 @@ class UploadsWrapper(PublishedWrapper):
 
     def __init__(self):
         self.file: Optional[Union[str, Any]] = None
+        self.alias: Optional[str] = None
 
         super(UploadsWrapper, self).__init__({
             'file': dummy_validator,
+            'alias': non_empty_text_validator
         })
 
         self.id: str = FAKE_UUID
@@ -314,11 +317,14 @@ class UploadsWrapper(PublishedWrapper):
     def load_model(self, loaded_model: Uploads) -> 'UploadsWrapper':
         super().load_model(loaded_model=loaded_model)
         self.file = loaded_model.file
+        self.alias = loaded_model.alias
         return self
 
     def retrieve_model(self) -> None:
         if self.id is not None or self.id != FAKE_UUID:
             self.model: Uploads = Uploads.objects.get(id=self.id)
+        elif self.alias:
+            self.model: Uploads = Uploads.objects.get(alias=self.alias)
         elif isinstance(self.file, str):
             self.model: Uploads = Uploads.objects.get(file=self.file)
         elif isinstance(self.file, File):
@@ -329,7 +335,7 @@ class UploadsWrapper(PublishedWrapper):
 
     def make_new_model(self) -> None:
         if isinstance(self.file, File):
-            self.model: Uploads = Uploads(file=self.file)
+            self.model: Uploads = Uploads(file=self.file, alias=f'{self.file.name}_{int(random() * 100000)}')
         else:
             raise ValueError(f'Cannot create upload since `file` {self.file} is not a File instance.')
 

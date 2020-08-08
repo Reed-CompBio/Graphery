@@ -213,7 +213,8 @@ class ExecResultJsonType(DjangoObjectType):
     # TODO django can't query a user-defined property
     is_published = graphene.Boolean()
 
-    def resolve_is_published(self, info):
+    @graphene.resolve_only_args
+    def resolve_is_published(self):
         return self.is_published
 
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
@@ -225,10 +226,16 @@ class ExecResultJsonType(DjangoObjectType):
 
 
 class UploadsType(PublishedFilterBase, DjangoObjectType):
+    relative_url = graphene.String()
+
+    @graphene.resolve_only_args
+    def resolve_url(self):
+        return self.relative_url
+
     @field_adder(published_mixin_field, uuid_mixin_field)
     class Meta:
         model = Uploads
-        fields = ('file', )
+        fields = ('file', 'relative_url')
         description = 'Uploaded files'
 
 
