@@ -40,7 +40,7 @@
 
 <script>
   import { siteName, navigationButtons } from '../../store/states/meta';
-  import LangSelector from '../ControlPanel/parts/LangSelector';
+  import LangSelector from '../ControlPanel/parts/selectors/LangSelector';
 
   export default {
     name: 'Header',

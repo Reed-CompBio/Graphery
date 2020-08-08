@@ -94,18 +94,18 @@
     props: ['anchorId', 'contentId', 'graphUrl', 'lang'],
     components: {
       StoreLocation: () =>
-        import('@/components/ControlPanel/parts/StoreLocationCard'),
+        import('@/components/ControlPanel/parts/cards/StoreLocationCard'),
       SubmitButton: () =>
-        import('@/components/ControlPanel/parts/SubmitButton'),
+        import('@/components/ControlPanel/parts/buttons/SubmitButton'),
       EditorHowTo: () => import('@/components/ControlPanel/parts/EditorHowTo'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
-      LangCard: () => import('../parts/LangCard'),
-      URLCard: () => import('@/components/ControlPanel/parts/URLCard'),
-      IDCard: () => import('@/components/ControlPanel/parts/IDCard'),
+      LangCard: () => import('../parts/cards/LangCard'),
+      URLCard: () => import('@/components/ControlPanel/parts/cards/URLCard'),
+      IDCard: () => import('@/components/ControlPanel/parts/cards/IDCard'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      EditorSection: () => import('../parts/EditorSection.vue'),
-      InfoCard: () => import('../parts/InfoCard.vue'),
+      EditorSection: () => import('../parts/selectors/EditorSection.vue'),
+      InfoCard: () => import('../parts/cards/InfoCard.vue'),
     },
     data() {
       return {

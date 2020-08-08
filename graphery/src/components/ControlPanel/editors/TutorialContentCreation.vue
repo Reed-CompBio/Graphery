@@ -113,19 +113,19 @@
     props: ['anchorId', 'contentId', 'tutorialUrl', 'lang'],
     components: {
       StoreLocation: () =>
-        import('@/components/ControlPanel/parts/StoreLocationCard'),
+        import('@/components/ControlPanel/parts/cards/StoreLocationCard'),
       EditorHowTo: () => import('@/components/ControlPanel/parts/EditorHowTo'),
       SubmitButton: () =>
-        import('@/components/ControlPanel/parts/SubmitButton'),
-      LangCard: () => import('@/components/ControlPanel/parts/LangCard'),
-      URLCard: () => import('../parts/URLCard.vue'),
-      AuthorSelection: () => import('../parts/AuthorSelection.vue'),
-      IDCard: () => import('../parts/IDCard.vue'),
+        import('@/components/ControlPanel/parts/buttons/SubmitButton'),
+      LangCard: () => import('@/components/ControlPanel/parts/cards/LangCard'),
+      URLCard: () => import('../parts/cards/URLCard.vue'),
+      AuthorSelection: () => import('../parts/selectors/AuthorSelection.vue'),
+      IDCard: () => import('../parts/cards/IDCard.vue'),
       ControlPageContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
-      EditorSection: () => import('../parts/EditorSection.vue'),
-      InfoCard: () => import('../parts/InfoCard.vue'),
+      EditorSection: () => import('../parts/selectors/EditorSection.vue'),
+      InfoCard: () => import('../parts/cards/InfoCard.vue'),
     },
     data() {
       return {

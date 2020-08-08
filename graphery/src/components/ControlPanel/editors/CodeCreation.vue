@@ -41,14 +41,14 @@
   import { mapState } from 'vuex';
   import loadingMixin from '../mixins/LoadingMixin';
   import pushToMixin from '../mixins/PushToMixin';
-  import SubmitButton from '../parts/SubmitButton';
-  import IDCard from '../parts/IDCard';
+  import SubmitButton from '../parts/buttons/SubmitButton';
+  import IDCard from '../parts/cards/IDCard';
   import { newModelUUID } from '@/services/params';
   import { apiCaller } from '@/services/apis';
   import { codeQuery, updateCodeMutation } from '@/services/queries';
   import { errorDialog, successDialog } from '@/services/helpers';
   import JsonCreation from './JsonCreation';
-  import NoCodeTutorialSelection from '../parts/NoCodeTutorialSelection';
+  import NoCodeTutorialSelection from '../parts/selectors/NoCodeTutorialSelection';
 
   export default {
     mixins: [loadingMixin, pushToMixin],

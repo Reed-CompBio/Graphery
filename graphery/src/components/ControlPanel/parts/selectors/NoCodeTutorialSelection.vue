@@ -17,8 +17,8 @@
 </template>
 
 <script>
-  import InfoCard from '../parts/InfoCard.vue';
-  import loadingMixin from '../mixins/LoadingMixin.vue';
+  import InfoCard from '../cards/InfoCard.vue';
+  import loadingMixin from '../../mixins/LoadingMixin.vue';
   import { apiCaller } from '@/services/apis';
   import { allTutorialNoCodeQuery } from '@/services/queries';
   import { errorDialog } from '@/services/helpers';

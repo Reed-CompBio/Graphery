@@ -13,7 +13,7 @@
                 v-model="graphObj.url"
                 hint="please input URL. Do not start or end it with -_."
                 label="Graph URL"
-              ></q-input>
+              />
             </div>
             <div class="col-6 q-pl-sm">
               <q-input
@@ -21,7 +21,7 @@
                 v-model="graphObj.name"
                 hint="Please enter a unique name."
                 label="Graph Name"
-              ></q-input>
+              />
             </div>
           </div>
           <div class="row full-width q-mt-md">
@@ -97,15 +97,15 @@
 <script>
   import { errorDialog, successDialog } from '../../../services/helpers';
   import { newModelUUID } from '../../../services/params';
-  import IDCard from '../parts/IDCard';
+  import IDCard from '../parts/cards/IDCard';
   import loadingMixin from '../mixins/LoadingMixin';
   import pushToMixin from '../mixins/PushToMixin.vue';
   import { apiCaller } from '../../../services/apis';
   import { graphQuery, updateGraphMutation } from '../../../services/queries';
-  import TutorialSelection from '../parts/TutorialSelection';
-  import AuthorSelection from '../parts/AuthorSelection';
-  import CategorySelection from '../parts/CategorySelection';
-  import SubmitButton from '../parts/SubmitButton';
+  import TutorialSelection from '../parts/selectors/TutorialSelection';
+  import AuthorSelection from '../parts/selectors/AuthorSelection';
+  import CategorySelection from '../parts/selectors/CategorySelection';
+  import SubmitButton from '../parts/buttons/SubmitButton';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
@@ -119,7 +119,7 @@
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
-      InfoCard: () => import('../parts/InfoCard.vue'),
+      InfoCard: () => import('../parts/cards/InfoCard.vue'),
     },
     data() {
       return {

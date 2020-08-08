@@ -121,12 +121,12 @@
       DeleteTableCell: () =>
         import('@/components/ControlPanel/parts/table/DeleteTableCell'),
       DeleteTableHeader: () => import('../parts/table/DeleteTableHeader.vue'),
-      AddNewButton: () => import('../parts/AddNewButton'),
+      AddNewButton: () => import('../parts/buttons/AddNewButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../parts/RefreshButton'),
-      OpenInPageButton: () => import('../parts/OpenInPageButton'),
-      OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
+      RefreshButton: () => import('../parts/buttons/RefreshButton'),
+      OpenInPageButton: () => import('../parts/buttons/OpenInPageButton'),
+      OpenInEditorButton: () => import('../parts/buttons/OpenInEditorButton'),
     },
     data() {
       return {

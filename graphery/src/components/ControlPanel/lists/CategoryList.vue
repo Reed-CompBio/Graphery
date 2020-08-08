@@ -68,11 +68,12 @@
     components: {
       AllTableHeader: () => import('../parts/table/AllTableHeader'),
       DeleteTableCell: () => import('../parts/table/DeleteTableCell'),
-      AddNewButton: () => import('../parts/AddNewButton'),
+      AddNewButton: () => import('../parts/buttons/AddNewButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../parts/RefreshButton.vue'),
-      OpenInEditorButton: () => import('../parts/OpenInEditorButton.vue'),
+      RefreshButton: () => import('../parts/buttons/RefreshButton.vue'),
+      OpenInEditorButton: () =>
+        import('../parts/buttons/OpenInEditorButton.vue'),
     },
     data() {
       return {
@@ -108,7 +109,6 @@
           sortBy: 'category',
           rowsPerPage: 20,
         },
-        loadingCategories: false,
         tableContent: [],
       };
     },

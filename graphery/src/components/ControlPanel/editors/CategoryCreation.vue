@@ -46,8 +46,8 @@
     updateCategoryMutation,
   } from '../../../services/queries';
   import { errorDialog, successDialog } from '../../../services/helpers';
-  import SubmitButton from '../parts/SubmitButton';
-  import IDCard from '../parts/IDCard';
+  import SubmitButton from '../parts/buttons/SubmitButton';
+  import IDCard from '../parts/cards/IDCard';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
@@ -61,7 +61,7 @@
       SubmitButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      InfoCard: () => import('../parts/InfoCard.vue'),
+      InfoCard: () => import('../parts/cards/InfoCard.vue'),
     },
     data() {
       return {

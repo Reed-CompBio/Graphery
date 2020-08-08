@@ -10,7 +10,7 @@
   </q-btn>
 </template>
 <script>
-  import SwitchTooltip from '../../framework/SwitchTooltip.vue';
+  import SwitchTooltip from '../../../framework/SwitchTooltip.vue';
   export default {
     props: ['label', 'routePath', 'disabled'],
     components: { SwitchTooltip },

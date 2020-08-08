@@ -105,7 +105,7 @@
   import { graphListQuery } from '@/services/queries';
   import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
-  import AddNewButton from '../parts/AddNewButton';
+  import AddNewButton from '../parts/buttons/AddNewButton';
   import { newModelUUID } from '@/services/params';
   import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
   import DeleteTableCell from '@/components/ControlPanel/parts/table/DeleteTableCell';
@@ -118,9 +118,9 @@
       AddNewButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../parts/RefreshButton'),
-      OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
-      OpenInPageButton: () => import('../parts/OpenInPageButton'),
+      RefreshButton: () => import('../parts/buttons/RefreshButton'),
+      OpenInEditorButton: () => import('../parts/buttons/OpenInEditorButton'),
+      OpenInPageButton: () => import('../parts/buttons/OpenInPageButton'),
     },
     data() {
       return {

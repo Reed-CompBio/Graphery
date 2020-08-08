@@ -25,7 +25,7 @@
 
 <script>
   import loadingMixin from '../mixins/LoadingMixin';
-  import UploadDisplayCard from '@/components/ControlPanel/parts/UploadDisplayCard';
+  import UploadDisplayCard from '@/components/ControlPanel/parts/cards/UploadDisplayCard';
   import { apiCaller } from '@/services/apis';
   import { fetchUploads } from '@/services/queries';
   import { errorDialog } from '@/services/helpers';

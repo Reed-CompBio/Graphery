@@ -14,7 +14,7 @@
         type: String,
       },
     },
-    components: { InfoCard: () => import('../parts/InfoCard') },
+    components: { InfoCard: () => import('./InfoCard') },
     computed: {
       displayedLocation() {
         return this.location;

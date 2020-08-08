@@ -129,12 +129,13 @@
       DeleteTableCell,
       AllTableHeader: () =>
         import('@/components/ControlPanel/parts/table/AllTableHeader'),
-      LangSelector: () => import('../parts/LangSelector.vue'),
-      OpenInPageButton: () => import('../parts/OpenInPageButton.vue'),
-      OpenInEditorButton: () => import('../parts/OpenInEditorButton.vue'),
+      LangSelector: () => import('../parts/selectors/LangSelector.vue'),
+      OpenInPageButton: () => import('../parts/buttons/OpenInPageButton.vue'),
+      OpenInEditorButton: () =>
+        import('../parts/buttons/OpenInEditorButton.vue'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../parts/RefreshButton.vue'),
+      RefreshButton: () => import('../parts/buttons/RefreshButton.vue'),
     },
     data() {
       return {

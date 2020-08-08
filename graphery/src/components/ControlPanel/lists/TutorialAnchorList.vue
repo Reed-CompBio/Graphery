@@ -84,12 +84,13 @@
         import('@/components/ControlPanel/parts/table/DeleteTableCell'),
       AllTableHeader: () =>
         import('@/components/ControlPanel/parts/table/AllTableHeader'),
-      AddNewButton: () => import('../parts/AddNewButton'),
+      AddNewButton: () => import('../parts/buttons/AddNewButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../parts/RefreshButton.vue'),
-      OpenInEditorButton: () => import('../parts/OpenInEditorButton.vue'),
-      OpenInPageButton: () => import('../parts/OpenInPageButton.vue'),
+      RefreshButton: () => import('../parts/buttons/RefreshButton.vue'),
+      OpenInEditorButton: () =>
+        import('../parts/buttons/OpenInEditorButton.vue'),
+      OpenInPageButton: () => import('../parts/buttons/OpenInPageButton.vue'),
     },
     data() {
       return {

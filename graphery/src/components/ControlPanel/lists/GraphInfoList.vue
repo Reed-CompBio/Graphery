@@ -98,12 +98,12 @@
         import('@/components/ControlPanel/parts/table/DeleteTableCell'),
       AllTableHeader: () =>
         import('@/components/ControlPanel/parts/table/AllTableHeader'),
-      OpenInPageButton: () => import('../parts/OpenInPageButton'),
-      OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
+      OpenInPageButton: () => import('../parts/buttons/OpenInPageButton'),
+      OpenInEditorButton: () => import('../parts/buttons/OpenInEditorButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../parts/RefreshButton.vue'),
-      LangSelector: () => import('../parts/LangSelector.vue'),
+      RefreshButton: () => import('../parts/buttons/RefreshButton.vue'),
+      LangSelector: () => import('../parts/selectors/LangSelector.vue'),
     },
     data() {
       return {

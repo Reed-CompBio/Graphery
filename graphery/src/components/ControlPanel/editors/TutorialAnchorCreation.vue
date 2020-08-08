@@ -55,9 +55,9 @@
     updateTutorialAnchorMutation,
   } from '@/services/queries';
   import { errorDialog, successDialog } from '@/services/helpers';
-  import SubmitButton from '../parts/SubmitButton';
-  import IDCard from '../parts/IDCard';
-  import CategorySelection from '../parts/CategorySelection';
+  import SubmitButton from '../parts/buttons/SubmitButton';
+  import IDCard from '../parts/cards/IDCard';
+  import CategorySelection from '../parts/selectors/CategorySelection';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
@@ -68,7 +68,7 @@
       SubmitButton,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      InfoCard: () => import('../parts/InfoCard.vue'),
+      InfoCard: () => import('../parts/cards/InfoCard.vue'),
     },
     data() {
       return {
