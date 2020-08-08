@@ -195,7 +195,22 @@
             });
         }
       },
+      checkPost() {
+        try {
+          JSON.parse(this.graphObj.cyjs);
+        } catch (e) {
+          errorDialog({
+            message:
+              'The CYJS string is not a valid JSON string. You can validate it here: https://jsonformatter.curiousconcept.com/',
+          });
+          return false;
+        }
+        return true;
+      },
       postGraph() {
+        if (!this.checkPost()) {
+          return;
+        }
         apiCaller(updateGraphMutation, this.graphObj)
           .then((data) => {
             if (!data || !('updateGraph' in data)) {
