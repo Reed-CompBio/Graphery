@@ -211,6 +211,12 @@ const routes: Array<RouteConfig> = [
         component: () =>
           import('@/components/ControlPanel/editors/CodeCreation.vue'),
       },
+      {
+        path: 'uploads',
+        name: 'Uploads List',
+        component: () =>
+          import('@/components/ControlPanel/lists/UploadsList.vue'),
+      },
     ],
     async beforeEnter(to, from, next) {
       if (store.state['user'] === null) {

@@ -14,11 +14,6 @@
           </q-chip>
         </q-img>
       </div>
-      <div class="q-mt-sm img-caption">
-        <code>
-          {{ resourceLink }}
-        </code>
-      </div>
     </q-card-section>
     <q-separator />
     <q-card-actions align="center">
@@ -31,6 +26,7 @@
   import mime from 'mime-types';
   import videoPlaceholder from '@/assets/icons/video.svg';
   import filePlaceholder from '@/assets/icons/file.svg';
+  import { BASE_URL } from '@/services/api_entry';
   export default {
     props: {
       resourceLink: {
@@ -39,8 +35,19 @@
       },
     },
     computed: {
+      correctedLink() {
+        if (
+          // if it's not relative/absolute url, make it relative url
+          this.resourceLink.startsWith(BASE_URL) ||
+          this.resourceLink.startsWith('/')
+        ) {
+          return this.resourceLink;
+        } else {
+          return '/' + this.resourceLink;
+        }
+      },
       lookUpResult() {
-        return mime.lookup(this.resourceLink);
+        return mime.lookup(this.correctedLink);
       },
       isImage() {
         return this.lookUpResult && this.lookUpResult.startsWith('image');
@@ -50,7 +57,7 @@
       },
       imageSrc() {
         return this.isImage
-          ? this.resourceLink
+          ? this.correctedLink
           : this.isVideo
           ? videoPlaceholder
           : filePlaceholder;
@@ -58,13 +65,3 @@
     },
   };
 </script>
-
-<style lang="sass">
-  .img-caption
-    text-align: center
-    word-wrap: break-word
-    font-size: 85%
-    background-color: rgba(27,31,35,.05)
-    border-radius: 3px
-    font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace
-</style>

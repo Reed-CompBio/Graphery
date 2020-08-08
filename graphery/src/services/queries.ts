@@ -474,3 +474,11 @@ mutation ($contentType: DeletionEnum!, $id: UUID!) {
     success
   }
 }`;
+
+export const fetchUploads = `
+query {
+  allUploads {
+    id
+    file
+  }
+}`;
