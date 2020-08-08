@@ -479,6 +479,6 @@ export const fetchUploads = `
 query {
   allUploads {
     id
-    file
+    relativeUrl
   }
 }`;

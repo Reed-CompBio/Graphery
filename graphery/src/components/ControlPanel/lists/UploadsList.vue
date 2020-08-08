@@ -15,7 +15,7 @@
       >
         <template v-slot:item="props">
           <div class="q-pa-xs col-xs-12 col-sm-4 col-md-3 col-lg-2">
-            <UploadDisplayCard :resource-link="props.row.file" />
+            <UploadDisplayCard :resource-link="props.row.relativeUrl" />
           </div>
         </template>
       </q-table>
@@ -41,14 +41,15 @@
       return {
         columns: [
           {
-            name: 'file',
-            label: 'File',
-            field: 'file',
+            name: 'relativeUrl',
+            label: 'relativeUrl',
+            field: 'relativeUrl',
           },
           {
             name: 'id',
             label: 'id',
             field: 'id',
+            required: true,
           },
         ],
         pagination: {

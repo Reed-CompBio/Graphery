@@ -22,7 +22,7 @@
     </q-card-section>
     <q-separator />
     <q-card-actions align="center">
-      <UploadActionButton label="Relative Link" />
+      <UploadActionButton label="Relative Link" @click="copyRelativeUrl" />
     </q-card-actions>
   </q-card>
 </template>
@@ -31,8 +31,8 @@
   import mime from 'mime-types';
   import videoPlaceholder from '@/assets/icons/video.svg';
   import filePlaceholder from '@/assets/icons/file.svg';
-  import { BASE_URL } from '@/services/api_entry';
   import UploadActionButton from '@/components/ControlPanel/parts/buttons/UploadActionButton';
+  import { saveTextToClipboard } from '@/services/helpers';
 
   export default {
     components: { UploadActionButton },
@@ -43,19 +43,8 @@
       },
     },
     computed: {
-      correctedLink() {
-        if (
-          // if it's not relative/absolute url, make it relative url
-          this.resourceLink.startsWith(BASE_URL) ||
-          this.resourceLink.startsWith('/')
-        ) {
-          return this.resourceLink;
-        } else {
-          return '/' + this.resourceLink;
-        }
-      },
       lookUpResult() {
-        return mime.lookup(this.correctedLink);
+        return mime.lookup(this.resourceLink);
       },
       isImage() {
         return this.lookUpResult && this.lookUpResult.startsWith('image');
@@ -65,15 +54,15 @@
       },
       imageSrc() {
         return this.isImage
-          ? this.correctedLink
+          ? this.resourceLink
           : this.isVideo
           ? videoPlaceholder
           : filePlaceholder;
       },
     },
     methods: {
-      testFunc() {
-        console.log('test');
+      copyRelativeUrl() {
+        saveTextToClipboard(this.resourceLink);
       },
     },
   };
