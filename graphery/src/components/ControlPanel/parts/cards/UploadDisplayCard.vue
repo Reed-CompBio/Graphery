@@ -2,7 +2,7 @@
   <q-card class="upload-card">
     <q-card-section>
       <div class="upload-image q-mx-auto q-mt-sm">
-        <q-img :src="imageSrc">
+        <q-img :src="imageSrc" style="min-height: 150px; min-width: 150px">
           <template v-slot:error>
             <div class="absolute-full flex flex-center bg-negative text-white">
               Cannot load image
@@ -13,7 +13,7 @@
             clickable
             dense
             size="sm"
-            @click="$emit('showUploadInfo', this.resourceLink)"
+            @click="$emit('showUploadInfo', resourceLink)"
           >
             <q-icon name="info" size="sm" color="white" />
           </q-chip>

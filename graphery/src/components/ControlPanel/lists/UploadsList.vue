@@ -15,10 +15,17 @@
       >
         <template v-slot:item="props">
           <div class="q-pa-xs col-xs-12 col-sm-4 col-md-3 col-lg-2">
-            <UploadDisplayCard :resource-link="props.row.relativeUrl" />
+            <UploadDisplayCard
+              :resource-link="props.row.relativeUrl"
+              @showUploadInfo="showUploadInfo"
+            />
           </div>
         </template>
       </q-table>
+      <UploadInfoWindow
+        :resource-link="infoWindowIntel"
+        v-model="showUploadInfoWindow"
+      />
     </template>
   </ControlPanelContentFrame>
 </template>
@@ -29,10 +36,12 @@
   import { apiCaller } from '@/services/apis';
   import { fetchUploads } from '@/services/queries';
   import { errorDialog } from '@/services/helpers';
+  import UploadInfoWindow from '@/components/ControlPanel/editors/UploadInfoWindow';
 
   export default {
     mixins: [loadingMixin],
     components: {
+      UploadInfoWindow,
       UploadDisplayCard,
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame'),
@@ -57,6 +66,8 @@
           rowsPerPage: 20,
         },
         tableContent: [],
+        showUploadInfoWindow: false,
+        infoWindowIntel: '',
       };
     },
     methods: {
@@ -78,6 +89,16 @@
           .finally(() => {
             this.finishedLoading();
           });
+      },
+      showInfo() {
+        this.showUploadInfoWindow = true;
+      },
+      changeInfoWindowIntel(url) {
+        this.infoWindowIntel = url;
+      },
+      showUploadInfo(url) {
+        this.changeInfoWindowIntel(url);
+        this.showInfo();
       },
     },
     mounted() {
