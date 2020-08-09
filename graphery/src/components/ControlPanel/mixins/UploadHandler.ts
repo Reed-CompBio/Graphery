@@ -2,7 +2,7 @@ import { deleteImage, uploadStatic } from '@/services/queries';
 import { apiCaller } from '@/services/apis';
 import { errorDialog, successDialog } from '@/services/helpers';
 
-export function fileUploadAction(files) {
+export function fileUploadAction(files: [File]) {
   const form = new FormData();
   form.append('query', uploadStatic);
   for (const file of files) {
@@ -21,12 +21,10 @@ export function fileUploadAction(files) {
     successDialog({
       message: 'Upload Image Successfully!',
     });
-
-    return data.uploadStatic.urls;
   });
 }
 
-export function imgDelCallback([filename]) {
+export function imgDelCallback(filename: string) {
   apiCaller(deleteImage, {
     url: filename,
   })

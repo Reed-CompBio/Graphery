@@ -402,11 +402,10 @@ mutation ($lang:String!, $content: TutorialContentInputType!){
   }
 }`;
 
-export const uploadImage = `
+export const uploadStatic = `
 mutation {
   uploadStatic {
     success
-    url
   }
 }`;
 
