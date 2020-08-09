@@ -8,6 +8,16 @@
     hide-header
     :loading="loadingContent"
   >
+    <template v-slot:top>
+      <AddNewButton
+        :create-func="
+          () => {
+            $emit('startUpload');
+          }
+        "
+      />
+      <RefreshButton :fetch-func="fetchUploadsContent" />
+    </template>
     <template v-slot:item="props">
       <div class="q-pa-xs col-xs-12 col-sm-4 col-md-3 col-lg-2">
         <UploadDisplayCard
@@ -29,6 +39,10 @@
   export default {
     mixins: [loadingMixin],
     components: {
+      RefreshButton: () =>
+        import('@/components/ControlPanel/parts/buttons/RefreshButton'),
+      AddNewButton: () =>
+        import('@/components/ControlPanel/parts/buttons/AddNewButton'),
       UploadDisplayCard: () =>
         import('@/components/ControlPanel/parts/cards/UploadDisplayCard'),
     },
