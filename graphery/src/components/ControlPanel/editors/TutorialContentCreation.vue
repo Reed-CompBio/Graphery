@@ -25,8 +25,6 @@
               class="full-width"
               ref="mdEditor"
               :initValue="tutorialContentObj.contentMd"
-              :imgAddAction="imgAddCallback"
-              :imgDelAction="imgDelCallback"
               @changes="handleEditorChanges"
               @saves="saveUploadCallback"
             ></EditorSection>
@@ -98,7 +96,6 @@
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import pushToMixin from '../mixins/PushToMixin.vue';
-  import imageHandleMixin from '../mixins/ImageHandleMixin';
   import { apiCaller } from '@/services/apis';
   import {
     tutorialContentMutation,
@@ -108,7 +105,7 @@
   import { errorDialog, resolveLink, successDialog } from '@/services/helpers';
 
   export default {
-    mixins: [loadingMixin, pushToMixin, imageHandleMixin],
+    mixins: [loadingMixin, pushToMixin],
     // TODO add props to router url
     props: ['anchorId', 'contentId', 'tutorialUrl', 'lang'],
     components: {
@@ -124,7 +121,7 @@
       ControlPageContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
-      EditorSection: () => import('../parts/selectors/EditorSection.vue'),
+      EditorSection: () => import('../parts/EditorSection.vue'),
       InfoCard: () => import('../parts/cards/InfoCard.vue'),
     },
     data() {

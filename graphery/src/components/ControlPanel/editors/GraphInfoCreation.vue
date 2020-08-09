@@ -24,8 +24,6 @@
               class="full-width"
               ref="mdEditor"
               :initValue="graphInfoObject.abstractMd"
-              :imgAddAction="imgAddCallback"
-              :imgDelAction="imgDelCallback"
               @changes="handleEditorChanges"
               @saves="saveUploadCallback"
             />
@@ -79,7 +77,6 @@
 <script>
   import loadingMixin from '../mixins/LoadingMixin';
   import pushToMixin from '../mixins/PushToMixin';
-  import imageHandleMixin from '@/components/ControlPanel/mixins/ImageHandleMixin';
   import { newModelUUID } from '@/services/params';
   import { apiCaller } from '@/services/apis';
   import {
@@ -90,7 +87,7 @@
 
   export default {
     // TODO add props to router url
-    mixins: [loadingMixin, pushToMixin, imageHandleMixin],
+    mixins: [loadingMixin, pushToMixin],
     props: ['anchorId', 'contentId', 'graphUrl', 'lang'],
     components: {
       StoreLocation: () =>
@@ -104,7 +101,7 @@
       IDCard: () => import('@/components/ControlPanel/parts/cards/IDCard'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      EditorSection: () => import('../parts/selectors/EditorSection.vue'),
+      EditorSection: () => import('../parts/EditorSection.vue'),
       InfoCard: () => import('../parts/cards/InfoCard.vue'),
     },
     data() {
