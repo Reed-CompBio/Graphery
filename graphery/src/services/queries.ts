@@ -480,5 +480,6 @@ query {
   allUploads {
     id
     relativeUrl
+    alias
   }
 }`;

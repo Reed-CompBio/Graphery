@@ -235,7 +235,7 @@ class UploadsType(PublishedFilterBase, DjangoObjectType):
     @field_adder(published_mixin_field, uuid_mixin_field)
     class Meta:
         model = Uploads
-        fields = ('file', 'relative_url')
+        fields = ('file', 'alias', 'relative_url')
         description = 'Uploaded files'
 
 
