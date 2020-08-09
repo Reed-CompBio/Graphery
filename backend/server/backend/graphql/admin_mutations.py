@@ -1,6 +1,5 @@
 import json
 from typing import List, Sequence, Mapping, Type, Optional, MutableMapping
-from os.path import join
 
 import graphene
 from graphene.types.generic import GenericScalar
@@ -123,22 +122,25 @@ class UpdateCode(SuccessMutationBase):
 
 
 class UploadStatic(SuccessMutationBase):
-    url = graphene.List(graphene.String, required=True)
+    urls = graphene.List(graphene.String, required=True)
 
     @write_required
     def mutate(self, info):
 
         files: Mapping[str, InMemoryUploadedFile] = info.context.FILES
 
-        if len(files) == 0 or not all('image' in file.content_type for file in files.values()):
+        if len(files) == 0:
             raise GraphQLError('No files are added.')
+
+        if not all('image' in file.content_type for file in files.values()):
+            raise GraphQLError('Invalid form data.')
 
         wrappers: List[UploadsWrapper] = []
 
-        for file in files.values():
-            wrappers.append(process_model_wrapper(UploadsWrapper, file=file))
+        for name, file in files.items():
+            wrappers.append(process_model_wrapper(UploadsWrapper, file=file, alias=name))
 
-        return UploadStatic(success=True, url=[wrapper.model.relative_url for wrapper in wrappers])
+        return UploadStatic(success=True, urls=[wrapper.model.relative_url for wrapper in wrappers])
 
 
 class DeleteStatic(SuccessMutationBase):
