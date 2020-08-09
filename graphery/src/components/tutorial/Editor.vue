@@ -10,7 +10,7 @@
 
 <script>
   import { mapGetters, mapState } from 'vuex';
-  import { errorDialog } from '../../services/helpers';
+  import { errorDialog } from '@/services/helpers';
   let monacoEditor;
 
   export default {
