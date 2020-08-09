@@ -5,11 +5,13 @@
 
   export default {
     methods: {
-      imgAddCallback(fileName, file) {
+      fileUploadAction(fileName, files) {
         // TODO post lang with axios
         const form = new FormData();
         form.append('query', uploadImage);
-        form.append(this.anchorId, file);
+        for (const file of files) {
+          form.append(this.anchorId, file);
+        }
 
         apiCaller(null, null, form)
           .then((data) => {

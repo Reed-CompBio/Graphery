@@ -123,11 +123,7 @@ class UpdateCode(SuccessMutationBase):
 
 
 class UploadStatic(SuccessMutationBase):
-    url = graphene.String(required=True)
-
-    @staticmethod
-    def get_full_url(url: str) -> str:
-        return join('/', settings.UPLOAD_STATICS_ENTRY, url)
+    url = graphene.List(graphene.String, required=True)
 
     @write_required
     def mutate(self, info):
@@ -137,13 +133,12 @@ class UploadStatic(SuccessMutationBase):
         if len(files) == 0 or not all('image' in file.content_type for file in files.values()):
             raise GraphQLError('No files are added.')
 
-        if len(files) > 1:
-            raise GraphQLError('You can only upload one file at a time')
+        wrappers: List[UploadsWrapper] = []
 
-        file = list(files.values())[0]
-        upload_wrapper: UploadsWrapper = process_model_wrapper(UploadsWrapper, file=file)
+        for file in files.values():
+            wrappers.append(process_model_wrapper(UploadsWrapper, file=file))
 
-        return UploadStatic(success=True, url=UploadStatic.get_full_url(upload_wrapper.model.file.url))
+        return UploadStatic(success=True, url=[wrapper.model.relative_url for wrapper in wrappers])
 
 
 class DeleteStatic(SuccessMutationBase):

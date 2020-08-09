@@ -143,4 +143,4 @@ class Uploads(PublishedMixin, UUIDMixin, models.Model):
 
     @property
     def relative_url(self) -> str:
-        return join('/', settings.UPLOAD_STATICS_ENTRY, self.file.name)
+        return join('/', settings.UPLOAD_STATICS_ENTRY, self.file.url)
