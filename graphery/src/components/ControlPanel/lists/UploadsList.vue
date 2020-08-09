@@ -4,11 +4,15 @@
       Uploads
     </template>
     <template>
-      <UploadTable @showUploadInfo="showUploadInfo" />
+      <UploadTable
+        @showUploadInfo="showUploadInfo"
+        @startUpload="startUpload"
+      />
       <UploadInfoPopup
         :resource-link="infoWindowIntel"
         v-model="showUploadInfoWindow"
       />
+      <UploadPopup v-model="showUploadPopup" />
     </template>
   </ControlPanelContentFrame>
 </template>
@@ -16,6 +20,8 @@
 <script>
   export default {
     components: {
+      UploadPopup: () =>
+        import('@/components/ControlPanel/parts/upload/UploadPopup'),
       UploadTable: () =>
         import('@/components/ControlPanel/parts/upload/UploadTable'),
       UploadInfoPopup: () =>
@@ -26,6 +32,7 @@
     data() {
       return {
         showUploadInfoWindow: false,
+        showUploadPopup: false,
         infoWindowIntel: '',
       };
     },
@@ -39,6 +46,9 @@
       showUploadInfo(url) {
         this.changeInfoWindowIntel(url);
         this.showInfo();
+      },
+      startUpload() {
+        this.showUploadPopup = true;
       },
     },
   };
