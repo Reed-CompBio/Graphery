@@ -36,7 +36,7 @@
               ></q-input>
             </q-card>
             <q-file
-              v-model="uploadFile"
+              v-model="uploadedFile"
               outlined
               use-chips
               counter
@@ -49,7 +49,7 @@
               </template>
               <template v-slot:after>
                 <!-- TODO button action -->
-                <q-btn round dense flat icon="send" />
+                <q-btn round dense flat icon="send" @click="readUploadedFile" />
               </template>
             </q-file>
           </div>
@@ -95,27 +95,22 @@
 </template>
 
 <script>
-  import { errorDialog, successDialog } from '../../../services/helpers';
-  import { newModelUUID } from '../../../services/params';
-  import IDCard from '../parts/cards/IDCard';
+  import { errorDialog, successDialog } from '@/services/helpers';
+  import { newModelUUID } from '@/services/params';
   import loadingMixin from '../mixins/LoadingMixin';
   import pushToMixin from '../mixins/PushToMixin.vue';
-  import { apiCaller } from '../../../services/apis';
-  import { graphQuery, updateGraphMutation } from '../../../services/queries';
-  import TutorialSelection from '../parts/selectors/TutorialSelection';
-  import AuthorSelection from '../parts/selectors/AuthorSelection';
-  import CategorySelection from '../parts/selectors/CategorySelection';
-  import SubmitButton from '../parts/buttons/SubmitButton';
+  import { apiCaller } from '@/services/apis';
+  import { graphQuery, updateGraphMutation } from '@/services/queries';
 
   export default {
     mixins: [loadingMixin, pushToMixin],
     props: ['id'],
     components: {
-      SubmitButton,
-      CategorySelection,
-      AuthorSelection,
-      TutorialSelection,
-      IDCard,
+      SubmitButton: () => import('../parts/buttons/SubmitButton'),
+      CategorySelection: () => import('../parts/selectors/CategorySelection'),
+      AuthorSelection: () => import('../parts/selectors/AuthorSelection'),
+      TutorialSelection: () => import('../parts/selectors/TutorialSelection'),
+      IDCard: () => import('../parts/cards/IDCard'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
@@ -149,7 +144,7 @@
             label: 'Trivial Graph',
           },
         ],
-        uploadFile: [],
+        uploadedFile: null,
       };
     },
     computed: {
@@ -159,10 +154,11 @@
     },
     methods: {
       checkFileType(files) {
-        return files.filter((file) => file.type === 'application/json');
+        return (
+          files && files.filter((file) => file.type === 'application/json')
+        );
       },
       fileRejected(rejectedEntries) {
-        console.log(rejectedEntries);
         errorDialog({
           message: `${rejectedEntries[0].file.name} is not a JSON file.`,
         });
@@ -236,6 +232,16 @@
           .finally(() => {
             this.finishedLoading();
           });
+      },
+      readUploadedFile() {
+        if (this.uploadedFile) {
+          const fileReader = new FileReader();
+          fileReader.onload = (e) => {
+            this.graphObj.cyjs = e.target.result;
+          };
+          fileReader.readAsText(this.uploadedFile);
+          this.uploadedFile = null;
+        }
       },
     },
     mounted() {
