@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="showDialog">
+  <q-dialog v-model="dialogModel">
     <UploadCard style="min-width: 30vw;" />
   </q-dialog>
 </template>

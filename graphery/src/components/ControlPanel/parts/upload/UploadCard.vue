@@ -2,6 +2,7 @@
   <q-card>
     <q-card-section>
       <q-file
+        ref="filePicker"
         v-model="files"
         :readonly="loadingContent"
         :disable="loadingContent"
@@ -11,13 +12,18 @@
         clearable
         counter
         use-chips
-        hint="Select
+        label="Select
       the files you want to upload."
+        hint="You can select multiple files at once."
+        append
         :max-total-size="10485760"
         class="full-width"
       >
         <template v-slot:prepend>
-          <q-icon name="attach_file" />
+          <q-icon name="attach_file" @click.stop />
+        </template>
+        <template v-slot:append>
+          <q-icon name="add" @click.stop />
         </template>
         <template v-slot:after>
           <q-btn @click="fileHandler" round dense flat icon="send" />
