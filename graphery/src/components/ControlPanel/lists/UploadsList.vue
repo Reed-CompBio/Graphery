@@ -5,7 +5,7 @@
     </template>
     <template>
       <UploadTable @showUploadInfo="showUploadInfo" />
-      <UploadInfoWindow
+      <UploadInfoPopup
         :resource-link="infoWindowIntel"
         v-model="showUploadInfoWindow"
       />
@@ -18,8 +18,8 @@
     components: {
       UploadTable: () =>
         import('@/components/ControlPanel/parts/upload/UploadTable'),
-      UploadInfoWindow: () =>
-        import('@/components/ControlPanel/editors/UploadInfoWindow'),
+      UploadInfoPopup: () =>
+        import('@/components/ControlPanel/parts/upload/UploadInfoPopup'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame'),
     },

@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="dialogModel">
-    <q-card style="min-width: 50vw;">
+    <q-card class="upload-info-card">
       <div class="q-ma-md full-height">
         <div class="row full-height">
           <div class="row-xs col-md-8 q-my-auto q-pr-md">
@@ -97,3 +97,10 @@
     },
   };
 </script>
+
+<style lang="sass">
+  .upload-info-card
+    min-width: 50vw
+    max-width: 50vw
+    max-height: 50vh
+</style>
