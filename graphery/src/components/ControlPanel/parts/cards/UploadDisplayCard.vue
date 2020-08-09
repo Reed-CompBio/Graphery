@@ -2,22 +2,13 @@
   <q-card class="upload-card">
     <q-card-section>
       <div class="upload-image q-mx-auto q-mt-sm">
-        <q-img :src="imageSrc" style="min-height: 150px; min-width: 150px">
-          <template v-slot:error>
-            <div class="absolute-full flex flex-center bg-negative text-white">
-              Cannot load image
-            </div>
-          </template>
-          <!-- TODO use on hover -->
-          <q-chip
-            clickable
-            dense
-            size="sm"
-            @click="$emit('showUploadInfo', resourceLink)"
-          >
-            <q-icon name="info" size="sm" color="white" />
-          </q-chip>
-        </q-img>
+        <ImageDisplay
+          :resource-link="resourceLink"
+          @showUploadInfo="(url) => $emit('showUploadInfo', url)"
+        />
+      </div>
+      <div class="q-mt-md" style="text-align: center;">
+        <code style="word-wrap: break-word; "> {{ alias }}</code>
       </div>
     </q-card-section>
     <q-separator />
@@ -28,36 +19,23 @@
 </template>
 
 <script>
-  import mime from 'mime-types';
-  import videoPlaceholder from '@/assets/icons/video.svg';
-  import filePlaceholder from '@/assets/icons/file.svg';
-  import UploadActionButton from '@/components/ControlPanel/parts/buttons/UploadActionButton';
   import { saveTextToClipboard } from '@/services/helpers';
 
   export default {
-    components: { UploadActionButton },
+    components: {
+      ImageDisplay: () =>
+        import('@/components/ControlPanel/parts/upload/ImageDisplay'),
+      UploadActionButton: () =>
+        import('@/components/ControlPanel/parts/buttons/UploadActionButton'),
+    },
     props: {
       resourceLink: {
         type: String,
         default: '',
       },
-    },
-    computed: {
-      lookUpResult() {
-        return mime.lookup(this.resourceLink);
-      },
-      isImage() {
-        return this.lookUpResult && this.lookUpResult.startsWith('image');
-      },
-      isVideo() {
-        return this.lookUpResult && this.lookUpResult.startsWith('video');
-      },
-      imageSrc() {
-        return this.isImage
-          ? this.resourceLink
-          : this.isVideo
-          ? videoPlaceholder
-          : filePlaceholder;
+      alias: {
+        type: String,
+        default: '',
       },
     },
     methods: {
