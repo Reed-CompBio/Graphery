@@ -105,17 +105,16 @@
   import { graphListQuery } from '@/services/queries';
   import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
-  import AddNewButton from '../parts/buttons/AddNewButton';
   import { newModelUUID } from '@/services/params';
   import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
-  import DeleteTableCell from '@/components/ControlPanel/parts/table/DeleteTableCell';
 
   export default {
     mixins: [loadingMixin],
     components: {
-      DeleteTableCell,
+      DeleteTableCell: () =>
+        import('@/components/ControlPanel/parts/table/DeleteTableCell'),
       AllTableHeader,
-      AddNewButton,
+      AddNewButton: () => import('../parts/buttons/AddNewButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       RefreshButton: () => import('../parts/buttons/RefreshButton'),

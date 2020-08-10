@@ -90,14 +90,14 @@
   import { graphInfoListQuery } from '@/services/queries';
   import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import { newModelUUID } from '@/services/params';
+  import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
 
   export default {
     mixins: [loadingMixin, tableLangMixin],
     components: {
       DeleteTableCell: () =>
         import('@/components/ControlPanel/parts/table/DeleteTableCell'),
-      AllTableHeader: () =>
-        import('@/components/ControlPanel/parts/table/AllTableHeader'),
+      AllTableHeader,
       OpenInPageButton: () => import('../parts/buttons/OpenInPageButton'),
       OpenInEditorButton: () => import('../parts/buttons/OpenInEditorButton'),
       ControlPanelContentFrame: () =>

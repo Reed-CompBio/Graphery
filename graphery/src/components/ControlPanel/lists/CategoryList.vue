@@ -62,11 +62,12 @@
   import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import { newModelUUID } from '@/services/params';
+  import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
 
   export default {
     mixins: [loadingMixin],
     components: {
-      AllTableHeader: () => import('../parts/table/AllTableHeader'),
+      AllTableHeader,
       DeleteTableCell: () => import('../parts/table/DeleteTableCell'),
       AddNewButton: () => import('../parts/buttons/AddNewButton'),
       ControlPanelContentFrame: () =>

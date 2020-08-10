@@ -121,14 +121,14 @@
   import { emptyTutorialContentTag, newModelUUID } from '@/services/params';
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import tableLangMixin from '../mixins/TableLangMixin.vue';
-  import DeleteTableCell from '@/components/ControlPanel/parts/table/DeleteTableCell';
+  import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
 
   export default {
     mixins: [loadingMixin, tableLangMixin],
     components: {
-      DeleteTableCell,
-      AllTableHeader: () =>
-        import('@/components/ControlPanel/parts/table/AllTableHeader'),
+      DeleteTableCell: () =>
+        import('@/components/ControlPanel/parts/table/DeleteTableCell'),
+      AllTableHeader,
       LangSelector: () => import('../parts/selectors/LangSelector.vue'),
       OpenInPageButton: () => import('../parts/buttons/OpenInPageButton.vue'),
       OpenInEditorButton: () =>
