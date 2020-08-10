@@ -41,8 +41,7 @@
   import { mapState } from 'vuex';
   import loadingMixin from '../mixins/LoadingMixin';
   import pushToMixin from '../mixins/PushToMixin';
-  import SubmitButton from '../parts/buttons/SubmitButton';
-  import IDCard from '../parts/cards/IDCard';
+  import leaveConfirmMixin from '../mixins/LeaveConfirmMixin.vue';
   import { newModelUUID } from '@/services/params';
   import { apiCaller } from '@/services/apis';
   import { codeQuery, updateCodeMutation } from '@/services/queries';
@@ -51,13 +50,13 @@
   import NoCodeTutorialSelection from '../parts/selectors/NoCodeTutorialSelection';
 
   export default {
-    mixins: [loadingMixin, pushToMixin],
+    mixins: [loadingMixin, pushToMixin, leaveConfirmMixin],
     props: ['id'],
     components: {
       NoCodeTutorialSelection,
       JsonCreation,
-      IDCard,
-      SubmitButton,
+      IDCard: () => import('../parts/cards/IDCard'),
+      SubmitButton: () => import('../parts/buttons/SubmitButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),

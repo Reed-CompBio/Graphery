@@ -39,26 +39,22 @@
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import pushToMixin from '../mixins/PushToMixin.vue';
-  import { newModelUUID } from '../../../services/params';
-  import { apiCaller } from '../../../services/apis';
-  import {
-    categoryQuery,
-    updateCategoryMutation,
-  } from '../../../services/queries';
-  import { errorDialog, successDialog } from '../../../services/helpers';
-  import SubmitButton from '../parts/buttons/SubmitButton';
-  import IDCard from '../parts/cards/IDCard';
+  import leaveConfirmMixin from '../mixins/LeaveConfirmMixin.vue';
+  import { newModelUUID } from '@/services/params';
+  import { apiCaller } from '@/services/apis';
+  import { categoryQuery, updateCategoryMutation } from '@/services/queries';
+  import { errorDialog, successDialog } from '@/services/helpers';
 
   export default {
-    mixins: [loadingMixin, pushToMixin],
+    mixins: [loadingMixin, pushToMixin, leaveConfirmMixin],
     props: {
       id: {
         default: newModelUUID,
       },
     },
     components: {
-      IDCard,
-      SubmitButton,
+      IDCard: () => import('../parts/cards/IDCard'),
+      SubmitButton: () => import('../parts/buttons/SubmitButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       InfoCard: () => import('../parts/cards/InfoCard.vue'),

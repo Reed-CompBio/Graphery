@@ -84,10 +84,11 @@
     graphInfoContentQuery,
   } from '@/services/queries';
   import { errorDialog, resolveLink, successDialog } from '@/services/helpers';
+  import leaveConfirmMixin from '../mixins/LeaveConfirmMixin.vue';
 
   export default {
     // TODO add props to router url
-    mixins: [loadingMixin, pushToMixin],
+    mixins: [loadingMixin, pushToMixin, leaveConfirmMixin],
     props: ['anchorId', 'contentId', 'graphUrl', 'lang'],
     components: {
       StoreLocation: () =>

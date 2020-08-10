@@ -99,11 +99,13 @@
   import { newModelUUID } from '@/services/params';
   import loadingMixin from '../mixins/LoadingMixin';
   import pushToMixin from '../mixins/PushToMixin.vue';
+  import leaveConfirmMixin from '../mixins/LeaveConfirmMixin.vue';
+
   import { apiCaller } from '@/services/apis';
   import { graphQuery, updateGraphMutation } from '@/services/queries';
 
   export default {
-    mixins: [loadingMixin, pushToMixin],
+    mixins: [loadingMixin, pushToMixin, leaveConfirmMixin],
     props: ['id'],
     components: {
       SubmitButton: () => import('../parts/buttons/SubmitButton'),

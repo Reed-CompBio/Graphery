@@ -103,9 +103,10 @@
   } from '@/services/queries';
   import { newModelUUID } from '@/services/params';
   import { errorDialog, resolveLink, successDialog } from '@/services/helpers';
+  import leaveConfirmMixin from '../mixins/LeaveConfirmMixin.vue';
 
   export default {
-    mixins: [loadingMixin, pushToMixin],
+    mixins: [loadingMixin, pushToMixin, leaveConfirmMixin],
     // TODO add props to router url
     props: ['anchorId', 'contentId', 'tutorialUrl', 'lang'],
     components: {
