@@ -531,6 +531,18 @@
 <h2 id="code">Code</h2>
 <p>The code editor actually smashes two editors together. The top section is the actual code editor where you can paste the code and submit it. The second section is the result json generator. Since the server side generator is not complete yet, you can only use a local generator, whose usage can be found in a <a href="/user-manual/local-server/index.html">separated page</a>. One tutorial only has one page and you can only execute code on the graphs associated with that tutorial. If you can't see the graph you want, please go to either the graph editor or the tutorial editor and link the graph and the tutorial together and then go back to generate results. </p>
 <p>You HAVE TO submit your code first before generating any result json. There are two submit buttons for two section so MAKE SURE you saved both sections before exiting. </p>
+<p>The code content should have the following components: <code>tracer</code> and <code>graph_object</code> from dummy_graph. <code>tracer</code> is the module that generates debug result. <code>graph_object</code> from dummy_graph is used to mount graph pulled from database during execution. You can't execute the code without these two components. <code>main</code> function is also required, it's the entry point. Without it, the code can't be parsed. <code>tracer</code> should be applied to every function which contains the variable you want to trance. If you don't specify <code>depth</code> param, and only apply <code>tracer</code> on the main function, other variables outside of <code>main</code> with NOT be traced. </p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">bundle.seeker</span> <span class="kn">import</span> <span class="n">tracer</span>
+<span class="kn">from</span> <span class="nn">bundle.utils.dummy_graph</span> <span class="kn">import</span> <span class="n">graph_object</span>
+
+<span class="nd">@tracer</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">a</span><span class="p">():</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">a</span><span class="p">()</span>
+</code></pre></div>
                 
               
               
