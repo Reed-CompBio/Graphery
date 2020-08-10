@@ -6,12 +6,7 @@
       </div>
     </template>
     <!-- TODO use on hover -->
-    <q-chip
-      clickable
-      dense
-      size="sm"
-      @click="$emit('showUploadInfo', resourceLink)"
-    >
+    <q-chip clickable dense size="sm" @click="$emit('showUploadInfo')">
       <q-icon name="info" size="sm" color="white" />
     </q-chip>
   </q-img>

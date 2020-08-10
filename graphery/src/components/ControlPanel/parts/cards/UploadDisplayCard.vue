@@ -3,8 +3,13 @@
     <q-card-section>
       <div class="upload-image q-mx-auto q-mt-sm">
         <ImageDisplay
-          :resource-link="resourceLink"
-          @showUploadInfo="(url) => $emit('showUploadInfo', url)"
+          :resource-link="displayInfo.url"
+          @showUploadInfo="
+            $emit('showUploadInfo', {
+              url: displayInfo.url,
+              id: displayInfo.id,
+            })
+          "
         />
       </div>
       <div class="q-mt-md" style="text-align: center;">
@@ -29,9 +34,8 @@
         import('@/components/ControlPanel/parts/buttons/UploadActionButton'),
     },
     props: {
-      resourceLink: {
-        type: String,
-        default: '',
+      displayInfo: {
+        type: Object,
       },
       alias: {
         type: String,

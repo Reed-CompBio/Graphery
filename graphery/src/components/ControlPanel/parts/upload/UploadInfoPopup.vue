@@ -39,7 +39,7 @@
               <UploadActionButton
                 label="Delete PERMANENTLY"
                 color="negative"
-                @click="deleteUploads"
+                @click="postDelete"
               />
             </q-card-actions>
           </div>
@@ -52,8 +52,10 @@
 <script>
   import { BASE_URL } from '@/services/api_entry';
   import { copyToClipboard } from 'quasar';
+  import deleteMixin from '@/components/ControlPanel/mixins/DeleteMixin';
 
   export default {
+    mixins: [deleteMixin],
     components: {
       UploadActionButton: () =>
         import('@/components/ControlPanel/parts/buttons/UploadActionButton'),
@@ -90,9 +92,6 @@
       },
       copyAbsoluteLink() {
         copyToClipboard(this.fullLink);
-      },
-      deleteUploads() {
-        alert('Not Implemented Yet!');
       },
     },
   };

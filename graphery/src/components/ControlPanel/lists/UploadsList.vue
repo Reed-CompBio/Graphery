@@ -9,7 +9,9 @@
         @startUpload="startUpload"
       />
       <UploadInfoPopup
-        :resource-link="infoWindowIntel"
+        :resource-link="infoWindowIntel.url"
+        content-type="UPLOADS"
+        :id="infoWindowIntel.id"
         v-model="showUploadInfoWindow"
       />
       <UploadPopup v-model="showUploadPopup" />
@@ -40,11 +42,8 @@
       showInfo() {
         this.showUploadInfoWindow = true;
       },
-      changeInfoWindowIntel(url) {
-        this.infoWindowIntel = url;
-      },
-      showUploadInfo(url) {
-        this.changeInfoWindowIntel(url);
+      showUploadInfo(obj) {
+        this.infoWindowIntel = obj;
         this.showInfo();
       },
       startUpload() {

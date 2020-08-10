@@ -6,7 +6,7 @@ from graphql import ResolveInfo
 
 from ..intel_wrappers.intel_wrapper import CategoryWrapper, TutorialAnchorWrapper, GraphWrapper, CodeWrapper, \
     ExecResultJsonWrapper, ENUSGraphContentWrapper, ZHCNTutorialContentWrapper, ENUSTutorialContentWrapper, \
-    ZHCNGraphContentWrapper
+    ZHCNGraphContentWrapper, UploadsWrapper
 from ..model.TutorialRelatedModel import FAKE_UUID, GraphPriority, Uploads
 from ..model.UserModel import ROLES
 from ..model.filters import show_published_only
@@ -245,6 +245,7 @@ class DeletionEnum(graphene.Enum):
     GRAPH_ANCHOR = GraphWrapper
     CODE = CodeWrapper
     EXEC_RESULT_JSON = ExecResultJsonWrapper
+    UPLOADS = UploadsWrapper
     ENUS_TUTORIAL_CONTENT = ENUSTutorialContentWrapper
     ZHCN_TUTORIAL_CONTENT = ZHCNTutorialContentWrapper
     ENUS_GRAPH_CONTENT = ENUSGraphContentWrapper

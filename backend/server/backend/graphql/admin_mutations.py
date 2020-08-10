@@ -151,16 +151,7 @@ class DeleteStatic(SuccessMutationBase):
 
     @write_required
     def mutate(self, _, url: str):
-        if url.startswith(DeleteStatic.upload_url_prefix):
-            url = url.replace(DeleteStatic.upload_url_prefix, '').strip()
-
-        try:
-            upload = Uploads.objects.get(file=url)
-            upload.delete()
-        except Uploads.DoesNotExist:
-            raise GraphQLError('The file you want to delete does not exist.')
-
-        return DeleteStatic(success=True)
+        raise DeprecationWarning
 
 
 class UpdateTutorialContent(SuccessMutationBase):

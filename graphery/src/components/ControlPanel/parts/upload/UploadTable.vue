@@ -21,9 +21,9 @@
     <template v-slot:item="props">
       <div class="q-pa-xs col-xs-12 col-sm-4 col-md-3 col-lg-2">
         <UploadDisplayCard
-          :resource-link="props.row.relativeUrl"
+          :displayInfo="{ url: props.row.relativeUrl, id: props.row.id }"
           :alias="props.row.alias"
-          @showUploadInfo="(url) => $emit('showUploadInfo', url)"
+          @showUploadInfo="(obj) => $emit('showUploadInfo', obj)"
         />
       </div>
     </template>
