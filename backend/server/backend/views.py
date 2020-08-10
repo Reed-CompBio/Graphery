@@ -15,7 +15,7 @@ def media_request(request: HttpRequest, url: str) -> HttpResponse:
         try:
             upload = Uploads.objects.get(file=url)
             file = upload.file
-            return HttpResponse(content=file, content_type=guess_type(file.path))
+            return HttpResponse(content=file, content_type=guess_type(file.path)[0])
         except Uploads.DoesNotExist:
             return HttpResponse(status=404)
     return HttpResponse(status=400)
