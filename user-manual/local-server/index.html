@@ -17,7 +17,7 @@
     
     
       
-        <title>APIs - Graphery Docs</title>
+        <title>Local Server - Graphery Docs</title>
       
     
     
@@ -51,7 +51,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#api-specifications" class="md-skip">
+        <a href="#local-server" class="md-skip">
           Skip to content
         </a>
       
@@ -79,7 +79,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              APIs
+              Local Server
             
           </span>
         </div>
@@ -163,10 +163,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
     
     <label class="md-nav__link" for="nav-2">
       User Manual
@@ -190,7 +192,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-manual/get-started/" title="Get Started" class="md-nav__link">
+    <a href="../get-started/" title="Get Started" class="md-nav__link">
       Get Started
     </a>
   </li>
@@ -202,7 +204,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-manual/utils/" title="Utilities" class="md-nav__link">
+    <a href="../utils/" title="Utilities" class="md-nav__link">
       Utilities
     </a>
   </li>
@@ -212,11 +214,67 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../user-manual/local-server/" title="Local Server" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Local Server
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="Local Server" class="md-nav__link md-nav__link--active">
       Local Server
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    Install
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -271,12 +329,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
     <label class="md-nav__link" for="nav-4">
       Backend Doc
@@ -300,7 +356,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../database-specification/" title="Databse Schema" class="md-nav__link">
+    <a href="../../backend-docs/database-specification/" title="Databse Schema" class="md-nav__link">
       Databse Schema
     </a>
   </li>
@@ -312,7 +368,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../naming-convention/" title="Naming Conventions" class="md-nav__link">
+    <a href="../../backend-docs/naming-convention/" title="Naming Conventions" class="md-nav__link">
       Naming Conventions
     </a>
   </li>
@@ -324,7 +380,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../cli-usages/" title="CLI Usages" class="md-nav__link">
+    <a href="../../backend-docs/cli-usages/" title="CLI Usages" class="md-nav__link">
       CLI Usages
     </a>
   </li>
@@ -334,20 +390,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-    <a href="./" title="APIs" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../../backend-docs/api-specification/" title="APIs" class="md-nav__link">
       APIs
     </a>
-    
   </li>
 
         
@@ -385,6 +432,37 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    Install
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -399,8 +477,28 @@
                   
                 
                 
-                <h1 id="api-specifications">API Specifications</h1>
-<p>Coming Soon~</p>
+                <h1 id="local-server">Local Server</h1>
+<h2 id="introduction">Introduction</h2>
+<p>Local server is used to generate step by step debug info for the front end. Please check out <a href="/user-manual/utils/index.html">utils</a> before reading this. </p>
+<h2 id="install">Install</h2>
+<div class="codehilite"><pre><span></span><code>git clone https://github.com/FlickerSoul/Graphery.git
+<span class="nb">cd</span> Graphery/backend
+</code></pre></div>
+
+
+<p>Under this director, you can see a <code>bundle</code> folder and a <code>user_server.py</code> file. Those two will be the only thing you need. You can copy then in to a separated folder and delete the rest. </p>
+<h2 id="usage">Usage</h2>
+<p>Python 3.7 and above is required to run this server. Check you python version using the following command first. </p>
+<div class="codehilite"><pre><span></span><code>python --version
+</code></pre></div>
+
+
+<p>Then run under the folder which contains <code>bundle</code> and <code>user_server.py</code> </p>
+<div class="codehilite"><pre><span></span><code>python user_server.py
+</code></pre></div>
+
+
+<p>No dependencies required. </p>
                 
               
               
@@ -419,7 +517,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../cli-usages/" title="CLI Usages" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../utils/" title="Utilities" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -428,19 +526,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                CLI Usages
+                Utilities
               </div>
             </div>
           </a>
         
         
-          <a href="../../about/" title="About" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../../for-writers/get-started/" title="Get Started" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                About
+                Get Started
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">
