@@ -509,6 +509,20 @@
 <p>The abstract box in the tutorial content will be rendered as html, so you can put either plain text or html there.</p>
 <h2 id="graph">Graph</h2>
 <p>In the graph editor, the can also see a url input and and name input. The same guideline from tutorial content editing should be applied here. You can paste the graph json to the text area or you can use the uploader below the text area to upload a json file and load the content by clicking the paper plane on the right. </p>
+<p>You can use <code>bundle</code> module in the git repo to generate a very basic graph json. </p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">bundle.GraphObjects.Node</span> <span class="kn">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="nn">bundle.GraphObjects.Edge</span> <span class="kn">import</span> <span class="n">Edge</span>
+<span class="kn">from</span> <span class="nn">bundle.GraphObjects.MutableGraph</span> <span class="kn">import</span> <span class="n">MutableGraph</span>
+
+<span class="n">graph</span><span class="p">:</span> <span class="n">MutableGraph</span> <span class="o">=</span> <span class="n">MutableGraph</span><span class="p">()</span>
+<span class="n">node_0</span><span class="p">:</span> <span class="n">Node</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">identity</span><span class="o">=</span><span class="s1">&#39;node_name&#39;</span><span class="p">)</span>
+<span class="n">node_1</span><span class="p">:</span> <span class="n">Node</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">identity</span><span class="o">=</span><span class="s1">&#39;distinct_node_name&#39;</span><span class="p">)</span>
+<span class="n">edge_0</span><span class="p">:</span> <span class="n">Edge</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">identity</span><span class="o">=</span><span class="s1">&#39;edge_1&#39;</span><span class="p">,</span> <span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">generate_json</span><span class="p">())</span>
+</code></pre></div>
+
+
 <h2 id="graph-info">Graph Info</h2>
 <p>Nothing special about it. The <em>IMPORTANT</em> note in tutorial content section also applies here. </p>
 <h2 id="code">Code</h2>

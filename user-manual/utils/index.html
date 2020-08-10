@@ -508,7 +508,7 @@
                 <h1 id="utilities">Utilities</h1>
 <h2 id="introduction">Introduction</h2>
 <p>This article talks about how the backend prepares data for database from user-input files.</p>
-<p>All the utilities live in the <code>bundle</code> module. There are three sections: <code>GraphObjects</code> in which all the elements of graphs are defined, <code>seeker</code> the variable tracing module, and <code>utils</code> which contains helpers used by <code>controller</code>. <code>controller.py</code> contains <code>controller</code> which should be the entry point of other utilities. <code>cli.py</code> is the CLI interacting with the user (not finished yet).</p>
+<p>All the utilities live in the <code>bundle</code> module. There are three sections: <code>GraphObjects</code> in which all the elements of graphs are defined, <code>seeker</code> the variable tracing module, and <code>utils</code> which contains helpers used by <code>controller</code>. <code>controller.py</code> contains <code>controller</code> which should be the entry point of other utilities. </p>
 <h2 id="graphobjects"><code>GraphObjects</code></h2>
 <p>The APIs exposed by <code>GraphObject</code> are listed <a href="../get-started/">here</a>. This section is for developers who wants to generate graph objects.</p>
 <p><code>Graph.py</code> has a function called <code>graph_generator</code>, which takes in a json string in <code>cyjs</code> format (example <a href="https://js.cytoscape.org/#notation/elements-json">here</a>, the second example in the section) and returns a <code>Graph</code> object.</p>
