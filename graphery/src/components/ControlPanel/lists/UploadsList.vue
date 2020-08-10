@@ -14,12 +14,9 @@
         :id="infoWindowIntel.id"
         content-type="UPLOADS"
         v-model="showUploadInfoWindow"
-        :finalCallback="$refs.contentTable.fetchUploadsContent"
+        :finalCallback="refreshContent"
       />
-      <UploadPopup
-        v-model="showUploadPopup"
-        :finalCallback="$refs.contentTable.fetchUploadsContent"
-      />
+      <UploadPopup v-model="showUploadPopup" :finalCallback="refreshContent" />
     </template>
   </ControlPanelContentFrame>
 </template>
@@ -53,6 +50,9 @@
       },
       startUpload() {
         this.showUploadPopup = true;
+      },
+      refreshContent() {
+        this.$refs.contentTable.fetchUploadsContent();
       },
     },
   };
