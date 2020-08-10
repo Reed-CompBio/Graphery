@@ -16,7 +16,10 @@
         v-model="showUploadInfoWindow"
         :finalCallback="$refs.contentTable?.fetchUploadsContent"
       />
-      <UploadPopup v-model="showUploadPopup" />
+      <UploadPopup
+        v-model="showUploadPopup"
+        :finalCallback="$refs.contentTable?.fetchUploadsContent"
+      />
     </template>
   </ControlPanelContentFrame>
 </template>

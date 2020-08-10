@@ -39,6 +39,12 @@
   import { errorDialog } from '@/services/helpers';
   export default {
     mixins: [loadingMixin],
+    props: {
+      finalCallback: {
+        type: Function,
+        default: () => () => null,
+      },
+    },
     data() {
       return {
         files: [],
@@ -57,6 +63,7 @@
             });
           })
           .finally(() => {
+            this.finalCallback();
             this.finishedLoading();
           });
       },

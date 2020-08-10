@@ -1,6 +1,6 @@
 <template>
   <q-dialog v-model="dialogModel">
-    <UploadCard style="min-width: 30vw;" />
+    <UploadCard style="min-width: 30vw;" :finalCallback="finalCallback" />
   </q-dialog>
 </template>
 
@@ -18,6 +18,9 @@
       showDialog: {
         type: Boolean,
         default: false,
+      },
+      finalCallback: {
+        type: Function,
       },
     },
     computed: {
