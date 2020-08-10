@@ -18,6 +18,9 @@
           <RefreshButton :fetch-func="fetchGraphs" />
           <AddNewButton :create-func="createGraph" />
         </template>
+        <template v-slot:header="props">
+          <AllTableHeader :passed-props="props" />
+        </template>
         <template v-slot:body="props">
           <q-tr :props="props">
             <!-- name -->
@@ -81,6 +84,15 @@
             <q-td key="id" :props="props">
               {{ props.row.id }}
             </q-td>
+
+            <DeleteTableCell
+              :message="
+                `Do you want to delete graph '${props.row.name} which belongs to tutorial '${props.row.tutorialName}' and has id '${props.row.id}'?`
+              "
+              :id="props.row.id"
+              content-type="GRAPH_ANCHOR"
+              :final-callback="fetchGraphs"
+            />
           </q-tr>
         </template>
       </q-table>
@@ -89,22 +101,25 @@
 </template>
 
 <script>
-  import { apiCaller } from '../../../services/apis';
-  import { graphListQuery } from '../../../services/queries';
-  import { errorDialog, resolveAndOpenLink } from '../../../services/helpers';
+  import { apiCaller } from '@/services/apis';
+  import { graphListQuery } from '@/services/queries';
+  import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
-  import AddNewButton from '../parts/AddNewButton';
-  import { newModelUUID } from '../../../services/params';
+  import { newModelUUID } from '@/services/params';
+  import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
 
   export default {
     mixins: [loadingMixin],
     components: {
-      AddNewButton,
+      DeleteTableCell: () =>
+        import('@/components/ControlPanel/parts/table/DeleteTableCell'),
+      AllTableHeader,
+      AddNewButton: () => import('../parts/buttons/AddNewButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../parts/RefreshButton'),
-      OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
-      OpenInPageButton: () => import('../parts/OpenInPageButton'),
+      RefreshButton: () => import('../parts/buttons/RefreshButton'),
+      OpenInEditorButton: () => import('../parts/buttons/OpenInEditorButton'),
+      OpenInPageButton: () => import('../parts/buttons/OpenInPageButton'),
     },
     data() {
       return {
@@ -172,7 +187,7 @@
         ],
         pagination: {
           sortBy: 'name',
-          rowsPerPage: 10,
+          rowsPerPage: 5,
         },
         tableContent: [],
       };

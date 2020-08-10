@@ -26,6 +26,10 @@
             title="Main"
           />
           <DrawerListItem
+            :destination="{ name: 'Uploads List' }"
+            title="Uploads"
+          />
+          <DrawerListItem
             :destination="{ name: 'Category List' }"
             title="Categories"
           />

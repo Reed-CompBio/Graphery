@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import InfoCard from '../parts/InfoCard.vue';
+  import InfoCard from './InfoCard.vue';
   export default {
     props: {
       url: {

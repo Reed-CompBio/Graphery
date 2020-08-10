@@ -4,7 +4,10 @@ from django.db.models import QuerySet
 from graphene_django import DjangoListField
 from graphql import ResolveInfo
 
-from ..model.TutorialRelatedModel import FAKE_UUID, GraphPriority
+from ..intel_wrappers.intel_wrapper import CategoryWrapper, TutorialAnchorWrapper, GraphWrapper, CodeWrapper, \
+    ExecResultJsonWrapper, ENUSGraphContentWrapper, ZHCNTutorialContentWrapper, ENUSTutorialContentWrapper, \
+    ZHCNGraphContentWrapper, UploadsWrapper
+from ..model.TutorialRelatedModel import FAKE_UUID, GraphPriority, Uploads
 from ..model.UserModel import ROLES
 from ..model.filters import show_published_only
 from ..model.mixins import field_adder, time_date_mixin_field, published_mixin_field, uuid_mixin_field
@@ -210,7 +213,8 @@ class ExecResultJsonType(DjangoObjectType):
     # TODO django can't query a user-defined property
     is_published = graphene.Boolean()
 
-    def resolve_is_published(self, info):
+    @graphene.resolve_only_args
+    def resolve_is_published(self):
         return self.is_published
 
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
@@ -219,6 +223,33 @@ class ExecResultJsonType(DjangoObjectType):
         fields = ('code', 'graph', 'json',)
         description = 'The execution result of a piece of code on ' \
                       'a graph. '
+
+
+class UploadsType(PublishedFilterBase, DjangoObjectType):
+    relative_url = graphene.String()
+
+    @graphene.resolve_only_args
+    def resolve_url(self):
+        return self.relative_url
+
+    @field_adder(published_mixin_field, uuid_mixin_field)
+    class Meta:
+        model = Uploads
+        fields = ('file', 'alias', 'relative_url')
+        description = 'Uploaded files'
+
+
+class DeletionEnum(graphene.Enum):
+    CATEGORY = CategoryWrapper
+    TUTORIAL_ANCHOR = TutorialAnchorWrapper
+    GRAPH_ANCHOR = GraphWrapper
+    CODE = CodeWrapper
+    EXEC_RESULT_JSON = ExecResultJsonWrapper
+    UPLOADS = UploadsWrapper
+    ENUS_TUTORIAL_CONTENT = ENUSTutorialContentWrapper
+    ZHCN_TUTORIAL_CONTENT = ZHCNTutorialContentWrapper
+    ENUS_GRAPH_CONTENT = ENUSGraphContentWrapper
+    ZHCN_GRAPH_CONTENT = ZHCNGraphContentWrapper
 
 
 TutorialTransBaseFields = ('tutorial_anchor', 'authors',

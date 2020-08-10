@@ -9,8 +9,11 @@ nav:
   - Home: "index.md"
   - "User Manual":
       - "Get Started": "./user-manual/get-started.md"
+      - "Utilities": "./user-manual/utils.md"
+      - "Local Server": "./user-manual/local-server.md"
+  - "For Writers":
+      - "Get Started": "./for-writers/get-started.md"
   - "Backend Doc":
-      - "Utilities": "./backend-docs/utils.md"
       - "Databse Schema": "./backend-docs/database-specification.md"
       - "Naming Conventions": "./backend-docs/naming-convention.md"
       - "CLI Usages": "./backend-docs/cli-usages.md"

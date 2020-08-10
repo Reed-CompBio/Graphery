@@ -21,6 +21,9 @@
           :show-header="true"
         />
       </template>
+      <template v-slot:header="props">
+        <AllTableHeader :passed-props="props" />
+      </template>
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="title" :props="props">
@@ -65,6 +68,15 @@
           <q-td key="id" :props="props">
             {{ props.row.id }}
           </q-td>
+
+          <DeleteTableCell
+            :message="
+              `Do you want to delete graph translation '${props.row.title} that belongs to graph '${props.row.graphName}' with id '${props.row.id}'?`
+            "
+            :id="props.row.id"
+            :content-type="currentDeletionContentType"
+            :final-callback="fetchGraphInfo"
+          />
         </q-tr>
       </template>
     </q-table>
@@ -78,16 +90,20 @@
   import { graphInfoListQuery } from '@/services/queries';
   import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import { newModelUUID } from '@/services/params';
+  import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
 
   export default {
     mixins: [loadingMixin, tableLangMixin],
     components: {
-      OpenInPageButton: () => import('../parts/OpenInPageButton'),
-      OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
+      DeleteTableCell: () =>
+        import('@/components/ControlPanel/parts/table/DeleteTableCell'),
+      AllTableHeader,
+      OpenInPageButton: () => import('../parts/buttons/OpenInPageButton'),
+      OpenInEditorButton: () => import('../parts/buttons/OpenInEditorButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../parts/RefreshButton.vue'),
-      LangSelector: () => import('../parts/LangSelector.vue'),
+      RefreshButton: () => import('../parts/buttons/RefreshButton.vue'),
+      LangSelector: () => import('../parts/selectors/LangSelector.vue'),
     },
     data() {
       return {
@@ -143,6 +159,10 @@
           sortBy: 'title',
           rowsPerPage: 10,
         },
+        graphContentTypeMapping: {
+          'en-us': 'ENUS_GRAPH_CONTENT',
+          'zh-cn': 'ZHCN_GRAPH_CONTENT',
+        },
       };
     },
     computed: {
@@ -150,6 +170,17 @@
         return {
           translation: this.tableLang,
         };
+      },
+      currentDeletionContentType() {
+        const contentType = this.graphContentTypeMapping[this.tableLang];
+        if (contentType) {
+          return contentType;
+        } else {
+          errorDialog({
+            message: 'Internal Error: Unknown deletion content type specified.',
+          });
+          return undefined;
+        }
       },
     },
     methods: {

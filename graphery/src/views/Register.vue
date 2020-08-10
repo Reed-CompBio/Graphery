@@ -105,8 +105,8 @@
                     <div class="q-ma-sm">
                       <q-btn
                         flat
-                        :label="$t('account.Login')"
-                        @click="login"
+                        type="submit"
+                        :label="$t('account.Register')"
                         :loading="loading"
                         :disable="loading"
                       ></q-btn>
@@ -114,8 +114,8 @@
                     <div class="q-ma-sm">
                       <q-btn
                         flat
-                        type="submit"
-                        :label="$t('account.Register')"
+                        :label="$t('account.Login')"
+                        @click="login"
                         :loading="loading"
                         :disable="loading"
                       ></q-btn>

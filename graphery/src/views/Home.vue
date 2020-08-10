@@ -15,6 +15,7 @@
         </p>
       </div>
     </div>
+    <q-separator />
     <div class="q-mx-auto">
       <div
         :class="{
@@ -68,7 +69,6 @@
         </div>
       </div>
     </div>
-    <q-separator />
   </MaterialPage>
 </template>
 

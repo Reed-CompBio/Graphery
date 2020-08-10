@@ -25,8 +25,6 @@
               class="full-width"
               ref="mdEditor"
               :initValue="tutorialContentObj.contentMd"
-              :imgAddAction="imgAddCallback"
-              :imgDelAction="imgDelCallback"
               @changes="handleEditorChanges"
               @saves="saveUploadCallback"
             ></EditorSection>
@@ -98,7 +96,6 @@
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import pushToMixin from '../mixins/PushToMixin.vue';
-  import imageHandleMixin from '../mixins/ImageHandleMixin';
   import { apiCaller } from '@/services/apis';
   import {
     tutorialContentMutation,
@@ -106,26 +103,27 @@
   } from '@/services/queries';
   import { newModelUUID } from '@/services/params';
   import { errorDialog, resolveLink, successDialog } from '@/services/helpers';
+  import leaveConfirmMixin from '../mixins/LeaveConfirmMixin.vue';
 
   export default {
-    mixins: [loadingMixin, pushToMixin, imageHandleMixin],
+    mixins: [loadingMixin, pushToMixin, leaveConfirmMixin],
     // TODO add props to router url
     props: ['anchorId', 'contentId', 'tutorialUrl', 'lang'],
     components: {
       StoreLocation: () =>
-        import('@/components/ControlPanel/parts/StoreLocationCard'),
+        import('@/components/ControlPanel/parts/cards/StoreLocationCard'),
       EditorHowTo: () => import('@/components/ControlPanel/parts/EditorHowTo'),
       SubmitButton: () =>
-        import('@/components/ControlPanel/parts/SubmitButton'),
-      LangCard: () => import('@/components/ControlPanel/parts/LangCard'),
-      URLCard: () => import('../parts/URLCard.vue'),
-      AuthorSelection: () => import('../parts/AuthorSelection.vue'),
-      IDCard: () => import('../parts/IDCard.vue'),
+        import('@/components/ControlPanel/parts/buttons/SubmitButton'),
+      LangCard: () => import('@/components/ControlPanel/parts/cards/LangCard'),
+      URLCard: () => import('../parts/cards/URLCard.vue'),
+      AuthorSelection: () => import('../parts/selectors/AuthorSelection.vue'),
+      IDCard: () => import('../parts/cards/IDCard.vue'),
       ControlPageContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
       EditorSection: () => import('../parts/EditorSection.vue'),
-      InfoCard: () => import('../parts/InfoCard.vue'),
+      InfoCard: () => import('../parts/cards/InfoCard.vue'),
     },
     data() {
       return {

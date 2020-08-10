@@ -22,6 +22,9 @@
             :show-header="true"
           />
         </template>
+        <template v-slot:header="props">
+          <AllTableHeader :passed-props="props" />
+        </template>
         <template v-slot:body="props">
           <q-tr :props="props">
             <!-- title -->
@@ -96,6 +99,14 @@
             <q-td key="id" :props="props">
               {{ props.row.id }}
             </q-td>
+
+            <DeleteTableCell
+              :message="
+                `Do you want to delete tutorial translation '${props.row.title}' which belongs to tutorial '${props.row.tutorialName}' and has id '${props.row.id}'?`
+              "
+              :id="props.row.id"
+              :content-type="currentDeletionContentType"
+            />
           </q-tr>
         </template>
       </q-table>
@@ -110,16 +121,21 @@
   import { emptyTutorialContentTag, newModelUUID } from '@/services/params';
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import tableLangMixin from '../mixins/TableLangMixin.vue';
+  import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
 
   export default {
     mixins: [loadingMixin, tableLangMixin],
     components: {
-      LangSelector: () => import('../parts/LangSelector.vue'),
-      OpenInPageButton: () => import('../parts/OpenInPageButton.vue'),
-      OpenInEditorButton: () => import('../parts/OpenInEditorButton.vue'),
+      DeleteTableCell: () =>
+        import('@/components/ControlPanel/parts/table/DeleteTableCell'),
+      AllTableHeader,
+      LangSelector: () => import('../parts/selectors/LangSelector.vue'),
+      OpenInPageButton: () => import('../parts/buttons/OpenInPageButton.vue'),
+      OpenInEditorButton: () =>
+        import('../parts/buttons/OpenInEditorButton.vue'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../parts/RefreshButton.vue'),
+      RefreshButton: () => import('../parts/buttons/RefreshButton.vue'),
     },
     data() {
       return {
@@ -192,6 +208,10 @@
           sortBy: 'title',
           rowsPerPage: 10,
         },
+        tutorialContentTypeMapping: {
+          'en-us': 'ENUS_TUTORIAL_CONTENT',
+          'zh-cn': 'ZHCN_TUTORIAL_CONTENT',
+        },
       };
     },
     computed: {
@@ -199,6 +219,17 @@
         return {
           translation: this.tableLang,
         };
+      },
+      currentDeletionContentType() {
+        const contentType = this.tutorialContentTypeMapping[this.tableLang];
+        if (contentType) {
+          return contentType;
+        } else {
+          errorDialog({
+            message: 'Internal Error: Unknown deletion content type specified.',
+          });
+          return undefined;
+        }
       },
     },
     methods: {

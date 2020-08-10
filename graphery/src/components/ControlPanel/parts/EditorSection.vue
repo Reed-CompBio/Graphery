@@ -17,18 +17,13 @@
 <script>
   import { mavonEditor } from 'mavon-editor';
   import 'mavon-editor/dist/css/index.css';
+  import { errorDialog } from '@/services/helpers';
 
   export default {
     props: {
       initValue: {
         type: String,
         default: '',
-      },
-      imgAddAction: {
-        type: Function,
-      },
-      imgDelAction: {
-        type: Function,
       },
     },
     components: {
@@ -41,6 +36,16 @@
       };
     },
     methods: {
+      imgAddAction() {
+        errorDialog({
+          message: 'Please use Uploads page to upload files.',
+        });
+      },
+      imgDelAction() {
+        errorDialog({
+          message: 'Invalid Command!',
+        });
+      },
       getRawText() {
         return this.rawText;
       },

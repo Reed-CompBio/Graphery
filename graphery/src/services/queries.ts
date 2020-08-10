@@ -402,17 +402,16 @@ mutation ($lang:String!, $content: TutorialContentInputType!){
   }
 }`;
 
-export const uploadImage = `
+export const uploadStatic = `
 mutation {
-  uploadStatics {
+  uploadStatic {
     success
-    url
   }
 }`;
 
 export const deleteImage = `
 mutation ($url: String!){
-  deleteStatics(url: $url) {
+  deleteStatic(url: $url) {
     success
   }
 }`;
@@ -465,5 +464,21 @@ export const registerMutation = `
 mutation ($email: String!, $username: String!, $password: String!, $invitationCode: String!) {
   register(email: $email, username: $username, password: $password, invitationCode:$invitationCode) {
     success
+  }
+}`;
+
+export const deleteMutation = `
+mutation ($contentType: DeletionEnum!, $id: UUID!) {
+  deleteContent (contentType: $contentType, id: $id) {
+    success
+  }
+}`;
+
+export const fetchUploads = `
+query {
+  allUploads {
+    id
+    relativeUrl
+    alias
   }
 }`;

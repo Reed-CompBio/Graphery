@@ -50,25 +50,24 @@
   import { apiCaller } from '@/services/apis';
   import loadingMixin from '../mixins/LoadingMixin';
   import pushToMixin from '../mixins/PushToMixin.vue';
+  import leaveConfirmMixin from '../mixins/LeaveConfirmMixin.vue';
   import {
     tutorialQuery,
     updateTutorialAnchorMutation,
   } from '@/services/queries';
   import { errorDialog, successDialog } from '@/services/helpers';
-  import SubmitButton from '../parts/SubmitButton';
-  import IDCard from '../parts/IDCard';
-  import CategorySelection from '../parts/CategorySelection';
+  import CategorySelection from '../parts/selectors/CategorySelection';
 
   export default {
-    mixins: [loadingMixin, pushToMixin],
+    mixins: [loadingMixin, pushToMixin, leaveConfirmMixin],
     props: ['id'],
     components: {
       CategorySelection,
-      IDCard,
-      SubmitButton,
+      IDCard: () => import('../parts/cards/IDCard'),
+      SubmitButton: () => import('../parts/buttons/SubmitButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      InfoCard: () => import('../parts/InfoCard.vue'),
+      InfoCard: () => import('../parts/cards/InfoCard.vue'),
     },
     data() {
       return {

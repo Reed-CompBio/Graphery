@@ -1,13 +1,18 @@
 import json
+from random import random
 from typing import Optional, Iterable, Mapping, Type, Union, Any
+
+from django.core.files import File
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
     categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
-    graph_priority_validator, json_validator, email_validator, username_validator, password_validator
-from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
+    graph_priority_validator, json_validator, email_validator, username_validator, password_validator, FAKE_PASSWORD, \
+    tutorial_anchors_validator
+from backend.model.TranslationModels import TranslationBase, GraphTranslationBase, ENUS, ZHCN, ENUSGraphContent, \
+    ZHCNGraphContent
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
 from backend.model.UserModel import User
-from backend.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper
+from backend.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper, VariedContentWrapper
 
 
 def finalize_prerequisite_wrapper(model_wrapper: AbstractWrapper, overwrite: bool = False) -> None:
@@ -42,7 +47,7 @@ class UserWrapper(AbstractWrapper):
         super().load_model(loaded_model)
         self.username = loaded_model.username
         self.email = loaded_model.email
-        self.password = loaded_model.password
+        self.password = FAKE_PASSWORD
         self.role = loaded_model.role
         return self
 
@@ -53,7 +58,12 @@ class UserWrapper(AbstractWrapper):
         field_list = [field for field in self.validators.keys() if field != 'password']
         for field in field_list:
             setattr(self.model, field, getattr(self, field))
-        if len(self.password) <= 20:
+
+        if self.password == FAKE_PASSWORD:
+            # TODO change this framework, added a exist/not modify flag
+            raise ValueError('Internal Error: password cannot be set to placeholder.')
+
+        if len(self.password) <= 25:
             self.model.set_password(self.password)
 
     def retrieve_model(self) -> None:
@@ -167,7 +177,7 @@ class GraphWrapper(PublishedWrapper):
             'authors': authors_validator,
             'priority': graph_priority_validator,
             'cyjs': json_validator,
-            'tutorials': wrapper_validator
+            'tutorials': tutorial_anchors_validator
         })
 
     def load_model(self, loaded_model: Graph) -> 'GraphWrapper':
@@ -290,10 +300,48 @@ class ExecResultJsonWrapper(AbstractWrapper):
         return self.__str__()
 
 
-class TutorialTranslationContentWrapper(PublishedWrapper):
-    def __init__(self):
-        self.model_class: Optional[Type[TranslationBase]] = None
+class UploadsWrapper(PublishedWrapper):
+    model_class: Type[Uploads] = Uploads
 
+    def __init__(self):
+        self.file: Optional[Union[str, Any]] = None
+        self.alias: Optional[str] = None
+
+        super(UploadsWrapper, self).__init__({
+            'file': dummy_validator,
+            'alias': non_empty_text_validator
+        })
+
+        self.id: str = FAKE_UUID
+
+    def load_model(self, loaded_model: Uploads) -> 'UploadsWrapper':
+        super().load_model(loaded_model=loaded_model)
+        self.file = loaded_model.file
+        self.alias = loaded_model.alias
+        return self
+
+    def retrieve_model(self) -> None:
+        if self.id is not None or self.id != FAKE_UUID:
+            self.model: Uploads = Uploads.objects.get(id=self.id)
+        elif self.alias:
+            self.model: Uploads = Uploads.objects.get(alias=self.alias)
+        elif isinstance(self.file, str):
+            self.model: Uploads = Uploads.objects.get(file=self.file)
+        elif isinstance(self.file, File):
+            self.model: Uploads = Uploads.objects.get(file=self.file.name)
+        else:
+            raise ValueError(f'Cannot find file model since `id` {self.id} and `file` {self.file}  '
+                             f'are either empty or not valid..')
+
+    def make_new_model(self) -> None:
+        if isinstance(self.file, File):
+            self.model: Uploads = Uploads(file=self.file, alias=f'{self.file.name}_{int(random() * 100000)}')
+        else:
+            raise ValueError(f'Cannot create upload since `file` {self.file} is not a File instance.')
+
+
+class TutorialTranslationContentWrapper(VariedContentWrapper[Type[TranslationBase]]):
+    def __init__(self):
         self.title: Optional[str] = None
         self.authors: Optional[Iterable[UserWrapper]] = None
         self.tutorial_anchor: Optional[TutorialAnchorWrapper] = None
@@ -301,7 +349,7 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
         self.content_md: Optional[str] = None
         self.content_html: Optional[str] = None
 
-        PublishedWrapper.__init__(self, {
+        super(TutorialTranslationContentWrapper, self).__init__({
             'title': non_empty_text_validator,
             'authors': authors_validator,
             'tutorial_anchor': wrapper_validator,
@@ -366,16 +414,22 @@ class TutorialTranslationContentWrapper(PublishedWrapper):
         return self.__str__()
 
 
-class GraphTranslationContentWrapper(PublishedWrapper):
-    def __init__(self):
-        self.model_class: Optional[Type[GraphTranslationBase]] = None
+class ENUSTutorialContentWrapper(TutorialTranslationContentWrapper):
+    model_class = ENUS
 
+
+class ZHCNTutorialContentWrapper(TutorialTranslationContentWrapper):
+    model_class = ZHCN
+
+
+class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationBase]]):
+    def __init__(self):
         self.title: Optional[str] = None
         self.abstract_md: Optional[str] = None
         self.abstract: Optional[str] = None
         self.graph_anchor: Optional[GraphWrapper] = None
 
-        PublishedWrapper.__init__(self, {
+        super(GraphTranslationContentWrapper, self).__init__({
             'title': non_empty_text_validator,
             'abstract_md': non_empty_text_validator,
             'abstract': non_empty_text_validator,
@@ -422,41 +476,12 @@ class GraphTranslationContentWrapper(PublishedWrapper):
         return self.__str__()
 
 
-class UploadsWrapper(PublishedWrapper):
-    model_class: Type[Uploads] = Uploads
+class ENUSGraphContentWrapper(GraphTranslationContentWrapper):
+    model_class = ENUSGraphContent
 
-    def __init__(self):
-        self.where: Optional[str] = None
-        self.url: Optional[str] = None
-        self.file: Optional[Union[str, Any]] = None
 
-        super(UploadsWrapper, self).__init__({
-            'where': dummy_validator,
-            'url': dummy_validator,
-            'file': dummy_validator,
-        })
-
-        raise DeprecationWarning
-
-    def load_model(self, loaded_model: Uploads) -> 'UploadsWrapper':
-        super().load_model(loaded_model=loaded_model)
-
-        self.where = loaded_model.where
-        self.url = loaded_model.where
-        self.file = loaded_model.file
-        return self
-
-    def retrieve_model(self) -> None:
-        if self.id is not None or self.id != FAKE_UUID:
-            self.model: Uploads = Uploads.objects.get(id=self.id)
-        elif isinstance(self.file, str):
-            self.model: Uploads = Uploads.objects.get(file=self.file)
-        else:
-            get_method = getattr(self.file, 'path', None)
-            raise ValueError('')
-
-    def make_new_model(self) -> None:
-        pass
+class ZHCNGraphContentWrapper(GraphTranslationContentWrapper):
+    model_class = ZHCNGraphContent
 
 
 FixedTypeWrapper = Union[UserWrapper,

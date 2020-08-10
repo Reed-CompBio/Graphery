@@ -18,11 +18,11 @@
 </template>
 
 <script>
-  import InfoCard from '../parts/InfoCard.vue';
-  import loadingMixin from '../mixins/LoadingMixin.vue';
-  import { apiCaller } from '../../../services/apis';
-  import { authorSelectQuery } from '../../../services/queries';
-  import { errorDialog } from '../../../services/helpers';
+  import InfoCard from '../cards/InfoCard.vue';
+  import loadingMixin from '../../mixins/LoadingMixin.vue';
+  import { apiCaller } from '../../../../services/apis';
+  import { authorSelectQuery } from '../../../../services/queries';
+  import { errorDialog } from '../../../../services/helpers';
 
   export default {
     mixins: [loadingMixin],

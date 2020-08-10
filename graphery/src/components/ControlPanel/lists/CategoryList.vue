@@ -18,6 +18,9 @@
           <RefreshButton :fetch-func="fetchCategories" class="q-mr-md" />
           <AddNewButton :create-func="createNewCategory" />
         </template>
+        <template v-slot:header="props">
+          <AllTableHeader :passed-props="props" />
+        </template>
         <template v-slot:body="props">
           <q-tr :props="props">
             <q-td key="category" :props="props">
@@ -37,6 +40,15 @@
             <q-td key="id" :props="props">
               {{ props.row.id }}
             </q-td>
+
+            <DeleteTableCell
+              :message="
+                `Do you want to delete category '${props.row.category} with id '${props.row.id}'?`
+              "
+              :id="props.row.id"
+              contentType="CATEGORY"
+              :finalCallback="fetchCategories"
+            />
           </q-tr>
         </template>
       </q-table>
@@ -45,21 +57,24 @@
 </template>
 
 <script>
-  import { apiCaller } from '../../../services/apis';
-  import { categoryListQuery } from '../../../services/queries';
-  import { errorDialog, resolveAndOpenLink } from '../../../services/helpers';
+  import { apiCaller } from '@/services/apis';
+  import { categoryListQuery } from '@/services/queries';
+  import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import loadingMixin from '../mixins/LoadingMixin.vue';
-  import AddNewButton from '../parts/AddNewButton';
-  import { newModelUUID } from '../../../services/params';
+  import { newModelUUID } from '@/services/params';
+  import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
 
   export default {
     mixins: [loadingMixin],
     components: {
-      AddNewButton,
+      AllTableHeader,
+      DeleteTableCell: () => import('../parts/table/DeleteTableCell'),
+      AddNewButton: () => import('../parts/buttons/AddNewButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../parts/RefreshButton.vue'),
-      OpenInEditorButton: () => import('../parts/OpenInEditorButton.vue'),
+      RefreshButton: () => import('../parts/buttons/RefreshButton.vue'),
+      OpenInEditorButton: () =>
+        import('../parts/buttons/OpenInEditorButton.vue'),
     },
     data() {
       return {
@@ -95,7 +110,6 @@
           sortBy: 'category',
           rowsPerPage: 20,
         },
-        loadingCategories: false,
         tableContent: [],
       };
     },

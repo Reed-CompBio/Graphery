@@ -1,12 +1,12 @@
 <template>
   <MaterialPage>
-    <article>
-      <header class="">
+    <article class="about-content">
+      <header>
         <h3 class="material-page-shorter-h3">
           {{ $t('nav.About') }}
         </h3>
       </header>
-      <section class="about-section">
+      <section>
         <p>
           Graphery is a web-based graph algorithm tutorial that is designed for
           biological researchers.
@@ -29,6 +29,8 @@
           applications such as animal social networks, ecology food webs,
           molecular interaction networks, and phylogenetic trees.
         </p>
+      </section>
+      <section>
         <h4>
           Feedback
         </h4>
@@ -48,6 +50,31 @@
             Email Me
           </a>
         </p>
+      </section>
+      <section>
+        <h4>Project Leader</h4>
+        <p>
+          <a href="https://www.reed.edu/biology/ritz/" target="_blank">
+            Anna Ritz
+          </a>
+          is an Associate Professor of Biology at
+          <a href="https://reed.edu" target="_blank"> Reed College</a>. A
+          computer scientist by training, she does research in computational
+          systems molecular biology. Dr. Ritz primarily develops graph
+          algorithms to analyze signaling pathways in large protein-protein
+          interaction networks.
+        </p>
+      </section>
+      <section>
+        <h4>
+          Funding
+        </h4>
+        <p>
+          This project is supported by an NSF CAREER Award (DBI-1750981) to Anna
+          Ritz.
+        </p>
+      </section>
+      <section>
         <h4>
           Contributors
         </h4>
@@ -59,6 +86,8 @@
             Jinbiao Zhang
           </li>
         </ul>
+      </section>
+      <section>
         <h4>
           Libraries
         </h4>
@@ -128,6 +157,8 @@
             <NewTabA link="https://www.postgresql.org/"> PostgreSQL </NewTabA>
           </li>
         </ul>
+      </section>
+      <section>
         <LicenseCard></LicenseCard>
       </section>
     </article>
@@ -146,7 +177,7 @@
 </script>
 
 <style lang="sass">
-  .about-section
+  .about-content
     p
       font-size: 1.2rem
   .uo-list

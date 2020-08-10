@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import InfoCard from '../parts/InfoCard.vue';
+  import InfoCard from './InfoCard.vue';
   import { langList } from '@/services/params';
   export default {
     props: ['lang'],

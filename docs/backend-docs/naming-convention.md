@@ -1,5 +1,7 @@
 # Naming Convention
 
+***Deprecated.***
+
 ## CLI Reader Folder
 
 <!-- TODO change the title name -->

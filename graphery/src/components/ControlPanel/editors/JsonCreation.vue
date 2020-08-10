@@ -82,13 +82,14 @@
     notAvailableMessage,
   } from '@/services/helpers';
   import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
+  import { newModelUUID } from '@/services/params';
 
   export default {
     props: ['codeId', 'codeContent'],
     mixins: [loadingMixin, pushCodeToLocalMixin],
     components: {
-      InfoCard: () => import('../parts/InfoCard'),
-      SubmitButton: () => import('../parts/SubmitButton'),
+      InfoCard: () => import('../parts/cards/InfoCard'),
+      SubmitButton: () => import('../parts/buttons/SubmitButton'),
       EditorFrame: () => import('../frames/EditorFrame'),
     },
     data() {
@@ -120,6 +121,10 @@
     },
     methods: {
       fetchTutorialGraphs() {
+        if (this.codeId === newModelUUID) {
+          return;
+        }
+
         this.startLoading();
         apiCaller(resultJsonGetGraphsQuery, {
           id: this.codeId,

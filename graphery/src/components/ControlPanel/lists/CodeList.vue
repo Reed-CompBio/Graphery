@@ -34,6 +34,7 @@
             >
               {{ col.label }}
             </q-th>
+            <DeleteTableHeader />
           </q-tr>
         </template>
         <template v-slot:body="props">
@@ -83,6 +84,16 @@
             <q-td key="id" :props="props">
               {{ props.row.id }}
             </q-td>
+
+            <DeleteTableCell
+              :message="
+                `Do you want to delete code with id
+                '${props.row.id}' and ALL of its result json?`
+              "
+              :id="props.row.id"
+              content-type="CODE"
+              :final-callback="fetchCode"
+            />
           </q-tr>
 
           <!-- Expand info -->
@@ -103,16 +114,20 @@
   import { codeListQuery } from '@/services/queries';
   import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
   import { newModelUUID } from '@/services/params';
+  import DeleteTableHeader from '../parts/table/DeleteTableHeader.vue';
 
   export default {
     mixins: [loadingMixin],
     components: {
-      AddNewButton: () => import('../parts/AddNewButton'),
+      DeleteTableCell: () =>
+        import('@/components/ControlPanel/parts/table/DeleteTableCell'),
+      DeleteTableHeader,
+      AddNewButton: () => import('../parts/buttons/AddNewButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
-      RefreshButton: () => import('../parts/RefreshButton'),
-      OpenInPageButton: () => import('../parts/OpenInPageButton'),
-      OpenInEditorButton: () => import('../parts/OpenInEditorButton'),
+      RefreshButton: () => import('../parts/buttons/RefreshButton'),
+      OpenInPageButton: () => import('../parts/buttons/OpenInPageButton'),
+      OpenInEditorButton: () => import('../parts/buttons/OpenInEditorButton'),
     },
     data() {
       return {

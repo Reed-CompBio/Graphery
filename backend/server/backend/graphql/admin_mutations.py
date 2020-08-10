@@ -1,6 +1,5 @@
 import json
 from typing import List, Sequence, Mapping, Type, Optional, MutableMapping
-from os.path import join
 
 import graphene
 from graphene.types.generic import GenericScalar
@@ -9,14 +8,15 @@ from graphql import GraphQLError
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.conf import settings
 
-from backend.graphql.decorators import write_required
+from backend.graphql.decorators import write_required, admin_required
 from backend.graphql.mutation_base import SuccessMutationBase
 from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeType, TutorialInterface, \
-    TutorialContentInputType, GraphContentInputType, GraphContentInterface, ExecResultJsonType
+    TutorialContentInputType, GraphContentInputType, GraphContentInterface, ExecResultJsonType, DeletionEnum
 from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, get_wrapper_by_id
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper, \
-    GraphTranslationContentWrapper, ExecResultJsonWrapper
+    GraphTranslationContentWrapper, ExecResultJsonWrapper, UploadsWrapper
+from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import GraphPriority, Uploads
 from backend.model.translation_collection import get_translation_table, get_graph_info_trans_table
@@ -121,32 +121,29 @@ class UpdateCode(SuccessMutationBase):
         return UpdateCode(success=True, model=code_wrapper.model)
 
 
-class UploadStatics(SuccessMutationBase):
-    url = graphene.String(required=True)
-
-    @staticmethod
-    def get_full_url(url: str) -> str:
-        return join('/', settings.UPLOAD_STATICS_ENTRY, url)
+class UploadStatic(SuccessMutationBase):
+    urls = graphene.List(graphene.String, required=True)
 
     @write_required
     def mutate(self, info):
 
         files: Mapping[str, InMemoryUploadedFile] = info.context.FILES
 
-        if len(files) == 0 or not all('image' in file.content_type for file in files.values()):
+        if len(files) == 0:
             raise GraphQLError('No files are added.')
 
-        if len(files) > 1:
-            raise GraphQLError('You can only upload one file at a time')
+        if not all('image' in file.content_type for file in files.values()):
+            raise GraphQLError('Invalid form data.')
 
-        file = list(files.values())[0]
-        upload = Uploads(file=file)
-        upload.save()
+        wrappers: List[UploadsWrapper] = []
 
-        return UploadStatics(success=True, url=UploadStatics.get_full_url(upload.file.url))
+        for name, file in files.items():
+            wrappers.append(process_model_wrapper(UploadsWrapper, file=file, alias=name))
+
+        return UploadStatic(success=True, urls=[wrapper.model.relative_url for wrapper in wrappers])
 
 
-class DeleteStatics(SuccessMutationBase):
+class DeleteStatic(SuccessMutationBase):
     upload_url_prefix = f'/{settings.UPLOAD_STATICS_ENTRY}/'
 
     class Arguments:
@@ -154,16 +151,7 @@ class DeleteStatics(SuccessMutationBase):
 
     @write_required
     def mutate(self, _, url: str):
-        if url.startswith(DeleteStatics.upload_url_prefix):
-            url = url.replace(DeleteStatics.upload_url_prefix, '').strip()
-
-        try:
-            upload = Uploads.objects.get(file=url)
-            upload.delete()
-        except Uploads.DoesNotExist:
-            raise GraphQLError('The file you want to delete does not exist.')
-
-        return DeleteStatics(success=True)
+        raise DeprecationWarning
 
 
 class UpdateTutorialContent(SuccessMutationBase):
@@ -236,3 +224,16 @@ class UpdateResultJson(SuccessMutationBase):
             result_json_models.append(result_wrapper.model)
 
         return UpdateResultJson(success=True, models=result_json_models)
+
+
+class DeleteContent(SuccessMutationBase):
+    class Arguments:
+        content_type = graphene.Argument(DeletionEnum, required=True)
+        id = graphene.Argument(graphene.UUID, required=True)
+
+    @admin_required
+    def mutate(self, info, content_type: Type[AbstractWrapper], id: str):
+        wrapper = get_wrapper_by_id(content_type, id)
+        wrapper.delete_model()
+
+        return DeleteContent(success=True, )

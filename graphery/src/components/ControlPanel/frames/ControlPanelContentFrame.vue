@@ -33,7 +33,7 @@
       background-color: #f5f5dc
 
     th
-      font-size: 16px
+      font-size: 1rem
 
     th:first-child,
     td:first-child

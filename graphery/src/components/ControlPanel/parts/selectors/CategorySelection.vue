@@ -18,15 +18,15 @@
 </template>
 
 <script>
-  import loadingMixin from '../mixins/LoadingMixin.vue';
-  import { apiCaller } from '../../../services/apis';
-  import { allCategoryQuery } from '../../../services/queries';
-  import { errorDialog } from '../../../services/helpers';
+  import loadingMixin from '../../mixins/LoadingMixin.vue';
+  import { apiCaller } from '../../../../services/apis';
+  import { allCategoryQuery } from '../../../../services/queries';
+  import { errorDialog } from '../../../../services/helpers';
 
   export default {
     mixins: [loadingMixin],
     components: {
-      InfoCard: () => import('../parts/InfoCard.vue'),
+      InfoCard: () => import('../cards/InfoCard.vue'),
     },
     model: {
       prop: 'categorySelection',

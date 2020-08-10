@@ -41,23 +41,22 @@
   import { mapState } from 'vuex';
   import loadingMixin from '../mixins/LoadingMixin';
   import pushToMixin from '../mixins/PushToMixin';
-  import SubmitButton from '../parts/SubmitButton';
-  import IDCard from '../parts/IDCard';
-  import { newModelUUID } from '../../../services/params';
-  import { apiCaller } from '../../../services/apis';
-  import { codeQuery, updateCodeMutation } from '../../../services/queries';
-  import { errorDialog, successDialog } from '../../../services/helpers';
+  import leaveConfirmMixin from '../mixins/LeaveConfirmMixin.vue';
+  import { newModelUUID } from '@/services/params';
+  import { apiCaller } from '@/services/apis';
+  import { codeQuery, updateCodeMutation } from '@/services/queries';
+  import { errorDialog, successDialog } from '@/services/helpers';
   import JsonCreation from './JsonCreation';
-  import NoCodeTutorialSelection from '../parts/NoCodeTutorialSelection';
+  import NoCodeTutorialSelection from '../parts/selectors/NoCodeTutorialSelection';
 
   export default {
-    mixins: [loadingMixin, pushToMixin],
+    mixins: [loadingMixin, pushToMixin, leaveConfirmMixin],
     props: ['id'],
     components: {
       NoCodeTutorialSelection,
       JsonCreation,
-      IDCard,
-      SubmitButton,
+      IDCard: () => import('../parts/cards/IDCard'),
+      SubmitButton: () => import('../parts/buttons/SubmitButton'),
       ControlPanelContentFrame: () =>
         import('../frames/ControlPanelContentFrame.vue'),
       EditorFrame: () => import('../frames/EditorFrame.vue'),
