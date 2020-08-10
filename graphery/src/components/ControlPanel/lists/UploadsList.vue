@@ -14,11 +14,11 @@
         :id="infoWindowIntel.id"
         content-type="UPLOADS"
         v-model="showUploadInfoWindow"
-        :finalCallback="$refs.contentTable?.fetchUploadsContent"
+        :finalCallback="$refs.contentTable.fetchUploadsContent"
       />
       <UploadPopup
         v-model="showUploadPopup"
-        :finalCallback="$refs.contentTable?.fetchUploadsContent"
+        :finalCallback="$refs.contentTable.fetchUploadsContent"
       />
     </template>
   </ControlPanelContentFrame>

@@ -63,8 +63,8 @@
             });
           })
           .finally(() => {
-            this.finalCallback();
             this.finishedLoading();
+            this.finalCallback();
           });
       },
     },
