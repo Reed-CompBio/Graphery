@@ -5,14 +5,16 @@
     </template>
     <template>
       <UploadTable
+        ref="contentTable"
         @showUploadInfo="showUploadInfo"
         @startUpload="startUpload"
       />
       <UploadInfoPopup
         :resource-link="infoWindowIntel.url"
-        content-type="UPLOADS"
         :id="infoWindowIntel.id"
+        content-type="UPLOADS"
         v-model="showUploadInfoWindow"
+        :finalCallback="$refs.contentTable?.fetchUploadsContent"
       />
       <UploadPopup v-model="showUploadPopup" />
     </template>
