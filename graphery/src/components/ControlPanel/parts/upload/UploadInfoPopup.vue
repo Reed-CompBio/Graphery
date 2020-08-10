@@ -39,7 +39,7 @@
               <UploadActionButton
                 label="Delete PERMANENTLY"
                 color="negative"
-                @click="postDelete"
+                @click="showDeleteDialog"
               />
             </q-card-actions>
           </div>
