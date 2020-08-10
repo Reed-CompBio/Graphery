@@ -12,9 +12,10 @@
       <UploadInfoPopup
         :resource-link="infoWindowIntel.url"
         :id="infoWindowIntel.id"
+        message=""
         content-type="UPLOADS"
         v-model="showUploadInfoWindow"
-        :finalCallback="refreshContent"
+        :finalCallback="infoPopupRefresh"
       />
       <UploadPopup v-model="showUploadPopup" :finalCallback="refreshContent" />
     </template>
@@ -44,6 +45,9 @@
       showInfo() {
         this.showUploadInfoWindow = true;
       },
+      closeInfo() {
+        this.showUploadInfoWindow = false;
+      },
       showUploadInfo(obj) {
         this.infoWindowIntel = obj;
         this.showInfo();
@@ -53,6 +57,10 @@
       },
       refreshContent() {
         this.$refs.contentTable.fetchUploadsContent();
+      },
+      infoPopupRefresh() {
+        this.refreshContent();
+        this.closeInfo();
       },
     },
   };
