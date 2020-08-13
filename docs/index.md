@@ -2,8 +2,6 @@
 
 ## Introduction
 
-Coming Soon~
+This is the documentation of how to use Graphery. If you are a writer, please check out `For Writers` section. If you are a visitor, please check out `User Manual` section. 
 
-## Usage
-
-Please use the navigation to get more info~
+Feel free to ask any question on [GitHub]()

@@ -12,7 +12,7 @@ A tutorial consists of the following components: categories, a tutorial anchor, 
 
 Every component can be created in the control panel. Simply by directing to the component page and clicking on `Add New` button, the app will take you to a empty page where you can fill in content and save it to the cloud. 
 
-To delete an entry, click on the red dustbin button at the end of the table, confirm that you know what you are doing the a popup, and the entry should be removed from the database. All deletion is NOT reversible for now. So please be cautious about the delete buttons. Deleting uploads is an exception. You need to click on the upload you want to delete. And you can find the a `Delete PERMANENTLY` button on a popup. Deleting tutorial anchors and graphs is another exception, which will be described in the following sections. 
+To delete an entry, click on the red trashcan button at the end of the table, confirm that you know what you are doing in a popup, and the entry should be removed from the database. All deletion is NOT reversible for now. So please be cautious about the delete buttons. Deleting uploads is an exception. You need to click on the upload you want to delete. And you can find the a `Delete PERMANENTLY` button on a popup. Deleting tutorial anchors and graphs is another exception, which will be described in the following sections. 
 
 To modify an existing entry, click on the fist cell corresponding to the entry you want to delete, the app will take you to an editing page. 
 
@@ -22,7 +22,7 @@ Every unsaved changes will be discarded when you leave the page. There will be a
 
 # About the structure of the control panel 
 
-Every thing on the control panel table is NOT editable. You have use corresponding editor page to edit content. 
+Every thing on the control panel table is NOT editable. You have use corresponding editor page to edit content. Every action that involves with the server (or database) will return a status popup, usually on the bottom of the window. If you did something and nothing happened on the page, that means there are some glitches on the server. Please submit a GitHub issue or contact me directly. 
 
 # Some general properties 
 
@@ -60,7 +60,25 @@ The abstract box in the tutorial content will be rendered as html, so you can pu
 
 ## Graph
 
-In the graph editor, the can also see a url input and and name input. The same guideline from tutorial content editing should be applied here. You can paste the graph json to the text area or you can use the uploader below the text area to upload a json file and load the content by clicking the paper plane on the right. 
+In the graph editor, the can also see a url input and a name input. The same guideline from tutorial content editing should be applied here. You can paste the graph json to the text area or you can use the uploader below the text area to upload a json file and load the content of that file by clicking the paper plane on the right. 
+
+You can use `bundle` module in the git repo to generate a very basic graph json. 
+
+```python
+from bundle.GraphObjects.Node import Node
+from bundle.GraphObjects.Edge import Edge
+from bundle.GraphObjects.MutableGraph import MutableGraph
+
+graph: MutableGraph = MutableGraph()
+node_0: Node = graph.add_node(identity='node_name')
+node_1: Node = graph.add_node(identity='distinct_node_name')
+edge_0: Edge = graph.add_edge(identity='edge_1', ())
+
+# you can use `remove_node` or `remove_edge` to remove components from a graph object. 
+# api will be listed in future update
+
+print(graph.generate_json())
+```
 
 ## Graph Info 
 
@@ -68,6 +86,21 @@ Nothing special about it. The *IMPORTANT* note in tutorial content section also 
 
 ## Code 
 
-The code editor actually smashes two editors together. The top section is the actual code editor where you can paste the code and submit it. The second section is the result json generator. Since the server side generator is not complete yet, you can only use local generator, whose usage will be in a [separated page](/user-manual/local-server/index.html). One tutorial only has one page and you can only execute code on the graphs associated with that tutorial. 
+The code editor actually smashes two editors together. The top section is the actual code editor where you can paste the code and submit it. The second section is the result json generator. Since the server side generator is not complete yet, you can only use a local generator, whose usage can be found in a [separated page](/user-manual/local-server/index.html). One tutorial only has one page and you can only execute code on the graphs associated with that tutorial. If you can't see the graph you want, please go to either the graph editor or the tutorial editor and link the graph and the tutorial together and then go back to generate results. 
 
-You HAVE TO submit your code first and then generate json. There are two submit buttons for two section so MAKE SURE you saved both sections before exiting. 
+You HAVE TO submit your code first before generating any result json. There are two submit buttons for two section so MAKE SURE you saved both sections before exiting. 
+
+The code content should have the following components: `tracer` and `graph_object` from dummy_graph. `tracer` is the module that generates debug result. `graph_object` from dummy_graph is used to mount graph pulled from database during execution. You can't execute the code without these two components. `main` function is also required, it's the entry point. Without it, the code can't be parsed. `tracer` should be applied to every function which contains the variable you want to trance. If you don't specify `depth` param, and only apply `tracer` on the main function, other variables outside of `main` with NOT be traced. 
+
+```python
+from bundle.seeker import tracer
+from bundle.utils.dummy_graph import graph_object
+
+@tracer('b')
+def a():
+    b = 10
+    print(b)
+
+def main():
+    a()
+```
