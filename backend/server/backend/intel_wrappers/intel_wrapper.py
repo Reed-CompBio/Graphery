@@ -21,6 +21,10 @@ def finalize_prerequisite_wrapper(model_wrapper: AbstractWrapper, overwrite: boo
     model_wrapper.finalize_model()
 
 
+def finalize_wrapper_without_preparation(model_wrapper: AbstractWrapper):
+    model_wrapper.get_model(validate=False)
+
+
 def finalize_prerequisite_wrapper_iter(model_wrappers: Iterable[AbstractWrapper]) -> None:
     for model_wrapper in model_wrappers:
         finalize_prerequisite_wrapper(model_wrapper)

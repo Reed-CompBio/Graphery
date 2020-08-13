@@ -104,7 +104,10 @@
                   <q-spinner-pie size="64"></q-spinner-pie>
                 </q-inner-loading>
               </div>
-              <div id="empty-indicator" v-show="infos.length === 0">
+              <div
+                id="empty-indicator"
+                v-show="infos.length === 0 && !loadingContent"
+              >
                 <EmptyEntryCard />
               </div>
               <ArticleCard

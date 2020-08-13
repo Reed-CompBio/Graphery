@@ -8,7 +8,6 @@ T = TypeVar('T')
 
 
 def process_model_wrapper(model_wrapper_class: Type[T], **kwargs) -> T:
-    # noinspection PyArgumentList
     wrapper_instance = model_wrapper_class().set_variables(**kwargs)
     finalize_prerequisite_wrapper(wrapper_instance, overwrite=True)
     if wrapper_instance.model is None:

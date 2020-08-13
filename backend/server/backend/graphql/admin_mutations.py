@@ -18,7 +18,7 @@ from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     GraphTranslationContentWrapper, ExecResultJsonWrapper, UploadsWrapper
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
-from backend.model.TutorialRelatedModel import GraphPriority, Uploads
+from backend.model.TutorialRelatedModel import GraphPriority
 from backend.model.translation_collection import get_translation_table, get_graph_info_trans_table
 
 

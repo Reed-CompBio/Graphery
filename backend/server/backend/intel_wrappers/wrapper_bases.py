@@ -52,7 +52,6 @@ class ModelWrapperBase(Generic[T], ABC):
             self.load_model_var(loaded_model)
 
         return self
-        # TODO load override and load all the info to fields
 
     @abstractmethod
     def retrieve_model(self) -> None:
@@ -62,7 +61,7 @@ class ModelWrapperBase(Generic[T], ABC):
     def make_new_model(self) -> None:
         raise NotImplementedError
 
-    def get_model(self, overwrite: bool = False) -> None:
+    def get_model(self, overwrite: bool = False, validate: bool = True) -> None:
         if not self.model_class:
             raise AssertionError
         # TODO use other error
@@ -166,9 +165,15 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
         try:
             self.retrieve_model()
             if overwrite:
-                self.overwrite_model()
+                if validate:
+                    self.overwrite_model()
+                else:
+                    raise AssertionError('Cannot overwrite model without validations!')
         except (self.model_class.DoesNotExist, ValidationError):
-            self.make_new_model()
+            if validate:
+                raise AssertionError('Cannot make new model without validations!')
+            else:
+                self.make_new_model()
         except self.model_class.MultipleObjectsReturned as e:
             # which should never happen
             raise AssertionError('Multiple model instances received with model {} and variables {}. Error: {}'
@@ -181,7 +186,7 @@ class PublishedWrapper(AbstractWrapper, ABC):
         validators['is_published'] = is_published_validator
         super(PublishedWrapper, self).__init__(validators)
 
-    def load_model_var(self, loaded_model: T) -> None:
+    def load_model_var(self, loaded_model: PublishedMixin) -> None:
         super().load_model_var(loaded_model)
         self.is_published = loaded_model.is_published
 
