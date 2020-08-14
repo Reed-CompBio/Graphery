@@ -44,8 +44,11 @@
           </div>
         </section>
         <section class="article-abstract-section q-mx-md">
-          <div class="q-mb-sm" v-html="abstract"></div>
+          <div class="q-mb-sm">
+            <MarkdownSection :input-html="abstract" />
+          </div>
         </section>
+        <q-separator />
         <q-card-actions>
           <q-btn flat :to="url" :disable="noContentNoClick">
             {{ moreButtonText }}
@@ -57,10 +60,12 @@
 </template>
 
 <script>
-  import { toLocalDateString } from '../../services/helpers';
-  import { emptyTutorialContentTag } from '../../services/params';
+  import { toLocalDateString } from '@/services/helpers';
+  import { emptyTutorialContentTag } from '@/services/params';
+  import MarkdownSection from '@/components/framework/MarkdownSection';
 
   export default {
+    components: { MarkdownSection },
     props: [
       'title',
       'authors',
