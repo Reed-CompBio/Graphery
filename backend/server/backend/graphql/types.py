@@ -42,7 +42,8 @@ class PublishedFilterBase(DjangoObjectType):
 class UserType(DjangoObjectType):
     role = graphene.String(required=True)
 
-    def resolve_role(self, info):
+    @graphene.resolve_only_args
+    def resolve_role(self):
         return ROLES(self.role).label
 
     @field_adder(uuid_mixin_field)
@@ -64,7 +65,8 @@ class TutorialInterface(graphene.Interface):
     created_time = graphene.DateTime()
     modified_time = graphene.DateTime()
 
-    def resolve_authors(self, info):
+    @graphene.resolve_only_args
+    def resolve_authors(self):
         return self.authors.all()
 
 
@@ -92,20 +94,22 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
     categories = DjangoListField(CategoryType, required=True)
 
     @show_published_only
-    def resolve_categories(self, info, is_published_only: bool):
+    @graphene.resolve_only_args
+    def resolve_categories(self, is_published_only: bool):
         raw_results = self.categories.is_published_only_all(is_published_only=is_published_only)
         return raw_results
 
     @show_published_only
+    @graphene.resolve_only_args
     def resolve_content(self,
-                        info,
                         is_published_only: bool,
                         translation: str = 'en-us',
                         default: str = ''):
         return self.get_translation(translation, default, is_published_only)
 
     @show_published_only
-    def resolve_code(self, info, is_published_only: bool):
+    @graphene.resolve_only_args
+    def resolve_code(self, is_published_only: bool):
         # TODO write a custom manager for this
         code = getattr(self, 'code', None)
         if code and (code.is_published or not is_published_only):
@@ -162,20 +166,23 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
     # they are convered under ManyToOneRel/ManyToManyRel/ManyToManyField
     # and will be automatically translated to DjangoListField
 
-    def resolve_priority(self, info):
+    @graphene.resolve_only_args
+    def resolve_priority(self):
         return GraphPriorityType(priority=self.priority, label=GraphPriority(self.priority).label)
 
-    def resolve_authors(self, info):
+    @graphene.resolve_only_args
+    def resolve_authors(self):
         return self.authors.all()
 
     @show_published_only
-    def resolve_categories(self, info, is_published_only: bool):
+    @graphene.resolve_only_args
+    def resolve_categories(self, is_published_only: bool):
         raw_results = self.categories.is_published_only_all(is_published_only=is_published_only)
         return raw_results
 
     @show_published_only
+    @graphene.resolve_only_args
     def resolve_content(self,
-                        info: ResolveInfo,
                         is_published_only: bool,
                         translation: str = 'en-us',
                         default: str = ''):
@@ -199,7 +206,8 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
 class CodeType(PublishedFilterBase, DjangoObjectType):
     is_published = graphene.Boolean()
 
-    def resolve_is_published(self, info):
+    @graphene.resolve_only_args
+    def resolve_is_published(self):
         return self.is_published
 
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
@@ -250,6 +258,11 @@ class DeletionEnum(graphene.Enum):
     ZHCN_TUTORIAL_CONTENT = ZHCNTutorialContentWrapper
     ENUS_GRAPH_CONTENT = ENUSGraphContentWrapper
     ZHCN_GRAPH_CONTENT = ZHCNGraphContentWrapper
+
+
+class FilterContentType(graphene.InputObjectType):
+    search_text = graphene.String()
+    category_ids = graphene.List(graphene.String)
 
 
 TutorialTransBaseFields = ('tutorial_anchor', 'authors',

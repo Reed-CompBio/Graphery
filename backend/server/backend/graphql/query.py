@@ -1,12 +1,13 @@
-from typing import Type
+from typing import Type, Optional, Mapping, List
 
 import graphene
-from django.db.models import QuerySet, Model
+from django.db.models import QuerySet, Model, Q
 from graphene_django import DjangoListField
 from graphql import GraphQLError
 from graphql import ResolveInfo
 
 from .decorators import login_required, write_required, admin_required
+from .utils import category_id_filter, tutorial_content_search
 from ..model.MetaModel import InvitationCode
 from ..model.TutorialRelatedModel import GraphPriority, Uploads
 from ..model.filters import show_published_only
@@ -14,7 +15,7 @@ from ..model.translation_collection import translation_tables
 from ..models import Category, Tutorial, Graph, ExecResultJson, User, ROLES
 
 from .types import UserType, CategoryType, TutorialType, GraphType, Code, ExecResultJsonType, CodeType, \
-    GraphPriorityType, UploadsType
+    GraphPriorityType, UploadsType, FilterContentType
 
 
 def get_or_none(model: Type[Model], **kwargs):
@@ -29,7 +30,7 @@ class Query(graphene.ObjectType):
     # email_exist = graphene.Boolean()
     user_info = graphene.Field(UserType)
     all_categories = DjangoListField(CategoryType)
-    all_tutorial_info = DjangoListField(TutorialType)
+    all_tutorial_info = DjangoListField(TutorialType, filter_content=FilterContentType())
     all_tutorial_info_no_code = DjangoListField(TutorialType, code=graphene.UUID())
     all_graph_info = DjangoListField(GraphType)
     all_code = DjangoListField(CodeType)
@@ -65,9 +66,30 @@ class Query(graphene.ObjectType):
     def resolve_all_categories(self):
         return Category.objects.all()
 
+    @staticmethod
+    def tutorial_info_filter_helper(filter_content: Optional[Mapping]) -> QuerySet:
+        search_text: str = filter_content.get('search_text', None)
+        category_ids: List[str] = filter_content.get('category_ids', None)
+
+        if search_text is not None and not isinstance(search_text, str):
+            raise GraphQLError('The search text must be a string.')
+        if category_ids is not None and \
+                not (isinstance(category_ids, List) and all(isinstance(cat, str) for cat in category_ids)):
+            raise GraphQLError('The categories must be a list of strings.')
+
+        raw_queryset: QuerySet = Tutorial.objects.all()
+
+        final_queryset: QuerySet = category_id_filter(raw_queryset, category_ids=category_ids)
+        final_queryset = tutorial_content_search(final_queryset, search_text=search_text)
+
+        return final_queryset
+
     @graphene.resolve_only_args
-    def resolve_all_tutorial_info(self):
-        return Tutorial.objects.all()
+    def resolve_all_tutorial_info(self, filter_content: Optional[Mapping] = None):
+        if filter_content:
+            return Query.tutorial_info_filter_helper(filter_content)
+        else:
+            return Tutorial.objects.all()
 
     @write_required
     @graphene.resolve_only_args
