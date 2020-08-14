@@ -1,4 +1,4 @@
-from typing import Iterable, Type
+from typing import Type
 
 import graphene
 from django.db.models import QuerySet, Model
@@ -44,7 +44,6 @@ class Query(graphene.ObjectType):
     tutorial = graphene.Field(TutorialType,
                               url=graphene.String(),
                               id=graphene.String())
-    tutorials = DjangoListField(TutorialType, categoryies=graphene.List(graphene.String))
     graph = graphene.Field(GraphType,
                            url=graphene.String(),
                            id=graphene.String())
@@ -118,7 +117,8 @@ class Query(graphene.ObjectType):
         return get_or_none(Category, id=id)
 
     @show_published_only
-    def resolve_tutorial(self, info: ResolveInfo, is_published_only: bool, url=None, id=None):
+    @graphene.resolve_only_args
+    def resolve_tutorial(self, is_published_only: bool, url=None, id=None):
         raw_result: QuerySet = Tutorial.objects.is_published_only_all(is_published_only=is_published_only)
 
         try:
@@ -127,27 +127,24 @@ class Query(graphene.ObjectType):
             elif id:
                 return raw_result.get(id=id)
         except Tutorial.DoesNotExist:
-            raise GraphQLError('The tutorial you requested with url={}, id={} does not exist.'.format(url, id))
+            raise GraphQLError('The tutorial you requested with url=%s, id=%s does not exist.' % (url, id))
 
         raise GraphQLError('In tutorial query, the url and id arguments can not both be empty.')
 
     @show_published_only
-    def resolve_tutorials(self, info: ResolveInfo, is_published_only: bool, categories: Iterable = ()):
-        return Category.objects.is_published_only_all(is_published_only=is_published_only)\
-                               .filter(category_in=categories)
-
-    @show_published_only
-    def resolve_graph(self, info: ResolveInfo, is_published_only: bool, url=None, id=None):
+    @graphene.resolve_only_args
+    def resolve_graph(self, is_published_only: bool, url=None, id=None):
         raw_result: QuerySet = Graph.objects.is_published_only_all(is_published_only=is_published_only)
 
         if url:
             return raw_result.get(url=url)
         elif id:
             return raw_result.get(id=id)
-        raise GraphQLError('The graph you requested with url={}, id={} does not exist.'.format(url, id))
+        raise GraphQLError('The graph you requested with url=%s, id=%s does not exist.' % (url, id))
 
     @write_required
-    def resolve_code(self, info: ResolveInfo, id: str):
+    @graphene.resolve_only_args
+    def resolve_code(self, id: str):
         return Code.objects.get(id=id)
 
     @admin_required
