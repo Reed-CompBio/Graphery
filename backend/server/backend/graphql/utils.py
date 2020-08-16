@@ -3,7 +3,6 @@ from typing import TypeVar, Type, List, Iterable
 from graphql import GraphQLError
 
 from backend.intel_wrappers.intel_wrapper import finalize_prerequisite_wrapper
-from backend.model.translation_collection import translation_tables
 
 T = TypeVar('T')
 

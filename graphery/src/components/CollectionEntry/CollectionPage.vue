@@ -123,12 +123,12 @@
   import { apiCaller } from '@/services/apis';
   import { errorDialog } from '@/services/helpers';
   import loadingMixin from '@/components/ControlPanel/mixins/LoadingMixin';
-  import CategorySelection from '@/components/ControlPanel/parts/selectors/CategorySelection';
 
   export default {
     mixins: [loadingMixin],
     components: {
-      CategorySelection,
+      CategorySelection: () =>
+        import('@/components/ControlPanel/parts/selectors/CategorySelection'),
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       ArticleCard: () => import('@/components/CollectionEntry/ArticleCard.vue'),
       EmptyEntryCard: () =>
