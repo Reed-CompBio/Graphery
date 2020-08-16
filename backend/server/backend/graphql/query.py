@@ -1,13 +1,14 @@
 from typing import Type, Optional, Mapping, List
 
 import graphene
-from django.db.models import QuerySet, Model, Q
+from django.db.models import QuerySet, Model
 from graphene_django import DjangoListField
 from graphql import GraphQLError
 from graphql import ResolveInfo
 
 from .decorators import login_required, write_required, admin_required
-from .utils import category_id_filter, tutorial_content_search
+from .filter_helpers import category_id_filter, tutorial_content_search, get_search_text, get_category_ids, \
+    graph_content_search
 from ..model.MetaModel import InvitationCode
 from ..model.TutorialRelatedModel import GraphPriority, Uploads
 from ..model.filters import show_published_only
@@ -67,17 +68,9 @@ class Query(graphene.ObjectType):
         return Category.objects.all()
 
     @staticmethod
-    def tutorial_info_filter_helper(filter_content: Optional[Mapping]) -> QuerySet:
-        search_text: str = filter_content.get('search_text', None)
-        category_ids: List[str] = filter_content.get('category_ids', None)
-
-        if search_text is not None and not isinstance(search_text, str):
-            raise GraphQLError('The search text must be a string.')
-        if category_ids is not None and \
-                not (isinstance(category_ids, List) and all(isinstance(cat, str) for cat in category_ids)):
-            raise GraphQLError('The categories must be a list of strings.')
-
-        raw_queryset: QuerySet = Tutorial.objects.all()
+    def tutorial_info_filter_helper(raw_queryset: QuerySet, filter_content: Optional[Mapping]) -> QuerySet:
+        search_text: Optional[str] = get_search_text(filter_content)
+        category_ids: Optional[List[str]] = get_category_ids(filter_content)
 
         final_queryset: QuerySet = category_id_filter(raw_queryset, category_ids=category_ids)
         final_queryset = tutorial_content_search(final_queryset, search_text=search_text)
@@ -86,10 +79,11 @@ class Query(graphene.ObjectType):
 
     @graphene.resolve_only_args
     def resolve_all_tutorial_info(self, filter_content: Optional[Mapping] = None):
+        raw_queryset = Tutorial.objects.all()
         if filter_content:
-            return Query.tutorial_info_filter_helper(filter_content)
+            return Query.tutorial_info_filter_helper(raw_queryset, filter_content)
         else:
-            return Tutorial.objects.all()
+            return raw_queryset
 
     @write_required
     @graphene.resolve_only_args
@@ -99,9 +93,22 @@ class Query(graphene.ObjectType):
 
         return Tutorial.objects.filter(code__isnull=True)
 
+    @staticmethod
+    def graph_info_filter_helper(raw_queryset: QuerySet, filter_content: Mapping) -> QuerySet:
+        search_text: Optional[str] = get_search_text(filter_content)
+        category_ids: Optional[List[str]] = get_category_ids(filter_content)
+
+        final_queryset: QuerySet = category_id_filter(raw_queryset, category_ids=category_ids)
+        final_queryset: QuerySet = graph_content_search(final_queryset, search_text=search_text)
+
+        return final_queryset
+
     @graphene.resolve_only_args
-    def resolve_all_graph_info(self):
-        return Graph.objects.all()
+    def resolve_all_graph_info(self, filter_content: Optional[Mapping] = None):
+        raw_queryset = Graph.objects.all()
+        if filter_content:
+            return Query.graph_info_filter_helper(raw_queryset, filter_content)
+        return raw_queryset
 
     @login_required
     @graphene.resolve_only_args
