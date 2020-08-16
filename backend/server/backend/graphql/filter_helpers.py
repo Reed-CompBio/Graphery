@@ -56,8 +56,6 @@ def category_id_filter(queryset: QuerySet, category_ids: List[str]) -> QuerySet:
 
 
 graph_content_search_vector_parts = ['%s__abstract_md', '%s__title']
-graph_tutorial_content_search_vector_parts = ['tutorials__%s__title', 'tutorials__%s__abstract',
-                                              'tutorials__%s__content_md']
 
 
 @skip_none
@@ -67,9 +65,6 @@ def graph_content_search(queryset: QuerySet, search_text: str) -> QuerySet:
             *(part % trans_type
               for trans_type in graph_info_translation_tables
               for part in graph_content_search_vector_parts),
-            *(part % trans_type
-              for trans_type in translation_tables
-              for part in graph_tutorial_content_search_vector_parts),
             *content_search_vector_attrs
         )
     ).filter(search=search_text)

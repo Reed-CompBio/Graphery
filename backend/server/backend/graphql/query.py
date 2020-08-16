@@ -33,7 +33,7 @@ class Query(graphene.ObjectType):
     all_categories = DjangoListField(CategoryType)
     all_tutorial_info = DjangoListField(TutorialType, filter_content=FilterContentType())
     all_tutorial_info_no_code = DjangoListField(TutorialType, code=graphene.UUID())
-    all_graph_info = DjangoListField(GraphType)
+    all_graph_info = DjangoListField(GraphType, filter_content=FilterContentType())
     all_code = DjangoListField(CodeType)
     all_exec_result = DjangoListField(ExecResultJsonType)
     all_supported_lang = graphene.List(graphene.String)
@@ -108,7 +108,8 @@ class Query(graphene.ObjectType):
         raw_queryset = Graph.objects.all()
         if filter_content:
             return Query.graph_info_filter_helper(raw_queryset, filter_content)
-        return raw_queryset
+        else:
+            return raw_queryset
 
     @login_required
     @graphene.resolve_only_args
