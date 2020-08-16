@@ -10,13 +10,30 @@
           <div class="pebble3"></div>
         </div>
         <div>
-          <h2>0 results found</h2>
-          <p>Sorry! We are fixing this issue!</p>
+          <h3>0 results found</h3>
+          <p>Please try other filter options!</p>
         </div>
       </div>
     </q-card-section>
+    <q-card-actions align="center" vertical>
+      <p>
+        If you believe this is a mistake, please contact me!
+      </p>
+      <div>
+        <FeedbackDropdown />
+      </div>
+    </q-card-actions>
   </q-card>
 </template>
+
+<script>
+  export default {
+    components: {
+      FeedbackDropdown: () =>
+        import('@/components/framework/FeedbackDropdown.vue'),
+    },
+  };
+</script>
 
 <style>
   .empty-icon-container {
@@ -27,7 +44,7 @@
     align-items: center;
     font-family: 'Dosis', sans-serif;
   }
-  .empty-icon-container h2 {
+  .empty-icon-container h3 {
     margin: 10px auto;
   }
   .empty-icon-container p {
