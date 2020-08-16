@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import { allTutorialAbstractInfoQuery } from '../services/queries';
+  import { allTutorialAbstractInfoQuery } from '@/services/queries';
 
   export default {
     components: {

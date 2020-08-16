@@ -4,7 +4,7 @@
 
 This article talks about how the backend prepares data for database from user-input files.
 
-All the utilities live in the `bundle` module. There are three sections: `GraphObjects` in which all the elements of graphs are defined, `seeker` the variable tracing module, and `utils` which contains helpers used by `controller`. `controller.py` contains `controller` which should be the entry point of other utilities. `cli.py` is the CLI interacting with the user (not finished yet).
+All the utilities live in the `bundle` module. There are three sections: `GraphObjects` in which all the elements of graphs are defined, `seeker` the variable tracing module, and `utils` which contains helpers used by `controller`. `controller.py` contains `controller` which should be the entry point of other utilities. 
 
 ## `GraphObjects`
 

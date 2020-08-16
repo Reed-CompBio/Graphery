@@ -21,6 +21,10 @@ def finalize_prerequisite_wrapper(model_wrapper: AbstractWrapper, overwrite: boo
     model_wrapper.finalize_model()
 
 
+def finalize_wrapper_without_preparation(model_wrapper: AbstractWrapper):
+    model_wrapper.get_model(validate=False)
+
+
 def finalize_prerequisite_wrapper_iter(model_wrappers: Iterable[AbstractWrapper]) -> None:
     for model_wrapper in model_wrappers:
         finalize_prerequisite_wrapper(model_wrapper)
@@ -40,16 +44,14 @@ class UserWrapper(AbstractWrapper):
         self.id = FAKE_UUID
         self.username: Optional[str] = None
         self.email: Optional[str] = None
-        self.password: Optional[str] = None
+        self.password: str = FAKE_PASSWORD
         self.role: Optional[int] = None
 
-    def load_model(self, loaded_model: User) -> 'UserWrapper':
-        super().load_model(loaded_model)
+    def load_model_var(self, loaded_model: User) -> None:
+        super().load_model_var(loaded_model)
         self.username = loaded_model.username
         self.email = loaded_model.email
-        self.password = FAKE_PASSWORD
         self.role = loaded_model.role
-        return self
 
     def overwrite_model(self) -> None:
         if not self.model_exists():
@@ -95,10 +97,9 @@ class CategoryWrapper(PublishedWrapper):
             'category': category_validator
         })
 
-    def load_model(self, loaded_model: Category) -> 'CategoryWrapper':
-        super().load_model(loaded_model)
+    def load_model_var(self, loaded_model: Category) -> None:
+        super().load_model_var(loaded_model)
         self.category = loaded_model.category
-        return self
 
     def retrieve_model(self) -> None:
         self.model: Category = self.model_class.objects.get(id=self.id)
@@ -127,12 +128,11 @@ class TutorialAnchorWrapper(PublishedWrapper):
             'categories': categories_validator,
         })
 
-    def load_model(self, loaded_model: Tutorial) -> 'TutorialAnchorWrapper':
-        super().load_model(loaded_model)
+    def load_model_var(self, loaded_model: Tutorial) -> None:
+        super().load_model_var(loaded_model)
         self.url = loaded_model.url
         self.name = loaded_model.name
         self.categories = [CategoryWrapper().load_model(cat) for cat in loaded_model.categories.all()]
-        return self
 
     def retrieve_model(self) -> None:
         self.model: Tutorial = self.model_class.objects.get(id=self.id)
@@ -180,8 +180,8 @@ class GraphWrapper(PublishedWrapper):
             'tutorials': tutorial_anchors_validator
         })
 
-    def load_model(self, loaded_model: Graph) -> 'GraphWrapper':
-        super().load_model(loaded_model)
+    def load_model_var(self, loaded_model: Graph) -> None:
+        super().load_model_var(loaded_model)
         self.url = loaded_model.url
         self.name = loaded_model.name
         self.categories = [CategoryWrapper().load_model(cat) for cat in loaded_model.categories.all()]
@@ -190,7 +190,6 @@ class GraphWrapper(PublishedWrapper):
         self.cyjs = json.loads(loaded_model.cyjs) if isinstance(loaded_model.cyjs, str) else loaded_model.cyjs
         self.tutorials = [TutorialAnchorWrapper().load_model(tutorial_anchor)
                           for tutorial_anchor in loaded_model.tutorials.all()]
-        return self
 
     def retrieve_model(self) -> None:
         self.model: Graph = self.model_class.objects.get(url=self.url, name=self.name)
@@ -240,11 +239,10 @@ class CodeWrapper(AbstractWrapper):
             'code': code_validator
         })
 
-    def load_model(self, loaded_model: Code) -> 'CodeWrapper':
-        super().load_model(loaded_model=loaded_model)
+    def load_model_var(self, loaded_model: Code) -> None:
+        super().load_model_var(loaded_model)
         self.tutorial = TutorialAnchorWrapper().load_model(loaded_model.tutorial)
         self.code = loaded_model.code
-        return self
 
     def retrieve_model(self) -> None:
         self.model: Code = self.model_class.objects.get(id=self.id)
@@ -275,13 +273,12 @@ class ExecResultJsonWrapper(AbstractWrapper):
             'json': json_validator,
         })
 
-    def load_model(self, loaded_model: ExecResultJson) -> 'ExecResultJsonWrapper':
-        super().load_model(loaded_model=loaded_model)
+    def load_model_var(self, loaded_model: ExecResultJson) -> None:
+        super().load_model_var(loaded_model)
         self.code = CodeWrapper().load_model(loaded_model.code)
         self.graph = GraphWrapper().load_model(loaded_model.graph)
         json_value = loaded_model.json
         self.json = json.loads(json_value) if isinstance(json_value, str) else json_value
-        return self
 
     def retrieve_model(self) -> None:
         # TODO Unresolved attribute reference 'objects' for class 'ExecResultJson' ?????
@@ -314,11 +311,10 @@ class UploadsWrapper(PublishedWrapper):
 
         self.id: str = FAKE_UUID
 
-    def load_model(self, loaded_model: Uploads) -> 'UploadsWrapper':
-        super().load_model(loaded_model=loaded_model)
+    def load_model_var(self, loaded_model: Uploads) -> None:
+        super().load_model_var(loaded_model)
         self.file = loaded_model.file
         self.alias = loaded_model.alias
-        return self
 
     def retrieve_model(self) -> None:
         if self.id is not None or self.id != FAKE_UUID:
@@ -358,17 +354,16 @@ class TutorialTranslationContentWrapper(VariedContentWrapper[Type[TranslationBas
             'content_html': non_empty_text_validator,
         })
 
-    def load_model(self, loaded_model: TranslationBase) -> 'TutorialTranslationContentWrapper':
-        super().load_model(loaded_model=loaded_model)
-        self.model_class = type(loaded_model)
+    def load_model_var(self, loaded_model: TranslationBase) -> None:
+        super().load_model_var(loaded_model)
 
+        self.model_class = type(loaded_model)
         self.title = loaded_model.title
         self.authors = [UserWrapper().load_model(user_model) for user_model in loaded_model.authors.all()]
         self.tutorial_anchor = TutorialAnchorWrapper().load_model(loaded_model.tutorial_anchor)
         self.abstract = loaded_model.abstract
         self.content_md = loaded_model.content_md
         self.content_html = loaded_model.content_html
-        return self
 
     def set_model_class(self, model_class: Type[TranslationBase]) -> 'TutorialTranslationContentWrapper':
         self.model_class = model_class
@@ -436,13 +431,14 @@ class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationB
             'graph_anchor': wrapper_validator,
         })
 
-    def load_model(self, loaded_model: GraphTranslationBase) -> 'GraphTranslationContentWrapper':
-        super().load_model(loaded_model=loaded_model)
+    def load_model_var(self, loaded_model: GraphTranslationBase) -> None:
+        super().load_model_var(loaded_model)
+
+        self.model_class = type(loaded_model)
         self.title = loaded_model.title
         self.abstract_md = loaded_model.abstract_md
         self.abstract = loaded_model.abstract
         self.graph_anchor = GraphWrapper().load_model(loaded_model.graph_anchor)
-        return self
 
     def set_model_class(self, model_class: Type[GraphTranslationBase]) -> 'GraphTranslationContentWrapper':
         self.model_class = model_class

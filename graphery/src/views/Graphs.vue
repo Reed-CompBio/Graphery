@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import { allGraphAbstractInfoQuery } from '../services/queries';
+  import { allGraphAbstractInfoQuery } from '@/services/queries';
   export default {
     components: {
       CollectionPage: () =>

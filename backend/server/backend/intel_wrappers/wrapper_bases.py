@@ -42,10 +42,16 @@ class ModelWrapperBase(Generic[T], ABC):
     def set_model_class(cls, model_class: Type[T]) -> None:
         cls.model_class = model_class
 
-    def load_model(self, loaded_model: T) -> 'ModelWrapperBase':
+    def load_model_var(self, loaded_model: T) -> None:
+        pass
+
+    def load_model(self, loaded_model: T, load_var: bool = True) -> 'ModelWrapperBase':
         self.model = loaded_model
+
+        if load_var:
+            self.load_model_var(loaded_model)
+
         return self
-        # TODO load override and load all the info to fields
 
     @abstractmethod
     def retrieve_model(self) -> None:
@@ -55,7 +61,7 @@ class ModelWrapperBase(Generic[T], ABC):
     def make_new_model(self) -> None:
         raise NotImplementedError
 
-    def get_model(self, overwrite: bool = False) -> None:
+    def get_model(self, overwrite: bool = False, validate: bool = True) -> None:
         if not self.model_class:
             raise AssertionError
         # TODO use other error
@@ -107,10 +113,9 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
 
         self.field_names = [*self.validators.keys()]
 
-    def load_model(self, loaded_model: models.Model) -> 'AbstractWrapper':
-        super().load_model(loaded_model=loaded_model)
+    def load_model_var(self, loaded_model: T) -> None:
+        super().load_model_var(loaded_model)
         self.id = loaded_model.id
-        return self
 
     def set_variables(self, **kwargs) -> 'AbstractWrapper':
         for key, value in kwargs.items():
@@ -147,21 +152,28 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
                 else:
                     setattr(self.model, field, field_value)
 
-    def get_model(self, overwrite: bool = False) -> None:
-        try:
-            self.validate()
-            super().get_model()
-        except AssertionError as e:
-            e.args = 'Something went wrong when validating variables {} for the model {}. Error: {}' \
-                         .format(list(self.validators.keys()), self.model_class, e),
-            raise
+    def get_model(self, overwrite: bool = False, validate: bool = True) -> None:
+        if validate:
+            try:
+                self.validate()
+                super().get_model()
+            except AssertionError as e:
+                e.args = 'Something went wrong when validating variables {} for the model {}. Error: {}' \
+                             .format(list(self.validators.keys()), self.model_class, e),
+                raise
 
         try:
             self.retrieve_model()
             if overwrite:
-                self.overwrite_model()
+                if validate:
+                    self.overwrite_model()
+                else:
+                    raise AssertionError('Cannot overwrite model without validations!')
         except (self.model_class.DoesNotExist, ValidationError):
-            self.make_new_model()
+            if validate:
+                raise AssertionError('Cannot make new model without validations!')
+            else:
+                self.make_new_model()
         except self.model_class.MultipleObjectsReturned as e:
             # which should never happen
             raise AssertionError('Multiple model instances received with model {} and variables {}. Error: {}'
@@ -174,10 +186,9 @@ class PublishedWrapper(AbstractWrapper, ABC):
         validators['is_published'] = is_published_validator
         super(PublishedWrapper, self).__init__(validators)
 
-    def load_model(self, loaded_model: PublishedMixin) -> 'PublishedWrapper':
-        super().load_model(loaded_model=loaded_model)
+    def load_model_var(self, loaded_model: PublishedMixin) -> None:
+        super().load_model_var(loaded_model)
         self.is_published = loaded_model.is_published
-        return self
 
 
 S = TypeVar('S')

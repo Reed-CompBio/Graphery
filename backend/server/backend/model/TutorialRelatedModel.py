@@ -97,10 +97,8 @@ class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
 
 class Code(UUIDMixin, TimeDateMixin, models.Model):
     # relations
-    # TODO I suppose this should a one-to-one field.
     tutorial = models.OneToOneField(Tutorial, on_delete=models.PROTECT)
     # content
-    # TODO unique necessary? or unique together with tutorial? Unique for now.
     code = models.TextField(unique=True)
 
     @property

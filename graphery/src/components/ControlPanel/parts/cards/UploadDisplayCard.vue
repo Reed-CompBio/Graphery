@@ -44,7 +44,7 @@
     },
     methods: {
       copyRelativeUrl() {
-        saveTextToClipboard(this.resourceLink);
+        saveTextToClipboard(this.displayInfo.url);
       },
     },
   };

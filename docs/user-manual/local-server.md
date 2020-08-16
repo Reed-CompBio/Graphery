@@ -11,7 +11,7 @@ git clone https://github.com/FlickerSoul/Graphery.git
 cd Graphery/backend
 ```
 
-Under this director, you can see a `bundle` folder and a `user_server.py` file. Those two will be the only thing you need. You can copy then in to a separated folder and delete the rest. 
+Under this director, you can see a `bundle` folder and a `user_server.py` file. Those two will be the only thing you need. You can copy them in to a separate folder and delete the rest. 
 
 ## Usage 
 

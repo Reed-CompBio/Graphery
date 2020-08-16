@@ -86,7 +86,7 @@
   let Tippy;
   let popper;
 
-  import { graphMenuHeaderSize } from '../../store/states/meta';
+  import { graphMenuHeaderSize } from '@/store/states/meta';
   import { mapState, mapGetters } from 'vuex';
   import {
     panzoomDefaults,
@@ -100,7 +100,7 @@
     jsonMIMEType,
     errorDialog,
     successDialog,
-  } from '../../services/helpers';
+  } from '@/services/helpers';
 
   export default {
     components: {
