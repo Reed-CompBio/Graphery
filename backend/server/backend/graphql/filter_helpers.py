@@ -1,4 +1,4 @@
-from typing import List, Mapping, Optional
+from typing import List, Mapping, Optional, Callable
 
 from django.db.models import QuerySet
 from django.contrib.postgres.search import SearchVector
@@ -7,14 +7,20 @@ from graphql import GraphQLError
 from backend.model.translation_collection import translation_tables, graph_info_translation_tables
 
 
-def skip_none(func):
-    def wrapper(*args, **kwargs):
-        if any(value is None for value in kwargs.values()):
-            return args[0]
-        else:
-            return func(*args, **kwargs)
+def skip_test(test_func: Callable):
+    def wrapper_generator(func: Callable):
+        def wrapper(*args, **kwargs):
+            if any(test_func(value) for value in kwargs.values()):
+                return args[0]
+            else:
+                return func(*args, **kwargs)
 
-    return wrapper
+        return wrapper
+    return wrapper_generator
+
+
+skip_none_or_empty_text = skip_test(lambda x: x is None or x == '')
+skip_none = skip_test(lambda x: x is None)
 
 
 def get_search_text(filter_content: Mapping) -> Optional[str]:
@@ -36,7 +42,7 @@ tutorial_content_search_vector_parts = ['%s__title', '%s__abstract', '%s__conten
 content_search_vector_attrs = ['url', 'name']
 
 
-@skip_none
+@skip_none_or_empty_text
 def tutorial_content_search(queryset: QuerySet, search_text: str) -> QuerySet:
     return queryset.annotate(
         search=SearchVector(
@@ -58,7 +64,7 @@ def category_id_filter(queryset: QuerySet, category_ids: List[str]) -> QuerySet:
 graph_content_search_vector_parts = ['%s__abstract_md', '%s__title']
 
 
-@skip_none
+@skip_none_or_empty_text
 def graph_content_search(queryset: QuerySet, search_text: str) -> QuerySet:
     return queryset.annotate(
         search=SearchVector(
