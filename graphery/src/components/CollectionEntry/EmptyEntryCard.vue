@@ -1,7 +1,7 @@
 <template>
   <!-- CREDIT: https://codepen.io/aido179-1471800764/pen/jZJjpo -->
   <q-card>
-    <div>
+    <q-card-section>
       <div class="empty-icon-container">
         <div class="animation-container">
           <div class="bounce"></div>
@@ -14,7 +14,7 @@
           <p>Sorry! We are fixing this issue!</p>
         </div>
       </div>
-    </div>
+    </q-card-section>
   </q-card>
 </template>
 
@@ -26,6 +26,12 @@
     flex-direction: column;
     align-items: center;
     font-family: 'Dosis', sans-serif;
+  }
+  .empty-icon-container h2 {
+    margin: 10px auto;
+  }
+  .empty-icon-container p {
+    margin: 0;
   }
   .animation-container {
     position: relative;

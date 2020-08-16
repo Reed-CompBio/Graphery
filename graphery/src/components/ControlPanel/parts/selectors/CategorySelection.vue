@@ -13,15 +13,23 @@
       option-label="category"
       option-value="id"
       :loading="loadingContent"
-    ></q-select>
+    >
+      <template v-slot:no-option>
+        <q-item>
+          <q-item-section class="text-grey">
+            No Items
+          </q-item-section>
+        </q-item>
+      </template>
+    </q-select>
   </InfoCard>
 </template>
 
 <script>
   import loadingMixin from '../../mixins/LoadingMixin.vue';
-  import { apiCaller } from '../../../../services/apis';
-  import { allCategoryQuery } from '../../../../services/queries';
-  import { errorDialog } from '../../../../services/helpers';
+  import { apiCaller } from '@/services/apis';
+  import { allCategoryQuery } from '@/services/queries';
+  import { errorDialog } from '@/services/helpers';
 
   export default {
     mixins: [loadingMixin],

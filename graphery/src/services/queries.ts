@@ -1,6 +1,6 @@
 export const allTutorialAbstractInfoQuery = `
-query ($translation: String, $default: String = "en-us") {
-  allTutorialInfo {
+query ($translation: String, $default: String = "en-us", $filterContent: FilterContentType) {
+  allTutorialInfo (filterContent: $filterContent) {
     url
     isPublished
     categories {
@@ -20,8 +20,8 @@ query ($translation: String, $default: String = "en-us") {
 // TODO look into the defaults
 
 export const allGraphAbstractInfoQuery = `
-query ($translation: String, $default: String = "en-us") {
-  allGraphInfo {
+query ($translation: String, $default: String = "en-us", $filterContent: FilterContentType) {
+  allGraphInfo (filterContent: $filterContent) {
     url
     authors {
       username

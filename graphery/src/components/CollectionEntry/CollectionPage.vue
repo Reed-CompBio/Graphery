@@ -51,24 +51,7 @@
                 </h5>
               </div>
               <div style="flex: 1 1 auto">
-                <q-select
-                  filled
-                  v-model="categoryFilterSelections"
-                  multiple
-                  :options="categoryFilterOptions"
-                  use-chips
-                  stack-label
-                  :label="$t('collectionPage.Categories')"
-                  dropdown-icon="mdi-menu-down"
-                >
-                  <template v-slot:no-option>
-                    <q-item>
-                      <q-item-section class="text-grey">
-                        No Items
-                      </q-item-section>
-                    </q-item>
-                  </template>
-                </q-select>
+                <CategorySelection v-model="categoryIds" />
               </div>
             </div>
           </div>
@@ -140,10 +123,12 @@
   import { apiCaller } from '@/services/apis';
   import { errorDialog } from '@/services/helpers';
   import loadingMixin from '@/components/ControlPanel/mixins/LoadingMixin';
+  import CategorySelection from '@/components/ControlPanel/parts/selectors/CategorySelection';
 
   export default {
     mixins: [loadingMixin],
     components: {
+      CategorySelection,
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       ArticleCard: () => import('@/components/CollectionEntry/ArticleCard.vue'),
       EmptyEntryCard: () =>
@@ -160,8 +145,7 @@
     data() {
       return {
         searchText: '',
-        categoryFilterSelections: [],
-        categoryFilterOptions: [],
+        categoryIds: [],
         infos: [], // Served as a filtered input
         current: 1,
         currentPage: 1,
@@ -181,12 +165,21 @@
           this.displayIndexStart + this.pageDisplayNum
         );
       },
+      filteredVariables() {
+        return {
+          ...this.variables,
+          filterContent: {
+            categoryIds: this.categoryIds,
+            searchText: this.searchText,
+          },
+        };
+      },
     },
     methods: {
       loadInfo() {
         this.startLoading();
 
-        apiCaller(this.query, this.variables)
+        apiCaller(this.query, this.filteredVariables)
           .then((data) => {
             if (!data) {
               throw Error('Invalid data returned.');
@@ -204,12 +197,8 @@
           });
       },
       search() {
-        if (this.loadingContent) {
-          console.log('Is searching, cancel current searching');
-          // TODO notify and cancel axios's request
-        }
-        console.log('search');
-        // this.toggleLoading();
+        this.searchText = this.searchText.trim();
+        this.loadInfo();
       },
       addToAuthorFilter(author) {
         // TODO apply author filter I don't need this
@@ -225,6 +214,9 @@
     },
     watch: {
       '$i18n.locale': function() {
+        this.loadInfo();
+      },
+      categoryIds: function() {
         this.loadInfo();
       },
     },
