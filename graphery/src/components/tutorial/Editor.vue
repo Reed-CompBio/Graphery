@@ -146,8 +146,10 @@
     mounted() {
       this.initMonacoEditor();
     },
-    destroyed() {
-      this.editor.dispose();
+    beforeDestroy() {
+      if (this.editor) {
+        this.editor.dispose();
+      }
     },
   };
 </script>
