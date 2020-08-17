@@ -1,10 +1,10 @@
 import pathlib
 from typing import Union, List, Mapping
 
-from bundle.utils.processor import Processor
-from bundle.utils.recorder import Recorder
-from bundle.utils.cache_file_helpers import CacheFolder, USER_DOCS_PATH
-from bundle.seeker import tracer
+from utils.processor import Processor
+from utils.recorder import Recorder
+from utils.cache_file_helpers import CacheFolder, USER_DOCS_PATH
+from seeker import tracer
 
 from time import time
 

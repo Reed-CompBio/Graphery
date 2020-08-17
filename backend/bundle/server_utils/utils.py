@@ -8,9 +8,9 @@ from typing import Mapping, Any, Callable, Union, List, Tuple
 from .params import DEFAULT_PORT, GRAPH_OBJ_ANCHOR_NAME, ENTRY_PY_MODULE_NAME, MAIN_FUNCTION_NAME, \
     ENTRY_PY_FILE_NAME
 
-from ..GraphObjects.Graph import Graph
-from ..utils.cache_file_helpers import TempSysPathAdder, get_md5_of_a_string
-from ..controller import controller
+from GraphObjects.Graph import Graph
+from utils.cache_file_helpers import TempSysPathAdder, get_md5_of_a_string
+from controller import controller
 
 
 class ExecutionException(Exception):

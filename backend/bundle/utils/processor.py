@@ -3,8 +3,8 @@ from random import randint
 from typing import Tuple, Mapping, List, Any, Iterable, MutableMapping, Optional, Set, Union
 import json
 
-from bundle.GraphObjects.Edge import Edge
-from bundle.GraphObjects.Node import Node
+from GraphObjects.Edge import Edge
+from GraphObjects.Node import Node
 
 
 def identifier_to_name(identifier: Tuple[str, str]) -> str:

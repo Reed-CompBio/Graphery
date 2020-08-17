@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-from bundle.server_utils.utils import arg_parser, valid_version
-from bundle.server_utils.main_functions import main
+from server_utils.utils import arg_parser, valid_version
+from server_utils.main_functions import main
 
 if __name__ == '__main__':
     if not valid_version():
