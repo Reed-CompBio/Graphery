@@ -87,7 +87,11 @@
 
           <TutorialSelection v-model="graphObj.tutorials" />
 
-          <SubmitButton :loading="loadingContent" :action="postGraph" />
+          <SubmitButton
+            class="full-width"
+            :loading="loadingContent"
+            :action="postGraph"
+          />
         </template>
       </EditorFrame>
     </template>

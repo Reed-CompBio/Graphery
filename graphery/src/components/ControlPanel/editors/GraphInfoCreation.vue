@@ -60,14 +60,12 @@
           <StoreLocation location="Cloud" />
 
           <!-- submit section -->
-          <div id="submit-section">
-            <SubmitButton
-              :action="postValue"
-              :loading="loadingContent"
-              class="full-width"
-            />
-            <!-- TODO align two sections -->
-          </div>
+          <SubmitButton
+            :action="postValue"
+            :loading="loadingContent"
+            class="full-width"
+          />
+          <!-- TODO align two sections -->
         </template>
       </EditorFrame>
     </template>
