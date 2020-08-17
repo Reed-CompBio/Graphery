@@ -192,7 +192,7 @@ class GraphWrapper(PublishedWrapper):
                           for tutorial_anchor in loaded_model.tutorials.all()]
 
     def retrieve_model(self) -> None:
-        self.model: Graph = self.model_class.objects.get(url=self.url, name=self.name)
+        self.model: Graph = self.model_class.objects.get(id=self.id)
 
     def make_new_model(self) -> None:
         self.model: Graph = self.model_class(url=self.url, name=self.name,
