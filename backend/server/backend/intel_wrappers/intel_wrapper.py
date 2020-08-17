@@ -458,13 +458,15 @@ class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationB
     def make_new_model(self) -> None:
         self.model: GraphTranslationBase = self.model_class(graph_anchor=self.graph_anchor.model,
                                                             title=self.title,
-                                                            abstract=self.abstract)
+                                                            abstract=self.abstract,
+                                                            abstract_md=self.abstract_md)
 
     def __str__(self):
         return f'<GraphContentWrapper\n' \
                f'model_class={self.model_class}\n' \
                f'model={self.model}\n' \
                f'title={self.title}\n' \
+               f'abstract_md={self.abstract_md}' \
                f'abstract={self.abstract}\n' \
                f'graph_anchor={self.graph_anchor}>'
 
