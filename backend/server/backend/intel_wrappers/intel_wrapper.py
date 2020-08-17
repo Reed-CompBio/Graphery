@@ -263,15 +263,16 @@ class ExecResultJsonWrapper(AbstractWrapper):
     model_class: Type[ExecResultJson] = ExecResultJson
 
     def __init__(self):
-        self.code: Optional[CodeWrapper] = None
-        self.graph: Optional[GraphWrapper] = None
-        self.json: Optional[Mapping] = None
-
         AbstractWrapper.__init__(self, {
             'code': wrapper_validator,
             'graph': wrapper_validator,
             'json': json_validator,
         })
+
+        self.id = FAKE_UUID
+        self.code: Optional[CodeWrapper] = None
+        self.graph: Optional[GraphWrapper] = None
+        self.json: Optional[Mapping] = None
 
     def load_model_var(self, loaded_model: ExecResultJson) -> None:
         super().load_model_var(loaded_model)
