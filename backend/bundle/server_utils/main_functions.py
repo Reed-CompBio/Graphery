@@ -3,9 +3,9 @@ from typing import Mapping, Callable, Any
 from wsgiref.simple_server import make_server
 from multiprocessing import Pool, TimeoutError
 
-from .params import TIMEOUT_SECONDS, REQUEST_CODE_NAME, ONLY_ACCEPTED_ORIGIN, ACCEPTED_ORIGIN, \
+from bundle.server_utils.params import TIMEOUT_SECONDS, REQUEST_CODE_NAME, ONLY_ACCEPTED_ORIGIN, ACCEPTED_ORIGIN, \
     REQUEST_GRAPH_NAME
-from .utils import create_error_response, create_data_response, execute, \
+from bundle.server_utils.utils import create_error_response, create_data_response, execute, \
     ExecutionException
 
 

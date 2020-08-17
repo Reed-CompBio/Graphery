@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from typing import Mapping
 
-from server_utils.utils import arg_parser, valid_version
-from server_utils.main_functions import main
+from bundle.server_utils.utils import arg_parser, valid_version
+from bundle.server_utils.main_functions import main
 
 
 def run_server(port: int) -> None:

@@ -15,7 +15,7 @@ from copy import copy
 from types import FrameType, FunctionType
 from typing import Iterable, Tuple, Any, Mapping, Optional, List, Callable, Union
 
-from utils.recorder import Recorder
+from bundle.utils.recorder import Recorder
 from .variables import CommonVariable, Exploding, BaseVariable
 from . import utils, pycompat
 
