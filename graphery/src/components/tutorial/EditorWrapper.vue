@@ -45,7 +45,12 @@
         >
           <SwitchTooltip :text="$t('tooltips.oneStepBack')"></SwitchTooltip>
         </q-btn>
-        <q-btn dense :icon="playPauseButton" @click="notAvailableMessage">
+        <q-btn
+          dense
+          :icon="playPauseButton"
+          @click="notAvailableMessage"
+          :disable="isNextButtonDisable"
+        >
           <SwitchTooltip :text="$t('tooltips.autoRun')"></SwitchTooltip>
         </q-btn>
         <q-btn

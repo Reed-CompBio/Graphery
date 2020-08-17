@@ -56,11 +56,25 @@
 
 <script>
   import { mapState } from 'vuex';
-  import { headerSize } from '../store/states/meta';
-  import { apiCaller } from '../services/apis';
-  import { pullGraphAndCodeQuery } from '../services/queries';
-  import { errorDialog, warningDialog } from '../services/helpers';
+  import { headerSize } from '@/store/states/meta';
+  import { apiCaller } from '@/services/apis';
+  import { pullGraphAndCodeQuery } from '@/services/queries';
+  import { errorDialog, warningDialog } from '@/services/helpers';
   import SplitterSeparator from '../components/framework/SplitterSeparator';
+  import { emptyCodeTemplate, newModelUUID } from '@/services/params';
+
+  const defaultCodeOption = [
+    {
+      label: 'Default Empty Template',
+      value: newModelUUID,
+    },
+  ];
+
+  const defaultCodeSnippet = (() => {
+    const obj = {};
+    obj[newModelUUID] = emptyCodeTemplate;
+    return obj;
+  })();
 
   export default {
     props: ['url'],
@@ -73,8 +87,8 @@
     data() {
       return {
         codeChoice: null,
-        codeOptions: null,
-        codeSnippets: null,
+        codeOptions: defaultCodeOption,
+        codeSnippets: defaultCodeSnippet,
       };
     },
     computed: {
@@ -114,6 +128,15 @@
       },
     },
     methods: {
+      generateDefaultJsonResults(graphId) {
+        return [
+          {
+            json: '[]',
+            graphId,
+            codeId: newModelUUID,
+          },
+        ];
+      },
       loadGraphAndCode() {
         apiCaller(pullGraphAndCodeQuery, this.requestPayload)
           .then((data) => {
@@ -133,9 +156,9 @@
               },
             ]);
 
-            this.codeOptions = [];
-            const resultJsonList = [];
-            this.codeSnippets = {};
+            this.codeOptions = defaultCodeOption;
+            const resultJsonList = this.generateDefaultJsonResults(graphObj.id);
+            this.codeSnippets = defaultCodeSnippet;
 
             if (graphObj.execresultjsonSet.length > 0) {
               graphObj.execresultjsonSet.forEach((obj) => {
