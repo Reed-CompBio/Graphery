@@ -171,9 +171,9 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
                     raise AssertionError('Cannot overwrite model without validations!')
         except (self.model_class.DoesNotExist, ValidationError):
             if validate:
-                raise AssertionError('Cannot make new model without validations!')
-            else:
                 self.make_new_model()
+            else:
+                raise AssertionError('Cannot make new model without validations!')
         except self.model_class.MultipleObjectsReturned as e:
             # which should never happen
             raise AssertionError('Multiple model instances received with model {} and variables {}. Error: {}'

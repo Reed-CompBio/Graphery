@@ -3,7 +3,7 @@
     <!-- Left drawer-->
     <q-layout view="hHh Lpr lff" container class="full-height">
       <q-drawer
-        :v-model="true"
+        v-model="showDrawer"
         show-if-above
         :width="300"
         :breakpoint="700"
