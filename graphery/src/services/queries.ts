@@ -4,6 +4,7 @@ query ($translation: String, $default: String = "en-us", $filterContent: FilterC
     url
     isPublished
     categories {
+      id
       category
     }
     content (translation: $translation, default: $default) {
@@ -27,6 +28,7 @@ query ($translation: String, $default: String = "en-us", $filterContent: FilterC
       username
     }
     categories {
+      id
       category
     }
     isPublished

@@ -21,7 +21,6 @@
               {{ url }}
             </q-chip>
             <q-chip
-              clickable
               v-for="author in authors"
               :key="author"
               icon="mdi-card-account-details"
@@ -32,11 +31,11 @@
             <q-chip
               clickable
               v-for="category in categories"
-              :key="category"
+              :key="category.id"
               icon="category"
-              @click="$emit('category-filter', category)"
+              @click="$emit('category-filter', category.id)"
             >
-              {{ category }}
+              {{ category.category }}
             </q-chip>
             <q-chip icon="mdi-calendar-month">
               {{ toLocalDateString($i18n.locale, modifiedTime) }}

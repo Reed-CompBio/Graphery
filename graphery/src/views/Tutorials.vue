@@ -10,7 +10,7 @@
         return input.map((ele) => {
           return {
             url: `/tutorial/${ele.url}`,
-            categories: ele.categories.map((obj) => obj.category),
+            categories: ele.categories,
             isAnchorPublished: ele.isPublished,
             title: ele.content.title,
             authors: ele.content.authors.map((obj) => obj.username),
