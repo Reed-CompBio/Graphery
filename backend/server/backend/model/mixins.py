@@ -36,12 +36,13 @@ class UUIDMixin(models.Model):
         abstract = True
 
 
-class LevelMixin(models.Model):
-    level = models.PositiveSmallIntegerField(unique=True)
+class RankMixin(models.Model):
+    level = models.PositiveSmallIntegerField()
     section = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         abstract = True
+        unique_together = ['level', 'section']
 
 
 def field_adder(*extra_fields: Tuple):
