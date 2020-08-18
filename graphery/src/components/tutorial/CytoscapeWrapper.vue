@@ -83,6 +83,7 @@
   let cytoscape;
   let panzoom;
   let dagre;
+  let fcose;
   let Tippy;
   let popper;
 
@@ -106,7 +107,7 @@
       return {
         cyInstance: null,
         moduleLoadedNum: 0,
-        moduleTargetNum: 5,
+        moduleTargetNum: 6,
         tippy: null,
         testValue: 0,
         lastVarObj: {},
@@ -187,6 +188,16 @@
           dagre = cd.default;
 
           cytoscape.use(dagre);
+
+          this.updateLayout();
+          this.moduleLoad();
+        });
+
+        import('cytoscape-fcose').then((cf) => {
+          console.debug('cytoscape fcose module: ', cf);
+          fcose = cf.default;
+
+          cytoscape.use(fcose);
 
           this.updateLayout();
           this.moduleLoad();
@@ -343,7 +354,7 @@
           );
         }
 
-        return GraphLayout.random;
+        return GraphLayout.fcose;
       },
       reloadGraph() {
         if (this.cyInstance) {

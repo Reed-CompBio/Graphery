@@ -23,6 +23,20 @@ export const panzoomDefaults = {
   resetIcon: 'mdi mdi-arrow-expand-all',
 };
 
+export const fcoseOptions = {
+  name: 'fcose',
+  // 'draft', 'default' or 'proof'
+  // - "draft" only applies spectral layout
+  // - "default" improves the quality with incremental layout (fast cooling rate)
+  // - "proof" improves the quality with incremental layout (slow cooling rate)
+  quality: 'default',
+  // Use random node positions at beginning of layout
+  // if this is set to false, then quality option must be "proof"
+  randomize: true,
+  // Whether or not to animate the layout
+  animate: true,
+};
+
 export const presetOptions = {
   name: 'preset',
 
@@ -97,6 +111,7 @@ export const randomLayout = {
 
 export const GraphLayout = {
   dagre: dagreOptions,
+  fcose: fcoseOptions,
   preset: presetOptions,
   random: randomLayout,
 };
