@@ -36,6 +36,14 @@ class UUIDMixin(models.Model):
         abstract = True
 
 
+class LevelMixin(models.Model):
+    level = models.PositiveSmallIntegerField(null=True)
+    section = models.PositiveSmallIntegerField(null=True, default=0)
+
+    class Meta:
+        abstract = True
+
+
 def field_adder(*extra_fields: Tuple):
     def wrapper(cls):
         for fields in extra_fields:

@@ -70,6 +70,11 @@ class TutorialInterface(graphene.Interface):
         return self.authors.all()
 
 
+class RankType(graphene.ObjectType):
+    level = graphene.Int()
+    section = graphene.Int()
+
+
 class TutorialContentInputType(graphene.InputObjectType):
     id = graphene.UUID(required=True)
     title = graphene.String(required=True)
@@ -92,6 +97,7 @@ class CategoryType(PublishedFilterBase, DjangoObjectType):
 class TutorialType(PublishedFilterBase, DjangoObjectType):
     content = graphene.Field(TutorialInterface, translation=graphene.String(), default=graphene.String(), required=True)
     categories = DjangoListField(CategoryType, required=True)
+    rank = graphene.Field(RankType)
 
     @show_published_only
     @graphene.resolve_only_args
@@ -115,6 +121,10 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
         if code and (code.is_published or not is_published_only):
             return code
         return Code(id=FAKE_UUID, code='# Empty \n', tutorial=Tutorial())
+
+    @graphene.resolve_only_args
+    def resolve_rank(self):
+        return RankType(level=self.level, section=self.section)
 
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
