@@ -121,11 +121,15 @@ class TutorialAnchorWrapper(PublishedWrapper):
         self.url: Optional[str] = None
         self.name: Optional[str] = None
         self.categories: Optional[Iterable[CategoryWrapper]] = None
+        self.level: Optional[int] = None
+        self.section: Optional[int] = None
 
         PublishedWrapper.__init__(self, {
             'url': url_validator,
             'name': name_validator,
             'categories': categories_validator,
+            'level': dummy_validator,
+            'section': dummy_validator,
         })
 
     def load_model_var(self, loaded_model: Tutorial) -> None:
@@ -133,12 +137,16 @@ class TutorialAnchorWrapper(PublishedWrapper):
         self.url = loaded_model.url
         self.name = loaded_model.name
         self.categories = [CategoryWrapper().load_model(cat) for cat in loaded_model.categories.all()]
+        self.level = loaded_model.level
+        self.section = loaded_model.section
 
     def retrieve_model(self) -> None:
         self.model: Tutorial = self.model_class.objects.get(id=self.id)
 
     def make_new_model(self) -> None:
-        self.model: Tutorial = self.model_class(url=self.url, name=self.name, is_published=False)
+        self.model: Tutorial = self.model_class(url=self.url, name=self.name,
+                                                level=self.level, section=self.section,
+                                                is_published=self.is_published)
 
     def prepare_model(self) -> None:
         finalize_prerequisite_wrapper_iter(self.categories)
@@ -197,7 +205,7 @@ class GraphWrapper(PublishedWrapper):
     def make_new_model(self) -> None:
         self.model: Graph = self.model_class(url=self.url, name=self.name,
                                              priority=self.priority, cyjs=self.cyjs,
-                                             is_published=False)
+                                             is_published=self.is_published)
 
     def prepare_model(self) -> None:
         finalize_prerequisite_wrapper_iter(self.categories)

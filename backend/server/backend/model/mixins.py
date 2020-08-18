@@ -37,8 +37,8 @@ class UUIDMixin(models.Model):
 
 
 class LevelMixin(models.Model):
-    level = models.PositiveSmallIntegerField(null=True)
-    section = models.PositiveSmallIntegerField(null=True, default=0)
+    level = models.PositiveSmallIntegerField(unique=True)
+    section = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         abstract = True

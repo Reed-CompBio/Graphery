@@ -71,8 +71,13 @@ class TutorialInterface(graphene.Interface):
 
 
 class RankType(graphene.ObjectType):
-    level = graphene.Int()
-    section = graphene.Int()
+    level = graphene.Int(required=True)
+    section = graphene.Int(required=True)
+
+
+class RankInputType(graphene.InputObjectType):
+    level = graphene.Argument(graphene.Int, required=True)
+    section = graphene.Argument(graphene.Int, required=True)
 
 
 class TutorialContentInputType(graphene.InputObjectType):
@@ -97,7 +102,7 @@ class CategoryType(PublishedFilterBase, DjangoObjectType):
 class TutorialType(PublishedFilterBase, DjangoObjectType):
     content = graphene.Field(TutorialInterface, translation=graphene.String(), default=graphene.String(), required=True)
     categories = DjangoListField(CategoryType, required=True)
-    rank = graphene.Field(RankType)
+    rank = graphene.Field(RankType, required=True)
 
     @show_published_only
     @graphene.resolve_only_args
