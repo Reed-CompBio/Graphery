@@ -1,5 +1,10 @@
 <template>
-  <q-select :options="numbers" v-model="modelNumber" :label="label" />
+  <q-select
+    :options="numbers"
+    v-model="modelNumber"
+    :label="label"
+    :option-label="formatter"
+  />
 </template>
 
 <script>
@@ -20,6 +25,10 @@
       currentNumber: {
         type: Number,
         default: 0,
+      },
+      formatter: {
+        type: Function,
+        default: null,
       },
     },
     model: {

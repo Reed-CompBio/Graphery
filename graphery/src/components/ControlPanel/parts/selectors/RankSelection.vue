@@ -15,12 +15,16 @@
         :end="99"
         label="Serial Number"
         v-model="serialNumber"
+        :formatter="(obj) => (obj < 10 ? '0' + obj : obj)"
       />
       <NumberSelection
         class="section-number-selection"
         label="Section Number"
-        v-model="serialNumber"
+        v-model="sectionNumber"
       />
+      <div class="rank-display-section text-bold text-h5">
+        <span>{{ currentRank.level }}-{{ currentRank.section }}</span>
+      </div>
     </div>
   </InfoCard>
 </template>
@@ -94,4 +98,8 @@
     width: 20%
     display: inline-block
     margin-left: 3%
+
+  .rank-display-section
+    margin-left: 5%
+    display: inline-block
 </style>
