@@ -54,6 +54,9 @@ class Tutorial(PublishedMixin, LevelMixin, UUIDMixin, TimeDateMixin, models.Mode
     def __str__(self):
         return f'<tutorial {self.url} | {self.name}>'
 
+    class Meta:
+        ordering = ['level', 'section']
+
 
 class GraphPriority(models.IntegerChoices):
     MAIN = 60, 'Main Graph'
@@ -93,6 +96,9 @@ class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
 
     def __str__(self):
         return f'<graph {self.url} | {self.name} | {GraphPriority(self.priority).label}>'
+
+    class Meta:
+        ordering = ['-priority']
 
 
 class Code(UUIDMixin, TimeDateMixin, models.Model):
