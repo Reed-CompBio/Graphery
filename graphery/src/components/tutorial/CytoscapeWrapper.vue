@@ -343,7 +343,7 @@
           );
         }
 
-        return GraphLayout.preset;
+        return GraphLayout.random;
       },
       reloadGraph() {
         if (this.cyInstance) {
