@@ -34,7 +34,7 @@
   },
   "collectionPage": {
     "Filter": "筛选",
-    "searchHint": "使用 Enter 进行搜索",
+    "searchHint": "搜索时请使用关键词. 按下 Enter 进行搜索.",
     "Categories": "分类"
   },
   "settings": {

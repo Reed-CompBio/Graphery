@@ -73,4 +73,4 @@ def graph_content_search(queryset: QuerySet, search_text: str) -> QuerySet:
               for part in graph_content_search_vector_parts),
             *content_search_vector_attrs
         )
-    ).filter(search=search_text)
+    ).filter(search=search_text.split(' ,."\'\\/[]{}!@#$%^&*()<>?:|-_=+`~'))

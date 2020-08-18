@@ -10,7 +10,7 @@
         <q-input
           outlined
           clearable
-          :debounce="500"
+          :debounce="50"
           :hint="$t('collectionPage.searchHint')"
           v-model="searchText"
           name="search-input"
