@@ -23,13 +23,15 @@
         v-model="sectionNumber"
       />
       <div class="rank-display-section text-bold text-h5">
-        <span>{{ currentRank.level }}-{{ currentRank.section }}</span>
+        <span>{{ rankText }}</span>
       </div>
     </div>
   </InfoCard>
 </template>
 
 <script>
+  import { rankToText } from '@/services/helpers';
+
   export default {
     components: {
       InfoCard: () =>
@@ -65,7 +67,7 @@
       serialNumber: {
         set(d) {
           this.$emit('updateRank', {
-            level: Math.round(this.currentRank.leading / 100) * 100 + d,
+            level: Math.round(this.currentRank.level / 100) * 100 + d,
             section: this.currentRank.section,
           });
         },
@@ -83,6 +85,9 @@
         get() {
           return this.currentRank.section;
         },
+      },
+      rankText() {
+        return rankToText(this.currentRank);
       },
     },
   };
