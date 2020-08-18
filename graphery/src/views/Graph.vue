@@ -30,6 +30,9 @@
                 dropdown-icon="mdi-menu-down"
                 :loading="codeListEmpty"
                 emit-value
+                option-label="label"
+                option-value="value"
+                map-options
               >
                 <template v-slot:no-option>
                   <q-item>
@@ -162,7 +165,7 @@
 
             if (graphObj.execresultjsonSet.length > 0) {
               graphObj.execresultjsonSet.forEach((obj) => {
-                this.codeOptions.push({
+                this.codeOptions.unshift({
                   label: obj.code.id,
                   value: obj.code.id,
                 });
