@@ -1,4 +1,4 @@
-import re
+import json
 from typing import Mapping, Sequence
 
 from django.contrib.auth.models import AnonymousUser
@@ -12,6 +12,7 @@ import pytest
 
 from backend.model.MetaModel import InvitationCode
 from backend.models import *
+from tests.utils import camel_to_snake, EmptyValue, AnyNoneEmptyValue, AnyValue
 
 
 @pytest.fixture(autouse=True)
@@ -42,17 +43,8 @@ def rq_admin(rf):
 
 
 @pytest.fixture(scope='module')
-def test_client():
+def graphql_client():
     return Client(schema)
-
-
-class EmptyVal:
-    pass
-
-
-def camel_to_snake(var_name: str) -> str:
-    var_name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', var_name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', var_name).lower()
 
 
 def assert_no_error(result: Mapping) -> Mapping:
@@ -61,12 +53,14 @@ def assert_no_error(result: Mapping) -> Mapping:
     return result['data']
 
 
-def assert_model_equal(model_instance: models.Model, variable_mapping: Mapping, exclude_list: Sequence = ()) -> None:
-    for var_name, var_value in variable_mapping.items():
-        if var_name in exclude_list:
-            continue
-        model_var_value = getattr(model_instance, camel_to_snake(var_name), EmptyVal)
-        assert model_var_value == var_value
+def assert_model_equal(model_instance: models.Model, variable_mapping: Mapping,
+                       validate_against: Mapping = None) -> None:
+    for var_name, var_value in {**variable_mapping, **(validate_against if validate_against else {})}.items():
+        model_var_value = getattr(model_instance, camel_to_snake(var_name), EmptyValue)
+        if isinstance(var_value, Sequence) and all(isinstance(var_value_ele, models.Model) for var_value_ele in var_value):
+            assert all(var_value_ele in model_var_value for var_value_ele in var_value)
+        else:
+            assert var_value == model_var_value
 
 
 @pytest.mark.parametrize(
@@ -87,9 +81,9 @@ def assert_model_equal(model_instance: models.Model, variable_mapping: Mapping, 
         )
     ]
 )
-def test_register_mutation(test_client, rq_anonymous,
+def test_register_mutation(graphql_client, rq_anonymous,
                            mutation_query: str, variables: Mapping, result_chain: Sequence, model: models.Model):
-    result = test_client.execute(mutation_query, variable_values=variables, context_value=rq_anonymous)
+    result = graphql_client.execute(mutation_query, variable_values=variables, context_value=rq_anonymous)
 
     data = assert_no_error(result)
 
@@ -98,35 +92,78 @@ def test_register_mutation(test_client, rq_anonymous,
 
     model_instance = model.objects.get(id=data)
 
-    assert_model_equal(model_instance, variables, exclude_list=('password', 'invitationCode'))
+    assert_model_equal(model_instance, variables, validate_against={'password': AnyNoneEmptyValue,
+                                                                    'invitationCode': AnyValue})
 
 
-id_exclude_list = ('id',)
+id_validation = {'id': AnyNoneEmptyValue}
 
 
+@pytest.mark.django_db
 @pytest.mark.parametrize(
-    'mutation_query, variables, result_chain, model, exclude_list',
+    'mutation_query, variables, result_chain, model, validate_against',
     [
         pytest.param(
-            '''mutation($id: UUID!, $category: String!, $isPublished: Boolean) {
-                  updateCategory(id: $id, category: $category, isPublished: $isPublished) {
-                    model {
-                      id
-                    }
-                  }
+            '''
+            mutation($id: UUID!, $category: String!, $isPublished: Boolean) {
+              updateCategory(id: $id, category: $category, isPublished: $isPublished) {
+                model {
+                  id
                 }
+              }
+            }
             ''',
-            {'id': FAKE_UUID, 'category': 'Test Mutation Category', 'isPublished': True},
+            {'id': FAKE_UUID, 'category': 'Test Mutation Category', 'isPublished': False},
             ('updateCategory', 'model',),
             Category,
-            id_exclude_list
-        )
+            id_validation
+        ),
+        *(pytest.param(
+            '''
+            mutation ($id: UUID!, $url: String!, $name: String!, $rank: RankInputType!, $categories: [String], $isPublished: Boolean) {
+              updateTutorialAnchor(id: $id, url: $url, name: $name, rank: $rank, categories: $categories, isPublished: $isPublished) {
+                success
+                model {
+                  id
+                }
+              }
+            }
+            ''',
+            {'id': FAKE_UUID, 'url': url_name_set[0], 'name': url_name_set[1],
+             'rank': rank, 'categories': catList, 'isPublished': False},
+            ('updateTutorialAnchor', 'model', ),
+            Tutorial,
+            {**id_validation, 'level': rank['level'], 'section': rank['section'], 'rank': AnyValue, 'categories': AnyValue},
+        ) for url_name_set, catList, rank in [
+            (('new-test-url-2', 'net test url 2'), [], {'level': 500, 'section': 2}),
+            (('new-test-url-1', 'net test url 1'), ['1e209965-f720-418b-8746-1eaee4c8295c', 'dbe8cf6f-09a5-41b6-86ba-367d7a63763f'], {'level': 501, 'section': 2})
+        ]),
+        *(pytest.param(
+            '''
+            mutation ($id: UUID!, $url: String!, $name: String!, $cyjs: JSONString!, $isPublished:Boolean, $priority: Int, $authors: [String], $categories: [String], $tutorials: [String]) {
+              updateGraph(id: $id, url: $url, name: $name, cyjs: $cyjs, isPublished: $isPublished, priority: $priority, authors: $authors, categories: $categories, tutorials: $tutorials) {
+                model {
+                  id
+                }
+              }
+            }
+            ''',
+            {'id': FAKE_UUID, 'url': url_name_set[0], 'name': url_name_set[1],
+             'cyjs': json_string, 'priority': 20,
+             'categories': catList, 'isPublished': False, 'tutorials': tutList},
+            ('updateGraph', 'model', ),
+            Graph,
+            {**id_validation, 'categories': AnyValue, 'tutorials': AnyValue, 'cyjs': json.loads(json_string)},
+        ) for url_name_set, json_string, catList, tutList in [
+            (('new-test-url-2', 'net test url 2'), '{"elements": {"edges": [], "nodes": []}, "layout": {"name": "dagre"}}', [], []),
+            (('new-test-url-1', 'net test url 1'), '{"elements": {"edges": [], "nodes": []}, "layout": {"name": "preset"}}', ['1e209965-f720-418b-8746-1eaee4c8295c', 'dbe8cf6f-09a5-41b6-86ba-367d7a63763f'], ['7b35ec2c-685f-4727-98c6-766e120fb0c0', '3e8c3a27-bb56-4dd2-92a1-069c26b533e4'])
+        ])
     ]
 )
-def test_admin_mutations_create(test_client, rq_admin,
+def test_admin_mutations_create(graphql_client, rq_admin,
                                 mutation_query: str, variables: Mapping, result_chain: Sequence, model: models.Model,
-                                exclude_list: Sequence):
-    result = test_client.execute(mutation_query, variable_values=variables, context_value=rq_admin)
+                                validate_against: Mapping):
+    result = graphql_client.execute(mutation_query, variable_values=variables, context_value=rq_admin)
 
     data = assert_no_error(result)
 
@@ -137,4 +174,4 @@ def test_admin_mutations_create(test_client, rq_admin,
 
     model_instance = model.objects.get(id=data_id)
 
-    assert_model_equal(model_instance, variables, exclude_list=exclude_list)
+    assert_model_equal(model_instance, variables, validate_against=validate_against)
