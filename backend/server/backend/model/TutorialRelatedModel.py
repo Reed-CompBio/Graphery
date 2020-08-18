@@ -6,7 +6,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from .UserModel import User
-from .mixins import PublishedMixin, TimeDateMixin, UUIDMixin, LevelMixin
+from .mixins import PublishedMixin, TimeDateMixin, UUIDMixin, RankMixin
 from .translation_collection import process_trans_name, process_graph_info_trans_name
 
 
@@ -24,7 +24,7 @@ class Category(PublishedMixin, UUIDMixin, models.Model):
         verbose_name_plural = 'categories'
 
 
-class Tutorial(PublishedMixin, LevelMixin, UUIDMixin, TimeDateMixin, models.Model):
+class Tutorial(PublishedMixin, RankMixin, UUIDMixin, TimeDateMixin, models.Model):
     # meta data
     # TODO add a url verification
     url = models.CharField(max_length=100, unique=True, blank=False, null=False)
