@@ -102,6 +102,7 @@ CSRF_COOKIE_SAMESITE = 'strict'
 # GraphQL settings
 GRAPHENE = {
     'SCHEMA': 'graphery.schema.schema',
+    "SUBSCRIPTION_PATH": "/ws/graphql"
 }
 
 # Internationalization

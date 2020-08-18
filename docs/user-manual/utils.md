@@ -10,7 +10,55 @@ All the utilities live in the `bundle` module. There are three sections: `GraphO
 
 The APIs exposed by `GraphObject` are listed [here](../user-manual/get-started.md). This section is for developers who wants to generate graph objects.
 
-`Graph.py` has a function called `graph_generator`, which takes in a json string in `cyjs` format (example [here](https://js.cytoscape.org/#notation/elements-json), the second example in the section) and returns a `Graph` object.
+`Graph.py` has a function called `graph_generator`, which takes in a json string in `cyjs` format which is described in the following example. 
+
+```json
+{
+  "elements":{
+    "nodes":[
+      {
+        "data":{
+          "id":"a"
+        }
+      },
+      {
+        "data":{
+          "id":"b"
+        }
+      }
+    ],
+    "edges":[
+      {
+        "data":{
+          "id":"ab",
+          "source":"a",
+          "target":"b"
+        }
+      }
+    ]
+  },
+  "layout":{
+    "name":"dagre",
+  },
+  "style":[
+    {
+      "selector":"node",
+      "style":{
+        "label":"data(id)"
+      }
+    }
+  ]
+}
+```
+
+The JSON content must contain `elements`. There is a default global layout added to the `style` section. If you want to specify the layout engine, please change the name of the layout. The available layout engines are 
+
+```text
+dagre  // used for directed acycle graphs
+fcose  // https://github.com/iVis-at-Bilkent/cytoscape.js-fcose
+preset // predefined layout => does not apply any layout engine
+random // random layout
+```
 
 The `cyjs` format is extended in this module. You can create an object filed `displayed` in a node or an edge element, like this:
 

@@ -166,6 +166,11 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
     # they are convered under ManyToOneRel/ManyToManyRel/ManyToManyField
     # and will be automatically translated to DjangoListField
 
+    @classmethod
+    def get_queryset(cls, queryset: QuerySet, info: ResolveInfo):
+        queryset: QuerySet = super(GraphType, cls).get_queryset(queryset, info)
+        return queryset.order_by('-priority')
+
     @graphene.resolve_only_args
     def resolve_priority(self):
         return GraphPriorityType(priority=self.priority, label=GraphPriority(self.priority).label)

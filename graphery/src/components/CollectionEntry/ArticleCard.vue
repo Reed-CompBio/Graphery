@@ -99,4 +99,8 @@
       margin: 10px 0
     .article-abstract-section
       margin-top: 15px
+
+  .article-abstract-section .markdown-body a
+    color: #b12 !important
+    text-decoration: none !important
 </style>

@@ -83,7 +83,8 @@ class GraphObjectEncoder(json.JSONEncoder):
                 *default_graph_styles,
                 # graph.styles
                 # TODO you can't have a empty dict. They must be removed
-            ]
+            ],
+            'layout': graph.layout
         }
 
     def default(self, obj: Any) -> Any:

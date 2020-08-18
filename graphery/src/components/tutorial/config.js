@@ -23,6 +23,41 @@ export const panzoomDefaults = {
   resetIcon: 'mdi mdi-arrow-expand-all',
 };
 
+export const fcoseOptions = {
+  name: 'fcose',
+  // 'draft', 'default' or 'proof'
+  // - "draft" only applies spectral layout
+  // - "default" improves the quality with incremental layout (fast cooling rate)
+  // - "proof" improves the quality with incremental layout (slow cooling rate)
+  quality: 'default',
+  // Use random node positions at beginning of layout
+  // if this is set to false, then quality option must be "proof"
+  randomize: true,
+  // Whether or not to animate the layout
+  animate: true,
+};
+
+export const presetOptions = {
+  name: 'preset',
+
+  positions: undefined, // map of (node id) => (position obj); or function(node){ return somPos; }
+  zoom: undefined, // the zoom level to set (prob want fit = false if set)
+  pan: undefined, // the pan level to set (prob want fit = false if set)
+  fit: true, // whether to fit to viewport
+  padding: 30, // padding on fit
+  animate: false, // whether to transition the node positions
+  animationDuration: 500, // duration of animation in ms if enabled
+  animationEasing: undefined, // easing of animation if enabled
+  animateFilter: function(node, i) {
+    return true;
+  }, // a function that determines whether the node should be animated.  All nodes animated by default on animate enabled.  Non-animated nodes are positioned immediately when the layout starts
+  ready: undefined, // callback on layoutready
+  stop: undefined, // callback on layoutstop
+  transform: function(node, position) {
+    return position;
+  }, // transform a given node position. Useful for changing flow direction in discrete layouts
+};
+
 export const dagreOptions = {
   name: 'dagre',
   // dagre algorithm options, uses default value on undefined
@@ -55,35 +90,28 @@ export const dagreOptions = {
   },
 };
 
-export const hierarchicalOptions = {
-  name: 'breadthfirst',
-  fit: false, // whether to fit the viewport to the graph
-  directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
-  padding: 30, // padding on fit
-  circle: false, // put depths in concentric circles if true, put depths top down if false
-  grid: false, // whether to create an even grid into which the DAG is placed (circle:false only)
-  spacingFactor: 1.75, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
+export const randomLayout = {
+  name: 'random',
+
+  fit: true, // whether to fit to viewport
+  padding: 30, // fit padding
   boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
-  avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
-  nodeDimensionsIncludeLabels: true, // Excludes the label when calculating node bounding boxes for the layout algorithm
-  roots: undefined, // the roots of the trees
-  maximal: false, // whether to shift nodes down their natural BFS depths in order to avoid upwards edges (DAGS only)
   animate: false, // whether to transition the node positions
   animationDuration: 500, // duration of animation in ms if enabled
-  animationEasing: undefined, // easing of animation if enabled,
+  animationEasing: undefined, // easing of animation if enabled
   animateFilter: function(node, i) {
     return true;
-  },
-  ready: function() {
-    this.layoutReady = true;
-    this.layoutStopped = false;
-  },
-  stop: function() {
-    this.layoutStopped = true;
-    this.layoutReady = false;
-    this.loading = false;
-  },
+  }, // a function that determines whether the node should be animated.  All nodes animated by default on animate enabled.  Non-animated nodes are positioned immediately when the layout starts
+  ready: undefined, // callback on layoutready
+  stop: undefined, // callback on layoutstop
   transform: function(node, position) {
     return position;
   }, // transform a given node position. Useful for changing flow direction in discrete layouts
+};
+
+export const GraphLayout = {
+  dagre: dagreOptions,
+  fcose: fcoseOptions,
+  preset: presetOptions,
+  random: randomLayout,
 };

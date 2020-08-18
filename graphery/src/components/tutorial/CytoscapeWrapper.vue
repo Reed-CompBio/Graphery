@@ -83,16 +83,13 @@
   let cytoscape;
   let panzoom;
   let dagre;
+  let fcose;
   let Tippy;
   let popper;
 
   import { graphMenuHeaderSize } from '@/store/states/meta';
   import { mapState, mapGetters } from 'vuex';
-  import {
-    panzoomDefaults,
-    dagreOptions,
-    hierarchicalOptions,
-  } from './config.js';
+  import { panzoomDefaults, GraphLayout } from './config.js';
 
   import {
     saveToFile,
@@ -110,12 +107,11 @@
       return {
         cyInstance: null,
         moduleLoadedNum: 0,
-        moduleTargetNum: 5,
+        moduleTargetNum: 6,
         tippy: null,
         testValue: 0,
         lastVarObj: {},
         choseGraphObj: null,
-        currentGraphLayoutEngine: 'dagre',
         // TODO remember to clear this out
       };
     },
@@ -192,6 +188,16 @@
           dagre = cd.default;
 
           cytoscape.use(dagre);
+
+          this.updateLayout();
+          this.moduleLoad();
+        });
+
+        import('cytoscape-fcose').then((cf) => {
+          console.debug('cytoscape fcose module: ', cf);
+          fcose = cf.default;
+
+          cytoscape.use(fcose);
 
           this.updateLayout();
           this.moduleLoad();
@@ -336,6 +342,20 @@
           }
         }
       },
+      currentGraphLayoutOption() {
+        if (this.currentGraphJsonObj === null) {
+          return null;
+        }
+
+        if (this.currentGraphJsonObj.layout) {
+          return (
+            GraphLayout[this.currentGraphJsonObj.layout.name] ||
+            GraphLayout.preset
+          );
+        }
+
+        return GraphLayout.fcose;
+      },
       reloadGraph() {
         if (this.cyInstance) {
           this.cyInstance.style().resetToDefault();
@@ -347,39 +367,9 @@
         if (!this.cyInstance) {
           return;
         }
-        /**
-         * copied from
-         * @see {@link https://github.com/cylc/cylc-ui/blob/master/src/components/cylc/graph/Graph.vue}
-         */
-        switch (this.currentGraphLayoutEngine) {
-          case 'dagre':
-            this.layoutOptions = dagreOptions;
-            this.runLayout(this.cyInstance, dagreOptions);
-            break;
-          case 'hac':
-            this.cyInstance.elements().hca({
-              mode: 'threshold',
-              threshold: 25,
-              distance: 'euclidean', // euclidean, squaredEuclidean, manhattan, max
-              preference: 'mean', // median, mean, min, max,
-              damping: 0.8, // [0.5 - 1]
-              minIterations: 100, // [optional] The minimum number of iterations the algorithm will run before stopping (default 100).
-              maxIterations: 1000, // [optional] The maximum number of iterations the algorithm will run before stopping (default 1000).
-              attributes: [
-                (node) => {
-                  return node.data('weight');
-                },
-              ],
-            });
-            this.layoutOptions = hierarchicalOptions;
-            this.runLayout(this.cyInstance, hierarchicalOptions);
-            break;
-          default:
-            // Should never happen!
-            this.layoutOptions = dagreOptions;
-            this.runLayout(this.cyInstance, dagreOptions);
-            break;
-        }
+
+        this.layoutOptions = this.currentGraphLayoutOption();
+        this.runLayout(this.cyInstance, this.layoutOptions);
       },
       runLayout(instance, layoutOptions = null) {
         /**

@@ -168,8 +168,10 @@
       this.initCodeEditor();
       this.fetchCode();
     },
-    destroyed() {
-      this.editor.dispose();
+    beforeDestroy() {
+      if (this.editor) {
+        this.editor.dispose();
+      }
     },
   };
 </script>

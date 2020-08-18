@@ -32,6 +32,7 @@
     "core-js": "^3.6.4",
     "cytoscape": "^3.15.1",
     "cytoscape-dagre": "^2.2.2",
+    "cytoscape-fcose": "^1.2.3",
     "cytoscape-panzoom": "^2.5.3",
     "cytoscape-popper": "^1.0.7",
     "highlight.js": "^10.1.2",

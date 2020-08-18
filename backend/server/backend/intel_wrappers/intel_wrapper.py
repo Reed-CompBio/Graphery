@@ -263,15 +263,15 @@ class ExecResultJsonWrapper(AbstractWrapper):
     model_class: Type[ExecResultJson] = ExecResultJson
 
     def __init__(self):
-        self.code: Optional[CodeWrapper] = None
-        self.graph: Optional[GraphWrapper] = None
-        self.json: Optional[Mapping] = None
-
         AbstractWrapper.__init__(self, {
             'code': wrapper_validator,
             'graph': wrapper_validator,
             'json': json_validator,
         })
+
+        self.code: Optional[CodeWrapper] = None
+        self.graph: Optional[GraphWrapper] = None
+        self.json: Optional[Mapping] = None
 
     def load_model_var(self, loaded_model: ExecResultJson) -> None:
         super().load_model_var(loaded_model)
@@ -283,6 +283,7 @@ class ExecResultJsonWrapper(AbstractWrapper):
     def retrieve_model(self) -> None:
         # TODO Unresolved attribute reference 'objects' for class 'ExecResultJson' ?????
         self.model: ExecResultJson = self.model_class.objects.get(code=self.code.model, graph=self.graph.model)
+        self.id = self.model.id
 
     def make_new_model(self) -> None:
         self.model: ExecResultJson = self.model_class(code=self.code.model, graph=self.graph.model, json=self.json)

@@ -5,6 +5,14 @@ from .Edge import Edge, EdgeSet, MutableEdgeSet, NodeTuple, EdgeIDTuple
 
 import json
 from typing import Iterable, Union, Optional, Mapping
+from enum import Enum
+
+
+class GraphLayout(Enum):
+    dagre = {'name': 'dagre'}
+    fcose = {'name': 'fcose'}
+    preset = {'name': 'preset'}
+    random = {'name': 'random'}
 
 
 class Graph(Stylable):
@@ -32,6 +40,8 @@ class Graph(Stylable):
 
         self.V = self.nodes
         self.E = self.edges
+
+        self.layout: Mapping = GraphLayout.dagre.value
 
         self.high_light_classes = []
 
@@ -194,6 +204,12 @@ class MutableGraph(Graph):
 
         self.edges.remove_edge(edge)
         return True
+
+    def set_layout(self, layout_name: GraphLayout) -> None:
+        if isinstance(layout_name, GraphLayout):
+            self.layout = layout_name.value
+        else:
+            print('Wrong layout name. Nothing is changed. Please use GraphLayout Enum.')
 
     def generate_json(self, indent: int = None) -> str:
         return json.dumps(self, indent=indent, cls=MutableGraph.GraphObjectEncoder)

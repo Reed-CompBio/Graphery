@@ -93,12 +93,12 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex';
+  import { mapGetters } from 'vuex';
   import {
     toLocalDateString,
     saveTextToClipboard,
     successDialog,
-  } from '../../services/helpers';
+  } from '@/services/helpers';
 
   export default {
     components: {
@@ -124,7 +124,6 @@
       ]),
     },
     methods: {
-      ...mapActions('tutorials', ['loadTutorial']),
       toLocalDateString,
       share() {
         saveTextToClipboard(window.location.href);

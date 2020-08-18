@@ -9,6 +9,10 @@ from backend.intel_wrappers.validators import is_published_validator, dummy_vali
 from backend.model.mixins import PublishedMixin
 
 
+class EmptyValue:
+    pass
+
+
 class IntelWrapperBase(ABC):
     def __init__(self, validators: Mapping[str, Callable]):
         self.validators = validators
@@ -16,8 +20,8 @@ class IntelWrapperBase(ABC):
     def validate(self):
         for field_name, validator in self.validators.items():
             # TODO change error class
-            field = getattr(self, field_name, None)
-            if field is None:
+            field = getattr(self, field_name, EmptyValue)
+            if field == EmptyValue:
                 raise AssertionError('Cannot find the field `%s` during validation' % field_name)
             try:
                 validator(field)
