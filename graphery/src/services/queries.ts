@@ -269,6 +269,10 @@ query($id: String!) {
     id
     url
     name
+    rank {
+      level
+      section
+    }
     categories {
       id
     }
