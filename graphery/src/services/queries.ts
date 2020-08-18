@@ -4,6 +4,7 @@ query ($translation: String, $default: String = "en-us", $filterContent: FilterC
     url
     isPublished
     categories {
+      id
       category
     }
     content (translation: $translation, default: $default) {
@@ -27,6 +28,7 @@ query ($translation: String, $default: String = "en-us", $filterContent: FilterC
       username
     }
     categories {
+      id
       category
     }
     isPublished
@@ -160,6 +162,10 @@ query {
     isPublished
     url
     id
+    rank {
+      level
+      section
+    }
   }
 }`;
 
@@ -265,6 +271,10 @@ query($id: String!) {
     id
     url
     name
+    rank {
+      level
+      section
+    }
     categories {
       id
     }
@@ -273,8 +283,8 @@ query($id: String!) {
 }`;
 
 export const updateTutorialAnchorMutation = `
-mutation ($id: UUID!, $url: String!, $name: String!, $categories: [String], $isPublished: Boolean) {
-  updateTutorialAnchor(id: $id, url: $url, name: $name, categories: $categories, isPublished: $isPublished) {
+mutation ($id: UUID!, $url: String!, $name: String!, $rank: RankInputType!, $categories: [String], $isPublished: Boolean) {
+  updateTutorialAnchor(id: $id, url: $url, name: $name, rank: $rank, categories: $categories, isPublished: $isPublished) {
     success
   }
 }`;

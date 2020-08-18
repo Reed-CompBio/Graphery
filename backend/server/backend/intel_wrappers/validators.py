@@ -116,3 +116,13 @@ def password_validator(password: str):
                               'least one upper case, lower case of letters, '
                               'one number, AND one special character (!@#$^&*). '
                               'The length should be between 8 to 25' % password)
+
+
+def level_validator(level: int):
+    if not isinstance(level, int) or level > 999 or level < 0:
+        raise ValidationError('`level` must be a positive number that\'s smaller than 1000.')
+
+
+def section_validator(section: int):
+    if not isinstance(section, int) or section > 9 or section < 0:
+        raise ValidationError('`section` must be a positive number that\' smaller than 10')

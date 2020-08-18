@@ -11,7 +11,8 @@ from django.conf import settings
 from backend.graphql.decorators import write_required, admin_required
 from backend.graphql.mutation_base import SuccessMutationBase
 from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeType, TutorialInterface, \
-    TutorialContentInputType, GraphContentInputType, GraphContentInterface, ExecResultJsonType, DeletionEnum
+    TutorialContentInputType, GraphContentInputType, GraphContentInterface, ExecResultJsonType, DeletionEnum, \
+    RankInputType
 from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, get_wrapper_by_id
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper, \
@@ -43,15 +44,17 @@ class UpdateTutorialAnchor(SuccessMutationBase):
         id = graphene.UUID(required=True)
         url = graphene.String(required=True)
         name = graphene.String(required=True)
+        rank = graphene.Argument(RankInputType, required=True)
         categories = graphene.List(graphene.String)
         is_published = graphene.Boolean()
 
     model = graphene.Field(TutorialType, required=True)
 
     @write_required
-    def mutate(self, _, id: str, url: str, name: str, categories: Sequence[str] = (), is_published: bool = False):
+    def mutate(self, _, id: str, url: str, name: str, rank: Mapping, categories: Sequence[str] = (), is_published: bool = False):
         if len(categories) == 0:
-            categories: Sequence[str] = ('uncategorized',)
+            categories: Sequence[str] = \
+                (CategoryWrapper.model_class.objects.get_or_create(category='uncategorized')[0].id, )
 
         url = url.strip()
         name = name.strip()
@@ -60,6 +63,7 @@ class UpdateTutorialAnchor(SuccessMutationBase):
 
         tutorial_anchor_wrapper = process_model_wrapper(TutorialAnchorWrapper,
                                                         id=id, url=url, name=name,
+                                                        level=rank['level'], section=rank['section'],
                                                         categories=categories,
                                                         is_published=is_published)
 

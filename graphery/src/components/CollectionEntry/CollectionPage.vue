@@ -10,7 +10,7 @@
         <q-input
           outlined
           clearable
-          :debounce="500"
+          :debounce="50"
           :hint="$t('collectionPage.searchHint')"
           v-model="searchText"
           name="search-input"
@@ -105,7 +105,6 @@
                 :abstract="info.abstract"
                 :isTransPublished="info.isTransPublished"
                 @category-filter="addToCategoryFilter"
-                @author-filter="addToAuthorFilter"
                 :moreButtonText="moreButtonText"
                 :notClickableWhenNoContent="notClickableWhenNoContent"
               ></ArticleCard>
@@ -200,13 +199,10 @@
         this.searchText = this.searchText.trim();
         this.loadInfo();
       },
-      addToAuthorFilter(author) {
-        // TODO apply author filter I don't need this
-        console.debug(`add ${author} to author filter`);
-      },
-      addToCategoryFilter(category) {
-        // TODO apply category filters
-        console.debug(`add ${category} to category filter`);
+      addToCategoryFilter(categoryId) {
+        if (this.categoryIds.indexOf(categoryId) < 0) {
+          this.categoryIds.push(categoryId);
+        }
       },
     },
     mounted() {

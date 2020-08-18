@@ -6,7 +6,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from .UserModel import User
-from .mixins import PublishedMixin, TimeDateMixin, UUIDMixin
+from .mixins import PublishedMixin, TimeDateMixin, UUIDMixin, LevelMixin
 from .translation_collection import process_trans_name, process_graph_info_trans_name
 
 
@@ -24,7 +24,7 @@ class Category(PublishedMixin, UUIDMixin, models.Model):
         verbose_name_plural = 'categories'
 
 
-class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
+class Tutorial(PublishedMixin, LevelMixin, UUIDMixin, TimeDateMixin, models.Model):
     # meta data
     # TODO add a url verification
     url = models.CharField(max_length=100, unique=True, blank=False, null=False)
@@ -53,6 +53,9 @@ class Tutorial(PublishedMixin, UUIDMixin, TimeDateMixin, models.Model):
 
     def __str__(self):
         return f'<tutorial {self.url} | {self.name}>'
+
+    class Meta:
+        ordering = ['level', 'section']
 
 
 class GraphPriority(models.IntegerChoices):
@@ -93,6 +96,9 @@ class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
 
     def __str__(self):
         return f'<graph {self.url} | {self.name} | {GraphPriority(self.priority).label}>'
+
+    class Meta:
+        ordering = ['-priority']
 
 
 class Code(UUIDMixin, TimeDateMixin, models.Model):

@@ -10,15 +10,15 @@
           <div class="pebble3"></div>
         </div>
         <div>
-          <h3>0 results found</h3>
-          <p>Please try other filter options!</p>
+          <div class="text-h3">0 results found</div>
+          <div class="text-body1">Please try other filter options!</div>
         </div>
       </div>
     </q-card-section>
-    <q-card-actions align="center" vertical>
-      <p>
+    <q-card-actions align="center" vertical class="q-pb-xl">
+      <div class="text-body1 q-mb-sm">
         If you believe this is a mistake, please contact me!
-      </p>
+      </div>
       <div>
         <FeedbackDropdown />
       </div>
@@ -43,12 +43,6 @@
     flex-direction: column;
     align-items: center;
     font-family: 'Dosis', sans-serif;
-  }
-  .empty-icon-container h3 {
-    margin: 10px auto;
-  }
-  .empty-icon-container p {
-    margin: 0;
   }
   .animation-container {
     position: relative;

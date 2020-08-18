@@ -70,6 +70,16 @@ class TutorialInterface(graphene.Interface):
         return self.authors.all()
 
 
+class RankType(graphene.ObjectType):
+    level = graphene.Int(required=True)
+    section = graphene.Int(required=True)
+
+
+class RankInputType(graphene.InputObjectType):
+    level = graphene.Argument(graphene.Int, required=True)
+    section = graphene.Argument(graphene.Int, required=True)
+
+
 class TutorialContentInputType(graphene.InputObjectType):
     id = graphene.UUID(required=True)
     title = graphene.String(required=True)
@@ -92,6 +102,7 @@ class CategoryType(PublishedFilterBase, DjangoObjectType):
 class TutorialType(PublishedFilterBase, DjangoObjectType):
     content = graphene.Field(TutorialInterface, translation=graphene.String(), default=graphene.String(), required=True)
     categories = DjangoListField(CategoryType, required=True)
+    rank = graphene.Field(RankType, required=True)
 
     @show_published_only
     @graphene.resolve_only_args
@@ -115,6 +126,10 @@ class TutorialType(PublishedFilterBase, DjangoObjectType):
         if code and (code.is_published or not is_published_only):
             return code
         return Code(id=FAKE_UUID, code='# Empty \n', tutorial=Tutorial())
+
+    @graphene.resolve_only_args
+    def resolve_rank(self):
+        return RankType(level=self.level, section=self.section)
 
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
@@ -165,11 +180,6 @@ class GraphType(PublishedFilterBase, DjangoObjectType):
     # Don't worried about tutorials and execresultjson_set since
     # they are convered under ManyToOneRel/ManyToManyRel/ManyToManyField
     # and will be automatically translated to DjangoListField
-
-    @classmethod
-    def get_queryset(cls, queryset: QuerySet, info: ResolveInfo):
-        queryset: QuerySet = super(GraphType, cls).get_queryset(queryset, info)
-        return queryset.order_by('-priority')
 
     @graphene.resolve_only_args
     def resolve_priority(self):

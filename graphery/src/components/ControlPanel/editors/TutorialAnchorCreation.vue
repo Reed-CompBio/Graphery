@@ -24,6 +24,11 @@
           <q-input outlined v-model="tutorialAnchorObj.name"></q-input>
         </InfoCard>
 
+        <RankSelection
+          class="half-width-card"
+          v-model="tutorialAnchorObj.rank"
+        />
+
         <CategorySelection
           v-model="tutorialAnchorObj.categories"
           class="half-width-card"
@@ -63,6 +68,8 @@
     props: ['id'],
     components: {
       CategorySelection,
+      RankSelection: () =>
+        import('@/components/ControlPanel/parts/selectors/RankSelection'),
       IDCard: () => import('../parts/cards/IDCard'),
       SubmitButton: () => import('../parts/buttons/SubmitButton'),
       ControlPanelContentFrame: () =>
