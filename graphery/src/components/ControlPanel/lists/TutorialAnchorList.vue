@@ -34,6 +34,10 @@
               />
             </q-td>
 
+            <q-td key="rank" :props="props">
+              <RankDisplay :rank="props.row.rank" />
+            </q-td>
+
             <!-- tutorial published -->
             <q-td key="isPublished" :props="props">
               {{ props.row.isPublished ? '✅' : '❌' }}
@@ -81,6 +85,7 @@
   export default {
     mixins: [loadingMixin],
     components: {
+      RankDisplay: () => import('@/components/framework/RankDisplay.vue'),
       DeleteTableCell: () =>
         import('@/components/ControlPanel/parts/table/DeleteTableCell'),
       AllTableHeader,
@@ -101,12 +106,23 @@
             field: 'name',
             align: 'center',
             sortable: true,
-            // Change this. Use custom title sorting: T(number), compare (number)
+          },
+          {
+            name: 'rank',
+            label: 'Rank',
+            field: 'rank',
+            align: 'center',
+            sortable: true,
             sort: (a, b) => {
-              if (a === b) {
-                return 0;
+              if (a.level === b.level) {
+                if (a.section === b.section) {
+                  return 0;
+                }
+
+                return a.section < b.section ? -1 : 1;
               }
-              return a < b ? -1 : 1;
+
+              return a.level < b.level ? -1 : 1;
             },
           },
           {
@@ -132,7 +148,7 @@
           },
         ],
         pagination: {
-          sortBy: 'name',
+          sortBy: 'rank',
           rowsPerPage: 20,
         },
         tableContent: [],

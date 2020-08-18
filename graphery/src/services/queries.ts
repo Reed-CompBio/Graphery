@@ -160,6 +160,10 @@ query {
     isPublished
     url
     id
+    rank {
+      level
+      section
+    }
   }
 }`;
 
