@@ -511,7 +511,54 @@
 <p>All the utilities live in the <code>bundle</code> module. There are three sections: <code>GraphObjects</code> in which all the elements of graphs are defined, <code>seeker</code> the variable tracing module, and <code>utils</code> which contains helpers used by <code>controller</code>. <code>controller.py</code> contains <code>controller</code> which should be the entry point of other utilities. </p>
 <h2 id="graphobjects"><code>GraphObjects</code></h2>
 <p>The APIs exposed by <code>GraphObject</code> are listed <a href="../get-started/">here</a>. This section is for developers who wants to generate graph objects.</p>
-<p><code>Graph.py</code> has a function called <code>graph_generator</code>, which takes in a json string in <code>cyjs</code> format (example <a href="https://js.cytoscape.org/#notation/elements-json">here</a>, the second example in the section) and returns a <code>Graph</code> object.</p>
+<p><code>Graph.py</code> has a function called <code>graph_generator</code>, which takes in a json string in <code>cyjs</code> format which is described in the following example. </p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+  <span class="nt">&quot;elements&quot;</span><span class="p">:{</span>
+    <span class="nt">&quot;nodes&quot;</span><span class="p">:[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;data&quot;</span><span class="p">:{</span>
+          <span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;a&quot;</span>
+        <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;data&quot;</span><span class="p">:{</span>
+          <span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;b&quot;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;edges&quot;</span><span class="p">:[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;data&quot;</span><span class="p">:{</span>
+          <span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;ab&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="s2">&quot;a&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="s2">&quot;b&quot;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;layout&quot;</span><span class="p">:{</span>
+    <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;dagre&quot;</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;style&quot;</span><span class="p">:[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;selector&quot;</span><span class="p">:</span><span class="s2">&quot;node&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;style&quot;</span><span class="p">:{</span>
+        <span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="s2">&quot;data(id)&quot;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+<p>The JSON content must contain <code>elements</code>. There is a default global layout added to the <code>style</code> section. If you want to specify the layout engine, please change the name of the layout. The available layout engines are </p>
+<div class="codehilite"><pre><span></span><code>dagre  // used for directed acycle graphs
+fcose  // https://github.com/iVis-at-Bilkent/cytoscape.js-fcose
+preset // predefined layout =&gt; does not apply any layout engine
+random // random layout
+</code></pre></div>
+
+
 <p>The <code>cyjs</code> format is extended in this module. You can create an object filed <code>displayed</code> in a node or an edge element, like this:</p>
 <div class="codehilite"><pre><span></span><code><span class="s2">&quot;nodes&quot;</span><span class="o">:</span> <span class="p">[</span>
     <span class="p">{</span>
