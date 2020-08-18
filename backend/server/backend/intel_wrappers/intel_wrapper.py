@@ -269,7 +269,6 @@ class ExecResultJsonWrapper(AbstractWrapper):
             'json': json_validator,
         })
 
-        self.id = FAKE_UUID
         self.code: Optional[CodeWrapper] = None
         self.graph: Optional[GraphWrapper] = None
         self.json: Optional[Mapping] = None
@@ -284,6 +283,7 @@ class ExecResultJsonWrapper(AbstractWrapper):
     def retrieve_model(self) -> None:
         # TODO Unresolved attribute reference 'objects' for class 'ExecResultJson' ?????
         self.model: ExecResultJson = self.model_class.objects.get(code=self.code.model, graph=self.graph.model)
+        self.id = self.model.id
 
     def make_new_model(self) -> None:
         self.model: ExecResultJson = self.model_class(code=self.code.model, graph=self.graph.model, json=self.json)
