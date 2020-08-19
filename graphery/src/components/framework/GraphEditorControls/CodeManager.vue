@@ -21,7 +21,10 @@
         this.$store.commit('code/LOAD_CODE_LIST', codeList);
       },
       updateCode(newCode) {
-        this.$store.commit('code/CHANGE_CODE_CONTENT', newCode);
+        this.$store.commit('code/CHANGE_CODE_CONTENT', {
+          codeObject: this.currentCodeObject,
+          code: newCode,
+        });
       },
     },
   };

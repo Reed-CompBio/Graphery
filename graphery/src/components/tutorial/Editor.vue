@@ -61,7 +61,9 @@
               }
             );
             this.editor.getModel().onDidChangeContent((_) => {
-              this.content = this.editor.getValue();
+              const codeContent = this.editor.getValue();
+              this.content = codeContent;
+              this.$emit('editorContentChanged', codeContent);
             });
             console.debug('mounted monaco editor', this.editor);
 

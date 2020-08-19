@@ -60,6 +60,7 @@ const getters: GetterTree<CodeStoreType, RootState> = {
     if (state.codeObjectList) {
       return state.codeObjectList.find((obj) => obj.id === state.currentCodeId);
     }
+    return null;
   },
 };
 

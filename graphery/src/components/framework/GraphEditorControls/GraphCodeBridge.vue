@@ -33,7 +33,7 @@
         return this.currentJsonObject[this.editorControlSliderPosition];
       },
       editorControlSliderLength() {
-        return this.currentJsonObject.length;
+        return this.currentCodeObject ? this.currentCodeObject.length : 1;
       },
     },
     methods: {
@@ -96,6 +96,9 @@
       },
       onCallWorkSpace() {
         notAvailableMessage();
+      },
+      onEditorContentChanged(newCode) {
+        this.updateCode(newCode);
       },
     },
   };

@@ -123,7 +123,11 @@
       >
         <template v-slot:before>
           <q-card class="popup-wrapper full-height" style="overflow-y: hidden;">
-            <Editor ref="editorComponent" class="full-height"></Editor>
+            <Editor
+              ref="editorComponent"
+              class="full-height"
+              @editorContentChanged="emitEditorContentChanged"
+            ></Editor>
           </q-card>
         </template>
         <template v-slot:separator>
@@ -357,6 +361,9 @@
         );
       },
       notAvailableMessage,
+      emitEditorContentChanged(newCode) {
+        this.$emit('editorContentChanged', newCode);
+      },
     },
     watch: {
       resultJsonArr: function() {
