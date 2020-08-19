@@ -166,6 +166,12 @@
       isNextButtonDisable() {
         return !this.isWalkable();
       },
+      disableStepSlider() {
+        // TODO
+        return this.sliderLength <= 1;
+      },
+    },
+    methods: {
       isWalkable(deltaStep = 1) {
         return (
           !this.disableOverride &&
@@ -173,14 +179,8 @@
           this.sliderPos + deltaStep <= this.sliderLength
         );
       },
-    },
-    methods: {
       showLabelAlwaysSwitch() {
         this.sliderLabelAlways = !this.sliderLabelAlways;
-      },
-      disableStepSlider() {
-        // TODO
-        return this.sliderLength <= 1;
       },
       onSliderChange(pos) {
         this.$emit('onSliderChange', pos);

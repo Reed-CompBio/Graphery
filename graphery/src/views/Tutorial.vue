@@ -33,7 +33,7 @@
           <template v-slot:after>
             <EditorControlUnit
               v-model="editorControlSliderPosition"
-              :slider-length="currentSliderLength"
+              :slider-length="editorControlSliderLength"
               :disable-override="false"
               :editor-enable-editing="true"
               @onMultipleStepsBack="onStepBack"

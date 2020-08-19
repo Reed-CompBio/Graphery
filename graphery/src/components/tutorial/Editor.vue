@@ -114,6 +114,9 @@
           this.editor.layout();
         }
       },
+      getCodeContent() {
+        return this.content;
+      },
       setCodeContent(content) {
         if (this.enableEditing) {
           this.editor.setValue(content);

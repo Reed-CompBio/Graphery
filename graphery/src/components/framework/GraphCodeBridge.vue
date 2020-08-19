@@ -1,5 +1,10 @@
 <script>
-  import { notAvailableMessage } from '@/services/helpers';
+  import {
+    errorDialog,
+    notAvailableMessage,
+    saveTextToClipboard,
+    successDialog,
+  } from '@/services/helpers';
 
   export default {
     computed: {
@@ -7,7 +12,7 @@
         // TODO
         return 1;
       },
-      currentSliderLength() {
+      editorControlSliderLength() {
         // TODO
         return 1;
       },
@@ -25,11 +30,41 @@
       onPushToLocalExec() {
         notAvailableMessage();
       },
+      checkEditorInitialized(showErrorDialog = false) {
+        if (this.$refs.editorWrapper) {
+          return this.$refs.editorWrapper;
+        } else {
+          if (showErrorDialog) {
+            errorDialog({
+              message: 'Editor is not initialized.',
+            });
+          }
+          return undefined;
+        }
+      },
       onCopyCurrentCode() {
-        // TODO
+        const editorWrapper = this.checkEditorInitialized(true);
+        if (editorWrapper) {
+          saveTextToClipboard(editorWrapper.getCurrentCode());
+        }
       },
       onPasteFromClipboard() {
-        // TODO
+        const editorWrapper = this.checkEditorInitialized(true);
+        if (editorWrapper) {
+          navigator.clipboard
+            .readText()
+            .then((text) => {
+              editorWrapper.setCurrentCode(text);
+              successDialog({
+                message: 'Pasted code successfully',
+              });
+            })
+            .catch((err) => {
+              errorDialog({
+                message: 'Failed to read clipboard contents. ' + err,
+              });
+            });
+        }
       },
       onChangeVariableListOrientation() {
         // TODO

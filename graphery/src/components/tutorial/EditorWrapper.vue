@@ -93,16 +93,6 @@
 
       <!-- copy paste button group -->
       <q-btn-group flat class="q-mr-md">
-        <q-btn dense icon="mdi-content-copy" @click="copyCurrentCode">
-          <SwitchTooltip :text="$t('tooltips.copyCodes')" />
-        </q-btn>
-        <q-btn
-          dense
-          icon="mdi-content-paste"
-          @click="setCurrentCodeFromClipboard"
-        >
-          <SwitchTooltip :text="$t('tooltips.pasteCodes')" />
-        </q-btn>
         <q-btn
           dense
           icon="mdi-rotate-right-variant"
@@ -193,13 +183,12 @@
     notAvailableMessage,
   } from '@/services/helpers';
   import Editor from '@/components/tutorial/Editor.vue';
-  import SplitterSeparator from '../framework/SplitterSeparator';
   import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
 
   export default {
     mixins: [pushCodeToLocalMixin],
     components: {
-      SplitterSeparator,
+      SplitterSeparator: () => import('../framework/SplitterSeparator'),
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
       Editor,
       VariableList: () => import('@/components/tutorial/VariableList.vue'),
@@ -344,32 +333,24 @@
         this.loadVariableObj(null);
         // TODO reload line decoration
       },
-      getCurrentCode() {
-        return this.$refs.editorComponent.content;
-      },
-      copyCurrentCode() {
+      getEditorComponent(showErrorDialog = false) {
         if (this.$refs.editorComponent) {
-          saveTextToClipboard(this.getCurrentCode());
+          return this.$refs.editorComponent;
+        } else {
+          if (showErrorDialog) {
+            errorDialog({
+              message: 'Editor Element is not initialized.',
+            });
+          }
         }
       },
-      setCurrentCodeFromClipboard() {
-        navigator.clipboard
-          .readText()
-          .then((text) => {
-            if (this.$refs.editorComponent) {
-              this.$refs.editorComponent.setCodeContent(text);
-              successDialog({
-                message: 'Pasted code successfully',
-              });
-            } else {
-              throw Error('Editor is not initialized.');
-            }
-          })
-          .catch((err) => {
-            errorDialog({
-              message: 'Failed to read clipboard contents. ' + err,
-            });
-          });
+      getCurrentCode() {
+        const editor = this.getEditorComponent();
+        return editor ? editor.getCodeContent() : '';
+      },
+      setCurrentCode(code) {
+        const editor = this.getEditorComponent();
+        editor.setCodeContent(code);
       },
       pushCodeToLocalExec() {
         this.pushToLocal(
