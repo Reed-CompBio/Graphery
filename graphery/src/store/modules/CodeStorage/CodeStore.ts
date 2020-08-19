@@ -21,7 +21,9 @@ const mutations: MutationTree<CodeStoreType> = {
   LOAD_CURRENT_CODE_ID(state, value: string) {
     state.currentCodeId = value;
   },
-
+  CHANGE_CODE_CONTENT(state, value: { codeObject: CodeType; code: string }) {
+    value.codeObject.code = value.code;
+  },
   // clear states
   CLEAR_CODE_LIST(state) {
     state.codeObjectList = null;
