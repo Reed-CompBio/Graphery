@@ -211,6 +211,13 @@ const getters: GetterTree<ResultJsonStateType, RootState> = {
       ? state.resultJsonObjectList.find(findByKey(keys))
       : null;
   },
+  getResultJsonObjectElement: (state, getter) => (
+    keys: KeysType,
+    position: number
+  ) => {
+    const jsonObject = getter.getCurrentJsonObject(keys);
+    return jsonObject.jsonObject && jsonObject.jsonObject[position];
+  },
 };
 
 export default {

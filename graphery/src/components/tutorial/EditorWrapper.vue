@@ -257,6 +257,13 @@
         this.loadNextVariableState(lineObject['variables']);
         this.$emit('updateCyWithVarObj', lineObject['variables']);
       },
+      editorMoveLine(lineNumber) {
+        this.$refs.editorComponent.moveToLine(lineNumber);
+      },
+      editorClearLineNumber() {
+        // TODO
+        this.$refs.editorComponent.clearnLine();
+      },
       getTheLastState(index) {
         if (!this.resultJsonArrEmpty) {
           for (let i = index; i >= 0; i--) {

@@ -7,7 +7,11 @@
       };
     },
     computed: {
-      ...mapGetters('rj', ['getCurrentJsonObject', 'getCurrentJsonString']),
+      ...mapGetters('rj', [
+        'getCurrentJsonObject',
+        'getCurrentJsonString',
+        'getResultJsonObjectElement',
+      ]),
     },
     methods: {
       getIdFromGraphIdAndCodeId(graphId, codeId) {
