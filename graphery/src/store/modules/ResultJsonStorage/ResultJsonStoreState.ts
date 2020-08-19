@@ -1,3 +1,6 @@
+import { GraphTypeFromQueryData } from '@/store/modules/GraphStorage/GraphStoreState';
+import { CodeTypeFromQueryData } from '@/store/modules/CodeStorage/CodeStoreState';
+
 export interface ResultJsonType {
   json: string;
   graphId: string;
@@ -6,12 +9,8 @@ export interface ResultJsonType {
 
 export interface ResultJsonTypeFromQueryData {
   json: string;
-  code: {
-    id: string;
-  };
-  graph: {
-    id: string;
-  };
+  code: CodeTypeFromQueryData;
+  graph: GraphTypeFromQueryData;
 }
 
 export interface ResultJsonStateType {

@@ -1,3 +1,10 @@
+import {
+  DateTimeMixinType,
+  IDMixinType,
+  IsPublishedMixinType,
+} from '@/store/states/state';
+import { ResultJsonTypeFromQueryData } from '@/store/modules/ResultJsonStorage/ResultJsonStoreState';
+
 export interface PriorityType {
   id?: string;
   priority?: number;
@@ -10,9 +17,7 @@ export interface GraphInfoContentType {
   isPublished?: boolean;
 }
 
-export interface GraphType {
-  id?: string;
-  isPublished?: boolean;
+export interface GraphType extends IsPublishedMixinType, IDMixinType {
   content?: GraphInfoContentType;
   priority?: PriorityType;
   cyjs?: string;
@@ -24,13 +29,11 @@ export interface GraphStoreType {
   currentGraphJsonString: string | null;
 }
 
-export interface GraphTypeFromQueryData extends GraphType {
-  createdTime?: Date;
-  modifiedTime?: Date;
+export interface GraphTypeFromQueryData extends GraphType, DateTimeMixinType {
   url?: string;
   name?: string;
   categories?: [];
   tutorials?: [];
-  execresultjsonSet?: [];
+  execresultjsonSet?: ResultJsonTypeFromQueryData[];
   authors?: [];
 }

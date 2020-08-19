@@ -237,3 +237,16 @@ export interface ContentRequestType {
   contentId: string;
   content: { raw: string; rendered: string };
 }
+
+export interface DateTimeMixinType {
+  createdTime?: string;
+  modifiedTime?: string;
+}
+
+export interface IsPublishedMixinType {
+  isPublished?: boolean;
+}
+
+export interface IDMixinType {
+  id?: string;
+}
