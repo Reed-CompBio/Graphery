@@ -91,17 +91,6 @@
         </q-btn>
       </q-btn-group>
 
-      <!-- copy paste button group -->
-      <q-btn-group flat class="q-mr-md">
-        <q-btn
-          dense
-          icon="mdi-rotate-right-variant"
-          @click="changeVariableListOrientation"
-        >
-          <SwitchTooltip :text="$t('tooltips.changeVariableListOrientation')" />
-        </q-btn>
-      </q-btn-group>
-
       <q-btn-group flat class="q-mr-md">
         <q-btn
           dense
@@ -176,12 +165,7 @@
 
 <script>
   import { mapActions, mapGetters, mapState } from 'vuex';
-  import { saveTextToClipboard } from '@/services/helpers';
-  import {
-    errorDialog,
-    successDialog,
-    notAvailableMessage,
-  } from '@/services/helpers';
+  import { errorDialog, notAvailableMessage } from '@/services/helpers';
   import Editor from '@/components/tutorial/Editor.vue';
   import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
 

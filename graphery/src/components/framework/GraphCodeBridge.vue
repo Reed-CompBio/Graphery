@@ -67,7 +67,10 @@
         }
       },
       onChangeVariableListOrientation() {
-        // TODO
+        const editorWrapper = this.checkEditorInitialized(true);
+        if (editorWrapper) {
+          editorWrapper.changeVariableListOrientation();
+        }
       },
       onCallWorkSpace() {
         notAvailableMessage();
