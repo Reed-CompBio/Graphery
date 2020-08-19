@@ -58,7 +58,11 @@ const actions: ActionTree<CodeStoreType, RootState> = {
   },
 };
 
-const getters: GetterTree<CodeStoreType, RootState> = {};
+const getters: GetterTree<CodeStoreType, RootState> = {
+  codeObjectListEmpty(state) {
+    return state.codeObjectList === null;
+  },
+};
 
 export default {
   namespaced: true,
