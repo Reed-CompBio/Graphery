@@ -5,35 +5,16 @@
     saveTextToClipboard,
     successDialog,
   } from '@/services/helpers';
-
-  import { mapGetters } from 'vuex';
-
   import ResultJsonManager from '@/components/framework/GraphEditorControls/ResultJsonManager';
+  import CodeManager from '@/components/framework/GraphEditorControls/CodeManager';
+  import GraphManager from '@/components/framework/GraphEditorControls/GraphManager';
 
   export default {
-    mixins: [ResultJsonManager],
+    mixins: [ResultJsonManager, CodeManager, GraphManager],
     data() {
       return {};
     },
     computed: {
-      ...mapGetters('graphs', ['getCurrentGraphId', 'getCurrentGraphObject']),
-      ...mapGetters('code', ['getCurrentCodeId', 'getCurrentCodeObject']),
-      currentGraphId: {
-        set(d) {
-          this.$store.dispatch('graphs/loadCurrentGraphId', d);
-        },
-        get() {
-          return this.getCurrentGraphId;
-        },
-      },
-      currentCodeId: {
-        set(d) {
-          this.$store.dispatch('code/loadCurrentCodeId', d);
-        },
-        get() {
-          return this.getCurrentCodeId;
-        },
-      },
       currentJsonObject() {
         return this.getCurrentJsonObject({
           graphId: this.currentGraphId,
