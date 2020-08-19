@@ -6,7 +6,6 @@ import {
 import { ResultJsonTypeFromQueryData } from '@/store/modules/ResultJsonStorage/ResultJsonStoreState';
 
 export interface PriorityType {
-  id?: string;
   priority?: number;
   label?: string;
 }

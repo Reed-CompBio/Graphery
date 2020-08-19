@@ -58,7 +58,7 @@ const getters: GetterTree<GraphStoreType, RootState> = {
     return state.graphObjectList;
   },
   getCurrentGraphObject(state, getter) {
-    return getter.getGraphById(state.currentGraphId);
+    return getter.getGraphObjectById(state.currentGraphId) || null;
   },
   getGraphObjectById: (state) => (id: string) => {
     // TODO may return undefined
