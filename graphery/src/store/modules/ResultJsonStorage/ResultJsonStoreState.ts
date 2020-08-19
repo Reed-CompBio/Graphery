@@ -20,7 +20,12 @@ export interface ResultJsonTypeFromQueryData {
   graph: GraphTypeFromQueryData;
 }
 
+export interface PositionType {
+  [key: string]: { position: number };
+}
+
 export interface ResultJsonStateType {
   resultJsonStringList: ResultJsonType[] | null;
   resultJsonObjectList: ResultJsonObjectType[] | null;
+  resultJsonPositions: PositionType;
 }

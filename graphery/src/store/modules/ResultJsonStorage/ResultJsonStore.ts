@@ -6,6 +6,7 @@ import {
   ResultJsonTypeFromQueryData,
   ResultJsonObjectType,
   KeysType,
+  PositionType,
 } from './ResultJsonStoreState';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 import { newModelUUID } from '@/services/params';
@@ -14,6 +15,7 @@ import { newModelUUID } from '@/services/params';
 const state: ResultJsonStateType = {
   resultJsonStringList: null,
   resultJsonObjectList: null,
+  resultJsonPositions: {},
   // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 
@@ -23,6 +25,12 @@ const mutations: MutationTree<ResultJsonStateType> = {
   },
   LOAD_RESULT_JSON_OBJECT_LIST(state, value: ResultJsonObjectType[]) {
     state.resultJsonObjectList = value;
+  },
+  LOAD_JSON_LOCATIONS(state, value: PositionType) {
+    state.resultJsonPositions = value;
+  },
+  CHANGE_JSON_LOCATION(state, value: { positionId: string; position: number }) {
+    state.resultJsonPositions[value.positionId].position = value.position;
   },
   CHANGE_RESULT_JSON_STRING(
     state,
@@ -217,6 +225,12 @@ const getters: GetterTree<ResultJsonStateType, RootState> = {
   ) => {
     const jsonObject = getter.getCurrentJsonObject(keys);
     return jsonObject.jsonObject && jsonObject.jsonObject[position];
+  },
+  getResultJsonPositionObjectFromId: (state) => (positionId: string) => {
+    return state.resultJsonPositions[positionId];
+  },
+  getResultJsonPositionFromId: (state) => (positionId: string) => {
+    return state.resultJsonPositions[positionId].position;
   },
 };
 
