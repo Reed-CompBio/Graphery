@@ -11,7 +11,6 @@ import { ActionTree, GetterTree, MutationTree } from 'vuex';
 const state: GraphStoreType = {
   graphObjectList: null,
   currentGraphId: null,
-  currentGraphJsonString: null,
   // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 
@@ -22,9 +21,6 @@ const mutations: MutationTree<GraphStoreType> = {
   LOAD_CURRENT_GRAPH_ID(state, value: string) {
     state.currentGraphId = value;
   },
-  LOAD_CURRENT_GRAPH_JSON_STRING(state, value: string) {
-    state.currentGraphJsonString = value;
-  },
 
   // clear states
   CLEAR_GRAPHS(state) {
@@ -32,9 +28,6 @@ const mutations: MutationTree<GraphStoreType> = {
   },
   CLEAR_CURRENT_GRAPH_ID(state) {
     state.currentGraphId = null;
-  },
-  CLEAR_CURRENT_GRAPH_JSON_STRING(state) {
-    state.currentGraphJsonString = null;
   },
 };
 
@@ -45,25 +38,27 @@ const actions: ActionTree<GraphStoreType, RootState> = {
   loadGraphListFromMatched({ commit }, graphList: GraphType[]) {
     commit('LOAD_GRAPH_OBJECT_LIST', graphList);
   },
-  loadCurrentGraphJsonString({ commit }, graphJsonString: string) {
-    commit('LOAD_CURRENT_GRAPH_JSON_STRING', graphJsonString);
-  },
   loadCurrentGraphId({ commit }, graphId: string) {
     commit('LOAD_CURRENT_GRAPH_ID', graphId);
   },
   CLEAR_ALL({ commit }) {
     commit('CLEAR_GRAPHS');
     commit('CLEAR_CURRENT_GRAPH_ID');
-    commit('CLEAR_CURRENT_GRAPH_JSON_STRING');
   },
 };
 
 const getters: GetterTree<GraphStoreType, RootState> = {
+  getCurrentGraphId(state) {
+    return state.currentGraphId;
+  },
   graphObjectListEmpty(state) {
     return state.graphObjectList === null;
   },
   getGraphObjectList(state) {
     return state.graphObjectList;
+  },
+  getCurrentGraphObject(state, getter) {
+    return getter.getGraphById(state.currentGraphId);
   },
   getGraphObjectById: (state) => (id: string) => {
     // TODO may return undefined

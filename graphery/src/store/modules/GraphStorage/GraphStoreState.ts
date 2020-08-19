@@ -26,7 +26,6 @@ export interface GraphType extends IsPublishedMixinType, UniqueIdMixinType {
 export interface GraphStoreType {
   graphObjectList: GraphType[] | null;
   currentGraphId: string | null;
-  currentGraphJsonString: string | null;
 }
 
 export interface GraphTypeFromQueryData extends GraphType, DateTimeMixinType {
