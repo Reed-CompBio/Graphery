@@ -6,18 +6,44 @@
     successDialog,
   } from '@/services/helpers';
 
+  import ResultJsonManager from '@/components/framework/GraphEditorControls/ResultJsonManager';
+
   export default {
+    mixins: [ResultJsonManager],
+    data() {
+      return {
+        currentGraphObject: null,
+        currentCodeObject: null,
+        currentGraphId: '',
+        currentCodeId: '',
+      };
+    },
     computed: {
+      currentJsonObject() {
+        return this.getCurrentJsonObject({
+          graphId: this.currentGraphId,
+          codeId: this.currentCodeId,
+        });
+      },
       editorControlSliderPosition() {
-        // TODO
-        return 1;
+        return this.resultJsonPositions[
+          this.getIdFromGraphIdAndCodeId(
+            this.currentGraphId,
+            this.currentCodeId
+          )
+        ];
+      },
+      currentVarObject() {
+        return this.currentJsonObject[this.editorControlSliderPosition];
       },
       editorControlSliderLength() {
-        // TODO
-        return 1;
+        return this.currentJsonObject.length;
       },
     },
     methods: {
+      onSliderChange(pos) {
+        this.updateResultJsonPosition(pos);
+      },
       onStepBack() {
         // TODO
       },
