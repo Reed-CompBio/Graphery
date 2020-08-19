@@ -31,6 +31,22 @@
             <SplitterSeparator :horizontal="true" />
           </template>
           <template v-slot:after>
+            <EditorControlUnit
+              v-model="editorControlSliderPosition"
+              :slider-length="currentSliderLength"
+              :disable-override="false"
+              :editor-enable-editing="true"
+              @onMultipleStepsBack="onStepBack"
+              @onStepBack="onStepBack"
+              @onStepForward="onStepForward"
+              @onMultipleStepForward="onStepForward"
+              @onPushToCloudExec="onPushToCloudExec"
+              @onPushToLocalExec="onPushToLocalExec"
+              @onCopyCurrentCode="onCopyCurrentCode"
+              @onPasteFromClipboard="onPasteFromClipboard"
+              @onChangeVariableListOrientation="onChangeVariableListOrientation"
+              @onCallWorkSpace="onCallWorkSpace"
+            />
             <EditorWrapper
               v-show="currentTab === 'editor'"
               ref="editorWrapper"
@@ -118,20 +134,25 @@
 </template>
 
 <script>
-  import { headerSize } from '../store/states/meta';
+  import { headerSize } from '@/store/states/meta';
   import { mapState, mapActions, mapGetters } from 'vuex';
-  import { apiCaller } from '../services/apis';
+  import { apiCaller } from '@/services/apis';
   import {
     pullTutorialArticle,
     pullTutorialDetailQuery,
-  } from '../services/queries';
-  import { errorDialog } from '../services/helpers';
-  import SplitterSeparator from '../components/framework/SplitterSeparator';
+  } from '@/services/queries';
+  import { errorDialog } from '@/services/helpers';
+
+  import GraphCodeBridge from '@/components/framework/GraphCodeBridge';
 
   export default {
+    mixins: [GraphCodeBridge],
     props: ['url'],
     components: {
-      SplitterSeparator,
+      EditorControlUnit: () =>
+        import('@/components/framework/EditorControlUnit'),
+      SplitterSeparator: () =>
+        import('../components/framework/SplitterSeparator'),
       CytoscapeWrapper: () =>
         import('@/components/tutorial/CytoscapeWrapper.vue'),
       TutorialArticle: () =>
