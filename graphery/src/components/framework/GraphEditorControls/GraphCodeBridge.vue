@@ -6,19 +6,34 @@
     successDialog,
   } from '@/services/helpers';
 
+  import { mapGetters } from 'vuex';
+
   import ResultJsonManager from '@/components/framework/GraphEditorControls/ResultJsonManager';
 
   export default {
     mixins: [ResultJsonManager],
     data() {
-      return {
-        currentGraphObject: null,
-        currentCodeObject: null,
-        currentGraphId: '',
-        currentCodeId: '',
-      };
+      return {};
     },
     computed: {
+      ...mapGetters('graphs', ['getCurrentGraphId', 'getCurrentGraphObject']),
+      ...mapGetters('code', ['getCurrentCodeId', 'getCurrentCodeObject']),
+      currentGraphId: {
+        set(d) {
+          this.$store.dispatch('graphs/loadCurrentGraphId', d);
+        },
+        get() {
+          return this.getCurrentGraphId;
+        },
+      },
+      currentCodeId: {
+        set(d) {
+          this.$store.dispatch('code/loadCurrentCodeId', d);
+        },
+        get() {
+          return this.getCurrentCodeId;
+        },
+      },
       currentJsonObject() {
         return this.getCurrentJsonObject({
           graphId: this.currentGraphId,
