@@ -19,7 +19,7 @@ export interface GraphType {
 }
 
 export interface GraphStoreType {
-  graphs: GraphType[] | null;
+  graphObjectList: GraphType[] | null;
   currentGraphId: string | null;
   currentGraphJsonString: string | null;
 }

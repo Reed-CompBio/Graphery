@@ -9,15 +9,15 @@ import { ActionTree, GetterTree, MutationTree } from 'vuex';
 
 // TODO remove the pseudo content!
 const state: GraphStoreType = {
-  graphs: null,
+  graphObjectList: null,
   currentGraphId: null,
   currentGraphJsonString: null,
   // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 
 const mutations: MutationTree<GraphStoreType> = {
-  LOAD_GRAPHS(state, value: GraphType[]) {
-    state.graphs = value;
+  LOAD_GRAPH_OBJECT_LIST(state, value: GraphType[]) {
+    state.graphObjectList = value;
   },
   LOAD_CURRENT_GRAPH_ID(state, value: string) {
     state.currentGraphId = value;
@@ -28,7 +28,7 @@ const mutations: MutationTree<GraphStoreType> = {
 
   // clear states
   CLEAR_GRAPHS(state) {
-    state.graphs = null;
+    state.graphObjectList = null;
   },
   CLEAR_CURRENT_GRAPH_ID(state) {
     state.currentGraphId = null;
@@ -39,16 +39,16 @@ const mutations: MutationTree<GraphStoreType> = {
 };
 
 const actions: ActionTree<GraphStoreType, RootState> = {
-  loadGraphsFromQueryData({ commit }, graphs: GraphTypeFromQueryData[]) {
-    commit('LOAD_GRAPHS', graphs);
+  loadGraphListFromQueryData({ commit }, graphList: GraphTypeFromQueryData[]) {
+    commit('LOAD_GRAPH_OBJECT_LIST', graphList);
   },
-  loadGraphsFromMatched({ commit }, graphs: GraphType[]) {
-    commit('LOAD_GRAPHS', graphs);
+  loadGraphListFromMatched({ commit }, graphList: GraphType[]) {
+    commit('LOAD_GRAPH_OBJECT_LIST', graphList);
   },
   loadCurrentGraphJsonString({ commit }, graphJsonString: string) {
     commit('LOAD_CURRENT_GRAPH_JSON_STRING', graphJsonString);
   },
-  loadCurrentGraphId({ commit }, graphId: object) {
+  loadCurrentGraphId({ commit }, graphId: string) {
     commit('LOAD_CURRENT_GRAPH_ID', graphId);
   },
   CLEAR_ALL({ commit }) {
