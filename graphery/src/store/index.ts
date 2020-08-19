@@ -8,6 +8,7 @@ import tutorials from '@/store/modules/tutorials';
 import settings from '@/store/modules/settings';
 import workspaces from '@/store/modules/workspaces';
 import edits from '@/store/modules/edits';
+import rj from '@/store/modules/ResultJsonStorage/ResultJsonStore';
 import createPersistedState from 'vuex-persistedstate';
 import { BaseState, UserType } from '@/store/states/state';
 
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     settings,
     workspaces,
     edits,
+    rj,
   },
   plugins: [createPersistedState({ paths: ['settings'] })],
   state: {
