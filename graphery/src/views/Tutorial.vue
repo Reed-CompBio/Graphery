@@ -52,6 +52,7 @@
               ref="editorWrapper"
               class="full-height"
               @updateCyWithVarObj="updateCytoscapeWithVarObj"
+              @editorContentChanged="onEditorContentChanged"
             ></EditorWrapper>
             <GraphInfo
               v-show="currentTab === 'graph-info'"
@@ -143,7 +144,7 @@
   } from '@/services/queries';
   import { errorDialog } from '@/services/helpers';
 
-  import GraphCodeBridge from '@/components/framework/GraphCodeBridge';
+  import GraphCodeBridge from '@/components/framework/GraphEditorControls/GraphCodeBridge';
 
   export default {
     mixins: [GraphCodeBridge],
@@ -229,6 +230,29 @@
               throw Error('Invalid data returned.');
             }
             this.loadTutorial(data.tutorial);
+
+            // NEW API
+            // load current code id
+            this.currentCodeId = data.tutorial.code.id;
+            // since code is a single object
+            this.loadCodeObjectListFromMatched([data.tutorial.code]);
+
+            // temp workround
+            this.currentGraphId = data.tutorial.graphSet[0].id;
+
+            // load graph set directly
+            this.loadGraphObjectListFromMatched(data.tutorial.graphSet);
+
+            this.loadResultJsonListFromQueryData(
+              data.tutorial.code.execresultjsonSet.map((obj) => ({
+                ...obj,
+                code: { id: data.tutorial.code.id },
+              }))
+            );
+            this.initResultJsonPositions(
+              data.tutorial.graphSet.map((obj) => obj.id),
+              data.tutorial.code.id
+            );
           })
           .catch((err) => {
             errorDialog({
