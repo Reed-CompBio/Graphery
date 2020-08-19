@@ -1,6 +1,6 @@
 import {
   DateTimeMixinType,
-  IDMixinType,
+  UniqueIdMixinType,
   IsPublishedMixinType,
 } from '@/store/states/state';
 import { ResultJsonTypeFromQueryData } from '@/store/modules/ResultJsonStorage/ResultJsonStoreState';
@@ -17,7 +17,7 @@ export interface GraphInfoContentType {
   isPublished?: boolean;
 }
 
-export interface GraphType extends IsPublishedMixinType, IDMixinType {
+export interface GraphType extends IsPublishedMixinType, UniqueIdMixinType {
   content?: GraphInfoContentType;
   priority?: PriorityType;
   cyjs?: string;

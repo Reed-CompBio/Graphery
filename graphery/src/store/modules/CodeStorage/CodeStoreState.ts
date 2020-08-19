@@ -1,11 +1,11 @@
 import {
   DateTimeMixinType,
-  IDMixinType,
+  UniqueIdMixinType,
   IsPublishedMixinType,
 } from '@/store/states/state';
 import { ResultJsonTypeFromQueryData } from '@/store/modules/ResultJsonStorage/ResultJsonStoreState';
 
-export interface CodeType extends IDMixinType {
+export interface CodeType extends UniqueIdMixinType {
   code?: string;
 }
 

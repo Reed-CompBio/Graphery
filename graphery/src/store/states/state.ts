@@ -247,6 +247,6 @@ export interface IsPublishedMixinType {
   isPublished?: boolean;
 }
 
-export interface IDMixinType {
+export interface UniqueIdMixinType {
   id?: string;
 }
