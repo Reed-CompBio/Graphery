@@ -13,17 +13,21 @@
       getIdFromGraphIdAndCodeId(graphId, codeId) {
         return `${graphId}-${codeId}`;
       },
-      updateResultJsonPosition(graphId, codeId, pos) {
-        this.resultJsonPositions[
-          this.getIdFromGraphIdAndCodeId(graphId, codeId)
-        ] = pos;
+      getResultJsonPositionObject(positionId) {
+        return this.resultJsonPositions[positionId];
+      },
+      getResultJsonPosition(positionId) {
+        return this.resultJsonPositions[positionId].position;
+      },
+      updateResultJsonPosition(positionId, pos) {
+        this.resultJsonPositions[positionId].position = pos;
       },
       initResultJsonPositions(graphIds, codeIds) {
         for (const graphId of graphIds) {
           for (const codeId of codeIds) {
             this.resultJsonPositions[
               this.getIdFromGraphIdAndCodeId(graphId, codeId)
-            ] = 1;
+            ] = { position: 1 };
           }
         }
       },
