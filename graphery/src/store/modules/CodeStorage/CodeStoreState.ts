@@ -12,7 +12,6 @@ export interface CodeType extends UniqueIdMixinType {
 export interface CodeStoreType {
   codeObjectList: CodeType[] | null;
   currentCodeId: string | null;
-  currentCodeObject: CodeType | null;
 }
 
 export interface CodeTypeFromQueryData

@@ -11,7 +11,6 @@ import { ActionTree, GetterTree, MutationTree } from 'vuex';
 const state: CodeStoreType = {
   codeObjectList: null,
   currentCodeId: null,
-  currentCodeObject: null,
   // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 
@@ -22,9 +21,6 @@ const mutations: MutationTree<CodeStoreType> = {
   LOAD_CURRENT_CODE_ID(state, value: string) {
     state.currentCodeId = value;
   },
-  LOAD_CURRENT_CODE_OBJECT(state, value: CodeType) {
-    state.currentCodeObject = value;
-  },
 
   // clear states
   CLEAR_CODE_LIST(state) {
@@ -32,9 +28,6 @@ const mutations: MutationTree<CodeStoreType> = {
   },
   CLEAR_CURRENT_CODE_ID(state) {
     state.currentCodeId = null;
-  },
-  CLEAR_CURRENT_CODE_OBJECT(state) {
-    state.currentCodeObject = null;
   },
 };
 
@@ -45,22 +38,26 @@ const actions: ActionTree<CodeStoreType, RootState> = {
   loadCodeListFromMatched({ commit }, codeList: CodeType[]) {
     commit('LOAD_CODE_LIST', codeList);
   },
-  loadCurrentCurrentCodeObject({ commit }, codeObject: CodeType) {
-    commit('LOAD_CURRENT_CODE_OBJECT', codeObject);
-  },
   loadCurrentCodeId({ commit }, codeId: string) {
     commit('LOAD_CURRENT_CODE_ID', codeId);
   },
   CLEAR_ALL({ commit }) {
     commit('CLEAR_CODE_LIST');
     commit('CLEAR_CURRENT_CODE_ID');
-    commit('CLEAR_CURRENT_CODE_OBJECT');
   },
 };
 
 const getters: GetterTree<CodeStoreType, RootState> = {
+  getCurrentCodeId(state) {
+    return state.currentCodeId;
+  },
   codeObjectListEmpty(state) {
     return state.codeObjectList === null;
+  },
+  getCurrentCodeObject(state) {
+    if (state.codeObjectList) {
+      return state.codeObjectList.find((obj) => obj.id === state.currentCodeId);
+    }
   },
 };
 
