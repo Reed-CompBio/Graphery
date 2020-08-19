@@ -21,19 +21,29 @@
           codeId: this.currentCodeId,
         });
       },
+      currentPositionId() {
+        return this.getIdFromGraphIdAndCodeId(
+          this.currentGraphId,
+          this.currentCodeId
+        );
+      },
       editorControlSliderPosition() {
-        return this.resultJsonPositions[
-          this.getIdFromGraphIdAndCodeId(
-            this.currentGraphId,
-            this.currentCodeId
-          )
-        ];
+        return this.getResultJsonPositionObject(this.currentPositionId);
       },
       currentVarObject() {
-        return this.currentJsonObject[this.editorControlSliderPosition];
+        if (this.currentCodeObject) {
+          return this.currentJsonObject.jsonObject[
+            this.editorControlSliderPosition
+          ];
+        }
+
+        // TODO
+        return null;
       },
       editorControlSliderLength() {
-        return this.currentCodeObject ? this.currentCodeObject.length : 1;
+        return this.currentJsonObject
+          ? this.currentJsonObject.jsonObject.length
+          : 1;
       },
     },
     methods: {

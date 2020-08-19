@@ -8,7 +8,7 @@
       v-model="modelSliderPos"
       :min="1"
       label
-      :label-value="`${modelSliderPos}/${sliderLength}`"
+      :label-value="`${getSliderPosition}/${sliderLength}`"
       :max="sliderLength"
       :step="1"
       snap
@@ -46,7 +46,7 @@
       </q-btn>
       <q-btn
         dense
-        icon="play"
+        icon="mdi-play"
         @click="notAvailableMessage"
         :disable="isNextButtonDisable"
       >
@@ -149,15 +149,16 @@
       return {
         sliderLabelAlways: true,
         skipSteps: 5,
+        sliderPositionCopy: 1,
       };
     },
     computed: {
       modelSliderPos: {
         set(d) {
-          this.$emit('changeSliderPos', d);
+          this.sliderPositionCopy = this.currentSliderPosition.position = d;
         },
         get() {
-          return this.currentSliderPosition;
+          return this.sliderPositionCopy;
         },
       },
       isPreviousButtonDisable() {
@@ -170,13 +171,16 @@
         // TODO
         return this.sliderLength <= 1;
       },
+      getSliderPosition() {
+        return this.sliderPositionCopy;
+      },
     },
     methods: {
       isWalkable(deltaStep = 1) {
         return (
           !this.disableOverride &&
-          1 <= this.sliderPos + deltaStep &&
-          this.sliderPos + deltaStep <= this.sliderLength
+          1 <= this.getSliderPosition + deltaStep &&
+          this.getSliderPosition + deltaStep <= this.sliderLength
         );
       },
       showLabelAlwaysSwitch() {
