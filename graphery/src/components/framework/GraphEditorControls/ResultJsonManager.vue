@@ -18,7 +18,7 @@
           this.getIdFromGraphIdAndCodeId(graphId, codeId)
         ] = pos;
       },
-      initResultJsonPositions(codeIds, graphIds) {
+      initResultJsonPositions(graphIds, codeIds) {
         for (const graphId of graphIds) {
           for (const codeId of codeIds) {
             this.resultJsonPositions[
@@ -26,6 +26,12 @@
             ] = 1;
           }
         }
+      },
+      loadResultJsonListFromQueryData(jsonList) {
+        this.$store.dispatch('rj/loadResultJsonListFromQueryData', jsonList);
+      },
+      loadResultJsonListFromMatched(jsonList) {
+        this.$store.dispatch('rj/loadResultJsonListFromMatched', jsonList);
       },
     },
   };

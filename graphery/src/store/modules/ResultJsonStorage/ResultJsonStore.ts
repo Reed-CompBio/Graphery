@@ -68,6 +68,24 @@ const mutations: MutationTree<ResultJsonStateType> = {
       }
     }
   },
+  CLEAR_RESULT_JSON_STRING_BY_CODE_ID(state, codeId: string) {
+    if (state.resultJsonStringList) {
+      state.resultJsonStringList.forEach((obj) => {
+        if (obj.codeId === codeId) {
+          obj.json = '[]';
+        }
+      });
+    }
+  },
+  CLEAR_RESULT_JSON_STRING_BY_GRAPH_ID(state, graphId: string) {
+    if (state.resultJsonStringList) {
+      state.resultJsonStringList.forEach((obj) => {
+        if (obj.graphId === graphId) {
+          obj.json = '[]';
+        }
+      });
+    }
+  },
   CLEAR_RESULT_JSON_OBJECT(state, value: KeysType) {
     if (state.resultJsonObjectList) {
       const result = state.resultJsonObjectList.find(
@@ -76,6 +94,24 @@ const mutations: MutationTree<ResultJsonStateType> = {
       if (result) {
         result.jsonObject = [];
       }
+    }
+  },
+  CLEAR_RESULT_JSON_OBJECT_BY_CODE_ID(state, codeId: string) {
+    if (state.resultJsonObjectList) {
+      state.resultJsonObjectList.forEach((obj) => {
+        if (obj.codeId === codeId) {
+          obj.jsonObject = [];
+        }
+      });
+    }
+  },
+  CLEAR_RESULT_JSON_OBJECT_BY_GRAPH_ID(state, graphId: string) {
+    if (state.resultJsonObjectList) {
+      state.resultJsonObjectList.forEach((obj) => {
+        if (obj.graphId === graphId) {
+          obj.jsonObject = [];
+        }
+      });
     }
   },
 };
@@ -139,6 +175,10 @@ const actions: ActionTree<ResultJsonStateType, RootState> = {
     const objectType = generateResultJsonObjectFromStringType(resultJsonString);
     commit('CHANGE_RESULT_JSON_STRING', resultJsonString);
     commit('CHANGE_RESULT_JSON_OBJECT', objectType);
+  },
+  clearResultJsonStringByCodeId({ commit }, codeId: string) {
+    commit('CLEAR_RESULT_JSON_STRING_BY_CODE_ID', codeId);
+    commit('CLEAR_RESULT_JSON_OBJECT_BY_CODE_ID', codeId);
   },
   clearResultJsonStringAndObjectByIds({ commit }, keys: KeysType) {
     commit('CLEAR_RESULT_JSON_STRING', keys);
