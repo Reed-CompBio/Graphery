@@ -115,14 +115,6 @@
           this.multipleSteps(noneEmptyPosition, noneEmptyElement);
         }
       },
-      onStepBack(steps) {
-        // steps: positive number
-        this.stepper(-steps);
-      },
-      onStepForward(steps) {
-        // steps: positive number
-        this.stepper(steps);
-      },
       onPushToCloudExec() {
         notAvailableMessage();
       },

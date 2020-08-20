@@ -118,7 +118,6 @@
 
 <script>
   import { notAvailableMessage } from '@/services/helpers';
-  import { mapGetters } from 'vuex';
 
   export default {
     props: {
@@ -146,7 +145,6 @@
       };
     },
     computed: {
-      ...mapGetters('rj', ['getResultJsonPositionFromId']),
       modelSliderPos: {
         set(d) {
           this.sliderPositionCopy = d;
