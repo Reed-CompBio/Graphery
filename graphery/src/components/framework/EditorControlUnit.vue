@@ -16,7 +16,6 @@
       style="width: 40%;"
       :label-always="sliderLabelAlways"
       :disable="disableStepSlider"
-      @change="onSliderChange"
     ></q-slider>
     <!-- stepper button group -->
     <q-btn-group flat class="q-mr-md">
@@ -187,9 +186,6 @@
       },
       showLabelAlwaysSwitch() {
         this.sliderLabelAlways = !this.sliderLabelAlways;
-      },
-      onSliderChange(pos) {
-        this.$emit('onSliderChange', this.sliderPosToJsonPos(pos));
       },
       onMultipleStepsBack() {
         this.setSliderPosition(this.getSliderPosition - this.skipSteps);

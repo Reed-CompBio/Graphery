@@ -22,6 +22,9 @@
           codeId: this.currentCodeId,
         });
       },
+      currentJsonArr() {
+        return this.currentJsonObject && this.currentJsonObject.jsonObject;
+      },
       currentPositionId() {
         return this.getIdFromGraphIdAndCodeId(
           this.currentGraphId,
@@ -30,16 +33,6 @@
       },
       editorControlSliderPosition() {
         return this.getResultJsonPositionObject(this.currentPositionId);
-      },
-      currentVarObject() {
-        if (this.currentCodeObject) {
-          return this.currentJsonObject.jsonObject[
-            this.editorControlSliderPosition
-          ];
-        }
-
-        // TODO
-        return null;
       },
       editorControlSliderLength() {
         return this.currentJsonObject || this.currentJsonObject === []
@@ -55,7 +48,7 @@
         const positionDelta =
           newPosition -
           this.getResultJsonPositionFromId(this.currentPositionId);
-        this.stepper(positionDelta);
+        this.stepper(newPosition, positionDelta);
         // this.updateResultJsonPosition(this.currentPositionId, pos);
       },
       updateEditorLine(lineNumber) {
@@ -71,13 +64,13 @@
             i
           );
           if (!this.emptyVariables(element)) {
-            return [i, element];
+            return element;
             // TODO what's the first element?
           }
         }
         // return number
       },
-      singleStep(newPosition, element) {
+      singleStep(element) {
         // element: {line: number, variables: object}
 
         if (!this.emptyVariables(element)) {
@@ -85,34 +78,31 @@
           // has content, change update the graph and change editor highlight
           // TODO cytoscape interface
           // this.$refs.cytoscapeWrapper.highlightVarObj(element['variables']);
+          // TODO update variable list
         }
-        this.updateEditorLine(element['line']);
-        this.updateResultJsonPosition(this.currentPositionId, newPosition);
       },
-      multipleSteps(newPosition, element) {
+      multipleSteps(noneEmptyElement) {
         // TODO cytoscape interface
-        this.updateEditorLine(element['line']);
-        this.updateResultJsonPosition(this.currentPositionId, newPosition);
+        // TODO update variable list
       },
-      stepper(steps) {
-        const newPosition =
-          this.getResultJsonPosition(this.currentPositionId) + steps;
+      stepper(newPosition, steps) {
         console.log('stepper new position', newPosition);
+        this.updateResultJsonPosition(this.currentPositionId, newPosition);
+        const element = this.getResultJsonObjectElement(
+          { graphId: this.currentGraphId, codeId: this.currentCodeId },
+          newPosition
+        );
+        this.updateEditorLine(element['line']);
 
         if (steps === 1 || steps === -1) {
-          const element = this.getResultJsonObjectElement(
-            { graphId: this.currentGraphId, codeId: this.currentCodeId },
+          console.log('stepper element', element);
+          this.singleStep(element);
+        } else {
+          const noneEmptyElement = this.findLastNoneEmptyElementPos(
             newPosition
           );
-
-          console.log('stepper element', element);
-          this.singleStep(newPosition, element);
-        } else {
-          const [
-            noneEmptyPosition,
-            noneEmptyElement,
-          ] = this.findLastNoneEmptyElementPos(newPosition);
-          this.multipleSteps(noneEmptyPosition, noneEmptyElement);
+          console.log('none empty element', noneEmptyElement);
+          this.multipleSteps(noneEmptyElement);
         }
       },
       onPushToCloudExec() {
