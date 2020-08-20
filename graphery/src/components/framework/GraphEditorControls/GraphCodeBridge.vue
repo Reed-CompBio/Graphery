@@ -156,7 +156,15 @@
       },
     },
     watch: {
-      //
+      currentJsonArr: function() {
+        const newPosition = this.getResultJsonPositionFromId(
+          this.currentPositionId
+        );
+        this.$refs.editorControlUnit.setPositionValueCopyFromJsonPos(
+          newPosition
+        );
+        this.stepper(newPosition, newPosition);
+      },
     },
   };
 </script>

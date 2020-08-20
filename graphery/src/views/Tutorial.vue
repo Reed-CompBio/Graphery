@@ -32,6 +32,7 @@
           </template>
           <template v-slot:after>
             <EditorControlUnit
+              ref="editorControlUnit"
               :slider-length="editorControlSliderLength"
               :disable-override="false"
               :editor-enable-editing="true"
@@ -232,9 +233,6 @@
             this.currentCodeId = data.tutorial.code.id;
             // since code is a single object
             this.loadCodeObjectListFromMatched([data.tutorial.code]);
-
-            // temp workround
-            this.currentGraphId = data.tutorial.graphSet[0].id;
 
             // load graph set directly
             this.loadGraphObjectListFromMatched(data.tutorial.graphSet);

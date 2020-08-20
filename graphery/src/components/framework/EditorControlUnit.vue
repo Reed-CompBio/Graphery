@@ -177,6 +177,9 @@
       jsonPosToSliderPos(sliderPos) {
         return sliderPos + 1;
       },
+      setPositionValueCopyFromJsonPos(jsonPos) {
+        this.sliderPositionCopy = this.jsonPosToSliderPos(jsonPos);
+      },
       isWalkable(deltaStep = 1) {
         return (
           !this.disableOverride &&
