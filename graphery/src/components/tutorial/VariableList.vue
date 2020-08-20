@@ -20,11 +20,8 @@
 </template>
 
 <script>
-  import { mapGetters, mapState } from 'vuex';
-  import {
-    EMPTY_VARIABLE_ELEMENT_DISPLAY,
-    VARIABLE_EMPTY_CONTENT_NOTATION,
-  } from '@/components/framework/GraphEditorControls/parameters';
+  import { mapGetters } from 'vuex';
+  import { EMPTY_VARIABLE_ELEMENT_DISPLAY } from '@/components/framework/GraphEditorControls/parameters';
   import {
     isGraphElement,
     isNormalElement,
@@ -39,14 +36,12 @@
       };
     },
     computed: {
-      ...mapState('tutorials', ['variableObj']),
-      ...mapGetters('tutorials', ['variableObjEmpty']),
-      ...mapGetters('variables', ['getCurrentVariables']),
+      ...mapGetters('variables', [
+        'getCurrentVariables',
+        'currentVariablesEmpty',
+      ]),
       currentVariables() {
         return this.getCurrentVariables;
-      },
-      currentVariablesEmpty() {
-        return this.currentVariables === VARIABLE_EMPTY_CONTENT_NOTATION;
       },
       variableDisplayList() {
         if (this.currentVariablesEmpty) {

@@ -2,6 +2,7 @@ import { RootState } from '@/store/states/state';
 
 import { VariableStoreType, VariableType } from './VarObjectStoreState';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
+import { VARIABLE_EMPTY_CONTENT_NOTATION } from '@/components/framework/GraphEditorControls/parameters';
 
 const state: VariableStoreType = {
   currentVariables: null,
@@ -29,6 +30,9 @@ const actions: ActionTree<VariableStoreType, RootState> = {
 const getters: GetterTree<VariableStoreType, RootState> = {
   getCurrentVariables(state) {
     return state.currentVariables;
+  },
+  currentVariablesEmpty(state) {
+    return state.currentVariables === VARIABLE_EMPTY_CONTENT_NOTATION;
   },
 };
 
