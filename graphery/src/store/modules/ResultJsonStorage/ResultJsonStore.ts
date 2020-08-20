@@ -11,12 +11,10 @@ import {
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 import { newModelUUID } from '@/services/params';
 
-// TODO remove the pseudo content!
 const state: ResultJsonStateType = {
   resultJsonStringList: null,
   resultJsonObjectList: null,
   resultJsonPositions: {},
-  // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 
 const mutations: MutationTree<ResultJsonStateType> = {

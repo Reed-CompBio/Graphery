@@ -7,11 +7,9 @@ import {
 } from './CodeStoreState';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 
-// TODO remove the pseudo content!
 const state: CodeStoreType = {
   codeObjectList: null,
   currentCodeId: null,
-  // use v-for to spread graphs and make :key bind to id (or serial code?)
 };
 
 const mutations: MutationTree<CodeStoreType> = {
