@@ -59,6 +59,7 @@
       </InfoCard>
     </template>
     <template v-slot:right>
+      <JSONSubmissionAttentionCard />
       <SubmitButton
         class="full-width"
         :loading="loadingContent"
@@ -88,6 +89,10 @@
     props: ['codeId', 'codeContent'],
     mixins: [loadingMixin, pushCodeToLocalMixin],
     components: {
+      JSONSubmissionAttentionCard: () =>
+        import(
+          '@/components/ControlPanel/parts/cards/JSONSubmissionAttentionCard'
+        ),
       InfoCard: () => import('../parts/cards/InfoCard'),
       SubmitButton: () => import('../parts/buttons/SubmitButton'),
       EditorFrame: () => import('../frames/EditorFrame'),
