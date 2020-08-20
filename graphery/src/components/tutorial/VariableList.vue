@@ -23,10 +23,13 @@
   import { mapGetters, mapState } from 'vuex';
   import {
     EMPTY_VARIABLE_ELEMENT_DISPLAY,
-    GRAPH_ELEMENT_TYPE,
-    NORMAL_VARIABLE_TYPE,
     VARIABLE_EMPTY_CONTENT_NOTATION,
   } from '@/components/framework/GraphEditorControls/parameters';
+  import {
+    isGraphElement,
+    isNormalElement,
+    revertNameCombo,
+  } from '@/components/framework/GraphEditorControls/ElementsUtils';
 
   export default {
     props: ['variableObject'],
@@ -63,36 +66,33 @@
       },
     },
     methods: {
-      revertNameCombo(nameCombo) {
-        return nameCombo.split('#')[1];
-      },
       revertGraphObject(nameCombo, element) {
         return {
           // TODO temporary work round figure out how to style it
-          label: this.revertNameCombo(nameCombo),
+          label: revertNameCombo(nameCombo),
           color: element['color'],
           value: element['repr'],
         };
       },
       revertNormalObject(nameCombo, element) {
         return {
-          label: this.revertNameCombo(nameCombo),
+          label: revertNameCombo(nameCombo),
           color: undefined,
           value: element['repr'],
         };
       },
       emptyObject(nameCombo) {
         return {
-          label: this.revertNameCombo(nameCombo),
+          label: revertNameCombo(nameCombo),
           color: undefined,
           value: EMPTY_VARIABLE_ELEMENT_DISPLAY,
         };
       },
       processVariableElement(key, value) {
         if (value) {
-          if (value.type === GRAPH_ELEMENT_TYPE) {
+          if (isGraphElement(value)) {
             return this.revertGraphObject(key, value);
-          } else if (value.type === NORMAL_VARIABLE_TYPE) {
+          } else if (isNormalElement(value)) {
             return this.revertNormalObject(key, value);
           } else {
             // which should never happen

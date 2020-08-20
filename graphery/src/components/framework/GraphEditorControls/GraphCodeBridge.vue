@@ -16,21 +16,6 @@
       return {};
     },
     computed: {
-      currentJsonObject() {
-        return this.getCurrentJsonObject({
-          graphId: this.currentGraphId,
-          codeId: this.currentCodeId,
-        });
-      },
-      currentJsonArr() {
-        return this.currentJsonObject && this.currentJsonObject.jsonObject;
-      },
-      currentPositionId() {
-        return this.getIdFromGraphIdAndCodeId(
-          this.currentGraphId,
-          this.currentCodeId
-        );
-      },
       editorControlSliderPosition() {
         return this.getResultJsonPositionObject(this.currentPositionId);
       },
@@ -75,16 +60,9 @@
 
         if (!this.emptyVariables(element)) {
           this.viewUpdater(element);
-          // TODO is the first element null?
-          // has content, change update the graph and change editor highlight
-          // TODO cytoscape interface
-          // this.$refs.cytoscapeWrapper.highlightVarObj(element['variables']);
-          // TODO update variable list
         }
       },
       multipleSteps(noneEmptyElement) {
-        // TODO cytoscape interface
-        // TODO update variable list
         this.viewUpdater(noneEmptyElement);
       },
       updateCytoscapeView(variables) {
@@ -94,6 +72,7 @@
         this.$store.commit('variables/LOAD_CURRENT_VARIABLES', variables);
       },
       viewUpdater(element) {
+        // elements: non null
         const variables = element['variables'];
         this.updateVariableList(variables);
         this.updateCytoscapeView(variables);

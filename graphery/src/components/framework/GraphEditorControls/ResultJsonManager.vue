@@ -9,6 +9,21 @@
         'getResultJsonPositionFromId',
         'getResultJsonPositionObjectFromId',
       ]),
+      currentJsonObject() {
+        return this.getCurrentJsonObject({
+          graphId: this.currentGraphId,
+          codeId: this.currentCodeId,
+        });
+      },
+      currentJsonArr() {
+        return this.currentJsonObject && this.currentJsonObject.jsonObject;
+      },
+      currentPositionId() {
+        return this.getIdFromGraphIdAndCodeId(
+          this.currentGraphId,
+          this.currentCodeId
+        );
+      },
     },
     methods: {
       getIdFromGraphIdAndCodeId(graphId, codeId) {
