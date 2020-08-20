@@ -144,15 +144,26 @@ class Processor:
         # TODO add `displayed` properties to var obj
         if isinstance(value, (Node, Edge)):
             # TODO create an interface here. Using str and dict is not a long-term solution
-            variable_value = {
-                'id': value.identity,
-                'color': self.variable_color_map[name],
-                'label': representation
-            }
+            variable_value = self.process_graph_elements(value, representation, name)
         else:
-            variable_value = representation
+            variable_value = self.process_normal_variables(representation)
 
         return variable_value
+
+    def process_graph_elements(self, element: Union[Node, Edge], representation: str, name: Tuple[str, str]) -> dict:
+        return {
+                'type': 'graph_element',
+                'id': element.identity,
+                'color': self.variable_color_map[name],
+                'repr': representation
+            }
+
+    @staticmethod
+    def process_normal_variables(representation: str) -> dict:
+        return {
+            'type': 'normal_var',
+            'repr': representation
+        }
 
     @classmethod
     def resolve_accessed(cls, accessed_variables) -> Optional[List]:

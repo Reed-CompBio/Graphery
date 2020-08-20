@@ -8,7 +8,7 @@
   import ResultJsonManager from '@/components/framework/GraphEditorControls/ResultJsonManager';
   import CodeManager from '@/components/framework/GraphEditorControls/CodeManager';
   import GraphManager from '@/components/framework/GraphEditorControls/GraphManager';
-  import { EMPTY_CONTENT_NOTATION } from '@/components/framework/GraphEditorControls/parameters';
+  import { VARIABLE_EMPTY_CONTENT_NOTATION } from '@/components/framework/GraphEditorControls/parameters';
 
   export default {
     mixins: [ResultJsonManager, CodeManager, GraphManager],
@@ -49,7 +49,7 @@
     },
     methods: {
       emptyVariables(element) {
-        return element['variables'] === EMPTY_CONTENT_NOTATION;
+        return element['variables'] === VARIABLE_EMPTY_CONTENT_NOTATION;
       },
       onSliderChange(newPosition) {
         const positionDelta =
