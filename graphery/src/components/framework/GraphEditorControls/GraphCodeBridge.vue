@@ -66,7 +66,9 @@
         this.viewUpdater(noneEmptyElement);
       },
       updateCytoscapeView(variables) {
-        //
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper.highlightVarObj(variables);
+        }
       },
       updateVariableList(variables) {
         this.$store.commit('variables/LOAD_CURRENT_VARIABLES', variables);

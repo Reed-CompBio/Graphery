@@ -80,6 +80,8 @@
 </template>
 
 <script>
+  import { isGraphElement } from '@/components/framework/GraphEditorControls/ElementsUtils';
+
   let cytoscape;
   let panzoom;
   let dagre;
@@ -326,17 +328,24 @@
       highlightVarObj(varObj) {
         if (varObj) {
           for (const [varName, varValue] of Object.entries(varObj)) {
+            // TODO something may go wrong here
+            // TODO make this simple
             if (typeof varValue === 'object') {
               if (varValue) {
-                if (this.lastVarObj[varName] !== varValue['id']) {
-                  this.unhighlightElement(this.lastVarObj[varName]);
-                  this.lastVarObj[varName] = varValue['id'];
-                }
+                if (isGraphElement(varValue)) {
+                  if (this.lastVarObj[varName] !== varValue['id']) {
+                    this.unhighlightElement(this.lastVarObj[varName]);
+                    this.lastVarObj[varName] = varValue['id'];
+                  }
 
-                this.highlightElement(varValue['id'], varValue['color']);
+                  this.highlightElement(varValue['id'], varValue['color']);
+                }
               } else {
-                this.unhighlightElement(this.lastVarObj[varName]);
-                this.lastVarObj[varName] = varValue;
+                if (varValue) {
+                  console.log('unhighlight: ', varName, varObj);
+                  this.unhighlightElement(this.lastVarObj[varName]);
+                  this.lastVarObj[varName] = varValue;
+                }
               }
             }
           }
