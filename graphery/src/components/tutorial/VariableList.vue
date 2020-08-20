@@ -30,11 +30,6 @@
 
   export default {
     props: ['variableObject'],
-    data() {
-      return {
-        sliderPos: 1,
-      };
-    },
     computed: {
       ...mapGetters('variables', [
         'getCurrentVariables',

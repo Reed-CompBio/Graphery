@@ -20,7 +20,6 @@
         editor: null,
         content: '',
         decorations: [],
-        sliderPos: 1,
       };
     },
     computed: {

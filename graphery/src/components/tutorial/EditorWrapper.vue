@@ -1,115 +1,5 @@
 <template>
   <div id="editor-container">
-    <q-bar>
-      <q-icon name="mdi-function" />
-      <div style="text-transform: uppercase;">Editor</div>
-      <q-space />
-      <q-slider
-        id="stepper-slider"
-        v-model="sliderPos"
-        :min="1"
-        label
-        :label-value="`${sliderPos}/${sliderLength}`"
-        :max="sliderLength"
-        :step="1"
-        snap
-        dense
-        style="width: 40%;"
-        :label-always="showLabelAlways"
-        :disable="disableStepSlider"
-        @change="updateInfoFromSliderChange"
-      ></q-slider>
-      <!-- stepper button group -->
-      <q-btn-group flat class="q-mr-md">
-        <q-btn dense @click="showLabelAlwaysSwitch">
-          <q-icon
-            :name="
-              showLabelAlways ? 'mdi-label-off-outline' : 'mdi-label-outline'
-            "
-          ></q-icon>
-          <SwitchTooltip :text="$t('tooltips.showLabelAlways')"></SwitchTooltip>
-        </q-btn>
-        <q-btn
-          dense
-          icon="mdi-skip-backward"
-          @click="previousSeveralSteps"
-          :disable="isPreviousButtonDisable"
-        >
-          <SwitchTooltip :text="$t('tooltips.fiveStepsBack')"></SwitchTooltip>
-        </q-btn>
-        <q-btn
-          dense
-          icon="mdi-skip-previous"
-          @click="previousStep"
-          :disable="isPreviousButtonDisable"
-        >
-          <SwitchTooltip :text="$t('tooltips.oneStepBack')"></SwitchTooltip>
-        </q-btn>
-        <q-btn
-          dense
-          :icon="playPauseButton"
-          @click="notAvailableMessage"
-          :disable="isNextButtonDisable"
-        >
-          <SwitchTooltip :text="$t('tooltips.autoRun')"></SwitchTooltip>
-        </q-btn>
-        <q-btn
-          dense
-          icon="mdi-skip-next"
-          @click="nextStep"
-          :disable="isNextButtonDisable"
-        >
-          <SwitchTooltip :text="$t('tooltips.oneStepForward')"></SwitchTooltip>
-        </q-btn>
-        <q-btn
-          dense
-          icon="mdi-skip-forward"
-          @click="nextSeveralSteps"
-          :disable="isNextButtonDisable"
-        >
-          <SwitchTooltip
-            :text="$t('tooltips.fiveStepsForward')"
-          ></SwitchTooltip>
-        </q-btn>
-        <!-- TODO auto play maybe?  -->
-      </q-btn-group>
-
-      <!-- execution button group -->
-      <q-btn-group flat class="q-mr-md">
-        <q-btn dense icon="mdi-cloud-upload" @click="notAvailableMessage">
-          <SwitchTooltip
-            :text="$t('tooltips.runCodeOnTheCloud')"
-          ></SwitchTooltip>
-        </q-btn>
-        <q-btn
-          dense
-          :disable="!enableEditing"
-          @click.prevent="pushCodeToLocalExec"
-        >
-          <q-icon name="mdi-cloud-download" />
-          <SwitchTooltip :text="$t('tooltips.runCodeLocally')"></SwitchTooltip>
-        </q-btn>
-      </q-btn-group>
-
-      <q-btn-group flat class="q-mr-md">
-        <q-btn
-          dense
-          icon="mdi-folder-network-outline"
-          @click="notAvailableMessage"
-        >
-          <SwitchTooltip :text="$t('tooltips.openWorkSpace')" />
-        </q-btn>
-      </q-btn-group>
-
-      <!-- Editor status -->
-      <q-btn-group flat class="q-mr-md">
-        <q-btn dense disable :icon="enableEditing ? 'lock_open' : 'lock'">
-        </q-btn>
-        <SwitchTooltip
-          :text="$t('tooltips.goToSettingsToChangeEditingPermission')"
-        ></SwitchTooltip>
-      </q-btn-group>
-    </q-bar>
     <div class="row" style="height: calc(100% - 32px); overflow: hidden;">
       <q-splitter
         v-model="codeValueListSplitPos"
@@ -168,8 +58,8 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters, mapState } from 'vuex';
-  import { errorDialog, notAvailableMessage } from '@/services/helpers';
+  import { mapState } from 'vuex';
+  import { errorDialog } from '@/services/helpers';
   import Editor from '@/components/tutorial/Editor.vue';
   import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
 
@@ -177,7 +67,6 @@
     mixins: [pushCodeToLocalMixin],
     components: {
       SplitterSeparator: () => import('../framework/SplitterSeparator'),
-      SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
       Editor,
       VariableList: () => import('@/components/tutorial/VariableList.vue'),
       // TODO decouple the workspace controller
@@ -186,147 +75,20 @@
     },
     data() {
       return {
-        isPlaying: false,
-        showLabelAlways: true,
         sliderPos: 1,
         codeValueListSplitPos: (5 / 6) * 100,
-        advanceSteps: 5,
-        isWorkSpaceSelectionOpen: false,
       };
     },
     computed: {
-      ...mapGetters('tutorials', [
-        'resultJsonArrEmpty',
-        'variableObjEmpty',
-        'resultJsonArr',
-      ]),
-      ...mapState('settings', ['enableEditing', 'variableListHorizontal']),
-      playPauseButton() {
-        if (this.isPlaying) {
-          return 'mdi-pause';
-        } else {
-          return 'mdi-play';
-        }
-      },
-      sliderLength() {
-        if (this.resultJsonArr) {
-          return this.resultJsonArr.length;
-        }
-        return 0;
-      },
-      disableStepSlider() {
-        return this.sliderLength < 1;
-      },
-      resultJsonArrPos() {
-        return this.sliderPos - 1;
-      },
-      isNextButtonDisable() {
-        return !this.isWalkable();
-      },
-      isPreviousButtonDisable() {
-        return !this.isWalkable(-1);
-      },
+      ...mapState('settings', ['variableListHorizontal']),
     },
     methods: {
-      ...mapActions('tutorials', ['loadVariableObj', 'loadCustomJson']),
-      showLabelAlwaysSwitch() {
-        this.showLabelAlways = !this.showLabelAlways;
-      },
-      // Stepper button actions
-      isWalkable(deltaStep = 1) {
-        return (
-          !this.disableStepSlider &&
-          1 <= this.sliderPos + deltaStep &&
-          this.sliderPos + deltaStep <= this.sliderLength
-        );
-      },
-      incrementSliderPos(deltaPos = 1) {
-        if (this.isWalkable(deltaPos)) {
-          this.sliderPos += deltaPos;
-          return true;
-        }
-        return false;
-      },
-      loadNextVariableState(variableState) {
-        if (variableState) {
-          this.loadVariableObj(variableState);
-        }
-      },
-      loadInfo(lineObject) {
-        this.$refs.editorComponent.moveToLine(lineObject['line']);
-        this.loadNextVariableState(lineObject['variables']);
-        this.$emit('updateCyWithVarObj', lineObject['variables']);
-      },
       editorMoveLine(lineNumber) {
         this.$refs.editorComponent.moveToLine(lineNumber);
       },
       editorClearLineNumber() {
         // TODO
         this.$refs.editorComponent.clearnLine();
-      },
-      getTheLastState(index) {
-        if (!this.resultJsonArrEmpty) {
-          for (let i = index; i >= 0; i--) {
-            const lineObject = this.resultJsonArr[i];
-            if (lineObject['variables']) {
-              return lineObject;
-            }
-          }
-          // Which should never happen since the backend ensures the first element must have a var dict
-          errorDialog({
-            message:
-              'The execution result json is not valid. Please send a feedback to the developer.',
-          });
-        }
-
-        return null;
-      },
-      initWrapperState() {
-        // called after the api call
-        if (this.resultJsonArr && !this.resultJsonArrEmpty) {
-          this.loadInfo(this.resultJsonArr[0]);
-        }
-      },
-      previousSeveralSteps() {
-        if (!this.resultJsonArrEmpty) {
-          if (!this.incrementSliderPos(-this.advanceSteps)) {
-            this.sliderPos = 0;
-          }
-          const previousLineObj = this.getTheLastState(this.resultJsonArrPos);
-          this.loadInfo(previousLineObj);
-        }
-      },
-      previousStep() {
-        if (!this.resultJsonArrEmpty && this.incrementSliderPos(-1)) {
-          const previousLineObj = this.resultJsonArr[this.resultJsonArrPos];
-          this.loadInfo(previousLineObj);
-        }
-      },
-      // TODO something wrong here
-      nextStep() {
-        if (!this.resultJsonArrEmpty && this.incrementSliderPos()) {
-          const nextLineObj = this.resultJsonArr[this.resultJsonArrPos];
-          this.loadInfo(nextLineObj);
-        }
-      },
-      nextSeveralSteps() {
-        if (!this.resultJsonArrEmpty) {
-          if (!this.incrementSliderPos(this.advanceSteps)) {
-            this.sliderPos = this.sliderLength;
-          }
-          const nextLineObj = this.getTheLastState(this.resultJsonArrPos);
-          this.loadInfo(nextLineObj);
-        }
-      },
-      updateInfoFromSliderChange(posValue) {
-        const arrIndex = posValue - 1;
-        const lineObject = this.getTheLastState(arrIndex);
-        this.loadInfo(lineObject);
-      },
-      reloadStepper() {
-        this.sliderPos = 1;
-        this.loadVariableObj(null);
-        // TODO reload line decoration
       },
       getEditorComponent(showErrorDialog = false) {
         if (this.$refs.editorComponent) {
@@ -347,35 +109,14 @@
         const editor = this.getEditorComponent();
         editor.setCodeContent(code);
       },
-      pushCodeToLocalExec() {
-        this.pushToLocal(
-          this.getCurrentCode(),
-          this.$store.getters['tutorials/currentGraphJsonObj'],
-          () => null,
-          (codeHash, execResult) => {
-            this.loadCustomJson(execResult);
-          },
-          this.reloadStepper
-        );
-      },
-      openWorkSpaceSelection() {
-        this.isWorkSpaceSelectionOpen = true;
-      },
       changeVariableListOrientation() {
         this.$store.dispatch(
           'settings/changeVariableListOrientation',
           !this.variableListHorizontal
         );
       },
-      notAvailableMessage,
       emitEditorContentChanged(newCode) {
         this.$emit('editorContentChanged', newCode);
-      },
-    },
-    watch: {
-      resultJsonArr: function() {
-        this.reloadStepper();
-        this.initWrapperState();
       },
     },
   };
