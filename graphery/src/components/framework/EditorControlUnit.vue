@@ -118,13 +118,10 @@
 
 <script>
   import { notAvailableMessage } from '@/services/helpers';
+  import { mapGetters } from 'vuex';
 
   export default {
     props: {
-      currentSliderPosition: {
-        type: Number,
-        default: 1,
-      },
       sliderLength: {
         type: Number,
         default: 1,
@@ -138,10 +135,6 @@
         default: false,
       },
     },
-    model: {
-      prop: 'currentSliderPosition',
-      event: 'changeSliderPos',
-    },
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
     },
@@ -153,9 +146,11 @@
       };
     },
     computed: {
+      ...mapGetters('rj', ['getResultJsonPositionFromId']),
       modelSliderPos: {
         set(d) {
-          this.sliderPositionCopy = this.currentSliderPosition.position = d;
+          this.sliderPositionCopy = d;
+          this.$emit('onSliderChange', this.sliderPosToJsonPos(d));
         },
         get() {
           return this.sliderPositionCopy;
@@ -172,10 +167,19 @@
         return this.sliderLength <= 1;
       },
       getSliderPosition() {
-        return this.sliderPositionCopy;
+        return this.modelSliderPos;
       },
     },
     methods: {
+      setSliderPosition(position) {
+        this.modelSliderPos = position;
+      },
+      sliderPosToJsonPos(sliderPos) {
+        return sliderPos - 1;
+      },
+      jsonPosToSliderPos(sliderPos) {
+        return sliderPos + 1;
+      },
       isWalkable(deltaStep = 1) {
         return (
           !this.disableOverride &&
@@ -187,19 +191,23 @@
         this.sliderLabelAlways = !this.sliderLabelAlways;
       },
       onSliderChange(pos) {
-        this.$emit('onSliderChange', pos);
+        this.$emit('onSliderChange', this.sliderPosToJsonPos(pos));
       },
       onMultipleStepsBack() {
-        this.$emit('onStepBack', this.skipSteps);
+        this.setSliderPosition(this.getSliderPosition - this.skipSteps);
+        // this.$emit('onStepBack', this.skipSteps);
       },
       onStepBack() {
-        this.$emit('onStepBack', 1);
+        this.setSliderPosition(this.getSliderPosition - 1);
+        // this.$emit('onStepBack', 1);
       },
       onStepForward() {
-        this.$emit('onStepForward', 1);
+        this.setSliderPosition(this.getSliderPosition + 1);
+        // this.$emit('onStepForward', 1);
       },
       onMultipleStepForward() {
-        this.$emit('onStepForward', this.skipSteps);
+        this.setSliderPosition(this.getSliderPosition + this.skipSteps);
+        // this.$emit('onStepForward', this.skipSteps);
       },
       onPushToCloudExec() {
         this.$emit('onPushToCloudExec');

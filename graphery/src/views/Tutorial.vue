@@ -32,10 +32,10 @@
           </template>
           <template v-slot:after>
             <EditorControlUnit
-              v-model="editorControlSliderPosition"
               :slider-length="editorControlSliderLength"
               :disable-override="false"
               :editor-enable-editing="true"
+              @onSliderChange="onSliderChange"
               @onMultipleStepsBack="onStepBack"
               @onStepBack="onStepBack"
               @onStepForward="onStepForward"
@@ -249,9 +249,10 @@
                 code: { id: data.tutorial.code.id },
               }))
             );
+            // takes in two list
             this.initResultJsonPositions(
               data.tutorial.graphSet.map((obj) => obj.id),
-              data.tutorial.code.id
+              [data.tutorial.code.id]
             );
           })
           .catch((err) => {

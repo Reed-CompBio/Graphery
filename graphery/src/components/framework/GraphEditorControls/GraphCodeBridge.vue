@@ -42,7 +42,7 @@
         return null;
       },
       editorControlSliderLength() {
-        return this.currentJsonObject
+        return this.currentJsonObject || this.currentJsonObject === []
           ? this.currentJsonObject.jsonObject.length
           : 1;
       },
@@ -51,8 +51,12 @@
       emptyVariables(element) {
         return element['variables'] === EMPTY_CONTENT_NOTATION;
       },
-      onSliderChange(pos) {
-        this.updateResultJsonPosition(this.currentPositionId, pos);
+      onSliderChange(newPosition) {
+        const positionDelta =
+          newPosition -
+          this.getResultJsonPositionFromId(this.currentPositionId);
+        this.stepper(positionDelta);
+        // this.updateResultJsonPosition(this.currentPositionId, pos);
       },
       updateEditorLine(lineNumber) {
         if (this.$refs.editorWrapper) {
@@ -173,6 +177,9 @@
       onEditorContentChanged(newCode) {
         this.updateCode(newCode);
       },
+    },
+    watch: {
+      //
     },
   };
 </script>
