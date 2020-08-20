@@ -38,11 +38,15 @@
     computed: {
       ...mapState('tutorials', ['variableObj']),
       ...mapGetters('tutorials', ['variableObjEmpty']),
-      variableObjectEmpty() {
-        return this.variableObject === VARIABLE_EMPTY_CONTENT_NOTATION;
+      ...mapGetters('variables', ['getCurrentVariables']),
+      currentVariables() {
+        return this.getCurrentVariables;
+      },
+      currentVariablesEmpty() {
+        return this.currentVariables === VARIABLE_EMPTY_CONTENT_NOTATION;
       },
       variableDisplayList() {
-        if (this.variableObjectEmpty) {
+        if (this.currentVariablesEmpty) {
           return [
             {
               label: 'Status',
@@ -52,7 +56,7 @@
         }
         const variableList = [];
 
-        for (const [key, value] of Object.entries(this.variableObj)) {
+        for (const [key, value] of Object.entries(this.currentVariables)) {
           variableList.push(this.processVariableElement(key, value));
         }
         return variableList;

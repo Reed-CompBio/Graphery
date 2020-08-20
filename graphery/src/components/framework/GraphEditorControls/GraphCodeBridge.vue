@@ -74,6 +74,7 @@
         // element: {line: number, variables: object}
 
         if (!this.emptyVariables(element)) {
+          this.viewUpdater(element);
           // TODO is the first element null?
           // has content, change update the graph and change editor highlight
           // TODO cytoscape interface
@@ -84,9 +85,22 @@
       multipleSteps(noneEmptyElement) {
         // TODO cytoscape interface
         // TODO update variable list
+        this.viewUpdater(noneEmptyElement);
+      },
+      updateCytoscapeView(variables) {
+        //
+      },
+      updateVariableList(variables) {
+        this.$store.commit('variables/LOAD_CURRENT_VARIABLES', variables);
+      },
+      viewUpdater(element) {
+        const variables = element['variables'];
+        this.updateVariableList(variables);
+        this.updateCytoscapeView(variables);
       },
       stepper(newPosition, steps) {
         console.log('stepper new position', newPosition);
+
         this.updateResultJsonPosition(this.currentPositionId, newPosition);
         const element = this.getResultJsonObjectElement(
           { graphId: this.currentGraphId, codeId: this.currentCodeId },
