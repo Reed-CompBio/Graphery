@@ -51,12 +51,7 @@
               @updateCyWithVarObj="updateCytoscapeWithVarObj"
               @editorContentChanged="onEditorContentChanged"
             ></EditorWrapper>
-            <GraphInfo
-              v-show="currentTab === 'graph-info'"
-              :graphName="graphTitle"
-              :isPublished="isGraphPublished"
-              :abstract="graphAbstract"
-            ></GraphInfo>
+            <GraphInfo v-show="currentTab === 'graph-info'"></GraphInfo>
             <HowToHelper v-show="currentTab === 'how-to'"></HowToHelper>
             <!-- page sticky -->
             <q-page-sticky
