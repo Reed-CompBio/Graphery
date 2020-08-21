@@ -72,11 +72,20 @@
 
     <!-- execution button group -->
     <q-btn-group flat class="q-mr-md">
-      <q-btn dense icon="mdi-cloud-upload" @click="onPushToCloudExec">
+      <q-btn
+        dense
+        icon="mdi-cloud-upload"
+        :disable="isExecButtonDisable"
+        @click="onPushToCloudExec"
+      >
         <SwitchTooltip :text="$t('tooltips.runCodeOnTheCloud')"></SwitchTooltip>
       </q-btn>
-      <q-btn dense @click.prevent="onPushToLocalExec">
-        <q-icon name="mdi-cloud-download" />
+      <q-btn
+        dense
+        icon="mdi-cloud-download"
+        :disable="isExecButtonDisable"
+        @click.prevent="onPushToLocalExec"
+      >
         <SwitchTooltip :text="$t('tooltips.runCodeLocally')"></SwitchTooltip>
       </q-btn>
     </q-btn-group>
@@ -153,6 +162,9 @@
           return this.sliderPositionCopy;
         },
       },
+      isExecButtonDisable() {
+        return this.disableOverride;
+      },
       isPreviousButtonDisable() {
         return !this.isWalkable(-1);
       },
@@ -161,7 +173,7 @@
       },
       disableStepSlider() {
         // TODO
-        return this.sliderLength <= 1;
+        return this.disableOverride || this.sliderLength <= 1;
       },
       getSliderPosition() {
         return this.modelSliderPos;

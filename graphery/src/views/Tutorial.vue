@@ -35,7 +35,7 @@
             <EditorControlUnit
               ref="editorControlUnit"
               :slider-length="editorControlSliderLength"
-              :disable-override="false"
+              :disable-override="disableSelection"
               :editor-enable-editing="true"
               @onSliderChange="onSliderChange"
               @onPushToCloudExec="onPushToCloudExec"
