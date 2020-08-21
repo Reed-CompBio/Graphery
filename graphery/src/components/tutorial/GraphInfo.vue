@@ -16,7 +16,9 @@
             title="Is Published? "
             :content="isPublished ? '✅' : '❌'"
           ></GraphInfoItem>
-          <GraphInfoItem title="Abstract: " :html="abstract"></GraphInfoItem>
+          <GraphInfoItem title="Abstract: ">
+            <MarkdownSection :input-html="abstract" />
+          </GraphInfoItem>
         </q-card-section>
       </q-card>
     </div>
@@ -27,6 +29,7 @@
   export default {
     props: ['graphName', 'isPublished', 'abstract'],
     components: {
+      MarkdownSection: () => import('@/components/framework/MarkdownSection'),
       GraphInfoItem: () => import('@/components/tutorial/GraphInfoItem.vue'),
     },
   };
