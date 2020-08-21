@@ -105,6 +105,12 @@
     components: {
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
     },
+    props: {
+      disableGraphSelection: {
+        type: Boolean,
+        default: false,
+      },
+    },
     data() {
       return {
         cyInstance: null,

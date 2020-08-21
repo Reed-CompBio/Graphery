@@ -24,6 +24,7 @@
           <template v-slot:before>
             <CytoscapeWrapper
               ref="cytoscapeWrapper"
+              :disableGraphSelection="disableSelection"
               style="overflow-y: hidden;"
             ></CytoscapeWrapper>
           </template>
