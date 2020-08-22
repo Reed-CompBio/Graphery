@@ -62,12 +62,12 @@
             @onPasteFromClipboard="onPasteFromClipboard"
             @onChangeVariableListOrientation="onChangeVariableListOrientation"
             @onCallWorkSpace="onCallWorkSpace"
-            @editorInstanceLoaded.once="onEditorInstanceLoaded"
           />
           <EditorWrapper
             ref="editorWrapper"
             style="max-height: calc(100% - 56px);"
             @editorContentChanged="onEditorContentChanged"
+            @editorInstanceLoaded.once="onEditorInstanceLoaded"
           ></EditorWrapper>
         </div>
       </template>

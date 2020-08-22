@@ -50,6 +50,7 @@
               ref="editorWrapper"
               class="full-height"
               @editorContentChanged="onEditorContentChanged"
+              @editorInstanceLoaded.once="onEditorInstanceLoaded"
             ></EditorWrapper>
             <GraphInfo v-show="currentTab === 'graph-info'"></GraphInfo>
             <HowToHelper v-show="currentTab === 'how-to'"></HowToHelper>
