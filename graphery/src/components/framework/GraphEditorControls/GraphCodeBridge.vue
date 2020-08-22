@@ -113,6 +113,12 @@
         this.$refs.editorControlUnit.setPositionValueCopyFromJsonPos(pos);
         this.stepper(pos, pos);
       },
+      resetContent() {
+        const newPosition = this.getResultJsonPositionFromId(
+          this.currentPositionId
+        );
+        this.restartWithNewPosition(newPosition);
+      },
       onPushToCloudExec() {
         notAvailableMessage();
       },
@@ -193,10 +199,7 @@
     },
     watch: {
       currentJsonArr: function() {
-        const newPosition = this.getResultJsonPositionFromId(
-          this.currentPositionId
-        );
-        this.restartWithNewPosition(newPosition);
+        this.resetContent();
       },
       getCurrentCodeObject: function(value) {
         if (this.$refs.editorWrapper && value) {
