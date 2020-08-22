@@ -66,11 +66,9 @@
               this.content = codeContent;
               this.$emit('editorContentChanged', codeContent);
             });
-            console.debug('mounted monaco editor', this.editor);
-
-            this.editor.setValue(this.codes);
 
             this.editor.layout();
+            this.$emit('editorInstanceLoaded');
           })
           .catch((err) => {
             errorDialog({
@@ -124,7 +122,7 @@
         return this.content;
       },
       setCodeContent(content) {
-        if (this.enableEditing) {
+        if (this.editor) {
           this.editor.setValue(content);
         }
       },

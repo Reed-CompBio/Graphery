@@ -509,7 +509,6 @@
               styleEnabled: true,
             })
           );
-          console.debug('cy obj is mounted', this.cyInstance);
 
           this.loadFirstGraph();
           this.reloadGraph();
@@ -520,6 +519,8 @@
           });
 
           this.moduleLoad();
+
+          this.$emit('cytoscapeInstanceLoaded');
         })
         .then(() => {
           this.registerExtensions();

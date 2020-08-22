@@ -17,6 +17,7 @@
               ref="editorComponent"
               class="full-height"
               @editorContentChanged="emitEditorContentChanged"
+              @editorInstanceLoaded.once="onEditorInstanceLoaded"
             ></Editor>
           </q-card>
         </template>
@@ -121,6 +122,9 @@
       },
       emitEditorContentChanged(newCode) {
         this.$emit('editorContentChanged', newCode);
+      },
+      onEditorInstanceLoaded() {
+        this.$emit('editorInstanceLoaded');
       },
     },
   };
