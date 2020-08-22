@@ -109,6 +109,10 @@
         const editor = this.getEditorComponent();
         editor.setCodeContent(code);
       },
+      clearEditorDecoration() {
+        const editor = this.getEditorComponent();
+        editor.clearDecoration();
+      },
       changeVariableListOrientation() {
         this.$store.dispatch(
           'settings/changeVariableListOrientation',
