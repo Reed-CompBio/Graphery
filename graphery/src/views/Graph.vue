@@ -12,7 +12,10 @@
       "
     >
       <template v-slot:before>
-        <CytoscapeWrapper ref="cytoscapeWrapper"></CytoscapeWrapper>
+        <CytoscapeWrapper
+          ref="cytoscapeWrapper"
+          @cytoscapeInstanceLoaded.once="onCytoscapeInstanceLoaded"
+        ></CytoscapeWrapper>
       </template>
       <template v-slot:separator>
         <SplitterSeparator :horizontal="verticalSplitter" />
@@ -28,7 +31,7 @@
                 label="Code"
                 :multiple="false"
                 dropdown-icon="mdi-menu-down"
-                :loading="codeListEmpty"
+                :loading="codeObjectListEmpty"
                 emit-value
                 option-label="label"
                 option-value="value"
@@ -47,9 +50,24 @@
               </q-select>
             </div>
           </q-bar>
+          <EditorControlUnit
+            ref="editorControlUnit"
+            :slider-length="editorControlSliderLength"
+            :disable-override="disableSelection"
+            :editor-enable-editing="true"
+            @onSliderChange="onSliderChange"
+            @onPushToCloudExec="onPushToCloudExec"
+            @onPushToLocalExec="onPushToLocalExec"
+            @onCopyCurrentCode="onCopyCurrentCode"
+            @onPasteFromClipboard="onPasteFromClipboard"
+            @onChangeVariableListOrientation="onChangeVariableListOrientation"
+            @onCallWorkSpace="onCallWorkSpace"
+            @editorInstanceLoaded.once="onEditorInstanceLoaded"
+          />
           <EditorWrapper
+            ref="editorWrapper"
             style="max-height: calc(100% - 56px);"
-            @updateCyWithVarObj="updateCytoscapeWithVarObj"
+            @editorContentChanged="onEditorContentChanged"
           ></EditorWrapper>
         </div>
       </template>
@@ -58,13 +76,13 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex';
+  import { mapGetters, mapState } from 'vuex';
   import { headerSize } from '@/store/states/meta';
   import { apiCaller } from '@/services/apis';
   import { pullGraphAndCodeQuery } from '@/services/queries';
   import { errorDialog, warningDialog } from '@/services/helpers';
-  import SplitterSeparator from '../components/framework/SplitterSeparator';
   import { emptyCodeTemplate, newModelUUID } from '@/services/params';
+  import GraphCodeBridge from '@/components/framework/GraphEditorControls/GraphCodeBridge';
 
   const defaultCodeOption = [
     {
@@ -73,29 +91,45 @@
     },
   ];
 
-  const defaultCodeSnippet = (() => {
-    const obj = {};
-    obj[newModelUUID] = emptyCodeTemplate;
-    return obj;
-  })();
+  const defaultCodeSnippetList = [
+    {
+      id: newModelUUID,
+      code: emptyCodeTemplate,
+    },
+  ];
 
   export default {
+    mixins: [GraphCodeBridge],
     props: ['url'],
     components: {
-      SplitterSeparator,
+      EditorControlUnit: () =>
+        import('@/components/framework/EditorControlUnit'),
+      SplitterSeparator: () =>
+        import('../components/framework/SplitterSeparator'),
       EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
       CytoscapeWrapper: () =>
         import('@/components/tutorial/CytoscapeWrapper.vue'),
     },
     data() {
       return {
-        codeChoice: null,
         codeOptions: defaultCodeOption,
-        codeSnippets: defaultCodeSnippet,
       };
     },
     computed: {
       ...mapState('settings', ['graphSplitPos']),
+      ...mapGetters('code', [
+        'getCurrentCodeObject',
+        'getCurrentCodeId',
+        'codeObjectListEmpty',
+      ]),
+      codeChoice: {
+        set(d) {
+          this.$store.commit('code/LOAD_CURRENT_CODE_ID', d);
+        },
+        get() {
+          return this.getCurrentCodeId;
+        },
+      },
       splitPos: {
         set(d) {
           this.$store.dispatch(
@@ -112,19 +146,10 @@
           height: `calc(100vh - ${headerSize}px)`,
         };
       },
-      codeListEmpty() {
-        return this.codeOptions === null || this.codeOptions.length === 0;
-      },
       requestPayload() {
         return {
           url: this.url,
         };
-      },
-      currentCode() {
-        if (!this.codeListEmpty && this.codeSnippets) {
-          return this.codeSnippets[this.codeChoice];
-        }
-        return null;
       },
       verticalSplitter() {
         return this.$q.screen.lt.md;
@@ -149,19 +174,12 @@
 
             const graphObj = data.graph;
 
-            this.$store.dispatch('tutorials/loadTutorialGraphs', [
-              {
-                id: graphObj.id,
-                cyjs: graphObj.cyjs,
-                isPublished: graphObj.isPublished,
-                content: graphObj.content,
-                priority: graphObj.priority,
-              },
-            ]);
+            // the object is singular
+            this.$store.commit('graphs/LOAD_GRAPH_OBJECT_LIST', [graphObj]);
 
             this.codeOptions = defaultCodeOption;
             const resultJsonList = this.generateDefaultJsonResults(graphObj.id);
-            this.codeSnippets = defaultCodeSnippet;
+            const codeObjectList = defaultCodeSnippetList;
 
             if (graphObj.execresultjsonSet.length > 0) {
               graphObj.execresultjsonSet.forEach((obj) => {
@@ -176,7 +194,10 @@
                   codeId: obj.code.id,
                 });
 
-                this.codeSnippets[obj.code.id] = obj.code.code;
+                codeObjectList.unshift({
+                  id: obj.code.id,
+                  code: obj.code.code,
+                });
               });
             } else {
               warningDialog({
@@ -184,13 +205,31 @@
               });
             }
 
-            if (this.codeOptions.length > 0) {
-              this.codeChoice = this.codeOptions[0].value;
-            }
+            // Code Store
+            this.$store.commit('code/LOAD_CODE_LIST', codeObjectList);
+            this.$store.commit(
+              'code/LOAD_CURRENT_CODE_ID',
+              this.codeOptions[0].value
+            );
 
-            this.$store.dispatch(
-              'tutorials/loadTutorialResultJsonList',
+            // JSON store
+            this.initResultJsonPositions(
+              [graphObj.id],
+              codeObjectList.map((obj) => obj.id)
+            );
+
+            this.$store.commit(
+              'rj/LOAD_RESULT_JSON_STRING_LIST',
               resultJsonList
+            );
+
+            this.$store.commit(
+              'rj/LOAD_RESULT_JSON_OBJECT_LIST',
+              resultJsonList.map((obj) => ({
+                jsonObject: JSON.parse(obj.json),
+                graphId: obj.graphId,
+                codeId: obj.codeId,
+              }))
             );
           })
           .catch((err) => {
@@ -199,18 +238,9 @@
             });
           });
       },
-      updateCytoscapeWithVarObj(varObj) {
-        this.$refs.cytoscapeWrapper.highlightVarObj(varObj);
-      },
     },
     mounted() {
       this.loadGraphAndCode();
-    },
-    watch: {
-      codeChoice: function() {
-        this.$store.commit('tutorials/LOAD_CURRENT_CODE_ID', this.codeChoice);
-        this.$store.commit('tutorials/LOAD_CODES', this.currentCode);
-      },
     },
     destroyed() {
       this.$store.dispatch('tutorials/clearAll');
