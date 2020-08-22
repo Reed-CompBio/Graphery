@@ -1,7 +1,6 @@
 <template>
   <div style="overflow: hidden; ">
     <q-splitter
-      v-if="$q.screen.gt.xs"
       v-model="splitPos"
       :style="splitterStyle"
       :horizontal="verticalSplitter"
@@ -10,6 +9,7 @@
           ? 'resizable-h-separator-splitter'
           : 'resizable-v-separator-splitter'
       "
+      class="after-splitter-overflow-hidden"
     >
       <template v-slot:before>
         <CytoscapeWrapper
@@ -247,3 +247,8 @@
     },
   };
 </script>
+
+<style lang="sass">
+  .after-splitter-overflow-hidden > .q-splitter__after
+    overflow: hidden
+</style>
