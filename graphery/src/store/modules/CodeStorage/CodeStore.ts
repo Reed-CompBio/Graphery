@@ -54,11 +54,17 @@ const getters: GetterTree<CodeStoreType, RootState> = {
   codeObjectListEmpty(state) {
     return state.codeObjectList === null;
   },
+  getCodeList(state) {
+    return state.codeObjectList;
+  },
   getCurrentCodeObject(state) {
     if (state.codeObjectList) {
       return state.codeObjectList.find((obj) => obj.id === state.currentCodeId);
     }
     return null;
+  },
+  getCurrentCodeContent(state, getter) {
+    return getter.getCurrentCodeObject && getter.getCurrentCodeObject.code;
   },
 };
 

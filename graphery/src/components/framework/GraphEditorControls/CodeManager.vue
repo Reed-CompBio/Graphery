@@ -25,6 +25,11 @@
           codeObject: this.currentCodeObject,
           code: newCode,
         });
+        // this.afterUpdatedCode(this.currentCodeObject);
+      },
+      // TODO
+      afterUpdatedCode(codeObj) {
+        this.$store.dispatch('rj/clearResultJsonStringByCodeId', codeObj.id);
       },
     },
   };
