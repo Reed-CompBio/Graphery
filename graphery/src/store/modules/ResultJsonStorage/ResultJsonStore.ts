@@ -227,8 +227,9 @@ const getters: GetterTree<ResultJsonStateType, RootState> = {
   getResultJsonPositionObjectFromId: (state) => (positionId: string) => {
     return state.resultJsonPositions[positionId];
   },
-  getResultJsonPositionFromId: (state) => (positionId: string) => {
-    return state.resultJsonPositions[positionId].position;
+  getResultJsonPositionFromId: (state, getter) => (positionId: string) => {
+    const positionObject = getter.getResultJsonPositionObjectFromId(positionId);
+    return positionObject && positionObject.position;
   },
 };
 

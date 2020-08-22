@@ -101,6 +101,11 @@
           { graphId: this.currentGraphId, codeId: this.currentCodeId },
           newPosition
         );
+
+        if (!element) {
+          return;
+        }
+
         this.updateEditorLine(element['line']);
 
         if (steps === 1 || steps === -1) {
@@ -115,8 +120,10 @@
         }
       },
       restartWithNewPosition(pos) {
-        this.$refs.editorControlUnit.setPositionValueCopyFromJsonPos(pos);
-        this.stepper(pos, pos);
+        if (pos) {
+          this.$refs.editorControlUnit.setPositionValueCopyFromJsonPos(pos);
+          this.stepper(pos, pos);
+        }
       },
       resetContent() {
         const newPosition = this.getResultJsonPositionFromId(
