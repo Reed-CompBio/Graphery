@@ -49,7 +49,6 @@
               v-show="currentTab === 'editor'"
               ref="editorWrapper"
               class="full-height"
-              @updateCyWithVarObj="updateCytoscapeWithVarObj"
               @editorContentChanged="onEditorContentChanged"
             ></EditorWrapper>
             <GraphInfo v-show="currentTab === 'graph-info'"></GraphInfo>
@@ -251,10 +250,6 @@
             });
           });
       },
-      updateCytoscapeWithVarObj(varObj) {
-        this.$refs.cytoscapeWrapper.highlightVarObj(varObj);
-      },
-      switchTabView(tab) {
         this.currentTab = tab;
       },
     },
