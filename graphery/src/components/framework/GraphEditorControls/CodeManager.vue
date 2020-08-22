@@ -3,7 +3,11 @@
 
   export default {
     computed: {
-      ...mapGetters('code', ['getCurrentCodeId', 'getCurrentCodeObject']),
+      ...mapGetters('code', [
+        'getCurrentCodeId',
+        'getCurrentCodeObject',
+        'getCurrentCodeContent',
+      ]),
       currentCodeId: {
         set(d) {
           this.$store.commit('code/LOAD_CURRENT_CODE_ID', d);

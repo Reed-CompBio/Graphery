@@ -198,6 +198,12 @@
         );
         this.restartWithNewPosition(newPosition);
       },
+      getCurrentCodeObject: function(value) {
+        if (this.$refs.editorWrapper && value) {
+          this.$refs.editorWrapper.clearEditorDecoration();
+          this.$refs.editorWrapper.setCurrentCode(this.getCurrentCodeContent);
+        }
+      },
     },
   };
 </script>
