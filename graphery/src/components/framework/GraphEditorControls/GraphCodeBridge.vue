@@ -19,7 +19,12 @@
       PushCodeToLocalMixin,
     ],
     data() {
-      return {};
+      return {
+        loadedList: {
+          editor: false,
+          cytoscape: false,
+        },
+      };
     },
     computed: {
       disableSelection() {
@@ -196,15 +201,23 @@
       onEditorContentChanged(newCode) {
         this.updateCode(newCode);
       },
+      onEditorInstanceLoaded() {
+        this.loadedList.editor = true;
+        this.$refs.editorWrapper.setCurrentCode(this.getCurrentCodeContent);
+      },
+      onCytoscapeInstanceLoaded() {
+        this.loadedList.cytoscape = true;
+      },
     },
     watch: {
       currentJsonArr: function() {
         this.resetContent();
       },
-      getCurrentCodeObject: function(value) {
-        if (this.$refs.editorWrapper && value) {
+      getCurrentCodeObject: function() {
+        if (this.$refs.editorWrapper) {
           this.$refs.editorWrapper.clearEditorDecoration();
           this.$refs.editorWrapper.setCurrentCode(this.getCurrentCodeContent);
+          this.resetContent();
         }
       },
     },
