@@ -16,6 +16,10 @@ query ($translation: String, $default: String = "en-us", $filterContent: FilterC
       isPublished
       modifiedTime
     }
+    rank {
+      level 
+      section
+    }
   }
 }`;
 // TODO look into the defaults
