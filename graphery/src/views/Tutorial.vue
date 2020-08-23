@@ -25,6 +25,7 @@
             <CytoscapeWrapper
               ref="cytoscapeWrapper"
               :disableGraphSelection="disableSelection"
+              @cytoscapeInstanceLoaded.once="onCytoscapeInstanceLoaded"
               style="overflow-y: hidden;"
             ></CytoscapeWrapper>
           </template>
