@@ -4,7 +4,7 @@ from wsgiref.simple_server import make_server
 from multiprocessing import Pool, TimeoutError
 
 from bundle.server_utils.params import TIMEOUT_SECONDS, REQUEST_CODE_NAME, ONLY_ACCEPTED_ORIGIN, ACCEPTED_ORIGIN, \
-    REQUEST_GRAPH_NAME
+    REQUEST_GRAPH_NAME, REQUEST_VERSION_NAME, VERSION
 from bundle.server_utils.utils import create_error_response, create_data_response, execute, \
     ExecutionException
 
@@ -32,7 +32,7 @@ def application(environ: Mapping, start_response: Callable):
                                                            'content-type',
                                                            'origin',
                                                            'user-agent',
-                                                           'x-requested-with', )))]
+                                                           'x-requested-with',)))]
 
     # origin check
     origin = environ.get('HTTP_ORIGIN', '')
@@ -84,6 +84,10 @@ def application_helper(environ: Mapping) -> Mapping:
     # get request content
     request_body = environ['wsgi.input'].read(int(environ['CONTENT_LENGTH']))
     request_json_object = json.loads(request_body)
+    if REQUEST_VERSION_NAME not in request_json_object or request_json_object[REQUEST_VERSION_NAME] != VERSION:
+        return create_error_response('The current version of your local server (%s) does not match version of the web '
+                                     'app"%s".' %
+                                     (VERSION, request_json_object.get(REQUEST_VERSION_NAME, 'Not Exist')))
 
     if REQUEST_CODE_NAME not in request_json_object:
         return create_error_response('No Code Snippets Embedded In The Request.')

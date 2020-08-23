@@ -102,11 +102,13 @@ export async function apiCaller(
 export async function localServerCaller(
   code: string,
   graph: string | object,
+  version: string,
   port = 7590
 ) {
   const response = await axios.post('http://localhost:' + port + '/run', {
     code,
     graph,
+    version,
   });
   if (response.data.errors) {
     throw Error(response.data.errors[0].message);

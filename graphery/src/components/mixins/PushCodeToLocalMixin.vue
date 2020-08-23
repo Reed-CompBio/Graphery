@@ -1,6 +1,7 @@
 <script>
   import { localServerCaller } from '@/services/apis';
   import { errorDialog, successDialog } from '@/services/helpers';
+  import { localServerTargetVersion } from '@/services/params';
 
   export default {
     data() {
@@ -26,7 +27,7 @@
         if (startCallback) {
           startCallback();
         }
-        await localServerCaller(code, graph)
+        await localServerCaller(code, graph, localServerTargetVersion)
           .then((data) => {
             if (!data) {
               throw Error('No valid data returned from local server');
