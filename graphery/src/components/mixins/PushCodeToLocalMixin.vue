@@ -27,7 +27,7 @@
         if (startCallback) {
           startCallback();
         }
-        await localServerCaller(code, graph, localServerTargetVersion)
+        await localServerCaller(code, graph)
           .then((data) => {
             if (!data) {
               throw Error('No valid data returned from local server');
