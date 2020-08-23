@@ -1,7 +1,6 @@
 <script>
   import { localServerCaller } from '@/services/apis';
   import { errorDialog, successDialog } from '@/services/helpers';
-  import { localServerTargetVersion } from '@/services/params';
 
   export default {
     data() {

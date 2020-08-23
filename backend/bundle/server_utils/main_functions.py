@@ -90,7 +90,7 @@ def application_helper(environ: Mapping) -> Mapping:
     request_json_object = json.loads(request_body)
     if REQUEST_VERSION_NAME not in request_json_object or request_json_object[REQUEST_VERSION_NAME] != VERSION:
         return create_error_response('The current version of your local server (%s) does not match version of the web '
-                                     'app"%s".' %
+                                     'app ("%s").' %
                                      (VERSION, request_json_object.get(REQUEST_VERSION_NAME, 'Not Exist')))
 
     if REQUEST_CODE_NAME not in request_json_object:
