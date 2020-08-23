@@ -34,8 +34,8 @@
         return this.getResultJsonPositionObject(this.currentPositionId);
       },
       editorControlSliderLength() {
-        return this.currentJsonObject || this.currentJsonObject.length === 0
-          ? this.currentJsonObject.jsonObject.length
+        return this.currentJsonObject
+          ? this.currentJsonObject.jsonObject.length && 1
           : 1;
       },
     },
