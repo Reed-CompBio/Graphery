@@ -46,7 +46,7 @@
       <q-btn
         dense
         icon="mdi-play"
-        @click="notAvailableMessage"
+        @click="onAutoRun"
         :disable="isNextButtonDisable"
       >
         <SwitchTooltip :text="$t('tooltips.autoRun')"></SwitchTooltip>
@@ -125,8 +125,6 @@
 </template>
 
 <script>
-  import { notAvailableMessage } from '@/services/helpers';
-
   export default {
     props: {
       sliderLength: {
@@ -204,19 +202,18 @@
       },
       onMultipleStepsBack() {
         this.setSliderPosition(this.getSliderPosition - this.skipSteps);
-        // this.$emit('onStepBack', this.skipSteps);
       },
       onStepBack() {
         this.setSliderPosition(this.getSliderPosition - 1);
-        // this.$emit('onStepBack', 1);
+      },
+      onAutoRun() {
+        // TODO
       },
       onStepForward() {
         this.setSliderPosition(this.getSliderPosition + 1);
-        // this.$emit('onStepForward', 1);
       },
       onMultipleStepForward() {
         this.setSliderPosition(this.getSliderPosition + this.skipSteps);
-        // this.$emit('onStepForward', this.skipSteps);
       },
       onPushToCloudExec() {
         this.$emit('onPushToCloudExec');
@@ -236,7 +233,6 @@
       onCallWorkSpace() {
         this.$emit('onCallWorkSpace');
       },
-      notAvailableMessage,
     },
   };
 </script>
