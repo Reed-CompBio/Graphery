@@ -44,4 +44,7 @@
   };
 </script>
 
-<style lang="sass"></style>
+<style lang="sass">
+  #graph-info-container
+    padding-bottom: 24px
+</style>
