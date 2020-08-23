@@ -2,7 +2,7 @@
   <div id="editor-panel">
     <q-resize-observer @resize="resizeAction"></q-resize-observer>
     <div id="editor" class="full-height"></div>
-    <q-inner-loading :showing="editor === null || codesEmpty">
+    <q-inner-loading :showing="editorAndContentLoading">
       <q-spinner-pie size="64px" color="primary" />
     </q-inner-loading>
   </div>
@@ -20,7 +20,6 @@
         editor: null,
         content: '',
         decorations: [],
-        sliderPos: 1,
       };
     },
     computed: {
@@ -32,8 +31,10 @@
         'fontSize',
         'wrap',
       ]),
-      ...mapState('tutorials', ['codes']),
-      ...mapGetters('tutorials', ['codesEmpty']),
+      ...mapGetters('code', ['codeObjectListEmpty']),
+      editorAndContentLoading() {
+        return this.editor === null || this.codeObjectListEmpty;
+      },
     },
     methods: {
       initMonacoEditor() {
@@ -61,13 +62,13 @@
               }
             );
             this.editor.getModel().onDidChangeContent((_) => {
-              this.content = this.editor.getValue();
+              const codeContent = this.editor.getValue();
+              this.content = codeContent;
+              this.$emit('editorContentChanged', codeContent);
             });
-            console.debug('mounted monaco editor', this.editor);
-
-            this.editor.setValue(this.codes);
 
             this.editor.layout();
+            this.$emit('editorInstanceLoaded');
           })
           .catch((err) => {
             errorDialog({
@@ -99,6 +100,9 @@
           );
         }
       },
+      clearDecoration() {
+        this.changeDecoration();
+      },
       focusToLine(line) {
         if (this.editor) {
           this.editor.revealLine(line);
@@ -114,33 +118,13 @@
           this.editor.layout();
         }
       },
+      getCodeContent() {
+        return this.content;
+      },
       setCodeContent(content) {
-        if (this.enableEditing) {
+        if (this.editor) {
           this.editor.setValue(content);
         }
-      },
-    },
-    watch: {
-      codes: function() {
-        if (this.editor && this.codes) {
-          this.editor.setValue(this.codes);
-        }
-
-        console.error('Cannot paste to a read-only editor.');
-        // TODO the setValue action is not undoable.
-        /*
-            // remove breakpoints
-            oldDecorations = activeEditor.deltaDecorations(oldDecorations, []);
-
-            activeEditor.executeEdits('beautifier', [{ identifier: 'delete' as any, range: new monaco.Range(1, 1, 10000, 1), text: '', forceMoveMarkers: true }]);
-            activeEditor.executeEdits('beautifier', [{ identifier: 'insert' as any, range: new monaco.Range(1, 1, 1, 1), text: text, forceMoveMarkers: true }]);
-            activeEditor.setSelection(new monaco.Range(0, 0, 0, 0));
-            activeEditor.setPosition(currentPosition);
-
-            // add breakpoints
-            oldDecorations = activeEditor.deltaDecorations(oldDecorations, breakPoints);
-            https://github.com/microsoft/monaco-editor/issues/299
-         */
       },
     },
     mounted() {

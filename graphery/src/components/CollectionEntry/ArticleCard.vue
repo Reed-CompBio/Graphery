@@ -3,25 +3,38 @@
     <q-intersection once transition="scale" class="expandable-helper">
       <q-card class="article-card-wrapper">
         <section>
-          <h5>
-            {{ title }}
-          </h5>
+          <div class="text-h5">
+            <div v-if="info.rank">
+              {{ rankText }}
+            </div>
+            <div>
+              {{ info.title }}
+            </div>
+          </div>
         </section>
         <section>
           <div>
-            <q-chip clickable v-if="!isAnchorPublished" icon="mdi-book-lock">
+            <q-chip
+              clickable
+              v-if="!info.isAnchorPublished"
+              icon="mdi-book-lock"
+            >
               Anchor Not Published
             </q-chip>
-            <q-chip clickable v-if="!isTransPublished" icon="mdi-book-lock">
+            <q-chip
+              clickable
+              v-if="!info.isTransPublished"
+              icon="mdi-book-lock"
+            >
               Translation Not Published
             </q-chip>
           </div>
           <div>
             <q-chip v-if="noContentNoClick" icon="link">
-              {{ url }}
+              {{ info.url }}
             </q-chip>
             <q-chip
-              v-for="author in authors"
+              v-for="author in info.authors"
               :key="author"
               icon="mdi-card-account-details"
               @click="$emit('author-filter', author)"
@@ -30,7 +43,7 @@
             </q-chip>
             <q-chip
               clickable
-              v-for="category in categories"
+              v-for="category in info.categories"
               :key="category.id"
               icon="category"
               @click="$emit('category-filter', category.id)"
@@ -38,18 +51,18 @@
               {{ category.category }}
             </q-chip>
             <q-chip icon="mdi-calendar-month">
-              {{ toLocalDateString($i18n.locale, modifiedTime) }}
+              {{ toLocalDateString($i18n.locale, info.modifiedTime) }}
             </q-chip>
           </div>
         </section>
         <section class="article-abstract-section q-mx-md">
           <div class="q-mb-sm">
-            <MarkdownSection :input-html="abstract" />
+            <MarkdownSection :input-html="info.abstract" />
           </div>
         </section>
         <q-separator />
         <q-card-actions>
-          <q-btn flat :to="url" :disable="noContentNoClick">
+          <q-btn flat :to="info.url" :disable="noContentNoClick">
             {{ moreButtonText }}
           </q-btn>
         </q-card-actions>
@@ -59,33 +72,25 @@
 </template>
 
 <script>
-  import { toLocalDateString } from '@/services/helpers';
+  import { rankToText, toLocalDateString } from '@/services/helpers';
   import { emptyTutorialContentTag } from '@/services/params';
   import MarkdownSection from '@/components/framework/MarkdownSection';
 
   export default {
     components: { MarkdownSection },
-    props: [
-      'title',
-      'authors',
-      'categories',
-      'modifiedTime',
-      'abstract',
-      'url',
-      'isTransPublished',
-      'isAnchorPublished',
-      'moreButtonText',
-      'notClickableWhenNoContent',
-    ],
+    props: ['info', 'moreButtonText', 'notClickableWhenNoContent'],
     methods: {
       toLocalDateString,
     },
     computed: {
       noContentNoClick() {
         return (
-          this.title === emptyTutorialContentTag &&
+          this.info.title === emptyTutorialContentTag &&
           this.notClickableWhenNoContent
         );
+      },
+      rankText() {
+        return rankToText(this.info.rank);
       },
     },
   };
@@ -94,8 +99,11 @@
 <style lang="sass">
   .article-card-wrapper
     padding: 10px 20px 7px
-    h5
+    .text-h5
       margin: 10px 0
+      div
+        display: inline-block
+        margin-right: 7px
     .article-abstract-section
       margin-top: 15px
 

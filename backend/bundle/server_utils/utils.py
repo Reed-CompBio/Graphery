@@ -17,14 +17,6 @@ class ExecutionException(Exception):
     pass
 
 
-def valid_version() -> bool:
-    v = sys.version_info
-    if v.major == 3 and v.minor >= 8:
-        return True
-    print('Your current python is %d.%d. Please use Python 3.8.' % (v.major, v.minor))
-    return False
-
-
 def arg_parser() -> Mapping[str, int]:
     parser = argparse.ArgumentParser(description='Graphery Local Server')
     parser.add_argument('-p', '--port',
@@ -80,10 +72,10 @@ def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool 
             main_function = getattr(imported_module, MAIN_FUNCTION_NAME, None)
 
             if not main_function or not isinstance(main_function, Callable):
-                raise ExecutionException('There is not main function or it is not valid')
+                raise ExecutionException('There is no main function or it is not valid')
 
             if not hasattr(imported_module, GRAPH_OBJ_ANCHOR_NAME):
-                raise ExecutionException('There is not graph object, which violates the naming convention')
+                raise ExecutionException('There is no graph object, which violates the naming convention')
 
             setattr(imported_module, GRAPH_OBJ_ANCHOR_NAME, graph_object)
 

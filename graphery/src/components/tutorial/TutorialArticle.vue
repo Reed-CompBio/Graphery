@@ -7,7 +7,9 @@
       class="q-px-lg q-pb-xl"
     >
       <div id="tutorial-wrapper" class="q-mt-xl">
-        <div id="tutorial-title" class="text-h2 q-mb-md">{{ title }}</div>
+        <div id="tutorial-title" class="text-h3 q-mb-lg">
+          {{ title }}
+        </div>
         <div id="tutorial-info" class="q-mb-lg">
           <div>
             <q-chip clickable v-if="!isAnchorPublished" icon="mdi-book-lock">
@@ -17,6 +19,9 @@
               Translation Not Published
             </q-chip>
           </div>
+          <q-chip icon="trending_up">
+            {{ rankText }}
+          </q-chip>
           <q-chip
             clickable
             v-for="author in authors"
@@ -99,10 +104,11 @@
     saveTextToClipboard,
     successDialog,
   } from '@/services/helpers';
+  import MarkdownSection from '@/components/framework/MarkdownSection';
 
   export default {
     components: {
-      MarkdownSection: () => import('../framework/MarkdownSection'),
+      MarkdownSection,
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
       LicenseCard: () => import('@/components/framework/LicenseCard.vue'),
     },
@@ -121,6 +127,7 @@
         'articleModTime',
         'isAnchorPublished',
         'isTransPublished',
+        'rankText',
       ]),
     },
     methods: {

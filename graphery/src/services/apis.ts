@@ -4,6 +4,7 @@ import vuex from '../store/index';
 
 import { Dialog } from 'quasar';
 import { errorDialog } from '@/services/helpers';
+import { localServerTargetVersion } from '@/services/params';
 
 export const apiClient: AxiosInstance = axios.create({
   withCredentials: true,
@@ -107,6 +108,7 @@ export async function localServerCaller(
   const response = await axios.post('http://localhost:' + port + '/run', {
     code,
     graph,
+    version: localServerTargetVersion,
   });
   if (response.data.errors) {
     throw Error(response.data.errors[0].message);

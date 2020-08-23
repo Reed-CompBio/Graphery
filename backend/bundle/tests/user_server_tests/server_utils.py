@@ -2,6 +2,8 @@ import json
 from collections import Mapping
 from typing import Union
 
+from bundle.server_utils.params import VERSION
+
 
 class Env:
     def __init__(self, **kwargs):
@@ -24,5 +26,6 @@ class FileLikeObj:
 def generate_wsgi_input(code: str, graph: Union[str, Mapping]):
     return FileLikeObj(json.dumps({
         'code': code,
-        'graph': graph
+        'graph': graph,
+        'version': VERSION
     }))

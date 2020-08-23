@@ -96,17 +96,10 @@
               <ArticleCard
                 v-for="info in displayedInfos"
                 :key="info.url"
-                :url="info.url"
-                :categories="info.categories"
-                :isAnchorPublished="info.isAnchorPublished"
-                :title="info.title"
-                :authors="info.authors"
-                :modifiedTime="info.modifiedTime"
-                :abstract="info.abstract"
-                :isTransPublished="info.isTransPublished"
-                @category-filter="addToCategoryFilter"
+                :info="info"
                 :moreButtonText="moreButtonText"
                 :notClickableWhenNoContent="notClickableWhenNoContent"
+                @category-filter="addToCategoryFilter"
               ></ArticleCard>
               <!-- TODO why do you want to filter authors? -->
             </div>

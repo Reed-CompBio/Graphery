@@ -17,9 +17,15 @@ export interface TutorialAbstractContentType {
   modifiedTime: string;
 }
 
+export interface RankType {
+  level: number;
+  section: number;
+}
+
 export interface AllTutorialsInfoType {
   url: string;
   isPublished: boolean;
+  rank: RankType;
   categories: string[];
   content: TutorialAbstractContentType;
 }

@@ -3,7 +3,18 @@
   import { errorDialog, successDialog } from '@/services/helpers';
 
   export default {
+    data() {
+      return {
+        isExecutingLocally: false,
+      };
+    },
     methods: {
+      startExecutingLocally() {
+        this.isExecutingLocally = true;
+      },
+      finishedExecutingLocally() {
+        this.isExecutingLocally = false;
+      },
       async pushToLocal(
         code,
         graph,
@@ -11,6 +22,7 @@
         successCallback,
         finalCallback
       ) {
+        this.startExecutingLocally();
         if (startCallback) {
           startCallback();
         }
@@ -39,6 +51,7 @@
             });
           })
           .finally(() => {
+            this.finishedExecutingLocally();
             if (finalCallback) {
               finalCallback();
             }

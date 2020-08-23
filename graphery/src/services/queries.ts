@@ -16,6 +16,10 @@ query ($translation: String, $default: String = "en-us", $filterContent: FilterC
       isPublished
       modifiedTime
     }
+    rank {
+      level 
+      section
+    }
   }
 }`;
 // TODO look into the defaults
@@ -48,6 +52,10 @@ query ($url: String, $translation: String, $default: String = "en-us") {
     isPublished
     categories {
       category
+    }
+    rank {
+      level
+      section
     }
     content(translation: $translation, default: $default) {
       title

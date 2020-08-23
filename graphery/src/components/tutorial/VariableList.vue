@@ -20,49 +20,77 @@
 </template>
 
 <script>
-  import { mapGetters, mapState } from 'vuex';
+  import { mapGetters } from 'vuex';
+  import { EMPTY_VARIABLE_ELEMENT_DISPLAY } from '@/components/framework/GraphEditorControls/parameters';
+  import {
+    isGraphElement,
+    isNormalElement,
+    revertNameCombo,
+  } from '@/components/framework/GraphEditorControls/ElementsUtils';
 
   export default {
-    data() {
-      return {
-        sliderPos: 1,
-      };
-    },
+    props: ['variableObject'],
     computed: {
-      ...mapState('tutorials', ['variableObj']),
-      ...mapGetters('tutorials', ['variableObjEmpty']),
+      ...mapGetters('variables', [
+        'getCurrentVariables',
+        'currentVariablesEmpty',
+      ]),
+      currentVariables() {
+        return this.getCurrentVariables;
+      },
       variableDisplayList() {
-        if (this.variableObjEmpty) {
+        if (this.currentVariablesEmpty) {
           return [
             {
               label: 'Status',
-              value: '<NULL>',
+              value: '<Empty>',
             },
           ];
         }
         const variableList = [];
 
-        for (const [key, value] of Object.entries(this.variableObj)) {
-          let variableValue;
-          let variableColor;
-          if (value) {
-            if (typeof value === 'object') {
-              variableValue = value['label'];
-              variableColor = value['color'];
-            } else {
-              variableValue = value;
-            }
-          } else {
-            variableValue = '<NULL>';
-          }
-          variableList.push({
-            // TODO temporary work round figure out how to style it
-            label: key.split('#')[1],
-            color: variableColor,
-            value: variableValue,
-          });
+        for (const [key, value] of Object.entries(this.currentVariables)) {
+          variableList.push(this.processVariableElement(key, value));
         }
         return variableList;
+      },
+    },
+    methods: {
+      revertGraphObject(nameCombo, element) {
+        return {
+          // TODO temporary work round figure out how to style it
+          label: revertNameCombo(nameCombo),
+          color: element['color'],
+          value: element['repr'],
+        };
+      },
+      revertNormalObject(nameCombo, element) {
+        return {
+          label: revertNameCombo(nameCombo),
+          color: undefined,
+          value: element['repr'],
+        };
+      },
+      emptyObject(nameCombo) {
+        return {
+          label: revertNameCombo(nameCombo),
+          color: undefined,
+          value: EMPTY_VARIABLE_ELEMENT_DISPLAY,
+        };
+      },
+      processVariableElement(key, value) {
+        if (value) {
+          if (isGraphElement(value)) {
+            return this.revertGraphObject(key, value);
+          } else if (isNormalElement(value)) {
+            return this.revertNormalObject(key, value);
+          } else {
+            // which should never happen
+            return undefined;
+          }
+        } else {
+          return this.emptyObject(key);
+        }
       },
     },
   };

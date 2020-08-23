@@ -13,7 +13,7 @@ import requests
 from bundle.server_utils.utils import create_error_response, create_data_response, execute
 from bundle.server_utils.main_functions import application_helper, main
 from bundle.tests.user_server_tests.server_utils import Env, FileLikeObj, generate_wsgi_input
-from bundle.server_utils.params import TIMEOUT_SECONDS, DEFAULT_PORT
+from bundle.server_utils.params import TIMEOUT_SECONDS, DEFAULT_PORT, VERSION
 
 
 class AnyResp:
@@ -110,9 +110,25 @@ def mock_normal_code() -> str:
                  create_error_response('Bad Request: Wrong Methods.')),  # wrong request method
     pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/env').content,
                  create_error_response('Bad Request: Wrong Methods.')),  # wrong entry point
-    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content(
+pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content(
         {
             'wsgi.input': FileLikeObj(json.dumps({}))
+        }).content,
+                 create_error_response('The current version of your local server (%s) does not match version of the '
+                                       'web app ("Not Exist").' % VERSION)),  # no version
+    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content(
+        {
+            'wsgi.input': FileLikeObj(json.dumps({
+                'version': '0.0.0'
+            }))
+        }).content,
+                 create_error_response('The current version of your local server (%s) does not match version of the '
+                                       'web app ("0.0.0").' % VERSION)),  # wrong version
+    pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content(
+        {
+            'wsgi.input': FileLikeObj(json.dumps({
+                'version': VERSION
+            }))
         }).content,
                  create_error_response('No Code Snippets Embedded In The Request.')),  # no code
     pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content(
@@ -120,7 +136,8 @@ def mock_normal_code() -> str:
             'code': textwrap.dedent('''\
                 def main():
                     print('hello')
-                ''')
+                '''),
+            'version': VERSION
         }))}).content,
                  create_error_response('No Graph Intel Embedded In The Request.')),  # no graph
     pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content({
@@ -140,7 +157,6 @@ def mock_normal_code() -> str:
 def test_application_helper(env, response):
     mock_response = application_helper(env)
     assert response == mock_response
-
 
 # @pytest.fixture
 # def local_server():

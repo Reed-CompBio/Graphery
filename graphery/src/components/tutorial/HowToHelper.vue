@@ -1,5 +1,5 @@
 <template>
-  <div class="full-height" style="overflow-y: auto;">
+  <div class="full-height" style="overflow-y: auto; padding-bottom: 24px">
     <div class="q-ma-lg markdown-body">
       <h1>
         How To

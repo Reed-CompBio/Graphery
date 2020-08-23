@@ -24,6 +24,8 @@
           <template v-slot:before>
             <CytoscapeWrapper
               ref="cytoscapeWrapper"
+              :disableGraphSelection="disableSelection"
+              @cytoscapeInstanceLoaded.once="onCytoscapeInstanceLoaded"
               style="overflow-y: hidden;"
             ></CytoscapeWrapper>
           </template>
@@ -31,77 +33,29 @@
             <SplitterSeparator :horizontal="true" />
           </template>
           <template v-slot:after>
+            <EditorControlUnit
+              ref="editorControlUnit"
+              :slider-length="editorControlSliderLength"
+              :disable-override="disableSelection"
+              :execLoading="execLoading"
+              @onSliderChange="onSliderChange"
+              @onPushToCloudExec="onPushToCloudExec"
+              @onPushToLocalExec="onPushToLocalExec"
+              @onCopyCurrentCode="onCopyCurrentCode"
+              @onPasteFromClipboard="onPasteFromClipboard"
+              @onChangeVariableListOrientation="onChangeVariableListOrientation"
+              @onCallWorkSpace="onCallWorkSpace"
+            />
             <EditorWrapper
               v-show="currentTab === 'editor'"
               ref="editorWrapper"
               class="full-height"
-              @updateCyWithVarObj="updateCytoscapeWithVarObj"
+              @editorContentChanged="onEditorContentChanged"
+              @editorInstanceLoaded.once="onEditorInstanceLoaded"
             ></EditorWrapper>
-            <GraphInfo
-              v-show="currentTab === 'graph-info'"
-              :graphName="graphTitle"
-              :isPublished="isGraphPublished"
-              :abstract="graphAbstract"
-            ></GraphInfo>
+            <GraphInfo v-show="currentTab === 'graph-info'"></GraphInfo>
             <HowToHelper v-show="currentTab === 'how-to'"></HowToHelper>
             <!-- page sticky -->
-            <q-page-sticky
-              v-if="$q.screen.gt.xs"
-              position="bottom-left"
-              :offset="[30, 30]"
-            >
-              <q-fab
-                direction="up"
-                color="primary"
-                icon="more_horiz"
-                padding="10px"
-              >
-                <q-fab-action
-                  color="accent"
-                  icon="mdi-code-json"
-                  padding="10px"
-                  @click.prevent="switchTabView('editor')"
-                >
-                  <SwitchTooltip
-                    :text="$t('tooltips.editor')"
-                    self="center left"
-                    anchor="center right"
-                  />
-                </q-fab-action>
-                <q-fab-action
-                  color="positive"
-                  icon="info"
-                  padding="10px"
-                  @click.prevent="switchTabView('graph-info')"
-                >
-                  <SwitchTooltip
-                    :text="$t('tooltips.graphInfo')"
-                    self="center left"
-                    anchor="center right"
-                  />
-                </q-fab-action>
-                <q-fab-action
-                  color="orange"
-                  icon="help"
-                  padding="10px"
-                  @click.prevent="switchTabView('how-to')"
-                >
-                  <SwitchTooltip
-                    :text="$t('tooltips.howTo')"
-                    self="center left"
-                    anchor="center right"
-                  />
-                </q-fab-action>
-                <!-- TODO added graph info and how to use editor here -->
-                <template v-slot:tooltip>
-                  <SwitchTooltip
-                    :text="$t('tooltips.showEditorAndMore')"
-                    self="center left"
-                    anchor="center right"
-                  ></SwitchTooltip>
-                </template>
-              </q-fab>
-            </q-page-sticky>
           </template>
         </q-splitter>
       </template>
@@ -109,6 +63,7 @@
         <SplitterSeparator :horizontal="$q.screen.lt.md" />
       </template>
       <template v-slot:after>
+        <EditorSectionPanelSwitchSticky @switchTabView="onSwitchTabView" />
         <TutorialArticle class="full-height"></TutorialArticle>
       </template>
     </q-splitter>
@@ -118,20 +73,30 @@
 </template>
 
 <script>
-  import { headerSize } from '../store/states/meta';
-  import { mapState, mapActions, mapGetters } from 'vuex';
-  import { apiCaller } from '../services/apis';
+  import { headerSize } from '@/store/states/meta';
+  import { mapState, mapActions } from 'vuex';
+  import { apiCaller } from '@/services/apis';
   import {
     pullTutorialArticle,
     pullTutorialDetailQuery,
-  } from '../services/queries';
-  import { errorDialog } from '../services/helpers';
-  import SplitterSeparator from '../components/framework/SplitterSeparator';
+  } from '@/services/queries';
+  import { errorDialog } from '@/services/helpers';
+
+  import GraphCodeBridge from '@/components/framework/GraphEditorControls/GraphCodeBridge';
+  import TabSwitchMixin from '@/components/framework/EditorSectionSwitch/TabSwitchMixin';
 
   export default {
+    mixins: [GraphCodeBridge, TabSwitchMixin],
     props: ['url'],
     components: {
-      SplitterSeparator,
+      EditorSectionPanelSwitchSticky: () =>
+        import(
+          '@/components/framework/EditorSectionSwitch/EditorSectionPanelSwitchSticky'
+        ),
+      EditorControlUnit: () =>
+        import('@/components/framework/EditorControlUnit'),
+      SplitterSeparator: () =>
+        import('../components/framework/SplitterSeparator'),
       CytoscapeWrapper: () =>
         import('@/components/tutorial/CytoscapeWrapper.vue'),
       TutorialArticle: () =>
@@ -139,17 +104,14 @@
       EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
       GraphInfo: () => import('@/components/tutorial/GraphInfo.vue'),
       HowToHelper: () => import('@/components/tutorial/HowToHelper.vue'),
-      SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
     },
     data() {
       return {
         editorSplitPos: 60,
-        currentTab: 'editor',
       };
     },
     computed: {
       ...mapState('settings', ['graphSplitPos']),
-      ...mapGetters('tutorials', ['currentGraphContent']),
       splitPos: {
         set(d) {
           this.$store.dispatch(
@@ -168,24 +130,6 @@
       },
       notTortureSmallScreen() {
         return this.$q.screen.gt.xs;
-      },
-      graphTitle() {
-        if (this.currentGraphContent) {
-          return this.currentGraphContent.title;
-        }
-        return '';
-      },
-      isGraphPublished() {
-        if (this.currentGraphContent) {
-          return this.currentGraphContent.isPublished;
-        }
-        return false;
-      },
-      graphAbstract() {
-        if (this.currentGraphContent) {
-          return this.currentGraphContent.abstract;
-        }
-        return '';
       },
       currentLang() {
         return this.$i18n.locale;
@@ -208,18 +152,33 @@
               throw Error('Invalid data returned.');
             }
             this.loadTutorial(data.tutorial);
+
+            // NEW API
+            // load current code id
+            this.currentCodeId = data.tutorial.code.id;
+            // since code is a single object
+            this.loadCodeObjectListFromMatched([data.tutorial.code]);
+
+            // load graph set directly
+            this.loadGraphObjectListFromMatched(data.tutorial.graphSet);
+
+            this.loadResultJsonListFromQueryData(
+              data.tutorial.code.execresultjsonSet.map((obj) => ({
+                ...obj,
+                code: { id: data.tutorial.code.id },
+              }))
+            );
+            // takes in two list
+            this.initResultJsonPositions(
+              data.tutorial.graphSet.map((obj) => obj.id),
+              [data.tutorial.code.id]
+            );
           })
           .catch((err) => {
             errorDialog({
               message: 'An error occurs during pulling tutorials. ' + err,
             });
           });
-      },
-      updateCytoscapeWithVarObj(varObj) {
-        this.$refs.cytoscapeWrapper.highlightVarObj(varObj);
-      },
-      switchTabView(tab) {
-        this.currentTab = tab;
       },
     },
     watch: {
@@ -278,7 +237,6 @@
     },
     destroyed() {
       this.clearAll();
-      // TODO restore states in vuex
     },
   };
 </script>
