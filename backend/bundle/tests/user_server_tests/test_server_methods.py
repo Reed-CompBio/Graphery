@@ -110,6 +110,12 @@ def mock_normal_code() -> str:
                  create_error_response('Bad Request: Wrong Methods.')),  # wrong request method
     pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/env').content,
                  create_error_response('Bad Request: Wrong Methods.')),  # wrong entry point
+pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content(
+        {
+            'wsgi.input': FileLikeObj(json.dumps({}))
+        }).content,
+                 create_error_response('The current version of your local server (%s) does not match version of the '
+                                       'web app ("Not Exist").' % VERSION)),  # no version
     pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content(
         {
             'wsgi.input': FileLikeObj(json.dumps({
@@ -117,7 +123,7 @@ def mock_normal_code() -> str:
             }))
         }).content,
                  create_error_response('The current version of your local server (%s) does not match version of the '
-                                       'web app ("0.0.0").' % VERSION)),  # no code
+                                       'web app ("0.0.0").' % VERSION)),  # wrong version
     pytest.param(Env(REQUEST_METHOD='POST', PATH_INFO='/run', CONTENT_LENGTH='1').add_content(
         {
             'wsgi.input': FileLikeObj(json.dumps({

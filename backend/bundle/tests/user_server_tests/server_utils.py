@@ -2,7 +2,7 @@ import json
 from collections import Mapping
 from typing import Union
 
-from server_utils.params import VERSION
+from bundle.server_utils.params import VERSION
 
 
 class Env:
