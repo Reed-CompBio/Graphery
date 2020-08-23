@@ -109,7 +109,6 @@
     },
     computed: {
       ...mapState('settings', ['graphSplitPos']),
-      ...mapGetters('tutorials', ['currentGraphContent']),
       splitPos: {
         set(d) {
           this.$store.dispatch(
@@ -128,24 +127,6 @@
       },
       notTortureSmallScreen() {
         return this.$q.screen.gt.xs;
-      },
-      graphTitle() {
-        if (this.currentGraphContent) {
-          return this.currentGraphContent.title;
-        }
-        return '';
-      },
-      isGraphPublished() {
-        if (this.currentGraphContent) {
-          return this.currentGraphContent.isPublished;
-        }
-        return false;
-      },
-      graphAbstract() {
-        if (this.currentGraphContent) {
-          return this.currentGraphContent.abstract;
-        }
-        return '';
       },
       currentLang() {
         return this.$i18n.locale;
@@ -256,7 +237,6 @@
     },
     destroyed() {
       this.clearAll();
-      // TODO restore states in vuex
     },
   };
 </script>
