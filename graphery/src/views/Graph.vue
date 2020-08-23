@@ -73,6 +73,7 @@
         </div>
       </template>
     </q-splitter>
+    <MobileViewWarningPopup v-if="onXsScreen" />
   </div>
 </template>
 
@@ -84,6 +85,7 @@
   import { errorDialog, warningDialog } from '@/services/helpers';
   import { emptyCodeTemplate, newModelUUID } from '@/services/params';
   import GraphCodeBridge from '@/components/framework/GraphEditorControls/GraphCodeBridge';
+  import OnXsScreenMixin from '@/components/mixins/OnXsScreenMixin';
 
   const defaultCodeOption = [
     {
@@ -100,9 +102,11 @@
   ];
 
   export default {
-    mixins: [GraphCodeBridge],
+    mixins: [GraphCodeBridge, OnXsScreenMixin],
     props: ['url'],
     components: {
+      MobileViewWarningPopup: () =>
+        import('@/components/framework/MobileViewWarningPopup'),
       EditorControlUnit: () =>
         import('@/components/framework/EditorControlUnit'),
       SplitterSeparator: () =>

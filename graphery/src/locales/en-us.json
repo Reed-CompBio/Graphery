@@ -58,9 +58,7 @@
     "enableEditing": "Enable Editing"
   },
   "notify": {
-    "editorEntry": "Open code editor using {...} button",
-    "mobileWarning": "This page is NOT designed for mobile view. To get all the functionalities, please use a desktop browser!",
-    "mobileChromeWarning": "Mobile Chrome is not well supported in this site. We are sorry for the inconvenience! Please use other browsers!"
+    "editorEntry": "Open code editor using {...} button"
   },
   "license": {
     "licenseInfo1": "All the articles without special specification are licensed under a",
@@ -81,5 +79,9 @@
     "twoPwdNotMatch": "Two passwords must match!",
     "ConfirmPassword": "Confirm Password",
     "InvitationCode": "Invitation Code"
+  },
+  "dialog": {
+    "ok": "OK!",
+    "mobileWarning": "We believe coding on a phone is a torture, so the mobile view is not perfected. Please use a larger screen to get the full experience"
   }
 }
