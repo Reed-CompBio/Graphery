@@ -1,3 +1,4 @@
 #!/usr/bin/env sh
 
-zip local_server.zip launch launch.bat bundle
+cd "$(dirname "$0")"
+zip local_server.zip launch launch.bat user_server.py bundle
