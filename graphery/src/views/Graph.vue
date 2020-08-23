@@ -242,9 +242,6 @@
     mounted() {
       this.loadGraphAndCode();
     },
-    destroyed() {
-      this.$store.dispatch('tutorials/clearAll');
-    },
   };
 </script>
 

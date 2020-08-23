@@ -228,5 +228,11 @@
         }
       },
     },
+    destroyed() {
+      this.$store.dispatch('rj/CLEAR_ALL');
+      this.$store.dispatch('graphs/CLEAR_ALL');
+      this.$store.dispatch('code/CLEAR_ALL');
+      this.$store.dispatch('variables/CLEAR_ALL');
+    },
   };
 </script>
