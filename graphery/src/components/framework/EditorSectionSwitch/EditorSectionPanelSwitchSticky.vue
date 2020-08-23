@@ -61,7 +61,7 @@
     },
     methods: {
       switchTabView(tabName) {
-        this.$emit('switchTab', tabName);
+        this.$emit('switchTabView', tabName);
       },
     },
   };

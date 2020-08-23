@@ -82,13 +82,16 @@
   import { errorDialog } from '@/services/helpers';
 
   import GraphCodeBridge from '@/components/framework/GraphEditorControls/GraphCodeBridge';
+  import TabSwitchMixin from '@/components/framework/EditorSectionSwitch/TabSwitchMixin';
 
   export default {
-    mixins: [GraphCodeBridge],
+    mixins: [GraphCodeBridge, TabSwitchMixin],
     props: ['url'],
     components: {
       EditorSectionPanelSwitchSticky: () =>
-        import('@/components/framework/EditorSectionPanelSwitchSticky'),
+        import(
+          '@/components/framework/EditorSectionSwitch/EditorSectionPanelSwitchSticky'
+        ),
       EditorControlUnit: () =>
         import('@/components/framework/EditorControlUnit'),
       SplitterSeparator: () =>
@@ -104,7 +107,6 @@
     data() {
       return {
         editorSplitPos: 60,
-        currentTab: 'editor',
       };
     },
     computed: {
@@ -176,9 +178,6 @@
               message: 'An error occurs during pulling tutorials. ' + err,
             });
           });
-      },
-      onSwitchTabView(tab) {
-        this.currentTab = tab;
       },
     },
     watch: {
