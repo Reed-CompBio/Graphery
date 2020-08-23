@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+
 python3 --version
 DIR="$(cd "$(dirname "$0")" && pwd)"
 "$DIR"/user_server.py
