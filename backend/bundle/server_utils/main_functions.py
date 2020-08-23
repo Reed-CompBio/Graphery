@@ -24,6 +24,10 @@ def main(port: int = 7590):
         httpd.serve_forever()
 
 
+def run_server(port: int) -> None:
+    main(port)
+
+
 def application(environ: Mapping, start_response: Callable):
     response_code = '200 OK'
     headers = [('Content-Type', 'application/json'),

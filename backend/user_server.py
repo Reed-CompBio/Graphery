@@ -1,17 +1,29 @@
 #!/usr/bin/env python3
-from typing import Mapping
 
-from bundle.server_utils.utils import arg_parser, valid_version
-from bundle.server_utils.main_functions import main
+import sys
 
 
-def run_server(port: int) -> None:
-    main(port)
+def valid_version() -> bool:
+    v = sys.version_info
+    if v.major == 3 and v.minor >= 7:
+        return True
+    print('Your current python is %d.%d. Please use Python 3.7.' % (v.major, v.minor))
+    return False
+
+
+if not valid_version():
+    exit(1)
+
+try:
+    from typing import Mapping
+    from bundle.server_utils.utils import arg_parser
+    from bundle.server_utils.main_functions import run_server
+except Exception as e:
+    print('Cannot import required packages. Error %s' % e)
+    exit(1)
 
 
 if __name__ == '__main__':
-    if not valid_version():
-        exit(1)
 
     args = arg_parser()
     server_port = args.get('port', None)
@@ -19,7 +31,7 @@ if __name__ == '__main__':
 
     try:
         if compile_content is not None and isinstance(compile_content, Mapping):
-            pass
+            raise NotImplementedError('CLI Compiling is not supported yet!')
         elif server_port is not None and isinstance(server_port, int):
             run_server(server_port)
         else:

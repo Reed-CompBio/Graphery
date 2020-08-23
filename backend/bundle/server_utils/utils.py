@@ -17,14 +17,6 @@ class ExecutionException(Exception):
     pass
 
 
-def valid_version() -> bool:
-    v = sys.version_info
-    if v.major == 3 and v.minor >= 8:
-        return True
-    print('Your current python is %d.%d. Please use Python 3.8.' % (v.major, v.minor))
-    return False
-
-
 def arg_parser() -> Mapping[str, int]:
     parser = argparse.ArgumentParser(description='Graphery Local Server')
     parser.add_argument('-p', '--port',
