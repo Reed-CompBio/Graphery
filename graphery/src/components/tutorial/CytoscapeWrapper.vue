@@ -118,7 +118,7 @@
         moduleTargetNum: 6,
         tippy: null,
         testValue: 0,
-        lastVarObj: {},
+        lastVarObjectStore: {},
         choseGraphObj: null,
         // TODO remember to clear this out
       };
@@ -320,34 +320,41 @@
           'overlay-padding': 5,
         });
       },
-      unhighlightElement(id) {
+      unhighlightElement(varObject) {
         if (!this.cyInstance) {
           return;
         }
-        this.cyInstance.getElementById(id).removeStyle('overlay-opacity');
+        this.cyInstance
+          .getElementById(varObject.id)
+          .removeStyle('overlay-opacity');
+      },
+      unhighlightAndStore(varName, varObject) {
+        this.unhighlightElement(this.lastVarObjectStore[varName]);
+        this.lastVarObjectStore[varName] = varObject;
+      },
+      clearAllHighLight() {
+        for (const varObj of Object.values(this.lastVarObjectStore)) {
+          this.unhighlightElement(varObj.id);
+        }
       },
       // highlight interface
-      highlightVarObj(varObj) {
-        if (varObj) {
-          for (const [varName, varValue] of Object.entries(varObj)) {
+      highlightVarObj(varObjList) {
+        if (varObjList) {
+          for (const [varName, varObj] of Object.entries(varObjList)) {
             // TODO something may go wrong here
             // TODO make this simple
-            if (typeof varValue === 'object') {
-              if (varValue) {
-                if (isGraphElement(varValue)) {
-                  if (this.lastVarObj[varName] !== varValue['id']) {
-                    this.unhighlightElement(this.lastVarObj[varName]);
-                    this.lastVarObj[varName] = varValue['id'];
-                  }
-
-                  this.highlightElement(varValue['id'], varValue['color']);
-                }
+            const lastVarObject = this.lastVarObjectStore[varName];
+            if (isGraphElement(varObj)) {
+              if (isGraphElement(lastVarObject)) {
+                this.unhighlightAndStore(varName, varObj);
               } else {
-                if (varValue) {
-                  console.log('unhighlight: ', varName, varObj);
-                  this.unhighlightElement(this.lastVarObj[varName]);
-                  this.lastVarObj[varName] = varValue;
-                }
+                this.lastVarObjectStore[varName] = varObj;
+              }
+
+              this.highlightElement(varObj.id, varObj.color);
+            } else {
+              if (isGraphElement(lastVarObject)) {
+                this.unhighlightAndStore(varName, varObj);
               }
             }
           }

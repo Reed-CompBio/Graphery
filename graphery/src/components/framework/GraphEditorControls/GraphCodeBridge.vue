@@ -34,7 +34,7 @@
         return this.getResultJsonPositionObject(this.currentPositionId);
       },
       editorControlSliderLength() {
-        return this.currentJsonObject || this.currentJsonObject === []
+        return this.currentJsonObject || this.currentJsonObject.length === 0
           ? this.currentJsonObject.jsonObject.length
           : 1;
       },
@@ -120,7 +120,7 @@
         }
       },
       restartWithNewPosition(pos) {
-        if (pos) {
+        if (pos !== undefined) {
           this.$refs.editorControlUnit.setPositionValueCopyFromJsonPos(pos);
           this.stepper(pos, pos);
         }
