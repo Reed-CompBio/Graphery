@@ -40,7 +40,7 @@
       },
       editorControlSliderLength() {
         return this.currentJsonObject
-          ? this.currentJsonObject.jsonObject.length && 1
+          ? this.currentJsonObject.jsonObject.length || 1
           : 1;
       },
     },
