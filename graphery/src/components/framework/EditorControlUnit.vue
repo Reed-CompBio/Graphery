@@ -206,7 +206,8 @@
         this.sliderLabelAlways = !this.sliderLabelAlways;
       },
       onMultipleStepsBack() {
-        this.setSliderPosition(this.getSliderPosition - this.skipSteps);
+        const finalStep = this.getSliderPosition - this.skipSteps;
+        this.setSliderPosition(finalStep < 1 ? 1 : finalStep);
       },
       onStepBack() {
         this.setSliderPosition(this.getSliderPosition - 1);
@@ -218,7 +219,10 @@
         this.setSliderPosition(this.getSliderPosition + 1);
       },
       onMultipleStepForward() {
-        this.setSliderPosition(this.getSliderPosition + this.skipSteps);
+        const finalStep = this.getSliderPosition + this.skipSteps;
+        this.setSliderPosition(
+          finalStep > this.sliderLength ? this.sliderLength : finalStep
+        );
       },
       onPushToCloudExec() {
         this.$emit('onPushToCloudExec');
