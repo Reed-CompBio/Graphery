@@ -6,6 +6,7 @@ import {
   TutorialState,
 } from '@/store/states/state';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
+import { rankToText } from '@/services/helpers';
 
 // TODO remove the pseudo content!
 const state: TutorialState = {
@@ -47,6 +48,7 @@ const actions: ActionTree<TutorialState, RootState> = {
       articleId: tutorialObj.id,
       isAnchorPublished: tutorialObj.isPublished,
       isTransPublished: tutorialObj.content.isPublished,
+      rank: tutorialObj.rank,
       authors: tutorialObj.content.authors.map((obj) => obj.username),
       categories: tutorialObj.categories.map((obj) => obj.category),
       modifiedTime: tutorialObj.content.modifiedTime,
@@ -90,6 +92,9 @@ const getters: GetterTree<TutorialState, RootState> = {
   },
   isTransPublished(state) {
     return state.metaState && state.metaState.isTransPublished;
+  },
+  rankText(state) {
+    return state.metaState && rankToText(state.metaState.rank);
   },
 };
 

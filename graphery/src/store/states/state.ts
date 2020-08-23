@@ -1,3 +1,5 @@
+import { RankType } from '@/types/types';
+
 export interface RootState {
   drawer: boolean;
 }
@@ -28,6 +30,7 @@ export interface TutorialMetaState {
   articleId: string | null;
   isAnchorPublished: boolean;
   isTransPublished: boolean;
+  rank: RankType;
   authors: string[];
   categories: string[];
   modifiedTime: string;
@@ -63,6 +66,7 @@ export interface CategoryType {
 export interface TutorialDetailResponse {
   id: string;
   isPublished: boolean;
+  rank: RankType;
   categories: CategoryType[];
   content: TutorialContent;
 }
