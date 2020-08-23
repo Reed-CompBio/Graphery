@@ -2,7 +2,7 @@
   <!-- TODO change list and app bar color -->
   <div style="overflow: hidden;">
     <q-splitter
-      v-if="notTortureSmallScreen"
+      v-if="!onXsScreen"
       v-model="splitPos"
       :style="tutorialStyle"
       :horizontal="$q.screen.lt.md"
@@ -69,6 +69,7 @@
     </q-splitter>
     <!-- view for small screen -->
     <TutorialArticle v-else></TutorialArticle>
+    <MobileViewWarningPopup v-if="onXsScreen" />
   </div>
 </template>
 
@@ -84,11 +85,14 @@
 
   import GraphCodeBridge from '@/components/framework/GraphEditorControls/GraphCodeBridge';
   import TabSwitchMixin from '@/components/framework/EditorSectionSwitch/TabSwitchMixin';
+  import OnXsScreenMixin from '@/components/mixins/OnXsScreenMixin';
 
   export default {
-    mixins: [GraphCodeBridge, TabSwitchMixin],
+    mixins: [GraphCodeBridge, TabSwitchMixin, OnXsScreenMixin],
     props: ['url'],
     components: {
+      MobileViewWarningPopup: () =>
+        import('@/components/framework/MobileViewWarningPopup'),
       EditorSectionPanelSwitchSticky: () =>
         import(
           '@/components/framework/EditorSectionSwitch/EditorSectionPanelSwitchSticky'
@@ -127,9 +131,6 @@
         return {
           height: `calc(100vh - ${headerSize}px)`,
         };
-      },
-      notTortureSmallScreen() {
-        return this.$q.screen.gt.xs;
       },
       currentLang() {
         return this.$i18n.locale;
@@ -207,28 +208,12 @@
       },
     },
     mounted() {
-      if (this.$q.screen.lt.sm) {
-        this.$q.notify({
-          multiLine: true,
-          message: this.$t('notify.mobileWarning'),
-          icon: 'warning',
-          actions: [{}],
-        });
-      } else {
+      if (!this.onXsScreen) {
         this.$q.notify({
           multiLine: true,
           message: this.$t('notify.editorEntry'),
           icon: 'mdi-code-json',
           timeout: 1500,
-        });
-      }
-      // TODO add a setting to hide notification
-      if (this.$q.platform.is.mobile && this.$q.platform.is.chrome) {
-        // TODO temporary workaround, find a way to solve mobile viewport
-        this.$q.notify({
-          multiLine: true,
-          message: this.$t('notify.mobileChromeWarning'),
-          icon: 'warning',
         });
       }
 
