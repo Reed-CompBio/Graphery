@@ -3,7 +3,6 @@
     v-if="$q.screen.gt.xs"
     position="bottom-left"
     :offset="[30, 30]"
-    style="z-index: 5"
   >
     <q-fab direction="up" color="primary" icon="more_horiz" padding="10px">
       <q-fab-action

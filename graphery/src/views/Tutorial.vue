@@ -55,7 +55,6 @@
             <GraphInfo v-show="currentTab === 'graph-info'"></GraphInfo>
             <HowToHelper v-show="currentTab === 'how-to'"></HowToHelper>
             <!-- page sticky -->
-            <EditorSectionPanelSwitchSticky @switchTabView="onSwitchTabView" />
           </template>
         </q-splitter>
       </template>
@@ -63,6 +62,7 @@
         <SplitterSeparator :horizontal="$q.screen.lt.md" />
       </template>
       <template v-slot:after>
+        <EditorSectionPanelSwitchSticky @switchTabView="onSwitchTabView" />
         <TutorialArticle class="full-height"></TutorialArticle>
       </template>
     </q-splitter>
