@@ -1,5 +1,11 @@
 #!/usr/bin/env sh
 
+if ! command -v python3 &> /dev/null
+then
+    echo "python3 could not be found"
+    exit
+fi
+
 python3 --version
 DIR="$(cd "$(dirname "$0")" && pwd)"
 "$DIR"/user_server.py
