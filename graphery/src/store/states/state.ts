@@ -24,29 +24,6 @@ export interface NotificationState {
   details: string;
 }
 
-export interface PriorityType {
-  priority: number;
-  label: string;
-}
-
-export interface Graph {
-  id: string;
-  isPublished: boolean;
-  content: {
-    title: string;
-    abstract: string;
-    isPublished: boolean;
-  };
-  priority: PriorityType;
-  cyjs: object | string;
-}
-
-export interface ResultJsonType {
-  json: string;
-  graphId: string;
-  codeId: string;
-}
-
 export interface TutorialMetaState {
   articleId: string | null;
   isAnchorPublished: boolean;
@@ -64,14 +41,6 @@ export interface TutorialArticleContent {
 export interface TutorialState {
   metaState: TutorialMetaState | null;
   articleContent: TutorialArticleContent | null;
-  // use v-for to spread graphs and make :key bind to id (or serial code?)
-  currentGraphId: string | null;
-  currentCodeId: string | null;
-  graphs: Graph[] | null;
-  codes: string | null;
-  resultJsonList: ResultJsonType[] | null;
-  variableObj: object | null;
-  customJson: object | null;
 }
 
 export interface UserType {
@@ -86,29 +55,6 @@ export interface TutorialContent {
   modifiedTime: string;
 }
 
-export interface TutorialGraph {
-  id: string;
-  isPublished: boolean;
-  content: {
-    title: string;
-    abstract: string;
-    isPublished: boolean;
-  };
-  priority: PriorityType;
-  cyjs: string;
-}
-
-export interface TutorialExecResultJson {
-  json: string;
-  graph: { id: string };
-}
-
-export interface TutorialCode {
-  id: string;
-  code: string;
-  execresultjsonSet: TutorialExecResultJson[];
-}
-
 export interface CategoryType {
   id: string;
   category: string;
@@ -119,31 +65,6 @@ export interface TutorialDetailResponse {
   isPublished: boolean;
   categories: CategoryType[];
   content: TutorialContent;
-  graphSet: TutorialGraph[];
-  code: TutorialCode;
-}
-
-export const enum GraphLayoutEngines {
-  dagre = 'dagre',
-  hierarchical = 'hac',
-}
-
-export interface TutorialRequestState {
-  articleUrl?: string;
-  isPublished?: boolean;
-  articleContent?: {
-    title: string;
-    contentHtml: string;
-    authors: string[];
-    categories: string[];
-    modifiedTime: string;
-    isPublished: boolean;
-  } | null;
-  // use v-for to spread graphs and make :key bind to id (or serial code?)
-  graphs?: Graph[] | null;
-  codes?: { [id: string]: { graphId: string; codes: string } } | null;
-  resultJson?: string | null;
-  variableObj?: object | null;
 }
 
 export interface SettingInfos {
