@@ -73,7 +73,7 @@
 
 <script>
   import { headerSize } from '@/store/states/meta';
-  import { mapState, mapActions, mapGetters } from 'vuex';
+  import { mapState, mapActions } from 'vuex';
   import { apiCaller } from '@/services/apis';
   import {
     pullTutorialArticle,

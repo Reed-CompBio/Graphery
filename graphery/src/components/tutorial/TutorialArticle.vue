@@ -99,10 +99,11 @@
     saveTextToClipboard,
     successDialog,
   } from '@/services/helpers';
+  import MarkdownSection from '@/components/framework/MarkdownSection';
 
   export default {
     components: {
-      MarkdownSection: () => import('../framework/MarkdownSection'),
+      MarkdownSection,
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
       LicenseCard: () => import('@/components/framework/LicenseCard.vue'),
     },
