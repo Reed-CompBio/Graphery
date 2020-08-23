@@ -9,6 +9,7 @@
   import CodeManager from '@/components/framework/GraphEditorControls/CodeManager';
   import GraphManager from '@/components/framework/GraphEditorControls/GraphManager';
   import PushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
+  import PushCodeToCloudMixin from '@/components/mixins/PushCodeToCloudMixin';
   import { VARIABLE_EMPTY_CONTENT_NOTATION } from '@/components/framework/GraphEditorControls/parameters';
 
   export default {
@@ -17,6 +18,7 @@
       CodeManager,
       GraphManager,
       PushCodeToLocalMixin,
+      PushCodeToCloudMixin,
     ],
     data() {
       return {
@@ -29,6 +31,9 @@
     computed: {
       disableSelection() {
         return this.isExecutingLocally;
+      },
+      execLoading() {
+        return this.isExecutingLocally || this.isExecutingRemotely;
       },
       editorControlSliderPosition() {
         return this.getResultJsonPositionObject(this.currentPositionId);
@@ -94,8 +99,6 @@
         this.updateCytoscapeView(variables);
       },
       stepper(newPosition, steps) {
-        console.log('stepper new position', newPosition);
-
         this.updateResultJsonPosition(this.currentPositionId, newPosition);
         const element = this.getResultJsonObjectElement(
           { graphId: this.currentGraphId, codeId: this.currentCodeId },
@@ -109,13 +112,11 @@
         this.updateEditorLine(element['line']);
 
         if (steps === 1 || steps === -1) {
-          console.log('stepper element', element);
           this.singleStep(element);
         } else {
           const noneEmptyElement = this.findLastNoneEmptyElementPos(
             newPosition
           );
-          console.log('none empty element', noneEmptyElement);
           this.multipleSteps(noneEmptyElement);
         }
       },

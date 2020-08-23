@@ -77,6 +77,7 @@
         icon="mdi-cloud-upload"
         :disable="isExecButtonDisable"
         @click="onPushToCloudExec"
+        :loading="execLoading"
       >
         <SwitchTooltip :text="$t('tooltips.runCodeOnTheCloud')"></SwitchTooltip>
       </q-btn>
@@ -85,6 +86,7 @@
         icon="mdi-cloud-download"
         :disable="isExecButtonDisable"
         @click.prevent="onPushToLocalExec"
+        :loading="execLoading"
       >
         <SwitchTooltip :text="$t('tooltips.runCodeLocally')"></SwitchTooltip>
       </q-btn>
@@ -115,7 +117,11 @@
 
     <!-- Editor status -->
     <q-btn-group flat class="q-mr-md">
-      <q-btn dense disable :icon="editorEnableEditing ? 'lock_open' : 'lock'">
+      <q-btn
+        dense
+        disable
+        :icon="$store.state.settings.enableEditing ? 'lock_open' : 'lock'"
+      >
       </q-btn>
       <SwitchTooltip
         :text="$t('tooltips.goToSettingsToChangeEditingPermission')"
@@ -135,9 +141,8 @@
         type: Boolean,
         default: false,
       },
-      editorEnableEditing: {
+      execLoading: {
         type: Boolean,
-        default: false,
       },
     },
     components: {

@@ -14,6 +14,7 @@
       <template v-slot:before>
         <CytoscapeWrapper
           ref="cytoscapeWrapper"
+          :disableGraphSelection="disableSelection"
           @cytoscapeInstanceLoaded.once="onCytoscapeInstanceLoaded"
         ></CytoscapeWrapper>
       </template>
@@ -54,7 +55,7 @@
             ref="editorControlUnit"
             :slider-length="editorControlSliderLength"
             :disable-override="disableSelection"
-            :editor-enable-editing="true"
+            :execLoading="execLoading"
             @onSliderChange="onSliderChange"
             @onPushToCloudExec="onPushToCloudExec"
             @onPushToLocalExec="onPushToLocalExec"
