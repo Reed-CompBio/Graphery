@@ -96,13 +96,16 @@
 </template>
 
 <script>
-  import { apiCaller } from '../services/apis';
-  import { loginMutation } from '../services/queries';
+  import { apiCaller } from '@/services/apis';
+  import { loginMutation } from '@/services/queries';
   import { mapActions, mapState } from 'vuex';
-  import { errorDialog, successDialog } from '../services/helpers';
+  import { errorDialog, successDialog } from '@/services/helpers';
 
   export default {
-    components: {},
+    metaInfo() {
+      const titleText = this.$t('nav.Login');
+      return { title: titleText };
+    },
     data() {
       return {
         account: '',

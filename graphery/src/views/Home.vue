@@ -51,6 +51,10 @@
 <script>
   export default {
     name: 'Home',
+    metaInfo() {
+      const titleText = this.$t('nav.Home');
+      return { title: titleText };
+    },
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       FeedbackDropdown: () =>

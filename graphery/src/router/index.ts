@@ -2,8 +2,10 @@ import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 import store from '../store/index';
 import { pullUser } from '@/services/helpers';
+import VueMeta from 'vue-meta';
 
 Vue.use(VueRouter);
+Vue.use(VueMeta);
 
 const routes: Array<RouteConfig> = [
   {

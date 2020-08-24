@@ -22,6 +22,10 @@
   import { errorDialog } from '@/services/helpers';
 
   export default {
+    metaInfo() {
+      const titleText = this.$t('nav.Account');
+      return { title: titleText };
+    },
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       UserInfoCards: () => import('@/components/user/UserInfoCards.vue'),

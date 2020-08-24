@@ -20,6 +20,9 @@
         return this.$route.params.pathMatch;
       },
     },
+    metaInfo: {
+      title: '404 Not Found',
+    },
   };
 </script>
 

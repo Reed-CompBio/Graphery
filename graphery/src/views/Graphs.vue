@@ -29,6 +29,10 @@
 <script>
   import { allGraphAbstractInfoQuery } from '@/services/queries';
   export default {
+    metaInfo() {
+      const titleText = this.$t('nav.Graphs');
+      return { title: titleText };
+    },
     components: {
       CollectionPage: () =>
         import('@/components/CollectionEntry/CollectionPage.vue'),
