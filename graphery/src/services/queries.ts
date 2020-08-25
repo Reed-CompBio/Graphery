@@ -1,5 +1,5 @@
 export const allTutorialAbstractInfoQuery = `
-query ($translation: String, $default: String = "en-us", $filterContent: FilterContentType) {
+query ($translation: String, $filterContent: FilterContentType) {
   allTutorialInfo (filterContent: $filterContent) {
     url
     isPublished
@@ -7,7 +7,7 @@ query ($translation: String, $default: String = "en-us", $filterContent: FilterC
       id
       category
     }
-    content (translation: $translation, default: $default) {
+    content (translation: $translation) {
       title
       authors {
         username
@@ -25,7 +25,7 @@ query ($translation: String, $default: String = "en-us", $filterContent: FilterC
 // TODO look into the defaults
 
 export const allGraphAbstractInfoQuery = `
-query ($translation: String, $default: String = "en-us", $filterContent: FilterContentType) {
+query ($translation: String, $filterContent: FilterContentType) {
   allGraphInfo (filterContent: $filterContent) {
     url
     authors {
@@ -37,7 +37,7 @@ query ($translation: String, $default: String = "en-us", $filterContent: FilterC
     }
     isPublished
     modifiedTime
-    content(translation: $translation, default: $default) {
+    content(translation: $translation) {
       title
       abstract
       isPublished
@@ -47,7 +47,7 @@ query ($translation: String, $default: String = "en-us", $filterContent: FilterC
 
 // TODo the graph id is pulled twice hmmm
 export const pullTutorialDetailQuery = `
-query ($url: String, $translation: String, $default: String = "en-us") {
+query ($url: String, $translation: String) {
   tutorial(url: $url) {
     isPublished
     categories {
@@ -57,7 +57,7 @@ query ($url: String, $translation: String, $default: String = "en-us") {
       level
       section
     }
-    content(translation: $translation, default: $default) {
+    content(translation: $translation) {
       title
       authors {
         username
@@ -69,7 +69,7 @@ query ($url: String, $translation: String, $default: String = "en-us") {
     graphSet {
       id
       isPublished
-      content(translation: $translation, default: $default) {
+      content(translation: $translation, default: "en-us") {
         title
         abstract
         isPublished
@@ -93,15 +93,16 @@ query ($url: String, $translation: String, $default: String = "en-us") {
   }
 }`;
 
-export const pullTutorialArticle = `query ($url: String, $translation: String, $default: String = "en-us") {
+export const pullTutorialArticle = `query ($url: String, $translation: String) {
   tutorial(url: $url) {
-    content(translation: $translation, default: $default) {
+    content(translation: $translation) {
       title
       contentHtml
     }
   }
 }`;
 
+// TODO remove default
 export const pullGraphAndCodeQuery = `
 query ($url: String, $translation: String, $default: String = "en-us") {
   graph(url: $url) {

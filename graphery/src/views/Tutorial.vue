@@ -146,7 +146,6 @@
         apiCaller(pullTutorialDetailQuery, {
           url: this.url,
           translation: this.currentLang,
-          default: 'en-us',
         })
           .then((data) => {
             if (!data) {
@@ -203,7 +202,6 @@
         apiCaller(pullTutorialArticle, {
           url: this.url,
           translation: newVal,
-          default: 'en-us',
         })
           .then((data) => {
             if (!data || !('tutorial' in data)) {
