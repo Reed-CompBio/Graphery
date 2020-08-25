@@ -8,7 +8,7 @@
     methods: {
       pushToNewPlace(id) {
         if (this.isCreatingNew) {
-          this.$router.push({ name: this.$route.name, params: { id } });
+          this.$router.replace({ name: this.$route.name, params: { id } });
         }
       },
     },
