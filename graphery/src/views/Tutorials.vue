@@ -9,7 +9,7 @@
         const input = data.allTutorialInfo.filter((ele) => ele.content);
         return input.map((ele) => {
           return {
-            url: `/tutorial/${ele.url}`,
+            url: `/tutorial/${$i18n.locale}/${ele.url}`,
             categories: ele.categories,
             isAnchorPublished: ele.isPublished,
             rank: ele.rank,

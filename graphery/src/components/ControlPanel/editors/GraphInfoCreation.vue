@@ -120,7 +120,10 @@
         return this.graphInfoObject.graphAnchor === newModelUUID;
       },
       resolvedPath() {
-        return resolveLink({ name: 'Graph', params: { url: this.graphUrl } });
+        return resolveLink({
+          name: 'Graph',
+          params: { lang: this.lang, url: this.graphUrl },
+        });
       },
     },
     methods: {

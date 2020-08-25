@@ -89,7 +89,7 @@
 
   export default {
     mixins: [GraphCodeBridge, TabSwitchMixin, OnXsScreenMixin],
-    props: ['url'],
+    props: ['lang', 'url'],
     components: {
       MobileViewWarningPopup: () =>
         import('@/components/framework/MobileViewWarningPopup'),
@@ -191,6 +191,13 @@
     },
     watch: {
       currentLang: function(newVal) {
+        this.$router.push({
+          name: 'Tutorial',
+          params: {
+            lang: newVal,
+            url: this.$route.params.url,
+          },
+        });
         this.$store.commit('tutorials/CLEAR_ARTICLE_CONTENT');
 
         apiCaller(pullTutorialArticle, {
@@ -213,6 +220,9 @@
             });
           });
       },
+    },
+    created() {
+      this.$i18n.locale = this.lang;
     },
     mounted() {
       if (!this.onXsScreen) {

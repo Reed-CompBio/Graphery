@@ -49,7 +49,7 @@
                 :label="props.row.url"
                 :routePath="{
                   name: 'Tutorial',
-                  params: { url: props.row.url },
+                  params: { lang: $i18n.locale, url: props.row.url },
                 }"
               />
             </q-td>

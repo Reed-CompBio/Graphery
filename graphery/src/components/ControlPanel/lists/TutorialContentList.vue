@@ -61,7 +61,7 @@
                 :disabled="emptyContent(props.row.title)"
                 :routePath="{
                   name: 'Tutorial',
-                  params: { url: props.row.tutorialUrl },
+                  params: { lang: tableLang, url: props.row.tutorialUrl },
                 }"
               />
             </q-td>

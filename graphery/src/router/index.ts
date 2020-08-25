@@ -20,23 +20,18 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "tutorials" */ '@/views/Tutorials.vue'),
   },
   {
-    path: '/tutorial/:url',
+    path: '/tutorial/:lang/:url',
     props: true,
+    name: 'Tutorial',
     component: () =>
       import(/* webpackChunkName: "tutorial" */ '@/views/Tutorial.vue'),
-    children: [
-      {
-        path: '',
-        name: 'Tutorial',
-        components: {
-          default: () =>
-            import(
-              /* webpackChunkName: "editor" */
-              '@/components/tutorial/Editor.vue'
-            ),
-        },
-      },
-    ],
+  },
+  {
+    path: 'tutorial/:url',
+    redirect: (to) => ({
+      name: 'Tutorial',
+      params: { lang: 'en-us', url: to.params.url },
+    }),
   },
   {
     path: '/graphs',
@@ -45,11 +40,18 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "graphs" */ '@/views/Graphs.vue'),
   },
   {
-    path: '/graph/:url',
+    path: '/graph/:lang/:url',
     name: 'Graph',
     props: true,
     component: () =>
       import(/* webpackChunkName: "graph" */ '@/views/Graph.vue'),
+  },
+  {
+    path: '/graph/:url',
+    redirect: (to) => ({
+      name: 'Graph',
+      params: { lang: 'en-us', url: to.params.url },
+    }),
   },
   {
     path: '/about',
