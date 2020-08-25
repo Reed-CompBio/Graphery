@@ -103,7 +103,7 @@
 
   export default {
     mixins: [GraphCodeBridge, OnXsScreenMixin],
-    props: ['url'],
+    props: ['lang', 'url'],
     metaInfo() {
       const graphTitle = this.headerTitle;
       return { title: graphTitle };
@@ -253,6 +253,9 @@
             });
           });
       },
+    },
+    created() {
+      this.$i18n.locale = this.lang;
     },
     mounted() {
       this.loadGraphAndCode();

@@ -35,7 +35,9 @@
   "collectionPage": {
     "Filter": "筛选",
     "searchHint": "搜索时请使用关键词. 按下 Enter 进行搜索.",
-    "Categories": "分类"
+    "Categories": "分类",
+    "ReadMore": "阅读更多",
+    "PlayWithIt": "代码尝试"
   },
   "settings": {
     "Display": "显示设置",

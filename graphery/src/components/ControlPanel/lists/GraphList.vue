@@ -76,7 +76,10 @@
             <q-td key="url" :props="props">
               <OpenInPageButton
                 :label="props.row.url"
-                :routePath="{ name: 'Graph', params: { url: props.row.url } }"
+                :routePath="{
+                  name: 'Graph',
+                  params: { lang: $i18n.locale, url: props.row.url },
+                }"
               />
             </q-td>
 

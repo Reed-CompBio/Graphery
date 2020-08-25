@@ -60,7 +60,7 @@
               :label="props.row.graphUrl"
               :routePath="{
                 name: 'Graph',
-                params: { url: props.row.graphUrl },
+                params: { lang: tableLang, url: props.row.graphUrl },
               }"
             />
           </q-td>

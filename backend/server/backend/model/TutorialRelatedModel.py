@@ -9,7 +9,6 @@ from .UserModel import User
 from .mixins import PublishedMixin, TimeDateMixin, UUIDMixin, RankMixin
 from .translation_collection import process_trans_name, process_graph_info_trans_name
 
-
 FAKE_UUID = '00000000-0000-0000-0000-000000000000'
 
 
@@ -49,7 +48,7 @@ class Tutorial(PublishedMixin, RankMixin, UUIDMixin, TimeDateMixin, models.Model
         if content.is_published or not is_published_only:
             return content
         else:
-            return None
+            return self.default_dummy_content()
 
     def __str__(self):
         return f'<tutorial {self.url} | {self.name}>'

@@ -76,7 +76,7 @@
                 :label="props.row.tutorialUrl"
                 :routePath="{
                   name: 'Tutorial',
-                  params: { url: props.row.tutorialUrl },
+                  params: { lang: $i18n.locale, url: props.row.tutorialUrl },
                 }"
               />
             </q-td>

@@ -146,7 +146,7 @@
       resolvedPath() {
         return resolveLink({
           name: 'Tutorial',
-          params: { url: this.tutorialUrl },
+          params: { lang: this.lang, url: this.tutorialUrl },
         });
       },
     },

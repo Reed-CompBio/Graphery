@@ -9,7 +9,7 @@
         const input = data.allGraphInfo;
         return input.map((ele) => {
           return {
-            url: `/graph/${ele.url}`,
+            url: `/graph/${$i18n.locale}/${ele.url}`,
             categories: ele.categories,
             isAnchorPublished: ele.isPublished,
             title: ele.content.title,
@@ -21,7 +21,7 @@
         });
       }
     "
-    moreButtonText="Play With it"
+    :moreButtonText="$t('collectionPage.PlayWithIt')"
     :notClickableWhenNoContent="false"
   ></CollectionPage>
 </template>

@@ -30,7 +30,7 @@
             </q-chip>
           </div>
           <div>
-            <q-chip v-if="noContentNoClick" icon="link">
+            <q-chip icon="link">
               {{ info.url }}
             </q-chip>
             <q-chip
