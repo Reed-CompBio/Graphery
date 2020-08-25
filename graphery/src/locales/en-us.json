@@ -35,7 +35,9 @@
   "collectionPage": {
     "Filter": "Filter",
     "searchHint": "Please use keywords. Press enter to search.",
-    "Categories": "Categories"
+    "Categories": "Categories",
+    "ReadMore": "Read More",
+    "PlayWithIt": "Play With It"
   },
   "settings": {
     "Display": "Display",

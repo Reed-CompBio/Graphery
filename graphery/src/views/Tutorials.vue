@@ -22,7 +22,7 @@
         });
       }
     "
-    moreButtonText="Read More"
+    :moreButtonText="$t('collectionPage.ReadMore')"
     :notClickableWhenNoContent="true"
   ></CollectionPage>
 </template>

@@ -21,7 +21,7 @@
         });
       }
     "
-    moreButtonText="Play With it"
+    :moreButtonText="$t('collectionPage.PlayWithIt')"
     :notClickableWhenNoContent="false"
   ></CollectionPage>
 </template>
