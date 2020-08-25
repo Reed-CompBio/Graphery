@@ -27,7 +27,7 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "tutorial" */ '@/views/Tutorial.vue'),
   },
   {
-    path: 'tutorial/:url',
+    path: '/tutorial/:url',
     redirect: (to) => ({
       name: 'Tutorial',
       params: { lang: 'en-us', url: to.params.url },

@@ -30,7 +30,7 @@
             </q-chip>
           </div>
           <div>
-            <q-chip icon="link">
+            <q-chip v-if="noContent" icon="link">
               {{ info.url }}
             </q-chip>
             <q-chip
@@ -83,11 +83,11 @@
       toLocalDateString,
     },
     computed: {
+      noContent() {
+        return this.info.title === emptyTutorialContentTag;
+      },
       noContentNoClick() {
-        return (
-          this.info.title === emptyTutorialContentTag &&
-          this.notClickableWhenNoContent
-        );
+        return this.noContent && this.notClickableWhenNoContent;
       },
       rankText() {
         return rankToText(this.info.rank);
