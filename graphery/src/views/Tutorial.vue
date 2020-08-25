@@ -152,6 +152,13 @@
             if (!data) {
               throw Error('Invalid data returned.');
             }
+
+            // TODO temporary fix
+            if (data.tutorial.content === null) {
+              this.$router.push({ name: '404' });
+              return;
+            }
+
             this.loadTutorial(data.tutorial);
 
             // NEW API

@@ -70,7 +70,7 @@ T = TypeVar("T")
 def make_dummy_content(content_model: Type[T]) -> T:
     return content_model(id=FAKE_UUID,
                          title=NULL_CONTENT_TITLE,
-                         abstract='No content exists. We are working on this!',
+                         abstract='This is an empty anchor. No Text content exists. We are working on this!',
                          is_published=False)
 
 

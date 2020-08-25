@@ -100,7 +100,7 @@ class CategoryType(PublishedFilterBase, DjangoObjectType):
 
 
 class TutorialType(PublishedFilterBase, DjangoObjectType):
-    content = graphene.Field(TutorialInterface, translation=graphene.String(), default=graphene.String(), required=True)
+    content = graphene.Field(TutorialInterface, translation=graphene.String(), default=graphene.String())
     categories = DjangoListField(CategoryType, required=True)
     rank = graphene.Field(RankType, required=True)
 

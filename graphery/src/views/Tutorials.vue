@@ -6,7 +6,7 @@
     :variables="{ translation: $i18n.locale }"
     :mappingFunction="
       (data) => {
-        const input = data.allTutorialInfo;
+        const input = data.allTutorialInfo.filter((ele) => ele.content);
         return input.map((ele) => {
           return {
             url: `/tutorial/${ele.url}`,
