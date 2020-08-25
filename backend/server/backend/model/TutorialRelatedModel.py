@@ -43,13 +43,13 @@ class Tutorial(PublishedMixin, RankMixin, UUIDMixin, TimeDateMixin, models.Model
     def get_translation(self, translation: str, default: str, is_published_only: bool = True):
         content = getattr(self,
                           process_trans_name(translation),
-                          getattr(self, process_trans_name(default), None))
-        if content:
-            if content.is_published or not is_published_only:
-                return content
-        # TODO this is not dry enough
+                          getattr(self, process_trans_name(default), self.default_dummy_content()))
 
-        return Tutorial.default_dummy_content()
+        # TODO this is not dry enough
+        if content.is_published or not is_published_only:
+            return content
+        else:
+            return None
 
     def __str__(self):
         return f'<tutorial {self.url} | {self.name}>'
@@ -92,7 +92,7 @@ class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
             if content.is_published or not is_published_only:
                 return content
 
-        return Graph.default_dummy_content()
+        return self.default_dummy_content()
 
     def __str__(self):
         return f'<graph {self.url} | {self.name} | {GraphPriority(self.priority).label}>'
