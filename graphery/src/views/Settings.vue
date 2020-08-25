@@ -193,6 +193,10 @@
 <script>
   import { mapState, mapActions } from 'vuex';
   export default {
+    metaInfo() {
+      const titleText = this.$t('nav.Settings');
+      return { title: titleText };
+    },
     components: {
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       SettingDisplayCard: () =>

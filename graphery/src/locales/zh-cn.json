@@ -7,8 +7,8 @@
     "copyCodes": "复制代码",
     "pasteCodes": "粘贴代码",
     "showEditorAndMore": "显示编辑器及更多",
-    "oneStepBack": "前进一步",
-    "oneStepForward": "后退一步",
+    "oneStepBack": "后退一步",
+    "oneStepForward": "前进一步",
     "fiveStepsBack": "后退五步",
     "fiveStepsForward": "前进五步",
     "autoRun": "自动执行",
@@ -83,5 +83,8 @@
   "dialog": {
     "ok": "好的!",
     "mobileWarning": "我们认为在手机上打代码是种折磨，所以我们没有完善移动端。请使用大屏获得完整体验。"
+  },
+  "metaInfo": {
+    "Tutorial": "教程"
   }
 }

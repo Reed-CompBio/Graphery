@@ -130,11 +130,13 @@ export function notAvailableMessage() {
 }
 
 export function rankToText(rank: { level: number; section: number }) {
-  return `${
-    rank.level < 10
-      ? '00' + rank.level.toString()
-      : rank.level < 100
-      ? '0' + rank.level.toString()
-      : rank.level.toString()
-  }-${rank.section}`;
+  return (
+    `${
+      rank.level < 10
+        ? '00' + rank.level.toString()
+        : rank.level < 100
+        ? '0' + rank.level.toString()
+        : rank.level.toString()
+    }` + (rank.section ? `-${rank.section}` : '')
+  );
 }

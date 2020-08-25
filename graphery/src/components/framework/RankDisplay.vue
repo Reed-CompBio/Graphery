@@ -1,9 +1,11 @@
 <template>
-  <span v-if="hasRank">{{ rank.level }}-{{ rank.section }}</span>
+  <span v-if="hasRank">{{ rankText }}</span>
   <span v-else></span>
 </template>
 
 <script>
+  import { rankToText } from '@/services/helpers';
+
   export default {
     props: {
       rank: {
@@ -14,6 +16,9 @@
     computed: {
       hasRank() {
         return this.rank !== null;
+      },
+      rankText() {
+        return rankToText(this.rank);
       },
     },
   };

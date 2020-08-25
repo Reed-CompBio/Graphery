@@ -154,6 +154,10 @@
 
 <script>
   export default {
+    metaInfo() {
+      const titleText = this.$t('nav.About');
+      return { title: titleText };
+    },
     components: {
       NewTabA: () => import('../components/framework/NewTabA'),
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),

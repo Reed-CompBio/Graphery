@@ -20,6 +20,11 @@
 
   export default Vue.extend({
     name: 'App',
+    metaInfo: {
+      title: 'Main',
+      titleTemplate: '%s | Graphery',
+      meta: [{ charset: 'utf-8' }],
+    },
     components: {
       Header: () => import('@/components/framework/Header.vue'),
       Footer: () => import('@/components/framework/Footer.vue'),

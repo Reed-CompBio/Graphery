@@ -107,6 +107,10 @@
   import MarkdownSection from '@/components/framework/MarkdownSection';
 
   export default {
+    metaInfo() {
+      const articleTitle = this.headerTitle;
+      return { title: articleTitle };
+    },
     components: {
       MarkdownSection,
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
@@ -129,6 +133,9 @@
         'isTransPublished',
         'rankText',
       ]),
+      headerTitle() {
+        return this.title ? this.title : this.$t('metaInfo.Tutorial');
+      },
     },
     methods: {
       toLocalDateString,

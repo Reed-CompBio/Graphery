@@ -104,6 +104,10 @@
   export default {
     mixins: [GraphCodeBridge, OnXsScreenMixin],
     props: ['url'],
+    metaInfo() {
+      const graphTitle = this.headerTitle;
+      return { title: graphTitle };
+    },
     components: {
       MobileViewWarningPopup: () =>
         import('@/components/framework/MobileViewWarningPopup'),
@@ -122,11 +126,17 @@
     },
     computed: {
       ...mapState('settings', ['graphSplitPos']),
+      ...mapGetters('graphs', ['getCurrentGraphObjectTitle']),
       ...mapGetters('code', [
         'getCurrentCodeObject',
         'getCurrentCodeId',
         'codeObjectListEmpty',
       ]),
+      headerTitle() {
+        return this.getCurrentGraphObjectTitle
+          ? this.getCurrentGraphObjectTitle
+          : this.$t('nav.Graph');
+      },
       codeChoice: {
         set(d) {
           this.$store.commit('code/LOAD_CURRENT_CODE_ID', d);
