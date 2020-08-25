@@ -44,12 +44,13 @@ def get_model_sites():
 
 
 class BackendSitemap(Sitemap):
-    def get_urls(self, site=None, **kwargs):
-        return super().get_urls(site=FakeSite(),
+    def get_urls(self, page=1, site=None, protocol=None):
+        return super().get_urls(page,
+                                site=FakeSite(),
                                 protocol='https')
 
     def items(self):
         return static_pages + get_model_sites()
 
-    def location(self, item):
-        return item
+    def location(self, obj):
+        return obj
