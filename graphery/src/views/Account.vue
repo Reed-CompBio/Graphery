@@ -54,6 +54,7 @@
             errorDialog({
               message: 'A error occurs during logging out. ' + err,
             });
+            this.$router.go();
           });
       },
     },

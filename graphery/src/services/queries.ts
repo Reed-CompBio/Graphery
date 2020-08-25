@@ -295,6 +295,9 @@ export const updateTutorialAnchorMutation = `
 mutation ($id: UUID!, $url: String!, $name: String!, $rank: RankInputType!, $categories: [String], $isPublished: Boolean) {
   updateTutorialAnchor(id: $id, url: $url, name: $name, rank: $rank, categories: $categories, isPublished: $isPublished) {
     success
+    model {
+      id
+    }
   }
 }`;
 

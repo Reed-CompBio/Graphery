@@ -188,7 +188,7 @@
       },
       pushToNewPlace(id) {
         if (this.$route.params.contentId === newModelUUID) {
-          this.$router.push({
+          this.$router.replace({
             name: this.$route.name,
             params: {
               anchorId: this.graphInfoObject.graphAnchor,

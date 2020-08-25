@@ -42,13 +42,17 @@ class Tutorial(PublishedMixin, RankMixin, UUIDMixin, TimeDateMixin, models.Model
     def get_translation(self, translation: str, default: str, is_published_only: bool = True):
         content = getattr(self,
                           process_trans_name(translation),
-                          getattr(self, process_trans_name(default), self.default_dummy_content()))
+                          getattr(self, process_trans_name(default), None))
 
-        # TODO this is not dry enough
-        if content.is_published or not is_published_only:
-            return content
+        if is_published_only:
+            if content is None or not content.is_published:
+                return None
+            else:
+                return content
         else:
-            return self.default_dummy_content()
+            if content is None:
+                return self.default_dummy_content()
+            return content
 
     def __str__(self):
         return f'<tutorial {self.url} | {self.name}>'
