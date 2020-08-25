@@ -83,5 +83,8 @@
   "dialog": {
     "ok": "OK!",
     "mobileWarning": "We believe coding on a phone is a torture, so the mobile view is not perfected. Please use a larger screen to get the full experience"
+  },
+  "metaInfo": {
+    "Tutorial": "Tutorial"
   }
 }

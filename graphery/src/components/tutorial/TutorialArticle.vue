@@ -134,7 +134,7 @@
         'rankText',
       ]),
       headerTitle() {
-        return this.title ? this.title : this.$t('nav.Tutorial');
+        return this.title ? this.title : this.$t('metaInfo.Tutorial');
       },
     },
     methods: {
