@@ -106,6 +106,7 @@
               "
               :id="props.row.id"
               :content-type="currentDeletionContentType"
+              :final-callback="fetchTutorialContent"
             />
           </q-tr>
         </template>

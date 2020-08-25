@@ -89,7 +89,7 @@
     },
     computed: {
       isCreatingNew() {
-        return this.tutorialAnchorObj.id === newModelUUID;
+        return this.id === newModelUUID;
       },
     },
     methods: {
@@ -130,7 +130,9 @@
               throw Error('Cannot update tutorial anchor at this time.');
             }
 
+            this.tutorialAnchorObj.id = data.updateTutorialAnchor.model.id;
             this.pushToNewPlace(this.tutorialAnchorObj.id);
+
             successDialog({
               message: 'Update Tutorial Anchor Successfully!',
             });
