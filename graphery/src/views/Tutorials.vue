@@ -31,6 +31,10 @@
   import { allTutorialAbstractInfoQuery } from '@/services/queries';
 
   export default {
+    metaInfo() {
+      const titleText = this.$t('nav.Tutorials');
+      return { title: titleText };
+    },
     components: {
       CollectionPage: () =>
         import('@/components/CollectionEntry/CollectionPage.vue'),
