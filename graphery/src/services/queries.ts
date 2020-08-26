@@ -25,7 +25,7 @@ query ($translation: String, $filterContent: FilterContentType) {
 // TODO look into the defaults
 
 export const allGraphAbstractInfoQuery = `
-query ($translation: String, $filterContent: FilterContentType) {
+query ($translation: String, $default: String, $filterContent: FilterContentType) {
   allGraphInfo (filterContent: $filterContent) {
     url
     authors {
@@ -37,7 +37,7 @@ query ($translation: String, $filterContent: FilterContentType) {
     }
     isPublished
     modifiedTime
-    content(translation: $translation) {
+    content(translation: $translation, default: $default) {
       title
       abstract
       isPublished
