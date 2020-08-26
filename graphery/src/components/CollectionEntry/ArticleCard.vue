@@ -62,7 +62,12 @@
         </section>
         <q-separator />
         <q-card-actions>
-          <q-btn flat :to="info.url" :disable="noContentNoClick">
+          <q-btn
+            flat
+            class="q-mt-sm"
+            :to="info.url"
+            :disable="noContentNoClick"
+          >
             {{ moreButtonText }}
           </q-btn>
         </q-card-actions>
