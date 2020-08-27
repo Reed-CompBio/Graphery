@@ -411,6 +411,9 @@ query ($id: String!, $translation: String!, $default: String = "en-us") {
       abstract
       contentMd
     }
+    graphSet {
+      id
+    }
   }
 }`;
 
@@ -502,5 +505,13 @@ query {
     id
     relativeUrl
     alias
+  }
+}`;
+
+export const graphSelectQuery = `
+query {
+  allGraphInfo {
+    id
+    name
   }
 }`;

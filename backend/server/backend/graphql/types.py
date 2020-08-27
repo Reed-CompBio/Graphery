@@ -89,6 +89,7 @@ class TutorialContentInputType(graphene.InputObjectType):
     content_md = graphene.String(required=True)
     content_html = graphene.String(required=True)
     is_published = graphene.Boolean(required=True)
+    graph_set = graphene.List(graphene.UUID, required=True)
 
 
 class CategoryType(PublishedFilterBase, DjangoObjectType):

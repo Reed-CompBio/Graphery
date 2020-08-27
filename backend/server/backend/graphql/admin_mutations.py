@@ -19,7 +19,7 @@ from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     GraphTranslationContentWrapper, ExecResultJsonWrapper, UploadsWrapper
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
-from backend.model.TutorialRelatedModel import GraphPriority
+from backend.model.TutorialRelatedModel import GraphPriority, Graph
 from backend.model.translation_collection import get_translation_table, get_graph_info_trans_table
 
 
@@ -175,8 +175,12 @@ class UpdateTutorialContent(SuccessMutationBase):
         content['authors'] = get_wrappers_by_ids(UserWrapper, content['authors'])
         content['tutorial_anchor'] = get_wrapper_by_id(TutorialAnchorWrapper, content['tutorial_anchor'])
 
+        graph_set: List[str] = content.pop('graph_set')
+
         tutorial_content_wrapper = process_model_wrapper(TutorialTranslationContentWrapper,
                                                          model_class=translation_table, **content)
+
+        tutorial_content_wrapper.model.tutorial_anchor.graph_set.set(Graph.objects.filter(id__in=graph_set))
 
         return UpdateTutorialContent(success=True, model=tutorial_content_wrapper.model)
 
