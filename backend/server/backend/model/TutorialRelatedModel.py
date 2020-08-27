@@ -2,7 +2,7 @@ from os.path import join
 from typing import Callable, Optional
 
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models
 
 from .UserModel import User
@@ -124,6 +124,7 @@ class ExecResultJson(UUIDMixin, TimeDateMixin, models.Model):
     graph = models.ForeignKey(Graph, on_delete=models.CASCADE)
     # content
     json = JSONField()
+    breakpoints = ArrayField(models.PositiveIntegerField(null=True), default=list)
 
     @property
     def is_published(self) -> bool:

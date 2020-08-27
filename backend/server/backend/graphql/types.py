@@ -244,7 +244,7 @@ class ExecResultJsonType(DjangoObjectType):
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
         model = ExecResultJson
-        fields = ('code', 'graph', 'json',)
+        fields = ('code', 'graph', 'json', 'breakpoints',)
         description = 'The execution result of a piece of code on ' \
                       'a graph. '
 
