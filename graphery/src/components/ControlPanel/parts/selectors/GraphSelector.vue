@@ -4,17 +4,22 @@
       Graphs
     </template>
     <!-- TODO add a confirmation dialog during deleting tutorials -->
-    <q-select
-      multiple
-      use-chips
-      v-model="selection"
-      :options="graphOptions"
-      emit-value
-      map-options
-      option-label="name"
-      option-value="id"
-      :loading="loadingContent"
-    ></q-select>
+    <div>
+      <q-select
+        multiple
+        use-chips
+        v-model="selection"
+        :options="graphOptions"
+        emit-value
+        map-options
+        option-label="name"
+        option-value="id"
+        :loading="loadingContent"
+      ></q-select>
+    </div>
+    <div class="q-mt-md">
+      <q-btn label="Add All" @click="addAllGraphs" />
+    </div>
   </InfoCard>
 </template>
 
@@ -75,6 +80,9 @@
       },
       emitValue(val) {
         this.$emit('getSelectedGraphs', val);
+      },
+      addAllGraphs() {
+        this.emitValue(this.graphOptions.map((obj) => obj.id));
       },
     },
     mounted() {
