@@ -224,6 +224,10 @@ query ($translation: String, $default: String = "") {
       contentHtml
       id 
     }
+    rank {
+      level
+      section
+    }
   }
 }`;
 
