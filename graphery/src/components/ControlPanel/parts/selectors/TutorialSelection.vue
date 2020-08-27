@@ -4,26 +4,31 @@
       Tutorials
     </template>
     <!-- TODO add a confirmation dialog during deleting tutorials -->
-    <q-select
-      :multiple="!singleSelection"
-      :use-chips="!singleSelection"
-      v-model="selection"
-      :options="tutorialOptions"
-      emit-value
-      map-options
-      option-label="name"
-      option-value="id"
-      :loading="loadingContent"
-    ></q-select>
+    <div>
+      <q-select
+        :multiple="multipleSelection"
+        :use-chips="multipleSelection"
+        v-model="selection"
+        :options="tutorialOptions"
+        emit-value
+        map-options
+        option-label="name"
+        option-value="id"
+        :loading="loadingContent"
+      ></q-select>
+    </div>
+    <div v-if="multipleSelection" class="q-mt-md">
+      <q-btn label="Add All" @click="addAll" />
+    </div>
   </InfoCard>
 </template>
 
 <script>
   import InfoCard from '../cards/InfoCard.vue';
   import loadingMixin from '../../mixins/LoadingMixin.vue';
-  import { apiCaller } from '../../../../services/apis';
-  import { tutorialSelectQuery } from '../../../../services/queries';
-  import { errorDialog } from '../../../../services/helpers';
+  import { apiCaller } from '@/services/apis';
+  import { tutorialSelectQuery } from '@/services/queries';
+  import { errorDialog } from '@/services/helpers';
 
   export default {
     mixins: [loadingMixin],
@@ -35,9 +40,9 @@
       event: 'getSelectedTutorial',
     },
     props: {
-      singleSelection: {
+      multipleSelection: {
         type: Boolean,
-        default: false,
+        default: true,
       },
       selectedTutorial: {},
     },
@@ -69,6 +74,9 @@
       },
       emitValue(val) {
         this.$emit('getSelectedTutorial', val);
+      },
+      addAll() {
+        this.emitValue(this.tutorialOptions.map((obj) => obj.id));
       },
     },
     computed: {
