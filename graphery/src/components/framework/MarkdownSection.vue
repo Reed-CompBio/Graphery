@@ -5,7 +5,7 @@
 <script>
   // TODO use custom css
   import 'mavon-editor/src/lib/css/md.css';
-  import markdown from 'mavon-editor/src/lib/core/markdown';
+  import markdown from '@/components/ControlPanel/parts/md/markdown';
   import hljs from 'highlight.js/lib/core';
   import python from 'highlight.js/lib/languages/python.js';
 
@@ -104,7 +104,7 @@
       loadExternalResources() {
         // katex
         this.loadScript(
-          'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.js',
+          'https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js',
           () => {
             this.renderHtml();
           }
@@ -116,7 +116,7 @@
 
         // Katex css
         this.loadLink(
-          'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.css'
+          'https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css'
         );
       },
       highlightCode() {
