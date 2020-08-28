@@ -14,6 +14,7 @@ import taskLists from 'markdown-it-task-lists';
 import container from 'markdown-it-container';
 import katexExternal from 'markdown-it-katex-external';
 import miip from 'markdown-it-images-preview';
+import bp from './breakpoint';
 
 // default mode
 const markdownConfig = {
@@ -94,5 +95,6 @@ markdown
   .use(mark)
   .use(container)
   .use(miip)
-  .use(katexExternal);
+  .use(katexExternal)
+  .use(bp);
 export default markdown;
