@@ -126,7 +126,6 @@
       },
       renderHtml() {
         this.renderedHtml = this.markdownIt.render(this.markdownRaw);
-        this.highlightCode();
         // this.$render(this.markdownRaw, (res) => {
         //   this.renderedHtml = res;
         // });
@@ -141,14 +140,21 @@
         return this.renderedHtml;
       },
     },
-    mounted() {
+    beforeMount() {
       hljs.registerLanguage('python', python);
+      hljs.initHighlightingOnLoad();
       this.loadExternalResources();
     },
     watch: {
       // TODO merge this into a computed value
       markdownRaw: function() {
         this.renderHtml();
+      },
+      processedHtml: function() {
+        this.$nextTick(() => {
+          this.highlightCode();
+          this.replaceBreakpoints();
+        });
       },
     },
   };
