@@ -36,7 +36,7 @@
                 ref="markdownSection"
                 :markdown-raw="rawMarkdown"
                 :highlight="true"
-                :render-breakpoint="true"
+                :breakpoint-react="true"
                 @processedHtmlChanged="onProcessedHtmlChanged"
                 @breakpointClicked="onBreakpointClicked"
               />
@@ -85,7 +85,7 @@
       },
       onBreakpointClicked(position) {
         successDialog({
-          message: `breakpoint clicked ${position}`,
+          message: `breakpoint ${position} clicked`,
         });
       },
       onProcessedHtmlChanged(processedHtml) {

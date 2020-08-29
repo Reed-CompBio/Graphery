@@ -52,7 +52,16 @@
 
         <!-- actual contents goes into here -->
         <div id="tutorial-content">
-          <MarkdownSection :input-html="htmlContent"></MarkdownSection>
+          <MarkdownSection
+            :input-html="htmlContent"
+            :breakpoint-react="true"
+            :highlight="true"
+            @breakpointClicked="
+              (position) => {
+                $emit('breakpointClicked', position);
+              }
+            "
+          ></MarkdownSection>
         </div>
 
         <LicenseCard></LicenseCard>

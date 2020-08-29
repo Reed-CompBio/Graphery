@@ -15,7 +15,12 @@
       <div v-show="expanded">
         <q-separator />
         <q-card-section>
-          <MarkdownSection :markdown-raw="helpMarkdown" />
+          <MarkdownSection
+            :markdown-raw="helpMarkdown"
+            :highlight="true"
+            :breakpoint-react="true"
+            @breakpointClicked="onBreakpointClicked"
+          />
         </q-card-section>
       </div>
     </q-slide-transition>
@@ -23,6 +28,7 @@
 </template>
 <script>
   import MarkdownSection from '@/components/framework/MarkdownSection';
+  import { successDialog } from '@/services/helpers';
   export default {
     components: { MarkdownSection },
     data() {
@@ -234,6 +240,13 @@
           '@12@',
         expanded: false,
       };
+    },
+    methods: {
+      onBreakpointClicked(position) {
+        successDialog({
+          message: `breakpoint ${position} clicked`,
+        });
+      },
     },
   };
 </script>
