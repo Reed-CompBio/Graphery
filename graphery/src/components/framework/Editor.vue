@@ -11,6 +11,7 @@
 <script>
   import { mapState } from 'vuex';
   import { errorDialog } from '@/services/helpers';
+  import { debounce } from 'quasar';
   let monacoEditor;
 
   export default {
@@ -83,20 +84,26 @@
                 glyphMargin: true,
               }
             );
-            this.editor.getModel().onDidChangeContent((_) => {
-              const codeContent = this.editor.getValue();
-              this.content = codeContent;
-              this.$emit('editorContentChanged', codeContent);
-            });
+            this.editor.getModel().onDidChangeContent(
+              debounce((_) => {
+                const codeContent = this.editor.getValue();
+                this.content = codeContent;
+                this.$emit('editorContentChanged', codeContent);
+              }),
+              50
+            );
 
-            this.editor.onDidScrollChange((event) => {
-              this.$emit(
-                'editorScrollChanged',
-                event.scrollTop /
-                  (this.editor.getScrollHeight() -
-                    this.editor.getLayoutInfo().height)
-              );
-            });
+            this.editor.onDidScrollChange(
+              debounce((event) => {
+                this.$emit(
+                  'editorScrollChanged',
+                  event.scrollTop /
+                    (this.editor.getScrollHeight() -
+                      this.editor.getLayoutInfo().height)
+                );
+              }),
+              50
+            );
 
             this.editor.layout();
             if (this.initValue) {
