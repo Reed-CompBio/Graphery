@@ -53,7 +53,7 @@
 </template>
 <script>
   import Editor from '@/components/framework/Editor';
-  import MarkdownSection from '@/components/framework/MarkdownSection';
+  import MarkdownSection from '@/components/framework/md/MarkdownSection';
   import { successDialog } from '@/services/helpers';
   import { QScrollArea } from 'quasar';
 

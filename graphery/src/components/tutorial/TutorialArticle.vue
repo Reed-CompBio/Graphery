@@ -113,7 +113,7 @@
     saveTextToClipboard,
     successDialog,
   } from '@/services/helpers';
-  import MarkdownSection from '@/components/framework/MarkdownSection';
+  import MarkdownSection from '@/components/framework/md/MarkdownSection';
 
   export default {
     metaInfo() {

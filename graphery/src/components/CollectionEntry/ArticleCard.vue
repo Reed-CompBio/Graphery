@@ -79,7 +79,7 @@
 <script>
   import { rankToText, toLocalDateString } from '@/services/helpers';
   import { emptyTutorialContentTag } from '@/services/params';
-  import MarkdownSection from '@/components/framework/MarkdownSection';
+  import MarkdownSection from '@/components/framework/md/MarkdownSection';
 
   export default {
     components: { MarkdownSection },

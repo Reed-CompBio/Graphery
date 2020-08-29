@@ -28,7 +28,7 @@
   </q-card>
 </template>
 <script>
-  import MarkdownSection from '@/components/framework/MarkdownSection';
+  import MarkdownSection from '@/components/framework/md/MarkdownSection';
   import { successDialog } from '@/services/helpers';
   export default {
     components: { MarkdownSection },

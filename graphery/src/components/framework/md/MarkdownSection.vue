@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import markdown from '@/components/ControlPanel/parts/md/markdown';
+  import markdown from '@/components/framework/md/markdown';
   import hljs from 'highlight.js/lib/core';
   import python from 'highlight.js/lib/languages/python.js';
 
