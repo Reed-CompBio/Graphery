@@ -85,6 +85,15 @@
               this.$emit('editorContentChanged', codeContent);
             });
 
+            this.editor.onDidScrollChange((event) => {
+              this.$emit(
+                'editorScrollChanged',
+                event.scrollTop /
+                  (this.editor.getScrollHeight() -
+                    this.editor.getLayoutInfo().height)
+              );
+            });
+
             this.editor.layout();
             this.$emit('editorInstanceLoaded');
           })
