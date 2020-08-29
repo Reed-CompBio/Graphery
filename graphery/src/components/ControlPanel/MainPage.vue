@@ -20,6 +20,10 @@
     data() {
       return {
         exampleMd:
+          '@12@\n' +
+          '@13@@14@\n' +
+          '@12.56@\n' +
+          '@sdafew@\n' +
           '# h1 Heading 8-)\n' +
           '## h2 Heading\n' +
           '### h3 Heading\n' +
