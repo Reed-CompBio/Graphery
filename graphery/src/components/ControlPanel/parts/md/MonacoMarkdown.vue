@@ -37,6 +37,7 @@
                 :markdown-raw="rawMarkdown"
                 :highlight="true"
                 :breakpoint-react="true"
+                doc-id="editor-md"
                 @processedHtmlChanged="onProcessedHtmlChanged"
                 @breakpointClicked="onBreakpointClicked"
               />

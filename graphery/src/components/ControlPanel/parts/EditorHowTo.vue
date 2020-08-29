@@ -20,6 +20,7 @@
             :highlight="true"
             :breakpoint-react="true"
             @breakpointClicked="onBreakpointClicked"
+            doc-id="how-to"
           />
         </q-card-section>
       </div>
