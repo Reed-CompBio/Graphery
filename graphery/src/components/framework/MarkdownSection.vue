@@ -25,7 +25,7 @@
         type: Boolean,
         default: false,
       },
-      renderBreakpoint: {
+      breakpointReact: {
         type: Boolean,
         default: false,
       },
@@ -158,7 +158,7 @@
           if (this.highlight) {
             this.highlightCode();
           }
-          if (this.renderBreakpoint) {
+          if (this.breakpointReact) {
             this.replaceBreakpoints();
           }
         });
@@ -177,6 +177,9 @@
       hljs.registerLanguage('python', python);
       hljs.initHighlightingOnLoad();
       this.loadExternalResources();
+    },
+    mounted() {
+      this.postRenderProcessing();
     },
     watch: {
       // TODO merge this into a computed value
