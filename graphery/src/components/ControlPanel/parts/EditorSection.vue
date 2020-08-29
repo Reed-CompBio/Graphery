@@ -31,7 +31,6 @@
     },
     data() {
       return {
-        rawText: '',
         splitPos: 50,
       };
     },
@@ -46,12 +45,9 @@
           message: 'Invalid Command!',
         });
       },
-      getRawText() {
-        return this.rawText;
-      },
       initText(text) {
-        if (this.initValue) {
-          this.initValue = text;
+        if (this.$refs.mdEditor) {
+          this.$refs.mdEditor.initText(text);
         }
       },
       onChangeAction(value, render) {

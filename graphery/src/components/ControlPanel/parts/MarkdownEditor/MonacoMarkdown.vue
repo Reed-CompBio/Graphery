@@ -100,6 +100,12 @@
       onEditorLoaded() {
         this.loadingContent = false;
       },
+      initText(value) {
+        this.rawMarkdown = value;
+        if (this.$refs.editor) {
+          this.$refs.editor.setCodeContent(value);
+        }
+      },
     },
     mounted() {
       if (this.$refs.editor) {
