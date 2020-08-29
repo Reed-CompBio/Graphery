@@ -1,9 +1,9 @@
 <template>
-  <div class="full-width">
+  <q-card>
     <div class="row full-width">
       <MarkdownToolbar class="full-width" />
     </div>
-    <div class="row full-width" style="height: 50vh;">
+    <div class="row full-width" style="height: calc(100% - 32px);">
       <q-splitter v-model="splitterPos" class="full-width">
         <template v-slot:before>
           <Editor
@@ -40,7 +40,7 @@
         </template>
       </q-splitter>
     </div>
-  </div>
+  </q-card>
 </template>
 <script>
   import Editor from '@/components/framework/Editor';
