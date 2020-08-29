@@ -4,7 +4,11 @@
       <MarkdownToolbar class="full-width" />
     </div>
     <div class="row full-width" style="height: calc(100% - 32px);">
-      <q-splitter v-model="splitterPos" class="full-width">
+      <q-splitter
+        v-model="splitterPos"
+        class="full-width"
+        :separator-class="'resizable-v-separator-splitter'"
+      >
         <template v-slot:before>
           <Editor
             ref="editor"
