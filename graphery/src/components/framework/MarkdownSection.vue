@@ -7,8 +7,6 @@
 </template>
 
 <script>
-  // TODO use custom css
-  import 'mavon-editor/src/lib/css/md.css';
   import markdown from '@/components/ControlPanel/parts/md/markdown';
   import hljs from 'highlight.js/lib/core';
   import python from 'highlight.js/lib/languages/python.js';
@@ -195,15 +193,24 @@
 
 <style lang="sass">
   @import "~highlight.js/styles/github.css"
-  pre
+  .markdown-body pre
     box-shadow: 0 1px 5px rgba(0,0,0,0.2), 0 2px 2px rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12)
-  pre > .hljs
+  .markdown-body pre > .hljs
     font-size: 1rem !important
     background-color: #f6f8fa
 
-  span.tutorial-breakpoint
-    padding: 3px
+  .markdown-body span.tutorial-breakpoint
+    padding: 2px
     background-color: #00acc1
     border-radius: 30px
     cursor: pointer
+
+  .markdown-body strong
+    font-weight: bolder
+  .markdown-body .hljs-center
+      text-align: center
+  .markdown-body .hljs-right
+      text-align: right
+  .markdown-body .hljs-left
+      text-align: left
 </style>
