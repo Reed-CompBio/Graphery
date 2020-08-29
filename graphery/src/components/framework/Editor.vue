@@ -9,11 +9,29 @@
 </template>
 
 <script>
-  import { mapGetters, mapState } from 'vuex';
+  import { mapState } from 'vuex';
   import { errorDialog } from '@/services/helpers';
   let monacoEditor;
 
   export default {
+    props: {
+      lang: {
+        type: String,
+        default: 'python',
+      },
+      wrapLine: {
+        type: Boolean,
+        default: false,
+      },
+      miniMapEnable: {
+        type: Boolean,
+        default: false,
+      },
+      loadingOverride: {
+        type: Boolean,
+        default: false,
+      },
+    },
     data() {
       return {
         expanded: false,
@@ -31,9 +49,8 @@
         'fontSize',
         'wrap',
       ]),
-      ...mapGetters('code', ['codeObjectListEmpty']),
       editorAndContentLoading() {
-        return this.editor === null || this.codeObjectListEmpty;
+        return this.editor === null || this.loadingOverride;
       },
     },
     methods: {
@@ -54,9 +71,10 @@
                 scrollBeyondLastLine: false, // remove blank space at the end of the editor
                 readOnly: !this.enableEditing,
                 theme: this.dark ? 'vs-dark' : 'vs',
-                language: 'python',
+                language: this.lang,
+                wordWrap: this.wrap || this.wrapLine ? 'on' : 'off',
                 minimap: {
-                  enabled: false,
+                  enabled: this.miniMapEnable,
                 },
                 glyphMargin: true,
               }
