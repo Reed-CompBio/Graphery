@@ -1,23 +1,23 @@
 <template>
   <div id="md-editor" class="full-height">
-    <mavonEditor
+    <MonacoMarkdown
       language="en"
       :ishljs="true"
       ref="mdEditor"
-      :value="initValue"
+      :init-value="initValue"
       class="full-height"
       @change="onChangeAction"
       @save="onSaveAction"
       @imgAdd="imgAddAction"
       @imgDel="imgDelAction"
-    ></mavonEditor>
+    ></MonacoMarkdown>
   </div>
 </template>
 
 <script>
-  import { mavonEditor } from 'mavon-editor';
   import 'mavon-editor/dist/css/index.css';
   import { errorDialog } from '@/services/helpers';
+  import MonacoMarkdown from '@/components/ControlPanel/parts/md/MonacoMarkdown';
 
   export default {
     props: {
@@ -27,7 +27,7 @@
       },
     },
     components: {
-      mavonEditor,
+      MonacoMarkdown,
     },
     data() {
       return {
