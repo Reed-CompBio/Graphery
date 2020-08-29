@@ -57,7 +57,7 @@
         </section>
         <section class="article-abstract-section q-mx-md">
           <div class="q-mb-sm">
-            <MarkdownSection :input-html="info.abstract" />
+            <MarkdownSection :input-html="info.abstract" :doc-id="info.url" />
           </div>
         </section>
         <q-separator />
