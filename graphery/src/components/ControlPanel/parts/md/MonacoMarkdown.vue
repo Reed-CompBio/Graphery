@@ -12,6 +12,7 @@
             lang="markdown"
             :wrapLine="true"
             :miniMapEnable="true"
+            :init-value="initValue"
             @editorContentChanged="onEditorContentChanged"
             @editorScrollChanged="onEditorScrollChanged"
           />
@@ -84,6 +85,11 @@
       onEditorScrollChanged(percentage) {
         // console.log('scroll to ', percentage);
       },
+    },
+    mounted() {
+      if (this.$refs.editor) {
+        this.$refs.editor.setCodeContent(this.initValue);
+      }
     },
   };
 </script>
