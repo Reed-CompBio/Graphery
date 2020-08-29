@@ -139,10 +139,9 @@
         });
       },
       renderHtml() {
-        this.renderedHtml = this.markdownIt.render(
-          this.markdownRaw,
-          this.markdownEnv
-        );
+        this.renderedHtml = this.markdownIt.render(this.markdownRaw, {
+          docId: this.docId,
+        });
         // this.$render(this.markdownRaw, (res) => {
         //   this.renderedHtml = res;
         // });
@@ -171,11 +170,6 @@
       },
     },
     computed: {
-      markdownEnv() {
-        return {
-          docId: this.docId,
-        };
-      },
       processedHtml() {
         if (this.inputHtml !== null) {
           return this.inputHtml;
@@ -198,8 +192,8 @@
         this.renderHtml();
       },
       processedHtml: function() {
-        this.$emit('processedHtmlChanged', this.processedHtml);
         this.postRenderProcessing();
+        this.$emit('processedHtmlChanged', this.processedHtml);
       },
     },
   };
