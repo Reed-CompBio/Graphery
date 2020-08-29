@@ -29,6 +29,10 @@
         type: Boolean,
         default: false,
       },
+      docId: {
+        type: String,
+        default: 'default',
+      },
     },
     data() {
       return {
@@ -135,7 +139,10 @@
         });
       },
       renderHtml() {
-        this.renderedHtml = this.markdownIt.render(this.markdownRaw);
+        this.renderedHtml = this.markdownIt.render(
+          this.markdownRaw,
+          this.markdownEnv
+        );
         // this.$render(this.markdownRaw, (res) => {
         //   this.renderedHtml = res;
         // });
@@ -144,7 +151,6 @@
         for (const tag of this.$refs.markdownMountingPoint.getElementsByClassName(
           'tutorial-breakpoint'
         )) {
-          console.log(tag);
           tag.addEventListener('click', (event) => {
             this.$emit(
               'breakpointClicked',
@@ -165,6 +171,11 @@
       },
     },
     computed: {
+      markdownEnv() {
+        return {
+          docId: this.docId,
+        };
+      },
       processedHtml() {
         if (this.inputHtml !== null) {
           return this.inputHtml;
