@@ -17,7 +17,7 @@
 <script>
   import 'mavon-editor/dist/css/index.css';
   import { errorDialog } from '@/services/helpers';
-  import MonacoMarkdown from '@/components/ControlPanel/parts/md/MonacoMarkdown';
+  import MonacoMarkdown from '@/components/ControlPanel/parts/MarkdownEditor/MonacoMarkdown';
 
   export default {
     props: {

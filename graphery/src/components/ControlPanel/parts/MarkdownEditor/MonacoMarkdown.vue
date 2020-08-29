@@ -69,7 +69,9 @@
       SplitterSeparator: () =>
         import('@/components/framework/SplitterSeparator'),
       MarkdownToolbar: () =>
-        import('@/components/ControlPanel/parts/md/MarkdownToolbar'),
+        import(
+          '@/components/ControlPanel/parts/MarkdownEditor/MarkdownToolbar'
+        ),
       Editor,
       QScrollArea,
     },
