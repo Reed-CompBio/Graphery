@@ -19,6 +19,7 @@
             :init-value="initValue"
             @editorContentChanged="onEditorContentChanged"
             @editorScrollChanged="onEditorScrollChanged"
+            @editorInstanceLoaded="onEditorLoaded"
           />
         </template>
         <template v-slot:separator>
@@ -40,6 +41,9 @@
                 @breakpointClicked="onBreakpointClicked"
               />
             </q-scroll-area>
+            <q-inner-loading :showing="loadingContent">
+              <q-spinner-pie size="64" color="primary" />
+            </q-inner-loading>
           </div>
         </template>
       </q-splitter>
@@ -72,6 +76,7 @@
       return {
         rawMarkdown: this.initValue,
         splitterPos: 60,
+        loadingContent: true,
       };
     },
     methods: {
@@ -88,6 +93,9 @@
       },
       onEditorScrollChanged(percentage) {
         // console.log('scroll to ', percentage);
+      },
+      onEditorLoaded() {
+        this.loadingContent = false;
       },
     },
     mounted() {
