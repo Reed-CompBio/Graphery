@@ -31,6 +31,10 @@
         type: Boolean,
         default: false,
       },
+      initValue: {
+        type: String,
+        default: null,
+      },
     },
     data() {
       return {
@@ -95,6 +99,9 @@
             });
 
             this.editor.layout();
+            if (this.initValue) {
+              this.setCodeContent(this.initValue);
+            }
             this.$emit('editorInstanceLoaded');
           })
           .catch((err) => {
