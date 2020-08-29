@@ -1,5 +1,9 @@
 <template>
-  <div class="markdown-body" v-html="processedHtml"></div>
+  <div
+    class="markdown-body"
+    ref="markdownMountingPoint"
+    v-html="processedHtml"
+  ></div>
 </template>
 
 <script>
@@ -18,6 +22,14 @@
       inputHtml: {
         type: String,
         default: null,
+      },
+      highlight: {
+        type: Boolean,
+        default: false,
+      },
+      renderBreakpoint: {
+        type: Boolean,
+        default: false,
       },
     },
     data() {
@@ -130,6 +142,29 @@
         //   this.renderedHtml = res;
         // });
       },
+      replaceBreakpoints() {
+        for (const tag of this.$refs.markdownMountingPoint.getElementsByClassName(
+          'tutorial-breakpoint'
+        )) {
+          console.log(tag);
+          tag.addEventListener('click', (event) => {
+            this.$emit(
+              'breakpointClicked',
+              event.target.getAttribute('position')
+            );
+          });
+        }
+      },
+      postRenderProcessing() {
+        this.$nextTick(() => {
+          if (this.highlight) {
+            this.highlightCode();
+          }
+          if (this.renderBreakpoint) {
+            this.replaceBreakpoints();
+          }
+        });
+      },
     },
     computed: {
       processedHtml() {
@@ -151,10 +186,8 @@
         this.renderHtml();
       },
       processedHtml: function() {
-        this.$nextTick(() => {
-          this.highlightCode();
-          this.replaceBreakpoints();
-        });
+        this.$emit('processedHtmlChanged', this.processedHtml);
+        this.postRenderProcessing();
       },
     },
   };
@@ -167,4 +200,10 @@
   pre > .hljs
     font-size: 1rem !important
     background-color: #f6f8fa
+
+  span.tutorial-breakpoint
+    padding: 3px
+    background-color: #00acc1
+    border-radius: 30px
+    cursor: pointer
 </style>
