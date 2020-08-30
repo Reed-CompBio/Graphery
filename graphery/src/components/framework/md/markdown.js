@@ -48,16 +48,7 @@ const markdownConfig = {
 };
 
 const markdown = markdownIt(markdownConfig);
-// 表情
-// 下标
-// 上标
-// <dl/>
-// <abbr/>
-// footnote
-// insert 带有下划线 样式 ++ ++
-// mark
-// taskLists
-//
+
 // add target="_blank" to all link
 const defaultRender =
   markdown.renderer.rules.link_open ||

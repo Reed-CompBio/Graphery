@@ -23,7 +23,6 @@
             {{ rankText }}
           </q-chip>
           <q-chip
-            clickable
             v-for="author in authors"
             :key="author"
             icon="mdi-card-account-details"

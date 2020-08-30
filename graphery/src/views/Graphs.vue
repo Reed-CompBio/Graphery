@@ -3,7 +3,7 @@
     :title="$t('nav.Graphs')"
     ref="collection"
     :query="query"
-    :variables="{ translation: this.$i18n.locale, default: 'en-us' }"
+    :variables="{ translation: $i18n.locale, default: 'en-us' }"
     :mappingFunction="
       (data) => {
         const input = data.allGraphInfo;

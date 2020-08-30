@@ -10,6 +10,7 @@
         :use-chips="multipleSelection"
         v-model="selection"
         :options="tutorialOptions"
+        clearable
         emit-value
         map-options
         option-label="name"

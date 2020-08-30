@@ -112,9 +112,7 @@
       },
     },
     mounted() {
-      if (this.$refs.editor) {
-        this.$refs.editor.setCodeContent(this.initValue);
-      }
+      this.initText(this.initValue);
     },
   };
 </script>

@@ -10,6 +10,7 @@
         use-chips
         v-model="selection"
         :options="graphOptions"
+        clearable
         emit-value
         map-options
         option-label="name"
