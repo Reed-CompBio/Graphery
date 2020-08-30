@@ -35,6 +35,7 @@ THIRD_PARTY_APPS = [
     'graphene_django',
     'django_filters',
     'corsheaders',
+    'channels',
 ]
 
 MY_APPS = [
@@ -74,7 +75,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'graphery.wsgi.application'
+# WSGI_APPLICATION = 'graphery.wsgi.application'
+ASGI_APPLICATION = "graphery.routing.application"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
