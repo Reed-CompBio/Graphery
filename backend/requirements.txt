@@ -2,19 +2,19 @@
 aniso8601==7.0.0
 asgiref==3.2.10; python_version >= '3.5'
 beautifulsoup4==4.9.1
-django-cors-headers==3.4.0
+django-cors-headers==3.5.0
 django-filter==2.3.0
-django==3.0.8
-graphene-django==2.12.1
+django==3.1
+graphene-django==2.13.0
 graphene==2.1.8
 graphql-core==2.3.2
 graphql-relay==2.0.1
 markdown-del-ins==1.0.0
 markdown==3.2.2
 promise==2.3
-prompt-toolkit==3.0.5
+prompt-toolkit==3.0.6
 psycopg2-binary==2.8.5
-pymdown-extensions==7.1
+pymdown-extensions==8.0
 pytz==2020.1
 rx==1.6.1
 singledispatch==3.4.0.3

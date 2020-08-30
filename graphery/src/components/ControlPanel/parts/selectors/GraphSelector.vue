@@ -1,15 +1,15 @@
 <template>
   <InfoCard>
     <template v-slot:title>
-      Tutorials
+      Graphs
     </template>
     <!-- TODO add a confirmation dialog during deleting tutorials -->
     <div>
       <q-select
-        :multiple="multipleSelection"
-        :use-chips="multipleSelection"
+        multiple
+        use-chips
         v-model="selection"
-        :options="tutorialOptions"
+        :options="graphOptions"
         clearable
         emit-value
         map-options
@@ -18,8 +18,8 @@
         :loading="loadingContent"
       ></q-select>
     </div>
-    <div v-if="multipleSelection" class="q-mt-md">
-      <q-btn label="Add All" @click="addAll" />
+    <div class="q-mt-md">
+      <q-btn label="Add All" @click="addAllGraphs" />
     </div>
   </InfoCard>
 </template>
@@ -28,7 +28,7 @@
   import InfoCard from '../cards/InfoCard.vue';
   import loadingMixin from '../../mixins/LoadingMixin.vue';
   import { apiCaller } from '@/services/apis';
-  import { tutorialSelectQuery } from '@/services/queries';
+  import { graphSelectQuery } from '@/services/queries';
   import { errorDialog } from '@/services/helpers';
 
   export default {
@@ -37,32 +37,38 @@
       InfoCard,
     },
     model: {
-      prop: 'selectedTutorial',
-      event: 'getSelectedTutorial',
+      prop: 'selectedGraphs',
+      event: 'getSelectedGraphs',
     },
     props: {
-      multipleSelection: {
-        type: Boolean,
-        default: true,
-      },
-      selectedTutorial: {},
+      selectedGraphs: {},
     },
     data() {
       return {
-        tutorialOptions: null,
+        graphOptions: null,
       };
+    },
+    computed: {
+      selection: {
+        set(d) {
+          this.emitValue(d);
+        },
+        get() {
+          return this.selectedGraphs;
+        },
+      },
     },
     methods: {
       fetchValue() {
         this.startLoading();
 
-        apiCaller(tutorialSelectQuery)
+        apiCaller(graphSelectQuery)
           .then((data) => {
-            if (!data || !('allTutorialInfo' in data)) {
+            if (!data || !('allGraphInfo' in data)) {
               throw Error('Invalid data returned.');
             }
 
-            this.tutorialOptions = data.allTutorialInfo;
+            this.graphOptions = data.allGraphInfo;
           })
           .catch((err) => {
             errorDialog({
@@ -74,20 +80,10 @@
           });
       },
       emitValue(val) {
-        this.$emit('getSelectedTutorial', val);
+        this.$emit('getSelectedGraphs', val);
       },
-      addAll() {
-        this.emitValue(this.tutorialOptions.map((obj) => obj.id));
-      },
-    },
-    computed: {
-      selection: {
-        set(d) {
-          this.emitValue(d);
-        },
-        get() {
-          return this.selectedTutorial;
-        },
+      addAllGraphs() {
+        this.emitValue(this.graphOptions.map((obj) => obj.id));
       },
     },
     mounted() {

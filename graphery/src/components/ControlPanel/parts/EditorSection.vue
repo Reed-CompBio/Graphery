@@ -1,23 +1,24 @@
 <template>
   <div id="md-editor" class="full-height">
-    <mavonEditor
+    <MonacoMarkdown
       language="en"
       :ishljs="true"
       ref="mdEditor"
-      :value="initValue"
+      :init-value="initValue"
+      :doc-id="docId"
       class="full-height"
       @change="onChangeAction"
       @save="onSaveAction"
       @imgAdd="imgAddAction"
       @imgDel="imgDelAction"
-    ></mavonEditor>
+    ></MonacoMarkdown>
   </div>
 </template>
 
 <script>
-  import { mavonEditor } from 'mavon-editor';
   import 'mavon-editor/dist/css/index.css';
   import { errorDialog } from '@/services/helpers';
+  import MonacoMarkdown from '@/components/ControlPanel/parts/MarkdownEditor/MonacoMarkdown';
 
   export default {
     props: {
@@ -25,13 +26,16 @@
         type: String,
         default: '',
       },
+      docId: {
+        type: String,
+        default: 'default',
+      },
     },
     components: {
-      mavonEditor,
+      MonacoMarkdown,
     },
     data() {
       return {
-        rawText: '',
         splitPos: 50,
       };
     },
@@ -46,12 +50,9 @@
           message: 'Invalid Command!',
         });
       },
-      getRawText() {
-        return this.rawText;
-      },
       initText(text) {
-        if (this.initValue) {
-          this.initValue = text;
+        if (this.$refs.mdEditor) {
+          this.$refs.mdEditor.initText(text);
         }
       },
       onChangeAction(value, render) {

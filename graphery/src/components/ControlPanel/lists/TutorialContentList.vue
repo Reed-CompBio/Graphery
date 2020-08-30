@@ -46,6 +46,10 @@
               <!-- TODO when the title is None, create a new content -->
             </q-td>
 
+            <q-td key="rank" :props="props">
+              <RankDisplay :rank="props.row.rank" />
+            </q-td>
+
             <q-td key="isPublished" :props="props">
               {{ props.row.isPublished ? '✅' : '❌' }}
             </q-td>
@@ -127,6 +131,7 @@
   export default {
     mixins: [loadingMixin, tableLangMixin],
     components: {
+      RankDisplay: () => import('@/components/framework/RankDisplay.vue'),
       DeleteTableCell: () =>
         import('@/components/ControlPanel/parts/table/DeleteTableCell'),
       AllTableHeader,
@@ -147,11 +152,23 @@
             field: 'title',
             align: 'center',
             sortable: true,
+          },
+          {
+            name: 'rank',
+            label: 'Rank',
+            field: 'rank',
+            align: 'center',
+            sortable: true,
             sort: (a, b) => {
-              if (a === b) {
-                return 0;
+              if (a.level === b.level) {
+                if (a.section === b.section) {
+                  return 0;
+                }
+
+                return a.section < b.section ? -1 : 1;
               }
-              return a < b ? -1 : 1;
+
+              return a.level < b.level ? -1 : 1;
             },
           },
           {
@@ -206,7 +223,7 @@
         ],
         tableContent: [],
         pagination: {
-          sortBy: 'title',
+          sortBy: 'rank',
           rowsPerPage: 10,
         },
         tutorialContentTypeMapping: {
@@ -249,6 +266,7 @@
               obj.content.tutorialId = obj.id;
               obj.content.tutorialName = obj.name;
               obj.content.tutorialUrl = obj.url;
+              obj.content.rank = obj.rank;
               return obj.content;
             });
           })

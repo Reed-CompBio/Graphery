@@ -2,7 +2,7 @@ from os.path import join
 from typing import Callable, Optional
 
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 from .UserModel import User
@@ -74,7 +74,7 @@ class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
     authors = models.ManyToManyField(User)
     priority = models.PositiveSmallIntegerField(choices=GraphPriority.choices, default=GraphPriority.MAIN)
     # json
-    cyjs = JSONField()
+    cyjs = models.JSONField()
     # belongs to
     tutorials = models.ManyToManyField(Tutorial)
 
@@ -123,7 +123,8 @@ class ExecResultJson(UUIDMixin, TimeDateMixin, models.Model):
     code = models.ForeignKey(Code, on_delete=models.CASCADE)
     graph = models.ForeignKey(Graph, on_delete=models.CASCADE)
     # content
-    json = JSONField()
+    json = models.JSONField()
+    breakpoints = ArrayField(models.PositiveIntegerField(null=True), default=list)
 
     @property
     def is_published(self) -> bool:

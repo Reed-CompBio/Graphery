@@ -9,11 +9,34 @@
 </template>
 
 <script>
-  import { mapGetters, mapState } from 'vuex';
+  import { mapState } from 'vuex';
   import { errorDialog } from '@/services/helpers';
+  import { debounce } from 'quasar';
   let monacoEditor;
 
   export default {
+    props: {
+      lang: {
+        type: String,
+        default: 'python',
+      },
+      wrapLine: {
+        type: Boolean,
+        default: false,
+      },
+      miniMapEnable: {
+        type: Boolean,
+        default: false,
+      },
+      loadingOverride: {
+        type: Boolean,
+        default: false,
+      },
+      initValue: {
+        type: String,
+        default: null,
+      },
+    },
     data() {
       return {
         expanded: false,
@@ -31,9 +54,8 @@
         'fontSize',
         'wrap',
       ]),
-      ...mapGetters('code', ['codeObjectListEmpty']),
       editorAndContentLoading() {
-        return this.editor === null || this.codeObjectListEmpty;
+        return this.editor === null || this.loadingOverride;
       },
     },
     methods: {
@@ -54,20 +76,39 @@
                 scrollBeyondLastLine: false, // remove blank space at the end of the editor
                 readOnly: !this.enableEditing,
                 theme: this.dark ? 'vs-dark' : 'vs',
-                language: 'python',
+                language: this.lang,
+                wordWrap: this.wrap || this.wrapLine ? 'on' : 'off',
                 minimap: {
-                  enabled: false,
+                  enabled: this.miniMapEnable,
                 },
                 glyphMargin: true,
               }
             );
-            this.editor.getModel().onDidChangeContent((_) => {
-              const codeContent = this.editor.getValue();
-              this.content = codeContent;
-              this.$emit('editorContentChanged', codeContent);
-            });
+            this.editor.getModel().onDidChangeContent(
+              debounce((_) => {
+                const codeContent = this.editor.getValue();
+                this.content = codeContent;
+                this.$emit('editorContentChanged', codeContent);
+              }),
+              50
+            );
+
+            this.editor.onDidScrollChange(
+              debounce((event) => {
+                this.$emit(
+                  'editorScrollChanged',
+                  event.scrollTop /
+                    (this.editor.getScrollHeight() -
+                      this.editor.getLayoutInfo().height)
+                );
+              }),
+              50
+            );
 
             this.editor.layout();
+            if (this.initValue) {
+              this.setCodeContent(this.initValue);
+            }
             this.$emit('editorInstanceLoaded');
           })
           .catch((err) => {

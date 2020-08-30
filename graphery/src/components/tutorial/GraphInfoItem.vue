@@ -13,7 +13,8 @@
 <script>
   export default {
     components: {
-      MarkdownSection: () => import('@/components/framework/MarkdownSection'),
+      MarkdownSection: () =>
+        import('@/components/framework/md/MarkdownSection'),
     },
     props: ['title', 'content', 'html'],
   };

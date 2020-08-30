@@ -25,7 +25,7 @@ query ($translation: String, $filterContent: FilterContentType) {
 // TODO look into the defaults
 
 export const allGraphAbstractInfoQuery = `
-query ($translation: String, $filterContent: FilterContentType) {
+query ($translation: String, $default: String, $filterContent: FilterContentType) {
   allGraphInfo (filterContent: $filterContent) {
     url
     authors {
@@ -37,7 +37,7 @@ query ($translation: String, $filterContent: FilterContentType) {
     }
     isPublished
     modifiedTime
-    content(translation: $translation) {
+    content(translation: $translation, default: $default) {
       title
       abstract
       isPublished
@@ -223,6 +223,10 @@ query ($translation: String, $default: String = "") {
       contentMd
       contentHtml
       id 
+    }
+    rank {
+      level
+      section
     }
   }
 }`;
@@ -411,6 +415,9 @@ query ($id: String!, $translation: String!, $default: String = "en-us") {
       abstract
       contentMd
     }
+    graphSet {
+      id
+    }
   }
 }`;
 
@@ -502,5 +509,13 @@ query {
     id
     relativeUrl
     alias
+  }
+}`;
+
+export const graphSelectQuery = `
+query {
+  allGraphInfo {
+    id
+    name
   }
 }`;

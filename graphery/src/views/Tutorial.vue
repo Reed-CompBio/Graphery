@@ -64,7 +64,10 @@
       </template>
       <template v-slot:after>
         <EditorSectionPanelSwitchSticky @switchTabView="onSwitchTabView" />
-        <TutorialArticle class="full-height"></TutorialArticle>
+        <TutorialArticle
+          class="full-height"
+          @breakpointClicked="onBreakpointClicked"
+        ></TutorialArticle>
       </template>
     </q-splitter>
     <!-- view for small screen -->
@@ -81,7 +84,7 @@
     pullTutorialArticle,
     pullTutorialDetailQuery,
   } from '@/services/queries';
-  import { errorDialog } from '@/services/helpers';
+  import { errorDialog, successDialog } from '@/services/helpers';
 
   import GraphCodeBridge from '@/components/framework/GraphEditorControls/GraphCodeBridge';
   import TabSwitchMixin from '@/components/framework/EditorSectionSwitch/TabSwitchMixin';
@@ -186,6 +189,17 @@
               message: 'An error occurs during pulling tutorials. ' + err,
             });
           });
+      },
+      onBreakpointClicked(position) {
+        if (this.onXsScreen) {
+          errorDialog({
+            message: 'The action is not supported on small-screen device',
+          });
+        }
+
+        successDialog({
+          message: `breakpoint ${position} clicked`,
+        });
       },
     },
     watch: {

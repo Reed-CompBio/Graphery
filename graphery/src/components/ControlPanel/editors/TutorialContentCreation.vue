@@ -25,6 +25,7 @@
               class="full-width"
               ref="mdEditor"
               :initValue="tutorialContentObj.contentMd"
+              :docId="`${anchorId}-${lang}`"
               @changes="handleEditorChanges"
               @saves="saveUploadCallback"
             ></EditorSection>
@@ -76,6 +77,8 @@
             </InfoCard>
           </div>
 
+          <GraphSelector v-model="tutorialContentObj.graphSet" />
+
           <StoreLocation location="Cloud" />
 
           <!-- submit section -->
@@ -110,6 +113,8 @@
     // TODO add props to router url
     props: ['anchorId', 'contentId', 'tutorialUrl', 'lang'],
     components: {
+      GraphSelector: () =>
+        import('@/components/ControlPanel/parts/selectors/GraphSelector'),
       StoreLocation: () =>
         import('@/components/ControlPanel/parts/cards/StoreLocationCard'),
       EditorHowTo: () => import('@/components/ControlPanel/parts/EditorHowTo'),
@@ -136,6 +141,7 @@
           contentMd: '',
           contentHtml: '',
           tutorialAnchor: this.anchorId,
+          graphSet: [],
         },
       };
     },
@@ -196,6 +202,10 @@
             this.tutorialUrl = data.tutorial.url;
             Object.assign(this.tutorialContentObj, data.tutorial.content);
             this.tutorialContentObj.authors = this.tutorialContentObj.authors.map(
+              (obj) => obj.id
+            );
+
+            this.tutorialContentObj.graphSet = data.tutorial.graphSet.map(
               (obj) => obj.id
             );
 

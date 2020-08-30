@@ -57,12 +57,17 @@
         </section>
         <section class="article-abstract-section q-mx-md">
           <div class="q-mb-sm">
-            <MarkdownSection :input-html="info.abstract" />
+            <MarkdownSection :input-html="info.abstract" :doc-id="info.url" />
           </div>
         </section>
         <q-separator />
         <q-card-actions>
-          <q-btn flat :to="info.url" :disable="noContentNoClick">
+          <q-btn
+            flat
+            class="q-mt-sm"
+            :to="info.url"
+            :disable="noContentNoClick"
+          >
             {{ moreButtonText }}
           </q-btn>
         </q-card-actions>
@@ -74,7 +79,7 @@
 <script>
   import { rankToText, toLocalDateString } from '@/services/helpers';
   import { emptyTutorialContentTag } from '@/services/params';
-  import MarkdownSection from '@/components/framework/MarkdownSection';
+  import MarkdownSection from '@/components/framework/md/MarkdownSection';
 
   export default {
     components: { MarkdownSection },

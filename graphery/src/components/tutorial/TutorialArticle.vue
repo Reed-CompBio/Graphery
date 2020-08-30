@@ -23,7 +23,6 @@
             {{ rankText }}
           </q-chip>
           <q-chip
-            clickable
             v-for="author in authors"
             :key="author"
             icon="mdi-card-account-details"
@@ -52,7 +51,16 @@
 
         <!-- actual contents goes into here -->
         <div id="tutorial-content">
-          <MarkdownSection :input-html="htmlContent"></MarkdownSection>
+          <MarkdownSection
+            :input-html="htmlContent"
+            :breakpoint-react="true"
+            :highlight="true"
+            @breakpointClicked="
+              (position) => {
+                $emit('breakpointClicked', position);
+              }
+            "
+          ></MarkdownSection>
         </div>
 
         <LicenseCard></LicenseCard>
@@ -104,7 +112,7 @@
     saveTextToClipboard,
     successDialog,
   } from '@/services/helpers';
-  import MarkdownSection from '@/components/framework/MarkdownSection';
+  import MarkdownSection from '@/components/framework/md/MarkdownSection';
 
   export default {
     metaInfo() {

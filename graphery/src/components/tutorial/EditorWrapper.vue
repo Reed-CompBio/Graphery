@@ -61,7 +61,7 @@
 <script>
   import { mapState } from 'vuex';
   import { errorDialog } from '@/services/helpers';
-  import Editor from '@/components/tutorial/Editor.vue';
+  import Editor from '@/components/framework/Editor.vue';
   import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
 
   export default {

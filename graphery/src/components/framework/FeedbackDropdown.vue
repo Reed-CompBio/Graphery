@@ -8,7 +8,7 @@
           </q-item-label>
         </q-item-section>
       </q-item>
-      <q-item tag="a" :href="mailToLink">
+      <q-item tag="a" :href="mailToLink" target="_blank">
         <q-item-section>
           <q-item-label class="feedback-item">
             {{ $t('nav.EmailMe') }}
