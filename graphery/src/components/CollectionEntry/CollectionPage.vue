@@ -115,6 +115,7 @@
   import { apiCaller } from '@/services/apis';
   import { errorDialog } from '@/services/helpers';
   import loadingMixin from '@/components/ControlPanel/mixins/LoadingMixin';
+  import { QPagination } from 'quasar';
 
   export default {
     mixins: [loadingMixin],
@@ -125,6 +126,7 @@
       ArticleCard: () => import('@/components/CollectionEntry/ArticleCard.vue'),
       EmptyEntryCard: () =>
         import('@/components/CollectionEntry/EmptyEntryCard.vue'),
+      QPagination,
     },
     props: [
       'title',
