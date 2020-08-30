@@ -216,9 +216,12 @@
   .markdown-body strong
     font-weight: bolder
   .markdown-body .hljs-center
-      text-align: center
+    text-align: center
   .markdown-body .hljs-right
-      text-align: right
+    text-align: right
   .markdown-body .hljs-left
-      text-align: left
+    text-align: left
+
+  .markdown-body .footnote-backref
+    font-family: auto,sans-serif
 </style>
