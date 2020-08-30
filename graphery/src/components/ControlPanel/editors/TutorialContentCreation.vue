@@ -25,6 +25,7 @@
               class="full-width"
               ref="mdEditor"
               :initValue="tutorialContentObj.contentMd"
+              :docId="`${anchorId}-${lang}`"
               @changes="handleEditorChanges"
               @saves="saveUploadCallback"
             ></EditorSection>

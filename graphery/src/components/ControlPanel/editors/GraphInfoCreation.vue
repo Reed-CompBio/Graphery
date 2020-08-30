@@ -23,6 +23,7 @@
             <EditorSection
               class="full-width"
               ref="mdEditor"
+              :docId="`${anchorId}-${lang}`"
               :initValue="graphInfoObject.abstractMd"
               @changes="handleEditorChanges"
               @saves="saveUploadCallback"

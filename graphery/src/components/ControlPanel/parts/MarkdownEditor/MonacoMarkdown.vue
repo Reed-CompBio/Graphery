@@ -37,7 +37,7 @@
                 :markdown-raw="rawMarkdown"
                 :highlight="true"
                 :breakpoint-react="true"
-                doc-id="editor-md"
+                :doc-id="docId"
                 @processedHtmlChanged="onProcessedHtmlChanged"
                 @breakpointClicked="onBreakpointClicked"
               />
@@ -62,6 +62,10 @@
       initValue: {
         type: String,
         default: '',
+      },
+      docId: {
+        type: String,
+        default: 'default',
       },
     },
     components: {

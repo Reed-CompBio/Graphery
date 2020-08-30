@@ -5,6 +5,7 @@
       :ishljs="true"
       ref="mdEditor"
       :init-value="initValue"
+      :doc-id="docId"
       class="full-height"
       @change="onChangeAction"
       @save="onSaveAction"
@@ -24,6 +25,10 @@
       initValue: {
         type: String,
         default: '',
+      },
+      docId: {
+        type: String,
+        default: 'default',
       },
     },
     components: {
