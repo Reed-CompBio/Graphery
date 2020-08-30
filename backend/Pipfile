@@ -23,6 +23,7 @@ pymdown-extensions = "*"
 prompt-toolkit = "*"
 beautifulsoup4 = "*"
 channels = "*"
+channels-redis = "*"
 
 [requires]
 python_version = "3.8"
