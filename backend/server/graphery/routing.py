@@ -1,5 +1,10 @@
-from channels.routing import ProtocolTypeRouter
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.security.websocket import AllowedHostsOriginValidator
+
+import backend.channels.routing
 
 application = ProtocolTypeRouter({
-    # Empty for now (http->django views is added by default)
+    'websocket': URLRouter(
+            backend.channels.routing.websocket_urlpatterns
+        )
 })
