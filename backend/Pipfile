@@ -10,6 +10,7 @@ parameterized = "*"
 guppy3 = "*"
 pytest-django = "*"
 requests = "*"
+websockets = "*"
 
 [packages]
 django = "*"
