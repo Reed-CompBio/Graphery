@@ -133,7 +133,11 @@
         this.restartWithNewPosition(newPosition);
       },
       onPushToCloudExec() {
-        notAvailableMessage();
+        console.log('send to cloud');
+        this.sendDataToCloudExecutor(
+          this.getCurrentCodeContent,
+          this.getCurrentGraphId
+        );
       },
       onPushToLocalExec() {
         const editorWrapper = this.checkEditorInitialized(true);
