@@ -9,7 +9,7 @@
           label="Graph"
           :multiple="false"
           dropdown-icon="mdi-menu-down"
-          :loading="graphObjectListEmpty"
+          :loading="selectLoading"
           :option-label="inputSectionLabelMapper"
           option-value="id"
           emit-value
@@ -106,7 +106,7 @@
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
     },
     props: {
-      disableGraphSelection: {
+      selectLoadingOverride: {
         type: Boolean,
         default: false,
       },
@@ -153,6 +153,9 @@
       },
       libLoading() {
         return this.moduleLoadedNum < this.moduleTargetNum;
+      },
+      selectLoading() {
+        return this.graphObjectListEmpty || this.selectLoadingOverride;
       },
       graphStyle() {
         return {

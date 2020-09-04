@@ -14,7 +14,7 @@
       <template v-slot:before>
         <CytoscapeWrapper
           ref="cytoscapeWrapper"
-          :disableGraphSelection="disableSelection"
+          :selectLoadingOverride="execLoading"
           @cytoscapeInstanceLoaded.once="onCytoscapeInstanceLoaded"
         ></CytoscapeWrapper>
       </template>
@@ -54,7 +54,7 @@
           <EditorControlUnit
             ref="editorControlUnit"
             :slider-length="editorControlSliderLength"
-            :disable-override="disableSelection"
+            :disable-override="execLoading"
             :execLoading="execLoading"
             @onSliderChange="onSliderChange"
             @onPushToCloudExec="onPushToCloudExec"
@@ -67,6 +67,7 @@
           <EditorWrapper
             ref="editorWrapper"
             style="max-height: calc(100% - 56px);"
+            :editorLoadingOverride="execLoading"
             @editorContentChanged="onEditorContentChanged"
             @editorInstanceLoaded.once="onEditorInstanceLoaded"
           ></EditorWrapper>

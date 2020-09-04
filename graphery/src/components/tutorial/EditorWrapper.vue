@@ -16,6 +16,7 @@
             <Editor
               ref="editorComponent"
               class="full-height"
+              :loadingOverride="editorLoadingOverride"
               @editorContentChanged="emitEditorContentChanged"
               @editorInstanceLoaded.once="onEditorInstanceLoaded"
             ></Editor>
@@ -66,6 +67,12 @@
 
   export default {
     mixins: [pushCodeToLocalMixin],
+    props: {
+      editorLoadingOverride: {
+        type: Boolean,
+        default: false,
+      },
+    },
     components: {
       SplitterSeparator: () => import('../framework/SplitterSeparator'),
       Editor,

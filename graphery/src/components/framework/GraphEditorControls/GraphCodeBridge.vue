@@ -29,9 +29,6 @@
       };
     },
     computed: {
-      disableSelection() {
-        return this.isExecutingLocally;
-      },
       execLoading() {
         return this.isExecutingLocally || this.isExecutingRemotely;
       },
