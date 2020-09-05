@@ -7,4 +7,4 @@ const PRO_BASE_SOCKET = 'wss://api-graphery.reedcompbio.org';
 const DEV_BASE_SOCKET = 'ws://localhost:8082';
 export const BASE_SOCKET =
   (process.env.NODE_ENV === 'production' ? PRO_BASE_SOCKET : DEV_BASE_SOCKET) +
-  '/ws';
+  '/ws/';
