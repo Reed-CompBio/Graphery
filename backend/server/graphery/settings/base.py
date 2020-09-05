@@ -11,15 +11,10 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import sys
 from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# temporary hack
-BUNDLE_BASE_DIR = Path(BASE_DIR) / '../../'
-sys.path.append(str(BUNDLE_BASE_DIR.absolute()))
 
 FILE_STORE_ROOT = Path('/var/www/')
 
