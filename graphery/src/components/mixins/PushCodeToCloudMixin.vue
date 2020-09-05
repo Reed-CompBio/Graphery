@@ -7,6 +7,7 @@
       return {
         isExecutingRemotely: false,
         timeStamp: null,
+        timer: null,
       };
     },
     methods: {
@@ -51,6 +52,7 @@
         );
       },
       onExecuted(data) {
+        clearTimeout(this.timer);
         return this.timeStamp !== null;
       },
       onStopped(data) {
@@ -72,13 +74,13 @@
         });
       },
       timeOutReset(seconds = 10) {
-        setTimeout(this.timeOutHelper, seconds * 1000);
+        return setTimeout(this.timeOutHelper, seconds * 1000);
       },
       sendDataToCloudExecutor(code, graphId) {
         this.startCloudExecuting();
         const message = this.wsData(code, graphId);
         websocketSend(message, this.onMessage, this.onWebsocketError);
-        this.timeOutReset();
+        this.timer = this.timeOutReset();
       },
     },
   };
