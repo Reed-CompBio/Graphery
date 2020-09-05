@@ -44,9 +44,12 @@
         }
       },
       onWaiting(data) {
-        warningDialog({
-          message: data.data['executing_status'],
-        });
+        warningDialog(
+          {
+            message: data.data['executing_status'],
+          },
+          1000
+        );
       },
       onExecuted(data) {
         console.log('original executed: ', data.data);
@@ -64,10 +67,10 @@
         });
         this.finishedCloudExecution();
       },
-      timeOutHelper() {
+      timeOutHelper(time) {
         this.finishedCloudExecution();
         errorDialog({
-          message: 'Execution Timed out',
+          message: `Request Timed Out After ${time / 1000}s`,
         });
       },
       timeOutReset(seconds = 10) {
@@ -77,6 +80,7 @@
         this.startCloudExecuting();
         const message = this.wsData(code, graphId);
         websocketSend(message, this.onMessage, this.onWebsocketError);
+        this.timeOutReset();
       },
     },
   };
