@@ -16,6 +16,7 @@ INSTRUCTION_TYPE_NAME = 'instruction'
 GRAPH_ID_INTERFACE_NAME = 'graphId'
 CODE_INTERFACE_NAME = 'code'
 TIME_STAMP_INTERFACE_NAME = 'timeStamp'
+TIME_STAMP_DIFF = 15
 
 
 class RequestHandlerTypes(Enum):
@@ -83,7 +84,7 @@ class RequestConsumer(JsonWebsocketConsumer):
         if time_stamp is None:
             raise RequestDataInvalid('Request data must contain time stamp.')
 
-        if get_time_stamp() - time_stamp > 15:
+        if get_time_stamp() - time_stamp > TIME_STAMP_DIFF:
             raise RequestDataInvalid('Time stamp is invalid')
 
     def enqueue(self, content: Mapping, **kwargs) -> None:

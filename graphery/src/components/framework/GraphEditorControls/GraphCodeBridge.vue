@@ -154,7 +154,6 @@
         }
       },
       onPushToCloudExec() {
-        console.log('send to cloud');
         this.restartWithNewPosition(0);
         this.sendDataToCloudExecutor(
           this.getCurrentCodeContent,

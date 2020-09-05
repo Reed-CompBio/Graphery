@@ -29,7 +29,6 @@
         });
       },
       onMessage(event) {
-        console.log('on message event: ', event);
         const data = JSON.parse(event.data);
         switch (data.type) {
           case 'waiting':
@@ -52,7 +51,6 @@
         );
       },
       onExecuted(data) {
-        console.log('original executed: ', data.data);
         return this.timeStamp !== null;
       },
       onStopped(data) {

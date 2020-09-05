@@ -1,4 +1,3 @@
-import threading
 from queue import Queue
 from typing import Mapping
 
@@ -10,7 +9,6 @@ from bundle.server_utils.utils import create_error_response
 
 class ProcessHandler:
     def __init__(self):
-        self.lock = threading.Lock()
         self.processing_queue = Queue()
 
     def enqueue(self, consumer: SyncConsumer) -> None:
