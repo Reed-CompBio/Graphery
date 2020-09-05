@@ -35,6 +35,7 @@ THIRD_PARTY_APPS = [
     'graphene_django',
     'django_filters',
     'corsheaders',
+    'channels',
 ]
 
 MY_APPS = [
@@ -74,7 +75,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'graphery.wsgi.application'
+# WSGI_APPLICATION = 'graphery.wsgi.application'
+ASGI_APPLICATION = 'graphery.routing.application'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -103,7 +106,6 @@ CSRF_COOKIE_SAMESITE = 'strict'
 # GraphQL settings
 GRAPHENE = {
     'SCHEMA': 'graphery.schema.schema',
-    "SUBSCRIPTION_PATH": "/ws/graphql"
 }
 
 # Internationalization
@@ -145,3 +147,12 @@ MEDIA_ROOT = str(FILE_STORE_ROOT / UPLOAD_FOLDER_NAME)
 INVITATION_CODE_FOLDER = str(FILE_STORE_ROOT)
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}

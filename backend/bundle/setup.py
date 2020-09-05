@@ -1,23 +1,22 @@
+import os
+
 import setuptools
 
 
 def read_file(filename):
-    with open(filename) as file:
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(base_path, filename)) as file:
         return file.read()
 
 
-long_description = 'This is a the backend of Graphery. It includes a Django server ' \
-                   'and a user server. '
-
 setuptools.setup(
-    name="Graphery Servers",
-    version="0.20.1",
+    name="bundle",
+    version="0.1.0",
     packages=setuptools.find_packages(exclude=['tests*']),
-    install_requires=read_file('requirements.txt'),
     author="Heyuan Zeng",
     author_email="zengl@reed.edu",
-    description="Backend of Graphery",
-    long_description=long_description,
+    description="Utilities for local server",
+    long_description=read_file('README.md'),
     long_description_content_type="text/markdown",
     url="https://github.com/FlickerSoul/Graphery",
     project_urls={
