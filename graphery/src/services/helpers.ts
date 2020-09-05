@@ -8,11 +8,11 @@ import { Location } from 'vue-router';
 import router from '@/router/index';
 import i18n from '@/i18n';
 
-export function successDialog(info: { message: string }) {
+export function successDialog(info: { message: string }, timeout = 1000) {
   Notify.create({
     ...info,
     type: 'positive',
-    timeout: 1000,
+    timeout: timeout,
     actions: [
       {
         label: 'Close',
@@ -23,14 +23,14 @@ export function successDialog(info: { message: string }) {
   });
 }
 
-export function warningDialog(info: { message: string }) {
+export function warningDialog(info: { message: string }, timeout = 10000) {
   Notify.create({
     ...info,
     type: 'warning',
     icon: 'report',
     multiLine: true,
     group: false,
-    timeout: 10000,
+    timeout: timeout,
     actions: [
       {
         label: 'Contact Dev',
@@ -49,14 +49,14 @@ export function warningDialog(info: { message: string }) {
   });
 }
 
-export function errorDialog(info: { message: string }) {
+export function errorDialog(info: { message: string }, timeout = 10000) {
   Notify.create({
     ...info,
     type: 'negative',
     icon: 'report',
     multiLine: true,
     group: false,
-    timeout: 10000,
+    timeout: timeout,
     actions: [
       {
         label: 'Contact Dev',

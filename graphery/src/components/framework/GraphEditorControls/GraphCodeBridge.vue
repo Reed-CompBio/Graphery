@@ -29,9 +29,6 @@
       };
     },
     computed: {
-      disableSelection() {
-        return this.isExecutingLocally;
-      },
       execLoading() {
         return this.isExecutingLocally || this.isExecutingRemotely;
       },
@@ -132,8 +129,36 @@
         );
         this.restartWithNewPosition(newPosition);
       },
+      updateResultJsonObject(obj) {
+        this.$store.commit('rj/CHANGE_RESULT_JSON_OBJECT', {
+          jsonObject: obj,
+          graphId: this.currentGraphId,
+          codeId: this.currentCodeId,
+        });
+      },
+      updateResultJsonString(resultString) {
+        this.$store.commit('rj/CHANGE_RESULT_JSON_STRING', {
+          json: resultString,
+          graphId: this.currentGraphId,
+          codeId: this.currentCodeId,
+        });
+      },
+      onExecuted(data) {
+        if (PushCodeToCloudMixin.methods.onExecuted.call(this, data)) {
+          this.updateResultJsonObject(data.data.execResult);
+          this.updateResultJsonString(JSON.stringify(data.data.execResult));
+          successDialog({
+            message: 'Executed Successfully',
+          });
+          this.finishedCloudExecution();
+        }
+      },
       onPushToCloudExec() {
-        notAvailableMessage();
+        this.restartWithNewPosition(0);
+        this.sendDataToCloudExecutor(
+          this.getCurrentCodeContent,
+          this.getCurrentGraphId
+        );
       },
       onPushToLocalExec() {
         const editorWrapper = this.checkEditorInitialized(true);
@@ -146,16 +171,8 @@
               this.restartWithNewPosition(0);
             },
             (codeHash, execResult) => {
-              this.$store.commit('rj/CHANGE_RESULT_JSON_OBJECT', {
-                jsonObject: execResult,
-                graphId: this.currentGraphId,
-                codeId: this.currentCodeId,
-              });
-              this.$store.commit('rj/CHANGE_RESULT_JSON_STRING', {
-                json: JSON.stringify(execResult),
-                graphId: this.currentGraphId,
-                codeId: this.currentCodeId,
-              });
+              this.updateResultJsonObject(execResult);
+              this.updateResultJsonString(JSON.stringify(execResult));
             },
             () => null
           );

@@ -1,2 +1,0 @@
-class InvalidGraphJson(ValueError):
-    pass
