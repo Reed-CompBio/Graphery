@@ -58,6 +58,12 @@
         });
         this.finishedCloudExecution();
       },
+      onWebsocketError() {
+        errorDialog({
+          message: 'Cannot process request due to connection error.',
+        });
+        this.finishedCloudExecution();
+      },
       timeOutHelper() {
         this.finishedCloudExecution();
         errorDialog({
@@ -70,7 +76,7 @@
       sendDataToCloudExecutor(code, graphId) {
         this.startCloudExecuting();
         const message = this.wsData(code, graphId);
-        websocketSend(message, this.onMessage);
+        websocketSend(message, this.onMessage, this.onWebsocketError);
       },
     },
   };
