@@ -1,10 +1,19 @@
+import json
+import urllib
 from queue import Queue
 from typing import Mapping
 
 from channels.consumer import SyncConsumer
 
-from bundle.server_utils.main_functions import time_out_execute
 from bundle.server_utils.utils import create_error_response
+from bundle.server_utils.params import VERSION
+
+
+def post_request(url: str, data: Mapping[str, str]) -> Mapping:
+    encoded_data = json.dumps(data).encode('UTF-8')
+    req = urllib.request.Request(url, data=encoded_data,
+                                 headers={'content-type': 'application/json'})
+    return json.loads(urllib.request.urlopen(req).read().decode('UTF-8'))
 
 
 class ProcessHandler:
@@ -33,8 +42,15 @@ class ProcessHandler:
     @staticmethod
     def execute(code: str, graph_json_obj: Mapping) -> Mapping:
         if code and graph_json_obj:
-            return time_out_execute(code=code,
-                                    graph_json=graph_json_obj)
+            response = post_request('http://localhost:7590/run',
+                                    data={'code': code,
+                                          'graph': graph_json_obj,
+                                          'version': VERSION})
+            if 'errors' in response:
+                return create_error_response(response['errors'][0]['message'])
+
+            return response
+
         return create_error_response('Cannot Read Code Or Graph Object')
 
     @staticmethod
