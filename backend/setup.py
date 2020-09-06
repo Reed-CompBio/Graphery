@@ -11,7 +11,7 @@ long_description = 'This is a the backend of Graphery. It includes a Django serv
 
 setuptools.setup(
     name="Graphery Servers",
-    version="0.20.1",
+    version="0.20.2",
     packages=setuptools.find_packages(exclude=['tests*']),
     install_requires=read_file('requirements.txt'),
     author="Heyuan Zeng",
