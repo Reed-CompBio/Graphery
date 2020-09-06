@@ -56,6 +56,7 @@
         return this.timeStamp !== null;
       },
       onStopped(data) {
+        clearTimeout(this.timer);
         errorDialog({
           message: `Executed is stopped unexpectedly. ${data.errors[0].message}`,
         });
