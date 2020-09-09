@@ -7,7 +7,6 @@
     </q-page-container>
     <Footer v-if="showFooter"></Footer>
     <NavigationDrawer v-if="$q.screen.lt.md"></NavigationDrawer>
-    <Notification></Notification>
   </q-layout>
 </template>
 
@@ -15,6 +14,9 @@
   import Vue from 'vue';
   import { apiClient } from '@/services/apis';
   import { mapState } from 'vuex';
+  import NavigationDrawer from '@/components/framework/NavigationDrawer';
+  import Header from '@/components/framework/Header';
+  import { QAjaxBar } from 'quasar';
 
   const showFooterRe = /^(\/tutorial\/|\/graph\/|\/control-panel)/;
 
@@ -26,11 +28,10 @@
       meta: [{ charset: 'utf-8' }],
     },
     components: {
-      Header: () => import('@/components/framework/Header.vue'),
+      Header,
+      QAjaxBar,
+      NavigationDrawer,
       Footer: () => import('@/components/framework/Footer.vue'),
-      NavigationDrawer: () =>
-        import('@/components/framework/NavigationDrawer.vue'),
-      Notification: () => import('@/components/framework/Notification.vue'),
     },
     computed: {
       ...mapState('settings', ['dark']),
@@ -74,10 +75,12 @@
         this.$q.dark.set(this.dark);
       },
     },
+    created() {
+      this.loadCSRFToken();
+    },
     mounted() {
       this.asciiArt();
       this.loadLang();
-      this.loadCSRFToken();
       this.loadDarkTheme();
     },
     watch: {
