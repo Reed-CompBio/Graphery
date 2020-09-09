@@ -116,13 +116,14 @@
   import { errorDialog } from '@/services/helpers';
   import loadingMixin from '@/components/ControlPanel/mixins/LoadingMixin';
   import { QPagination } from 'quasar';
+  import MaterialPage from '@/components/framework/MaterialPage.vue';
 
   export default {
     mixins: [loadingMixin],
     components: {
       CategorySelection: () =>
         import('@/components/ControlPanel/parts/selectors/CategorySelection'),
-      MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
+      MaterialPage,
       ArticleCard: () => import('@/components/CollectionEntry/ArticleCard.vue'),
       EmptyEntryCard: () =>
         import('@/components/CollectionEntry/EmptyEntryCard.vue'),

@@ -85,8 +85,13 @@
   import { pullGraphAndCodeQuery } from '@/services/queries';
   import { errorDialog, warningDialog } from '@/services/helpers';
   import { emptyCodeTemplate, newModelUUID } from '@/services/params';
+
   import GraphCodeBridge from '@/components/framework/GraphEditorControls/GraphCodeBridge';
   import OnXsScreenMixin from '@/components/mixins/OnXsScreenMixin';
+
+  import EditorWrapper from '@/components/tutorial/EditorWrapper';
+  import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper';
+  import SplitterSeparator from '@/components/framework/SplitterSeparator';
 
   const defaultCodeOption = [
     {
@@ -110,15 +115,13 @@
       return { title: graphTitle };
     },
     components: {
+      EditorWrapper,
+      CytoscapeWrapper,
+      SplitterSeparator,
       MobileViewWarningPopup: () =>
         import('@/components/framework/MobileViewWarningPopup'),
       EditorControlUnit: () =>
         import('@/components/framework/EditorControlUnit'),
-      SplitterSeparator: () =>
-        import('../components/framework/SplitterSeparator'),
-      EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
-      CytoscapeWrapper: () =>
-        import('@/components/tutorial/CytoscapeWrapper.vue'),
     },
     data() {
       return {

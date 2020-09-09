@@ -28,14 +28,14 @@
 
 <script>
   import { allGraphAbstractInfoQuery } from '@/services/queries';
+  import CollectionPage from '@/components/CollectionEntry/CollectionPage';
   export default {
     metaInfo() {
       const titleText = this.$t('nav.Graphs');
       return { title: titleText };
     },
     components: {
-      CollectionPage: () =>
-        import('@/components/CollectionEntry/CollectionPage.vue'),
+      CollectionPage,
     },
     data() {
       return {

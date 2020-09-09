@@ -131,6 +131,7 @@
 </template>
 
 <script>
+  import SwitchTooltip from '@/components/framework/SwitchTooltip';
   export default {
     props: {
       sliderLength: {
@@ -146,7 +147,7 @@
       },
     },
     components: {
-      SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
+      SwitchTooltip,
     },
     data() {
       return {
