@@ -89,8 +89,7 @@
                 const codeContent = this.editor.getValue();
                 this.content = codeContent;
                 this.$emit('editorContentChanged', codeContent);
-              }),
-              50
+              }, 100)
             );
 
             this.editor.onDidScrollChange(
@@ -101,8 +100,7 @@
                     (this.editor.getScrollHeight() -
                       this.editor.getLayoutInfo().height)
                 );
-              }),
-              50
+              }, 100)
             );
 
             this.editor.layout();
