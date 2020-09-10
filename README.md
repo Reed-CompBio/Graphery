@@ -1,6 +1,7 @@
 # Graphery
 
 Dev: [![Build Status](https://travis-ci.com/FlickerSoul/Graphery.svg?token=iGoqjTdG7SFLHQyLfgoz&branch=dev)](https://travis-ci.com/FlickerSoul/Graphery)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FFlickerSoul%2FGraphery.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FFlickerSoul%2FGraphery?ref=badge_shield)
 
 Master: [![Build Status](https://travis-ci.com/FlickerSoul/Graphery.svg?token=iGoqjTdG7SFLHQyLfgoz&branch=master)](https://travis-ci.com/FlickerSoul/Graphery)
 
@@ -38,3 +39,7 @@ python user_server.py
 
 * general updates: weekly
 * feature updates: biweekly/monthly
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FFlickerSoul%2FGraphery.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FFlickerSoul%2FGraphery?ref=badge_large)
