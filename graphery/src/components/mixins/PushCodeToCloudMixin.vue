@@ -73,8 +73,7 @@
       timeOutHelper() {
         this.finishedCloudExecution();
         errorDialog({
-          message: `Request Timed Out After ${Number(TIME_OUT_SECONDS) /
-            1000}s`,
+          message: `Request Timed Out After ${TIME_OUT_SECONDS}s`,
         });
       },
       timeOutReset(seconds = TIME_OUT_SECONDS) {
