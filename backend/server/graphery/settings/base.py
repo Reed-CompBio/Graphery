@@ -172,7 +172,7 @@ LOGGING = {
         'execution_request_log': {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': '/var/log/graphery/graphery_execution.log',
+            'filename': os.getenv('GRAPHERY_EXECUTION_LOG_PATH', '/var/log/graphery/graphery_execution.log'),
             'when': 'D',  # this specifies the interval
             'interval': 1,  # defaults to 1, only necessary for other values
             'backupCount': 30,  # how many backup file to keep, 10 days
@@ -181,7 +181,7 @@ LOGGING = {
         'normal_operation_log': {
             'level': 'INFO',
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': '/var/log/graphery/graphery_normal.log',
+            'filename': os.getenv('GRAPHERY_NORMAL_LOG_PATH', '/var/log/graphery/graphery_normal.log'),
             'when': 'D',  # this specifies the interval
             'interval': 1,  # defaults to 1, only necessary for other values
             'backupCount': 30,  # how many backup file to keep, 10 days
