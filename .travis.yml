@@ -16,8 +16,6 @@ services:
 env:
   - GRAPHERY_NORMAL_LOG_PATH=graphery_normal.log
   - GRAPHERY_EXECUTION_LOG_PATH=graphery_execution.log
-
-env:
   - PIPENV_IGNORE_VIRTUALENVS=1
 
 install:
