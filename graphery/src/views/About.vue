@@ -153,17 +153,19 @@
 </template>
 
 <script>
+  import MaterialPage from '@/components/framework/MaterialPage.vue';
+  import FeedbackDropdown from '@/components/framework/FeedbackDropdown';
+
   export default {
     metaInfo() {
       const titleText = this.$t('nav.About');
       return { title: titleText };
     },
     components: {
+      MaterialPage,
+      FeedbackDropdown,
       NewTabA: () => import('../components/framework/NewTabA'),
-      MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       LicenseCard: () => import('@/components/framework/LicenseCard.vue'),
-      FeedbackDropdown: () =>
-        import('@/components/framework/FeedbackDropdown.vue'),
     },
   };
 </script>

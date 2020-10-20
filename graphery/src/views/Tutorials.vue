@@ -29,6 +29,7 @@
 
 <script>
   import { allTutorialAbstractInfoQuery } from '@/services/queries';
+  import CollectionPage from '@/components/CollectionEntry/CollectionPage';
 
   export default {
     metaInfo() {
@@ -36,8 +37,7 @@
       return { title: titleText };
     },
     components: {
-      CollectionPage: () =>
-        import('@/components/CollectionEntry/CollectionPage.vue'),
+      CollectionPage,
     },
     data() {
       return {

@@ -54,9 +54,10 @@
 </template>
 
 <script>
+  import SwitchTooltip from '@/components/framework/SwitchTooltip';
   export default {
     components: {
-      SwitchTooltip: () => import('@/components/framework/SwitchTooltip'),
+      SwitchTooltip,
     },
     methods: {
       switchTabView(tabName) {

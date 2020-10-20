@@ -91,25 +91,27 @@
   import TabSwitchMixin from '@/components/framework/EditorSectionSwitch/TabSwitchMixin';
   import OnXsScreenMixin from '@/components/mixins/OnXsScreenMixin';
 
+  import TutorialArticle from '@/components/tutorial/TutorialArticle';
+  import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper';
+  import EditorWrapper from '@/components/tutorial/EditorWrapper';
+  import SplitterSeparator from '@/components/framework/SplitterSeparator';
+
   export default {
     mixins: [GraphCodeBridge, TabSwitchMixin, OnXsScreenMixin],
     props: ['lang', 'url'],
     components: {
+      SplitterSeparator,
+      CytoscapeWrapper,
+      TutorialArticle,
+      EditorWrapper,
+      EditorControlUnit: () =>
+        import('@/components/framework/EditorControlUnit'),
       MobileViewWarningPopup: () =>
         import('@/components/framework/MobileViewWarningPopup'),
       EditorSectionPanelSwitchSticky: () =>
         import(
           '@/components/framework/EditorSectionSwitch/EditorSectionPanelSwitchSticky'
         ),
-      EditorControlUnit: () =>
-        import('@/components/framework/EditorControlUnit'),
-      SplitterSeparator: () =>
-        import('../components/framework/SplitterSeparator'),
-      CytoscapeWrapper: () =>
-        import('@/components/tutorial/CytoscapeWrapper.vue'),
-      TutorialArticle: () =>
-        import('@/components/tutorial/TutorialArticle.vue'),
-      EditorWrapper: () => import('@/components/tutorial/EditorWrapper.vue'),
       GraphInfo: () => import('@/components/tutorial/GraphInfo.vue'),
       HowToHelper: () => import('@/components/tutorial/HowToHelper.vue'),
     },

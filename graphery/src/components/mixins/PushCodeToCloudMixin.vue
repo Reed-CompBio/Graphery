@@ -2,6 +2,8 @@
   import { websocketSend } from '@/services/websocket_handler';
   import { errorDialog, warningDialog } from '@/services/helpers';
 
+  const TIME_OUT_SECONDS = 10;
+
   export default {
     data() {
       return {
@@ -68,13 +70,13 @@
         });
         this.finishedCloudExecution();
       },
-      timeOutHelper(time) {
+      timeOutHelper() {
         this.finishedCloudExecution();
         errorDialog({
-          message: `Request Timed Out After ${time / 1000}s`,
+          message: `Request Timed Out After ${TIME_OUT_SECONDS}s`,
         });
       },
-      timeOutReset(seconds = 10) {
+      timeOutReset(seconds = TIME_OUT_SECONDS) {
         return setTimeout(this.timeOutHelper, seconds * 1000);
       },
       sendDataToCloudExecutor(code, graphId) {

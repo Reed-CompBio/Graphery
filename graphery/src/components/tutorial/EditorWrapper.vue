@@ -64,6 +64,8 @@
   import { errorDialog } from '@/services/helpers';
   import Editor from '@/components/framework/Editor.vue';
   import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
+  import VariableList from '@/components/tutorial/VariableList';
+  import SplitterSeparator from '@/components/framework/SplitterSeparator';
 
   export default {
     mixins: [pushCodeToLocalMixin],
@@ -74,9 +76,9 @@
       },
     },
     components: {
-      SplitterSeparator: () => import('../framework/SplitterSeparator'),
+      SplitterSeparator,
       Editor,
-      VariableList: () => import('@/components/tutorial/VariableList.vue'),
+      VariableList,
       // TODO decouple the workspace controller
       // TutorialWorkSpaceController: () =>
       //   import('@/components/tutorial/TutorialWorkSpaceController.vue'),

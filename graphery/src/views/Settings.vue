@@ -192,16 +192,18 @@
 
 <script>
   import { mapState, mapActions } from 'vuex';
+  import MaterialPage from '@/components/framework/MaterialPage.vue';
+  import SettingDisplayCard from '@/components/settings/SettingDisplayCard';
+  import SettingUnit from '@/components/settings/SettingUnit';
   export default {
     metaInfo() {
       const titleText = this.$t('nav.Settings');
       return { title: titleText };
     },
     components: {
-      MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
-      SettingDisplayCard: () =>
-        import('@/components/settings/SettingDisplayCard.vue'),
-      SettingUnit: () => import('@/components/settings/SettingUnit.vue'),
+      MaterialPage,
+      SettingDisplayCard,
+      SettingUnit,
     },
     computed: {
       ...mapState('settings', [
