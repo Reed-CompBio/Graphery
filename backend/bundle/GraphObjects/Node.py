@@ -8,7 +8,7 @@ class Node(Comparable, HasProperty, Stylable):
     _PREFIX = 'v'
 
     def __init__(self, identity: str, name: str = None,
-                 styles: Union[str, Mapping] = None, classes: Iterable = None):
+                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = ()):
         """
         create an node with an identity
         @param identity:
@@ -27,7 +27,7 @@ class Node(Comparable, HasProperty, Stylable):
         return self.__str__()
 
     @staticmethod
-    def return_node(identity: Union[str, 'Node'], styles=None, classes=None):
+    def return_node(identity: Union[str, 'Node'], styles: Iterable[Mapping] = (), classes: Iterable[str] = ()):
         if isinstance(identity, str):
             return Node(identity=identity, styles=styles, classes=classes)
         elif isinstance(identity, Node):

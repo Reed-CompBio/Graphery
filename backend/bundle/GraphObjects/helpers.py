@@ -7,25 +7,6 @@ from .Edge import Edge, EdgeSet
 from .Graph import Graph
 
 # TODO add default styles
-default_graph_styles: List[dict] = [
-    {
-        "selector": "node",
-        "style": {
-            "label": "data(id)",
-            "text-valign": "center",
-            "text-halign": "center",
-            "text-outline-color": "white",
-            "text-outline-opacity": 1,
-            "text-outline-width": 1,
-            "height": "10px",
-            "width": "10px",
-            "font-size": "5px",
-            "border-color": "black",
-            "border-opacity": 1,
-            "border-width": 1
-        }
-    },
-]
 default_directed_styles: dict = {}
 
 
@@ -80,9 +61,8 @@ class GraphObjectEncoder(json.JSONEncoder):
                 'edges': cls.return_edge_set_encoding(graph.E)
             },
             'style': [
-                *default_graph_styles,
-                # graph.styles
-                # TODO you can't have a empty dict. They must be removed
+                # *default_graph_styles,
+                *graph.styles
             ],
             'layout': graph.layout
         }

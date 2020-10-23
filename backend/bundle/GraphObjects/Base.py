@@ -1,7 +1,10 @@
+from __future__ import annotations
 from abc import ABCMeta
-from typing import Union, Iterable, Mapping, Type, MutableMapping
+from typing import Union, Iterable, Mapping, Type, MutableMapping, List
 import json
 import logging
+
+from .Errors import InvalidGraphStyleCollectionError, InvalidGraphClassCollectionError
 
 
 class Comparable(metaclass=ABCMeta):
@@ -102,30 +105,49 @@ class HasProperty(metaclass=ABCMeta):
 
 
 class Stylable(metaclass=ABCMeta):
-    def __init__(self, style: Union[str, Mapping] = None, classes: Iterable[str] = None):
+    @staticmethod
+    def is_valid_graph_styles(styles: Iterable[Mapping]) -> bool:
+        if isinstance(styles, Iterable):
+            for element in styles:
+                if not isinstance(element, Mapping) or 'selector' not in element or 'style' not in element:
+                    return False
+            return True
+        return False
+
+    @staticmethod
+    def is_valid_graph_classes(classes: Iterable[str]) -> bool:
+        return isinstance(classes, Iterable) and all(isinstance(element, str) for element in classes)
+
+    def __init__(self, styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = None):
         """
         interface that helps managing the state of an element
-        @param style:
+        @param styles:
         @param classes:
         """
-        # TODO I don't think I need styles
-        self.styles: MutableMapping[str, str] = {}
+
+        self.styles: List[MutableMapping[str, str]] = []
         self.classes = []
 
-        if isinstance(style, str):
+        if isinstance(styles, str):
             try:
-                self.styles.update(json.loads(style))
+                styles = json.loads(styles)
             except json.JSONDecodeError as e:
                 logging.exception('Cannot decode Json')
                 raise e
             except Exception as e:
                 logging.exception('Unknown Exception')
                 raise e
-        elif isinstance(style, Mapping):
-            self.styles.update(style)
 
-        if isinstance(classes, Mapping):
+        if self.is_valid_graph_styles(styles):
+            self.styles.extend(styles)
+        else:
+            raise InvalidGraphStyleCollectionError(f'cannot init {type(self)} due to graph style format error.')
+
+        # TODO ???
+        if self.is_valid_graph_classes(classes):
             self.classes.extend(classes)
+        else:
+            raise InvalidGraphClassCollectionError(f'cannot init {type(self)} due to graph class format error.')
 
 
 class ElementSet:
