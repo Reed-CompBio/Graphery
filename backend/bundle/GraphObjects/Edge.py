@@ -4,7 +4,7 @@ from .Node import Node, NodeSet
 from typing import Iterable, Tuple, Mapping, Union
 from collections import namedtuple
 
-NodeTuple = namedtuple('Edge', ('incident_node', 'final_node'))
+NodeTuple = namedtuple('Edge', ('u', 'v'))
 EdgeIDTuple = namedtuple('edge_identities', ('incident_edge_identity', 'final_edge_identity'))
 
 
