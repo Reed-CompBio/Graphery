@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import ABCMeta
-from typing import Union, Iterable, Mapping, Type, MutableMapping, List
+from typing import Union, Iterable, Mapping, Type, MutableMapping, List, overload
 import json
 import logging
 
@@ -118,7 +118,13 @@ class Stylable(metaclass=ABCMeta):
     def is_valid_graph_classes(classes: Iterable[str]) -> bool:
         return isinstance(classes, Iterable) and all(isinstance(element, str) for element in classes)
 
-    def __init__(self, styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = None):
+    @overload
+    def __init__(self, styles: Iterable[Mapping] = (), classes: Iterable[str] = None) -> None: ...
+
+    @overload
+    def __init__(self, styles: str = (), classes: Iterable[str] = None) -> None: ...
+
+    def __init__(self, styles, classes):
         """
         interface that helps managing the state of an element
         @param styles:
