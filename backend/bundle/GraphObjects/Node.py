@@ -1,3 +1,4 @@
+from __future__ import annotations
 from .Base import Comparable, HasProperty, Stylable, ElementSet
 from typing import Iterable, Mapping, Union
 

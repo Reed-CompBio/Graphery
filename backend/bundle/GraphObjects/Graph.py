@@ -1,3 +1,4 @@
+from __future__ import annotations
 from .Base import Stylable
 from .Errors import GraphJsonFormatError
 from .Node import Node, NodeSet, MutableNodeSet
