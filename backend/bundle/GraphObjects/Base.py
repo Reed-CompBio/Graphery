@@ -4,7 +4,7 @@ from typing import Union, Iterable, Mapping, Type, MutableMapping, List, Callabl
 import json
 import logging
 
-from .Errors import InvalidStyleCollectionError, InvalidClassCollectionError, InvalidComparableName
+from .Errors import InvalidStyleCollectionError, InvalidClassCollectionError
 
 
 class Comparable(metaclass=ABCMeta):
@@ -13,23 +13,18 @@ class Comparable(metaclass=ABCMeta):
     """
     _PREFIX = ''
 
-    @staticmethod
-    def name_validator(name: str) -> bool:
-        return isinstance(name, str) and bool(name)
-
-    def __init__(self, name: Union[int, str]):
+    def __init__(self, identity: Union[int, str], name=None):
         """
         Identity interface. Subclass should pass in an identity that should be comparable
         But it is restricted to `int` and `str` for now.
-        @param name: unique name for this object
+        @param identity: unique id for this object
+        @param name: displayed name for this object
         """
         # TODO read SUID if id is not present.
         # TODO think of an naming convention for id
-        if not self.name_validator(name):
-            raise InvalidComparableName(f'Cannot parse name for {type(self)} (name literal: {name}).')
-
-        self.name = str(name)
-        self.identity = self._PREFIX + name
+        assert identity is not None
+        self.identity = identity
+        self.name = name if name else self._PREFIX + str(identity)
 
     def __eq__(self, other):
         if isinstance(other, type(self)):

@@ -193,7 +193,7 @@ class MutableGraph(Graph):
         super().__init__(nodes, edges, node_container=MutableNodeSet, edge_container=MutableEdgeSet)
 
     def add_node(self, identity: Union[str, Node] = None,
-                 styles: Union[str, Iterable[Mapping]] = (), classes: Union[str, Iterable[str]] = ()) -> Node:
+                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = ()) -> Node:
         node = Node.return_node(identity=identity, styles=styles, classes=classes)
         self.nodes.add_node(node)
         return node
@@ -201,9 +201,8 @@ class MutableGraph(Graph):
     def add_edge(self,
                  identity: str = None,
                  edge: Union[Edge, NodeTuple, EdgeIDTuple] = (),
-                 styles: Union[str, Iterable[Mapping]] = (),
-                 classes: Union[str, Iterable[str]] = ()) -> Optional[Edge]:
-        edge = Edge.return_edge(identity, edge, styles=styles, classes=classes)
+                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = ()) -> Optional[Edge]:
+        edge = Edge.return_edge(identity, edge, styles, classes)
 
         # TODO think about it
         for node in edge:
