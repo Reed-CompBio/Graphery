@@ -2,9 +2,9 @@ class GraphJsonFormatError(ValueError):
     pass
 
 
-class InvalidGraphStyleCollectionError(ValueError):
+class InvalidStyleCollectionError(ValueError):
     pass
 
 
-class InvalidGraphClassCollectionError(ValueError):
+class InvalidClassCollectionError(ValueError):
     pass

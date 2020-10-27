@@ -23,7 +23,7 @@ Edge_C = TypeVar('Edge_C')
 class Graph(Stylable, Generic[Node_C, Edge_C]):
     """The graph object"""
 
-    default_graph_styles = [{
+    default_styles = [{
         "selector": "node",
         "style": {
             "label": "data(id)",
@@ -44,21 +44,19 @@ class Graph(Stylable, Generic[Node_C, Edge_C]):
     def __init__(self, nodes: Iterable[Node], edges: Iterable[Edge],
                  node_container: Type[Node_C] = NodeSet,
                  edge_container: Type[Edge_C] = EdgeSet,
-                 styles: Iterable[Mapping] = None, with_default_style: bool = False, classes: Iterable[str] = ()):
+                 styles: Iterable[Mapping] = (), classes: Iterable[str] = (),
+                 add_default_styles: bool = True,
+                 add_default_classes: bool = True):
         """ graph constructor.
 
         @param nodes:
         @param edges:
         @raise ValueError: if nodes and edges are not iterable
         """
-
-        if styles is None:
-            styles = self.default_graph_styles
-        elif Stylable.is_valid_graph_styles(styles):
-            if with_default_style:
-                styles = [*self.default_graph_styles, *styles]
-
-        super(Graph, self).__init__(styles, classes)
+        super(Graph, self).__init__(
+            styles, classes,
+            add_default_styles=add_default_styles, add_default_classes=add_default_classes
+        )
 
         if isinstance(nodes, Iterable) and isinstance(edges, Iterable):
             if isinstance(nodes, node_container):

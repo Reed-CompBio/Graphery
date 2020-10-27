@@ -9,7 +9,8 @@ class Node(Comparable, HasProperty, Stylable):
     _PREFIX = 'v'
 
     def __init__(self, identity: str, name: str = None,
-                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = ()):
+                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = (),
+                 add_default_styles=False, add_default_classes=False):
         """
         create an node with an identity
         @param identity:
@@ -19,7 +20,10 @@ class Node(Comparable, HasProperty, Stylable):
         """
         Comparable.__init__(self, identity, name)
         HasProperty.__init__(self)
-        Stylable.__init__(self, styles, classes)
+        Stylable.__init__(
+            self, styles, classes,
+            add_default_styles=add_default_styles, add_default_classes=add_default_classes
+        )
 
     def __str__(self):
         return 'Node(id: %s)' % self.identity

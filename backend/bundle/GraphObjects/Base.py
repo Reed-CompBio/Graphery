@@ -1,10 +1,10 @@
 from __future__ import annotations
 from abc import ABCMeta
-from typing import Union, Iterable, Mapping, Type, MutableMapping, List, overload
+from typing import Union, Iterable, Mapping, Type, MutableMapping, List, Callable
 import json
 import logging
 
-from .Errors import InvalidGraphStyleCollectionError, InvalidGraphClassCollectionError
+from .Errors import InvalidStyleCollectionError, InvalidClassCollectionError
 
 
 class Comparable(metaclass=ABCMeta):
@@ -56,6 +56,7 @@ class HasProperty(metaclass=ABCMeta):
     """
     Property interface allows you to manage defined property and access them through subscript;
     """
+
     def __init__(self):
         """
         create a property interface
@@ -105,6 +106,9 @@ class HasProperty(metaclass=ABCMeta):
 
 
 class Stylable(metaclass=ABCMeta):
+    default_styles = []
+    default_classes = []
+
     @staticmethod
     def is_valid_graph_styles(styles: Iterable[Mapping]) -> bool:
         if isinstance(styles, Iterable):
@@ -118,13 +122,11 @@ class Stylable(metaclass=ABCMeta):
     def is_valid_graph_classes(classes: Iterable[str]) -> bool:
         return isinstance(classes, Iterable) and all(isinstance(element, str) for element in classes)
 
-    @overload
-    def __init__(self, styles: Iterable[Mapping] = (), classes: Iterable[str] = None) -> None: ...
-
-    @overload
-    def __init__(self, styles: str = (), classes: Iterable[str] = None) -> None: ...
-
-    def __init__(self, styles, classes):
+    def __init__(self, styles: Union[str, Iterable[Mapping]], classes: Union[str, Iterable[str]],
+                 add_default_styles: bool = False,
+                 add_default_classes: bool = True,
+                 style_validator: Callable = is_valid_graph_styles,
+                 class_validator: Callable = is_valid_graph_classes):
         """
         interface that helps managing the state of an element
         @param styles:
@@ -137,23 +139,34 @@ class Stylable(metaclass=ABCMeta):
         if isinstance(styles, str):
             try:
                 styles = json.loads(styles)
-            except json.JSONDecodeError as e:
-                logging.exception('Cannot decode Json')
-                raise e
             except Exception as e:
                 logging.exception('Unknown Exception')
-                raise e
+                raise InvalidStyleCollectionError(f'Cannot parse style string for {type(self)} - {e}'
+                                                  f'(style literal: {styles}).')
 
-        if self.is_valid_graph_styles(styles):
+        if isinstance(classes, str):
+            try:
+                classes = json.loads(classes)
+            except Exception as e:
+                raise InvalidClassCollectionError(f'Cannot parse class string for {type(self)} - {e}'
+                                                  f'(class literal: {classes}).')
+
+        if style_validator(styles):
             self.styles.extend(styles)
+            if add_default_styles:
+                self.styles.extend(self.default_styles)
         else:
-            raise InvalidGraphStyleCollectionError(f'cannot init {type(self)} due to graph style format error.')
+            raise InvalidStyleCollectionError(f'Cannot init {type(self)} due to graph style format error '
+                                              f'(styles: {styles}).')
 
         # TODO ???
-        if self.is_valid_graph_classes(classes):
+        if class_validator(classes):
             self.classes.extend(classes)
+            if add_default_classes:
+                self.classes.extend(self.default_classes)
         else:
-            raise InvalidGraphClassCollectionError(f'cannot init {type(self)} due to graph class format error.')
+            raise InvalidClassCollectionError(f'Cannot init {type(self)} due to graph class format error '
+                                              f'(classes: {classes}).')
 
 
 class ElementSet:

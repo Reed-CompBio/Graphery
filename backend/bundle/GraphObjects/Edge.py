@@ -11,8 +11,11 @@ EdgeIDTuple = namedtuple('edge_identities', ('incident_edge_identity', 'final_ed
 class Edge(Comparable, HasProperty, Stylable):
     _PREFIX = 'e'
 
+    default_directed_styles = []
+
     def __init__(self, identity, node_pair: NodeTuple, name=None,
-                 styles: Iterable[Mapping] = (), classes: Iterable[str] = (), directed=False):
+                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = (), directed=False,
+                 add_default_styles=False, add_default_classes=False):
         """
         create an edge with an identity and a pair of nodes
         @param identity:
@@ -25,7 +28,11 @@ class Edge(Comparable, HasProperty, Stylable):
         """
         Comparable.__init__(self, identity, name)
         HasProperty.__init__(self)
-        Stylable.__init__(self, styles, classes)
+        Stylable.__init__(
+            self, [*styles, *(self.default_directed_styles if directed else ())], classes,
+            add_default_styles=add_default_styles, add_default_classes=add_default_classes
+        )
+
         if isinstance(node_pair, Tuple) and all(isinstance(node, Node) for node in node_pair):
             self.node_pair: NodeTuple = node_pair
         else:
