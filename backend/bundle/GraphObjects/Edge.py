@@ -1,8 +1,10 @@
+from __future__ import annotations
+from typing import Iterable, Tuple, Mapping, Union
+from collections import namedtuple
+
 from .Base import Comparable, HasProperty, Stylable, ElementSet
 from .Errors import GraphJsonFormatError
 from .Node import Node, NodeSet
-from typing import Iterable, Tuple, Mapping, Union
-from collections import namedtuple
 
 NodeTuple = namedtuple('Edge', ('u', 'v'))
 EdgeIDTuple = namedtuple('edge_identities', ('incident_edge_identity', 'final_edge_identity'))

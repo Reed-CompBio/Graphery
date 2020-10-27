@@ -30,6 +30,7 @@ class Comparable(metaclass=ABCMeta):
             raise InvalidIdentityError
         self.identity = identity
         self.name = name if name else self._PREFIX + str(identity)
+        self.hash_cache = None
 
     def __eq__(self, other):
         if isinstance(other, type(self)):
@@ -40,20 +41,22 @@ class Comparable(metaclass=ABCMeta):
         return not self.__eq__(other)
 
     def __hash__(self):
-        return hash((type(self), self.identity))
+        if self.hash_cache is None:
+            self.hash_cache = hash((type(self), self.identity))
+        return self.hash_cache
 
-    def __gt__(self, other: 'Comparable'):
+    def __gt__(self, other: Comparable):
         if not isinstance(other, Comparable):
             raise ValueError('Cannot compare %s with %s' % (self, other))
         return self.identity > other.identity
 
-    def __lt__(self, other: 'Comparable'):
+    def __lt__(self, other: Comparable):
         return not self.__gt__(other)
 
-    def __ge__(self, other: 'Comparable'):
+    def __ge__(self, other: Comparable):
         return self.__gt__(other) or self.__eq__(other)
 
-    def __le__(self, other: 'Comparable'):
+    def __le__(self, other: Comparable):
         return self.__lt__(other) or self.__eq__(other)
 
 
