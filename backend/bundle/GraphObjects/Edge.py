@@ -1,3 +1,6 @@
+from __future__ import annotations
+from copy import copy
+
 from .Base import Comparable, HasProperty, Stylable, ElementSet
 from .Errors import GraphJsonFormatError
 from .Node import Node, NodeSet
@@ -13,12 +16,11 @@ class Edge(Comparable, HasProperty, Stylable):
 
     default_directed_styles = []
 
-    def __init__(self, identity, node_pair: NodeTuple, name=None,
+    def __init__(self, name: str, node_pair: NodeTuple,
                  styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = (), directed=False,
                  add_default_styles=False, add_default_classes=False):
         """
         create an edge with an identity and a pair of nodes
-        @param identity:
         @param node_pair:
         @param name:
         @param styles: the styles used on this edge
@@ -26,7 +28,7 @@ class Edge(Comparable, HasProperty, Stylable):
         @param directed: whether this edge is directed
         @raise KeyError: if there is some problem with the node pair
         """
-        Comparable.__init__(self, identity, name)
+        Comparable.__init__(self, name)
         HasProperty.__init__(self)
         Stylable.__init__(
             self, [*styles, *(self.default_directed_styles if directed else ())], classes,
@@ -67,15 +69,25 @@ class Edge(Comparable, HasProperty, Stylable):
         """
         return self.directed
 
-    def reverse_direction(self) -> None:
+    def reverse_direction(self) -> Edge:
         """
         change the direction if the edge is directed
         @return:
         """
         if self.is_directed():
-            self.node_pair = self.node_pair[::-1]
+            new_instance = copy(self)
+            new_instance.node_pair = new_instance.node_pair[::-1]
 
-    def __contains__(self, node):
+            return new_instance
+
+        return self
+
+    def __eq__(self, other: Edge):
+        if isinstance(other, Edge):
+            return all(node in self.node_pair for node in other.node_pair) and other.directed == self.directed
+        return False
+
+    def __contains__(self, node: Node):
         """
         returns true if a node is part of this edge
         @param node:
@@ -107,7 +119,7 @@ class Edge(Comparable, HasProperty, Stylable):
         return self.__str__()
 
     @staticmethod
-    def return_edge(identity: str = None, edge: Union['Edge', NodeTuple, Tuple[str, str]] = (),
+    def return_edge(identity: str = None, edge: Union['Edge', NodeTuple, Tuple[str, str]] = (), directed: bool = None,
                     styles: Iterable[Mapping] = (), classes: Iterable[str] = ()) -> 'Edge':
 
         if isinstance(identity, str):
@@ -118,7 +130,8 @@ class Edge(Comparable, HasProperty, Stylable):
             else:
                 # TODO think about it
                 incident_node, final_node = None, None
-            return Edge(identity, NodeTuple(incident_node, final_node), styles, classes)
+            return Edge(identity, NodeTuple(incident_node, final_node),
+                        styles=styles, classes=classes, directed=directed)
         else:
             if isinstance(edge, Edge):
                 return edge

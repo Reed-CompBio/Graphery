@@ -8,17 +8,16 @@ from .Errors import GraphJsonFormatError
 class Node(Comparable, HasProperty, Stylable):
     _PREFIX = 'v'
 
-    def __init__(self, identity: str, name: str = None,
+    def __init__(self, name: str,
                  styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = (),
                  add_default_styles=False, add_default_classes=False):
         """
         create an node with an identity
-        @param identity:
         @param name:
         @param styles: the styles applied to this node
         @param classes: the classes applied to this node
         """
-        Comparable.__init__(self, identity, name)
+        Comparable.__init__(self, name)
         HasProperty.__init__(self)
         Stylable.__init__(
             self, styles, classes,
@@ -34,7 +33,7 @@ class Node(Comparable, HasProperty, Stylable):
     @staticmethod
     def return_node(identity: Union[str, 'Node'], styles: Iterable[Mapping] = (), classes: Iterable[str] = ()):
         if isinstance(identity, str):
-            return Node(identity=identity, styles=styles, classes=classes)
+            return Node(name=identity, styles=styles, classes=classes)
         elif isinstance(identity, Node):
             return identity
         else:
