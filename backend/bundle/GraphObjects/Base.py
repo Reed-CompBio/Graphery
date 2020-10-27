@@ -4,7 +4,7 @@ from typing import Union, Iterable, Mapping, Type, MutableMapping, List, Callabl
 import json
 import logging
 
-from .Errors import InvalidStyleCollectionError, InvalidClassCollectionError
+from .Errors import InvalidStyleCollectionError, InvalidClassCollectionError, InvalidIdentityError
 
 
 class Comparable(metaclass=ABCMeta):
@@ -12,6 +12,10 @@ class Comparable(metaclass=ABCMeta):
     Comparable interface allows you compare objects with their identity.
     """
     _PREFIX = ''
+
+    @staticmethod
+    def identity_validator(identity: Union[str, int]) -> bool:
+        return identity is not None
 
     def __init__(self, identity: Union[int, str], name=None):
         """
@@ -22,7 +26,8 @@ class Comparable(metaclass=ABCMeta):
         """
         # TODO read SUID if id is not present.
         # TODO think of an naming convention for id
-        assert identity is not None
+        if not self.identity_validator(identity):
+            raise InvalidIdentityError
         self.identity = identity
         self.name = name if name else self._PREFIX + str(identity)
 
@@ -165,7 +170,6 @@ class Stylable(metaclass=ABCMeta):
             raise InvalidStyleCollectionError(f'Cannot init {type(self)} due to graph style format error '
                                               f'(styles: {styles}).')
 
-        # TODO ???
         if class_validator(classes):
             self.classes.extend(classes)
             if add_default_classes:
