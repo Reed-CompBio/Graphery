@@ -125,8 +125,8 @@ class Stylable(metaclass=ABCMeta):
     def __init__(self, styles: Union[str, Iterable[Mapping]], classes: Union[str, Iterable[str]],
                  add_default_styles: bool = False,
                  add_default_classes: bool = True,
-                 style_validator: Callable = is_valid_graph_styles,
-                 class_validator: Callable = is_valid_graph_classes):
+                 style_validator: Callable = None,
+                 class_validator: Callable = None):
         """
         interface that helps managing the state of an element
         @param styles:
@@ -150,6 +150,12 @@ class Stylable(metaclass=ABCMeta):
             except Exception as e:
                 raise InvalidClassCollectionError(f'Cannot parse class string for {type(self)} - {e}'
                                                   f'(class literal: {classes}).')
+
+        if style_validator is None:
+            style_validator = self.is_valid_graph_styles
+
+        if class_validator is None:
+            class_validator = self.is_valid_graph_classes
 
         if style_validator(styles):
             self.styles.extend(styles)
