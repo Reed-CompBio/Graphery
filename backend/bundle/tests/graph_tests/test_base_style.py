@@ -6,7 +6,7 @@ from typing import Type, Callable
 
 import pytest
 
-from GraphObjects.Errors import InvalidStyleCollectionError, InvalidClassCollectionError
+from bundle.GraphObjects.Errors import InvalidStyleCollectionError, InvalidClassCollectionError
 from bundle.GraphObjects.Base import Stylable
 
 
