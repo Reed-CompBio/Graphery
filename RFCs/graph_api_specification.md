@@ -12,7 +12,22 @@ General:
 `HasProperty` Abstract Class:
 
 * It should have an initializer that takes in an dictionary or an iterable of 2-tuples to initialize the property dictionary.
+
+* It should have an initializer that allows users to specify the initial properties. It can be either a dictionary or a `Iterable` of 2-tuples. 
+
+  ```python
+  def __init__(self, init_properties: Union[Mapping, Iterable[Tuple]] = ()):
+    self.properties = {}
+    if isinstance(init_properties, Mapping):
+      self.properties.update(init_properties)
+    elif isinstance(init_properties, Iterable) and all(validator(element) element in init_properties):
+      self.properties.update(init_properties)
+    else:
+      raise Exception
+  ```
+
 * It should support `setitem` and `getitem` operations so that users can use `instance[property_name]` to access the property. 
+
 * It should support `contains` operation so that the one can check if a property exists in the instance It should support `get_properties` that returns either the dictionary or an iterator of tuples of key-value pair It should support `property_size` that returns the size of the current property dictionary 
 
 `Stylable` Abstract class:
@@ -49,8 +64,6 @@ General:
     ```python
   self.connected_edges = {'edge_1', 'edge_2', 'edge_3', 'edge_5'}
     ```
-    
-    
   
 * It should have a function named `add_neighbor` that takes in a node instance that’s going to be recorded in the `neighbors` field. `delete_neighbor` should be used to do the opposite, which is deleting a neighbor. 
 
@@ -269,30 +282,46 @@ General:
 * It should have procedures that supports adding new nodes as well as deleting existing nodes. 
 
   ```python
-  def add_node(self, identity: comparable, 
+  def add_node(self, identity: Union[Node, comparable], 
                default_styles=(), use_default_styles=False, 
                default_classes=(), use_default_classes=False, 
                init_properties=None):
-    if identity in self.node_set:
-      raise
-    node = Node(identity, default_styles, use_default_styles, default_classes, use_default_classes, init_properties)
-    self.node_set.add(node)
+    if isinstance(identity, Iterable) and all(validator(element) for element in identity):
+      pass
+    else:
+  		identity = [identity]
+    
+  for element in identity:
+    	if identity in self.node_set:
+        continue
+      
+    	if isinstance(element, Node):
+        node = element
+      else:
+    	node = Node(element, default_styles, use_default_styles, default_classes, use_default_classes, init_properties)
+    	self.node_set.add(node)
   ```
-
+  
   ```python
-  def delete_node(self, node: Union[Node, str]):
-    if node not in self.node_set:
-      return 
-    self.node_set.remove(node)
+  def delete_node(self, inputs: Union[Node, str, Iterable[Node, str]]):
+  	if isinstance(inputs, Iterable) and all(validator(element) for element in inputs):
+    	pass
+    else:
+      inputs = [inputs]
+    
+    for element in inputs:
+  	  if element not in self.node_set:
+    	  return 
+  	  self.node_set.remove(element)
   ```
-
+  
   ```python
   def add_edge(self, *info: Iterable[Union[str, Node]], identity: str = None,
                default_styles=(), use_default_styles=False, 
                default_classes=(), use_default_classes=False, 
                init_properties=None):
     if identity in self.edge_set:
-      raise
+    raise
       
     node_pair = edge_info_to_node_pair(info)
     if any(node not in self.node_set for node in node_pair):
@@ -308,5 +337,5 @@ General:
     
     self.edge_set.add(edge)
   ```
-
+  
   
