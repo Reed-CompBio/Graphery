@@ -48,7 +48,7 @@ General:
 
 * The current proposal is `Node(id: ‘identifier’)`. 
 
-* It should support recording neighbors and connected edges and getting the neighbors and connected edges. 
+* ~~It should support recording neighbors and connected edges and getting the neighbors and connected edges.~~
 
   - It should have a member variable named `neighbors` that records the reachable node of the node instance. The field is currently proposed to be a dictionary whose keys are node instances and values are sets of edges linking the two nodes together. That is 
 
@@ -65,7 +65,7 @@ General:
     self.connected_edges = {'edge_1', 'edge_2', 'edge_3', 'edge_5'}
     ```
   
-* It should have a function named `add_neighbor` that takes in a node instance that’s going to be recorded in the `neighbors` field. `delete_neighbor` should be used to do the opposite, which is deleting a neighbor. 
+* ~~It should have a function named `add_neighbor` that takes in a node instance that’s going to be recorded in the `neighbors` field. `delete_neighbor` should be used to do the opposite, which is deleting a neighbor.~~
 
   * `add_neighbor`
 
@@ -135,7 +135,7 @@ General:
     	self.neighbors[connected_node] = None
   ```
 
-* It should have a function named `add_connected_edge` that adds a new connected edge. And also `delete_connected_edge` to delete a connected edge 
+* ~~It should have a function named `add_connected_edge` that adds a new connected edge. And also `delete_connected_edge` to delete a connected edge.~~
 
   * `add_connected_edge`
 
@@ -260,15 +260,22 @@ General:
 
 * It should override the default style list so that all graphs have a unified looks. The default style list should also contain a style sheet for directed edges, which should only works on the edges with directed style class specified. 
 
-* It should support membership query for edges, nodes, and properties. It should also have individual procedures to query the membership of nodes and edges with either the instances of the corresponding classes or the identity. 
+* It should support membership query for edges, nodes, and properties: 
+  ```python
+  graph['property']  # returns True if 'property' is in the graph
+  graph[node]  # returns True if node is in the graph
+  graph[edge]  # returns True if edge is in the graph
+  graph[node1, node2, direction]  # returns True if the edge connecting node1 and node2 exists. 
+                                  # direction is optional
+  ```
 
   ```python
-  def __contains__(self, other: Union[str, Node, Edge]) -> bool:
+  def __contains__(self, other: Union[str, Node, Edge, Tuple]) -> bool:
     if isinstance(other, str):
       return other in self.properties
     elif isinstance(other, Node):
       return self.has_node(other)
-    elif isinstance(other, Edge):
+    elif isinstance(other, Edge) or isinstance(other, Tuple):
       return self.has_edge(other)
     else:
       return False
@@ -282,6 +289,22 @@ General:
   ```python
   def has_edge(self, edge: Union[Edge, str]) -> bool:
     return edge in self.edge_set
+  ```
+
+* It should have a adjacency matrix that records the neighbors of a node. The matrix should be a python `defaultdict`. The keys are nodes and the values are connected nodes (in a list). If two nodes aren't connected, it will return an empty `Iterable`. 
+  ```python
+  def adjacent_nodes(node: Node) -> Iterable[Node]:
+    pass
+  ```
+
+  ```python
+  def connect_nodes_by_edge(edge: Edge):
+    pass
+  ```
+
+  ```python
+  def disconnect_nodes_by_edge(edge: Edge):
+    pass
   ```
 
 * It should have procedures that supports adding new nodes as well as deleting existing nodes. 
@@ -349,7 +372,7 @@ General:
     self.disconnect_nodes_by_edge(edge)
   ```
   
-* It should have procedures that support batch adding/deleting nodes and edges. 
+* It should have procedures that support batch adding/deleting nodes and edges. The procedure that adds nodes takes in an `Iterable` of a mix of `Node` objects and `Sequence`s. Each of the `Sequence`s contains at least one and at most two elements; the first element is the identity of the node, which is a hashable object and the second is a dictionary used as keyword arguments to initialize the node. 
 
   ```python
   def add_nodes_from(self, identities: Iterable[Node, Sequence[comparable, Mapping]]):
@@ -369,6 +392,8 @@ General:
           pass
   ```
   
+  The delete method also takes in an `Iterable` object and call `delete_node` on each element in the `Iterable`. Each element should be either a `Node` object or an hashable identity. 
+
   ```python
   def delete_nodes_from(self, inputs: Iterable[Node, comparable]):
     if not validate(inputs):
