@@ -29,7 +29,7 @@
   "dependencies": {
     "@quasar/extras": "^1.9.12",
     "axios": "^0.19.2",
-    "core-js": "^3.6.4",
+    "core-js": "^3.8.1",
     "cytoscape": "^3.17.1",
     "cytoscape-dagre": "^2.3.2",
     "cytoscape-fcose": "^1.2.3",
