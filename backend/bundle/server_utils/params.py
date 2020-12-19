@@ -12,6 +12,6 @@ REQUEST_CODE_NAME: str = 'code'
 REQUEST_GRAPH_NAME: str = 'graph'
 
 REQUEST_VERSION_NAME: str = 'version'
-VERSION: str = '0.1.0'
+VERSION: str = '0.1.2'
 
 SERVER_LOG = None

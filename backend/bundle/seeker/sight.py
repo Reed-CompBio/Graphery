@@ -308,11 +308,13 @@ class Tracer:
     def __enter__(self):
         if DISABLED:
             return
+
         calling_frame = inspect.currentframe().f_back
         if not self._is_internal_frame(calling_frame):
             calling_frame.f_trace = self.trace
             self.target_frames.add(calling_frame)
 
+        thread_global.__dict__.setdefault('depth', -1)
         stack = self.thread_local.__dict__.setdefault(
             'original_trace_functions', []
         )
@@ -378,7 +380,6 @@ class Tracer:
                 else:
                     return None
 
-        thread_global.__dict__.setdefault('depth', -1)
         if event == 'call':
             thread_global.depth += 1
         indent = ' ' * 4 * thread_global.depth

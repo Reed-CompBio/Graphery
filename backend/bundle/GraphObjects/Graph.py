@@ -1,10 +1,11 @@
+from __future__ import annotations
 from .Base import Stylable
 from .Errors import GraphJsonFormatError
 from .Node import Node, NodeSet, MutableNodeSet
 from .Edge import Edge, EdgeSet, MutableEdgeSet, NodeTuple, EdgeIDTuple
 
 import json
-from typing import Iterable, Union, Optional, Mapping
+from typing import Iterable, Union, Optional, Mapping, Type, TypeVar, Generic
 from enum import Enum
 
 
@@ -15,26 +16,57 @@ class GraphLayout(Enum):
     random = {'name': 'random'}
 
 
-class Graph(Stylable):
+Node_C = TypeVar('Node_C')
+Edge_C = TypeVar('Edge_C')
+
+
+class Graph(Stylable, Generic[Node_C, Edge_C]):
     """The graph object"""
 
-    def __init__(self, nodes: Iterable[Node], edges: Iterable[Edge], styles=None, classes=None):
-        """
-        graph constructor.
+    default_styles = [{
+        "selector": "node",
+        "style": {
+            "label": "data(id)",
+            "text-valign": "center",
+            "text-halign": "center",
+            "text-outline-color": "white",
+            "text-outline-opacity": 1,
+            "text-outline-width": 1,
+            "height": "10px",
+            "width": "10px",
+            "font-size": "5px",
+            "border-color": "black",
+            "border-opacity": 1,
+            "border-width": 1
+        }
+    }, ]
+
+    def __init__(self, nodes: Iterable[Node], edges: Iterable[Edge],
+                 node_container: Type[Node_C] = NodeSet,
+                 edge_container: Type[Edge_C] = EdgeSet,
+                 styles: Iterable[Mapping] = (), classes: Iterable[str] = (),
+                 add_default_styles: bool = True,
+                 add_default_classes: bool = True):
+        """ graph constructor.
+
         @param nodes:
         @param edges:
         @raise ValueError: if nodes and edges are not iterable
         """
-        super(Graph, self).__init__(styles, classes)
+        super(Graph, self).__init__(
+            styles, classes,
+            add_default_styles=add_default_styles, add_default_classes=add_default_classes
+        )
+
         if isinstance(nodes, Iterable) and isinstance(edges, Iterable):
-            if isinstance(nodes, NodeSet):
+            if isinstance(nodes, node_container):
                 self.nodes = nodes
             else:
-                self.nodes = NodeSet(nodes)
-            if isinstance(edges, EdgeSet):
+                self.nodes = node_container(nodes)
+            if isinstance(edges, edge_container):
                 self.edges = edges
             else:
-                self.edges = EdgeSet(edges)
+                self.edges = edge_container(edges)
         else:
             raise ValueError
 
@@ -158,15 +190,10 @@ class MutableGraph(Graph):
     from .helpers import GraphObjectEncoder
 
     def __init__(self, nodes: Iterable[Node] = (), edges: Iterable[Edge] = ()):
-        super().__init__(nodes, edges)
-        self.nodes: MutableNodeSet = MutableNodeSet(self.nodes)
-        self.edges: MutableEdgeSet = MutableEdgeSet(self.edges)
-
-        self.V = self.nodes
-        self.E = self.edges
+        super().__init__(nodes, edges, node_container=MutableNodeSet, edge_container=MutableEdgeSet)
 
     def add_node(self, identity: Union[str, Node] = None,
-                 styles: Union[str, Mapping] = None, classes: Iterable = None) -> Node:
+                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = ()) -> Node:
         node = Node.return_node(identity=identity, styles=styles, classes=classes)
         self.nodes.add_node(node)
         return node
@@ -174,7 +201,7 @@ class MutableGraph(Graph):
     def add_edge(self,
                  identity: str = None,
                  edge: Union[Edge, NodeTuple, EdgeIDTuple] = (),
-                 styles=None, classes=None) -> Optional[Edge]:
+                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = ()) -> Optional[Edge]:
         edge = Edge.return_edge(identity, edge, styles, classes)
 
         # TODO think about it

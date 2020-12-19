@@ -1,17 +1,23 @@
-from .Base import Comparable, HasProperty, Stylable, ElementSet
-from .Errors import GraphJsonFormatError
-from .Node import Node, NodeSet
+from __future__ import annotations
 from typing import Iterable, Tuple, Mapping, Union
 from collections import namedtuple
 
-NodeTuple = namedtuple('Edge', ('incident_node', 'final_node'))
+from .Base import Comparable, HasProperty, Stylable, ElementSet
+from .Errors import GraphJsonFormatError
+from .Node import Node, NodeSet
+
+NodeTuple = namedtuple('Edge', ('u', 'v'))
 EdgeIDTuple = namedtuple('edge_identities', ('incident_edge_identity', 'final_edge_identity'))
 
 
 class Edge(Comparable, HasProperty, Stylable):
     _PREFIX = 'e'
 
-    def __init__(self, identity, node_pair: NodeTuple, name=None, styles=None, classes=None, directed=False):
+    default_directed_styles = []
+
+    def __init__(self, identity, node_pair: NodeTuple, name=None,
+                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = (), directed=False,
+                 add_default_styles=False, add_default_classes=False):
         """
         create an edge with an identity and a pair of nodes
         @param identity:
@@ -24,7 +30,11 @@ class Edge(Comparable, HasProperty, Stylable):
         """
         Comparable.__init__(self, identity, name)
         HasProperty.__init__(self)
-        Stylable.__init__(self, styles, classes)
+        Stylable.__init__(
+            self, [*styles, *(self.default_directed_styles if directed else ())], classes,
+            add_default_styles=add_default_styles, add_default_classes=add_default_classes
+        )
+
         if isinstance(node_pair, Tuple) and all(isinstance(node, Node) for node in node_pair):
             self.node_pair: NodeTuple = node_pair
         else:
@@ -100,7 +110,7 @@ class Edge(Comparable, HasProperty, Stylable):
 
     @staticmethod
     def return_edge(identity: str = None, edge: Union['Edge', NodeTuple, Tuple[str, str]] = (),
-                    styles=None, classes=None) -> 'Edge':
+                    styles: Iterable[Mapping] = (), classes: Iterable[str] = ()) -> 'Edge':
 
         if isinstance(identity, str):
             if isinstance(edge, NodeTuple):

@@ -2212,3 +2212,12 @@ def test_exception():
             ElapsedTimeEntry(),
         )
     )
+
+
+def test_exception_on_entry():
+    @seeker.tracer()
+    def f(x):
+        pass
+
+    with pytest.raises(TypeError):
+        f()
