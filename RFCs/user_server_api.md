@@ -52,7 +52,23 @@ The `type` should be a enum(mapping) that has the following values.
 
 ```python
 {
+    str: 'String',
+    List: 'List',
+    Tuple: 'Tuple',
+    Deque: 'Deque',
+    Counter: 'Counter',
     None: 'None',
-    
+    Set: 'Set',  # which includes Set, set, KeyView(dict_keys), ValueView(dict_values), ItemView(dict_items), frozenset, MutableSet
+    Mapping: 'Mapping',  # which includes mappingproxy (not sure what that is), MutableMapping, dict 
+    Sequence: 'Sequence',  # which includes tuple, str, range, memoryview, MutableSequence, list, bytearray
+    ByteString: 'ByteString',  # which is optional in this version 
 }
 ```
+
+The type string should follow the naming convention for a class. 
+
+The order in this dictionary matters. Since if a string is matched as a sequence, the frontend is probably going to unfold the elements (in this case the chars). 
+
+The hex color should be chose in a way that's friendly to color blind people. It's not guaranteed that all colors are friendly. The author should try to expand the palette as much as possible. 
+
+`repr` should be a string representation of the value. The `repr` should be formatted according to the `type` field. Then, if the `__repr__` or `__str__` function is overridden in a instance, the program should use those. It should prefer `__repr__` over `__str__`. Otherwise, the ugly default representation should be used. 
