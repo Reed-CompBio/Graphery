@@ -1,6 +1,6 @@
-# User Server API 
+## User Server API 
 
-## Current API 
+### Current API 
 
 ```python
 {
@@ -25,19 +25,23 @@ The line is the line number of current execution. Say the current line is 17, th
 
 `repr` is the string representation of the variable, that is, the value of the variable. 
 
-## Proposed API 
+### Proposed API 
 
 ```python
-{
-    'line': line, 
-    'variables': {
-        'identity': {
-            'type': 'some_type',
-            'color': 'some_color_hex',
-            'repr': 'some_repr'
-        }
-    }
-}
+[
+    {
+        'line': line, 
+        'variables': {
+            'identity': {
+                'type': 'some_type',
+                'color': 'some_color_hex',
+                'repr': 'some_repr'
+            }
+        }, 
+        'order': ['identity1', 'identity2', ...]
+    },
+    ...
+]
 ```
 
 The `identity` should be built from an `Sequence` of strings by following rules.
@@ -52,6 +56,8 @@ The `type` should be a enum(mapping) that has the following values.
 
 ```python
 {
+    Node: 'Node',
+    Edge: 'Edge',
     str: 'String',
     List: 'List',
     Tuple: 'Tuple',
@@ -72,3 +78,9 @@ The order in this dictionary matters. Since if a string is matched as a sequence
 The hex color should be chose in a way that's friendly to color blind people. It's not guaranteed that all colors are friendly. The author should try to expand the palette as much as possible. 
 
 `repr` should be a string representation of the value. The `repr` should be formatted according to the `type` field. Then, if the `__repr__` or `__str__` function is overridden in a instance, the program should use those. It should prefer `__repr__` over `__str__`. Otherwise, the ugly default representation should be used. 
+
+The new variable list is going to bring up the changed variables. So `order` is a new field that going to specify the order of the variables on the variable list. Since the dictionary used in the variable list preserves the insertion order, one way to get around `order` field is by deleting the variable and add it back as if it's a new record. 
+
+## Frontend 
+
+
