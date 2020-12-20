@@ -20,7 +20,9 @@
 
 - [ ] The code for the step controller must be tested. There are still some minor errors when dealing with edge cases. 
 
-- [ ] Create an API for user server (the snooper) and the front end. The stepper works OK right now but some work should be done to make the experience of variable list better. It's are to see the variable names and variable detail right now. The user server should follow the API when sending information to the frontend. The frontend should have a tokenizer that interprets the information sent from the backend. 
+- [ ] Create an API for user server (the snooper) and the front end. The stepper works OK right now but some work should be done to make the experience of variable list better. It's are to see the variable names and variable detail right now. The user server should follow the API when sending information to the frontend. The frontend should have a tokenizer that interprets the information sent from the backend. _A separate document will be posted._
+
+- [ ] Unify `Processor` and `Recorder`. There is no need to collect variables first and then serialize them.
 
 - [ ] IP restriction should be imposed to reduce malicious requests. The execution time should be limited to 1 second. 
 
