@@ -16,3 +16,5 @@ site/
 *.xd
 schema.json
 
+# package-lock
+package-lock.json

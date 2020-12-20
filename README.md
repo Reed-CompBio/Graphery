@@ -15,15 +15,21 @@ cd graphery
 npm i && npm run build
 ```
 
-Prepare the backend: 
+Run the server:
+
+```bash
+npm run serve
+```
+
+Prepare the backend:
 
 ```bash
 cd backend
 pip install -r requirements.txt
 # or you can user `pipenv install`
-cd server 
+cd server
 python manage.py makemigrations
-python manage.py migrate 
+python manage.py migrate
 python manage.py runserver
 ```
 
