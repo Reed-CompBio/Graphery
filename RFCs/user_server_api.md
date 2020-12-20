@@ -83,4 +83,4 @@ The new variable list is going to bring up the changed variables. So `order` is 
 
 ## Frontend 
 
-
+The transition of the variable list can be cover by [native `<transition-group>`](https://vuejs.org/v2/guide/transitions.html#List-Transitions) tag. 

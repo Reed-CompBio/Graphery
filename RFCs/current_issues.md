@@ -10,7 +10,7 @@
 
 - [ ] Modify the default CSS for Cytoscape. The global CSS for graphs should be added when the graphs are loaded instead of when the data is processed. _The guideline for Cytoscape CSS will also be put into a different markdown file._
 
-- [ ] There should be a custom CSS for the variable list. _More information are listed in the functionality section._
+- [ ] There should be a custom CSS for the variable list. _More information are listed in the functionality section. [user_server_api.md](./user_server_api.md)_
 
 ### Improvements
 
@@ -20,7 +20,7 @@
 
 - [ ] The code for the step controller must be tested. There are still some minor errors when dealing with edge cases. 
 
-- [ ] Create an API for user server (the snooper) and the front end. The stepper works OK right now but some work should be done to make the experience of variable list better. It's are to see the variable names and variable detail right now. The user server should follow the API when sending information to the frontend. The frontend should have a tokenizer that interprets the information sent from the backend. _A separate document will be posted._
+- [ ] Create an API for user server (the snooper) and the front end. The stepper works OK right now but some work should be done to make the experience of variable list better. It's are to see the variable names and variable detail right now. The user server should follow the API when sending information to the frontend. The frontend should have a tokenizer that interprets the information sent from the backend. _A separate document will be posted. [user_server_api.md](./user_server_api.md)_
 
 - [ ] Unify `Processor` and `Recorder`. There is no need to collect variables first and then serialize them.
 
