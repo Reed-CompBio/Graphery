@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import json
 from collections.abc import Mapping, Set
+from collections import Counter
 from copy import deepcopy
 from numbers import Number
 from random import randint
-from typing import Any, List, MutableMapping, Sequence, Tuple, Deque, Union, Counter
+from typing import Any, List, MutableMapping, Sequence, Tuple, Deque, Union
 
 from ..GraphObjects.Edge import Edge
 from ..GraphObjects.Node import Node
@@ -92,10 +94,15 @@ class Recorder:
     _REPR_HEADER = 'repr'
     _PROPERTY_HEADER = 'properties'
 
+    _LINE_HEADER = 'line'
+    _VARIABLE_HEADER = 'variables'
+    _ACCESS_HEADER = 'accesses'
+
     def __init__(self):
         self._changes: List[MutableMapping] = []
         # self.variables: Set[str] = set()
         self._color_mapping: MutableMapping = {}
+        self._ACCESSED_IDENTIFIER_STRING = self.register_variable(self._ACCESSED_IDENTIFIER)
 
     def assign_color(self, identifier_string: str) -> None:
         if identifier_string not in self._color_mapping:
@@ -131,7 +138,7 @@ class Recorder:
                             - @keyword accesses: means access changes
         @param line_no: the line number
         """
-        self._changes.append({'line': line_no, 'variables': None, 'accesses': None})
+        self._changes.append({self._LINE_HEADER: line_no, self._VARIABLE_HEADER: None, self._ACCESS_HEADER: None})
 
     def get_last_record(self) -> MutableMapping:
         """
@@ -156,17 +163,17 @@ class Recorder:
 
         @return: variables dict in the last record
         """
-        last_variable_change = self.get_last_record()['variables']
+        last_variable_change = self.get_last_record()[self._VARIABLE_HEADER]
         if last_variable_change is None:
-            last_variable_change = self.get_last_record()['variables'] = {}
+            last_variable_change = self.get_last_record()[self._VARIABLE_HEADER] = {}
 
         return last_variable_change
 
     def get_previous_vc(self) -> MutableMapping:
         """Get the second last dict in the record list"""
-        previous_variable_change = self.get_previous_record()['variables']
+        previous_variable_change = self.get_previous_record()[self._VARIABLE_HEADER]
         if previous_variable_change is None:
-            previous_variable_change = self.get_previous_record()['variables'] = {}
+            previous_variable_change = self.get_previous_record()[self._VARIABLE_HEADER] = {}
 
         return previous_variable_change
 
@@ -180,27 +187,33 @@ class Recorder:
 
         return self.get_last_record()['accesses']
 
-    @staticmethod
-    def custom_repr(variable_state: Any) -> Any:
-        return deepcopy(variable_state)
+    def custom_repr(self, variable_state: Any, variable_type: str) -> Any:
+        # if variable_type == self._TYPE_MAPPING[object]:
+        #     return repr(variable_state)
+
+        # return deepcopy(variable_state)
+        return repr(variable_state)
 
     def process_variable_state(self, identifier_string: str, variable_state: Any) -> MutableMapping:
         state_mapping: MutableMapping = {
             self._COLOR_HEADER: self._color_mapping[identifier_string],
-            self._REPR_HEADER: self.custom_repr(variable_state),
         }
 
-        for type_candidate in self._TYPE_MAPPING.keys():
+        for type_candidate, type_string in self._TYPE_MAPPING.items():
             if isinstance(variable_state, type_candidate):
-                state_mapping[self._TYPE_HEADER] = type_candidate
+                state_mapping[self._TYPE_HEADER] = type_string
                 break
 
         if self._TYPE_HEADER not in state_mapping:
+            # which should never happen
             raise  # TODO define exception
+
+        state_mapping[self._REPR_HEADER] = self.custom_repr(variable_state, state_mapping[self._TYPE_HEADER])
 
         if state_mapping[self._TYPE_HEADER] in self._GRAPH_OBJECT_TYPES:
             variable_state: Union[Node, Edge]
-            state_mapping[self._PROPERTY_HEADER] = self.custom_repr(variable_state.properties)
+            state_mapping[self._PROPERTY_HEADER] = self.custom_repr(variable_state.properties,
+                                                                    self._TYPE_MAPPING[Mapping])
 
         return state_mapping
 
@@ -239,6 +252,9 @@ class Recorder:
 
     def get_change_list(self) -> List[MutableMapping]:
         return self._changes
+
+    def get_change_list_json(self) -> str:
+        return json.dumps(self._changes)
 
     def purge(self):
         """Empty previous recorded items"""

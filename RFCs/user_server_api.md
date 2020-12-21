@@ -42,7 +42,7 @@ The line is the line number of current execution. Say the current line is 17, th
                 }
             }
         }, 
-        'accessed': [
+        'accesses': [
             {
                 'type': 'some_type',
                 'color': 'some_color_hex',
@@ -79,7 +79,7 @@ The `type` should be a enum(mapping) that has the following values.
     Deque: 'Deque',
     #  Counter: 'Counter',
     tyep(None): 'None',
-    Set: 'Set',  # which includes Set, set, KeyView(dict_keys), ValueView(dict_values), ItemView(dict_items), frozenset, MutableSet
+    Set: 'Set',  # which includes Set, set, KeyView(dict_keys), ItemView(dict_items), frozenset, MutableSet
     Mapping: 'Mapping',  # which includes mappingproxy (not sure what that is), MutableMapping, dict 
     Sequence: 'Sequence',  # which includes tuple, str, range, memoryview, MutableSequence, list, bytearray
     #  ByteString: 'ByteString',  # which is optional in this version 
