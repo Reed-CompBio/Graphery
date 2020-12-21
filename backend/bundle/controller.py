@@ -25,7 +25,7 @@ class Controller:
         self.tracer_cls.set_new_recorder(self.recorder)
 
     def get_recorded_content(self) -> List[Mapping]:
-        return self.recorder.changes
+        return self.recorder.get_change_list()
 
     def get_processed_result(self) -> List[Mapping]:
         return self.processor.result
@@ -38,7 +38,7 @@ class Controller:
         self.processor.purge()
 
     def generate_processed_record(self):
-        self.processor.load_data(change_list=self.recorder.changes, variables=self.recorder.variables)
+        self.processor.load_data(change_list=self.recorder.get_change_list(), variables=self.recorder.variables)
         self.processor.generate_result_json()
 
     def __call__(self, dir_name: Union[str, pathlib.Path] = None,

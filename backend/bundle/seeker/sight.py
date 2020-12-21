@@ -11,7 +11,6 @@ import itertools
 import threading
 import traceback
 import logging
-from copy import copy
 from types import FrameType, FunctionType
 from typing import Iterable, Tuple, Any, Mapping, Optional, List, Callable, Union
 
@@ -217,8 +216,8 @@ class Tracer:
         cls._recorder = recorder
 
     @classmethod
-    def get_recorder_change_list(cls) -> List[dict]:
-        return cls.get_recorder().changes
+    def get_recorder_change_list(cls) -> List[Mapping]:
+        return cls.get_recorder().get_change_list()
 
     @classmethod
     def set_log_file_name(cls, file_name: Optional[str]) -> None:
@@ -426,6 +425,7 @@ class Tracer:
         #                                                                     #
         # Finished dealing with misplaced function definition. ################
 
+        # TODO remove the if statement
         if event != 'return':
             self.recorder.add_record(line_no)
 
@@ -445,21 +445,17 @@ class Tracer:
 
         for name, (value, value_repr) in local_reprs.items():
             identifier = (self.prefix, name)
-            copied_value = copy(value)
-            if name not in old_local_reprs:
-                self.recorder.register_variable(identifier)
+            identifier_string = self.recorder.register_variable(identifier)
 
+            if name not in old_local_reprs:
                 if event == 'call':
-                    # TODO it seems to work but I am not sure about this
-                    self.recorder.add_vc_to_last_record(identifier, copied_value)
+                    self.recorder.add_vc_to_last_record(identifier_string, value)
                 else:
-                    self.recorder.add_vc_to_previous_record(identifier, copied_value)
-                self.write('{indent}{newish_string}{name} = {value_repr}'.format(
-                    **locals()))
+                    self.recorder.add_vc_to_previous_record(identifier_string, value)
+                self.write('{indent}{newish_string}{name} = {value_repr}'.format(**locals()))
             elif old_local_reprs[name][1] != value_repr:
-                self.recorder.add_vc_to_previous_record(identifier, copied_value)
-                self.write('{indent}Modified var:.. {name} = {value_repr}'.format(
-                    **locals()))
+                self.recorder.add_vc_to_previous_record(identifier_string, value)
+                self.write('{indent}Modified var:.. {name} = {value_repr}'.format(**locals()))
 
         #                                                                     #
         # Finished newish and modified variables. #############################

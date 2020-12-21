@@ -96,7 +96,7 @@ Elapsed time: 00:00:00.000315
 `tracer` does more than showing you what's changed, it also records the changes. You can get the records by using 
 
 ```python
-tracer.get_recorder().changes  # type: List[dict]
+tracer.get_recorder().get_change_list()  # type: List[MutableMapping]
 ```
 
 For the first code in this doc, the output is 
