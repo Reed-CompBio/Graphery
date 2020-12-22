@@ -35,14 +35,18 @@ def test_assign_color(empty_recorder, default_identifier_and_string):
         default_identifier_string
     )
     assert default_identifier_string in empty_recorder._color_mapping
-    assert empty_recorder._color_mapping[default_identifier_string] == empty_recorder._COLOR_PALETTE[0]
+    assert empty_recorder._color_mapping[default_identifier_string] == empty_recorder._COLOR_PALETTE[2]
 
     for i in range(20):
         identifier_string = identifier_to_string(
             ('namespace', f'variable{i}')
         )
         empty_recorder.assign_color(identifier_string)
-        assert len(empty_recorder._color_mapping) == i + 2
+
+        # two for reserved identifiers
+        # one is added manually at the beginning
+        # one is just added in the loop
+        assert len(empty_recorder._color_mapping) == i + 4
 
 
 def test_register_variable(empty_recorder):
@@ -134,25 +138,25 @@ def test_json_dump(empty_recorder):
           "line":1,
           "variables":{
              "main\u200b@var_1":{
-                "color":"#1F78B4",
+                "color":"#A6CEE3",
                 "type":"Number",
                 "repr":"1"
              },
              "main\u200b@var_2":{
-                "color":"#B2DF8A",
+                "color":"#1F78B4",
                 "type":"Node",
                 "repr":"Node(id: 1)",
                 "properties":"{}"
              },
              "main\u200b@var_4":{
-                "color":"#FB9A99",
+                "color":"#33A02C",
                 "type":"None",
                 "repr":"None"
              }
           },
           "accesses":[
              {
-                "color":"#A6CEE3",
+                "color":"#B15928",
                 "type":"Node",
                 "repr":"Node(id: 1)",
                 "properties":"{}"
@@ -163,17 +167,16 @@ def test_json_dump(empty_recorder):
           "line":2,
           "variables":{
              "main\u200b@var_3":{
-                "color":"#33A02C",
+                "color":"#B2DF8A",
                 "type":"String",
                 "repr":"'ab'"
              }
           },
           "accesses":[
              {
-                "color":"#A6CEE3",
-                "type":"Node",
-                "repr":"Node(id: 1)",
-                "properties":"{}"
+                "color":"#B15928",
+                "type":"Mapping",
+                "repr":"{1: {2: 3, 4: 5}, (6, 7, 8): 9}"
              }
           ]
        },
@@ -182,7 +185,7 @@ def test_json_dump(empty_recorder):
           "variables":null,
           "accesses":null
        }
-    ] 
+    ]
     """)
     first_line_no = 1
     empty_recorder.add_record(first_line_no)
@@ -223,7 +226,13 @@ def test_json_dump(empty_recorder):
         fourth_var_id_string, fourth_var_value
     )
 
-    second_accessed_var_value = Node('1')
+    second_accessed_var_value = {
+        1: {
+            2: 3,
+            4: 5
+        },
+        (6, 7, 8): 9
+    }
     empty_recorder.add_ac_to_last_record(
         second_accessed_var_value
     )
@@ -237,3 +246,4 @@ def test_json_dump(empty_recorder):
     )
 
     assert json.loads(empty_recorder.get_change_list_json()) == json.loads(result_string)
+    # print(empty_recorder.get_change_list_json())

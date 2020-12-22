@@ -60,29 +60,41 @@ class Recorder:
             ...
         ]
     """
-    _COLOR_PALETTE = ["#A6CEE3", "#1F78B4", "#B2DF8A", "#33A02C",
-                      "#FB9A99", "#E31A1C", "#FDBF6F", "#FF7F00",
-                      "#CAB2D6", "#6A3D9A", "#FFFF99", ]
-    _ACCESSED_COLOR = "#B15928"
+    _COLOR_PALETTE = ["#828282", "#B15928",  # reserved for inner variables and global access
+                      "#A6CEE3", "#1F78B4", "#B2DF8A",
+                      "#33A02C", "#FB9A99", "#E31A1C",
+                      "#FDBF6F", "#FF7F00", "#CAB2D6",
+                      "#6A3D9A", "#FFFF99"]
     _ACCESSED_IDENTIFIER = ('global', 'accessed var')
     _ACCESSED_IDENTIFIER_STRING = identifier_to_string(_ACCESSED_IDENTIFIER)
 
-    _TYPE_MAPPING = {
-        # simple individuals
+    _INNER_IDENTIFIER = ('', u'\u200b'.join('inner'))
+    _INNER_IDENTIFIER_STRING = identifier_to_string(_INNER_IDENTIFIER)
+
+    _SINGULAR_MAPPING = {
         Number: 'Number',
         str: 'String',
         Node: 'Node',
         Edge: 'Edge',
-        # simple containers
+        type(None): 'None',
+    }
+
+    _CONTAINER_MAPPING = {
         List: 'List',
         Tuple: 'Tuple',
         Deque: 'Deque',
         Counter: 'Counter',
-        type(None): 'None',
         Set: 'Set',  # which includes Set, set, KeyView(dict_keys), ValueView(dict_values), ItemView(dict_items),
-                     # frozenset, MutableSet
+        # frozenset, MutableSet
         Mapping: 'Mapping',  # which includes mappingproxy (not sure what that is), MutableMapping, dict
         Sequence: 'Sequence',  # which includes tuple, str, range, memoryview, MutableSequence, list, bytearray
+    }
+
+    _TYPE_MAPPING = {
+        # simple individuals
+        **_SINGULAR_MAPPING,
+        # simple containers
+        **_CONTAINER_MAPPING,
         # wildcard
         object: 'Object',
     }
@@ -102,6 +114,7 @@ class Recorder:
         self._changes: List[MutableMapping] = []
         # self.variables: Set[str] = set()
         self._color_mapping: MutableMapping = {}
+        self._INNER_IDENTIFIER_STRING = self.register_variable(self._INNER_IDENTIFIER)
         self._ACCESSED_IDENTIFIER_STRING = self.register_variable(self._ACCESSED_IDENTIFIER)
 
     def assign_color(self, identifier_string: str) -> None:
@@ -256,7 +269,7 @@ class Recorder:
     def get_change_list_json(self) -> str:
         return json.dumps(self._changes)
 
-    def purge(self):
+    def purge(self) -> None:
         """Empty previous recorded items"""
         self._changes: List[dict] = []
         # self.variables: Set[Tuple[str, str]] = set()
