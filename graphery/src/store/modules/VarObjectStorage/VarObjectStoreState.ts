@@ -3,6 +3,7 @@ export interface VariableType {
   repr: string;
   id?: string;
   color?: string;
+  properties?: object;
 }
 
 export interface VariableStoreType {

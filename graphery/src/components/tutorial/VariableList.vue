@@ -23,8 +23,10 @@
   import { mapGetters } from 'vuex';
   import { EMPTY_VARIABLE_ELEMENT_DISPLAY } from '@/components/framework/GraphEditorControls/parameters';
   import {
+    isContainerElement,
     isGraphElement,
-    isNormalElement,
+    isInitElement,
+    isSingularElement,
     revertNameCombo,
   } from '@/components/framework/GraphEditorControls/ElementsUtils';
 
@@ -79,13 +81,25 @@
         };
       },
       processVariableElement(key, value) {
+        /**
+         * Process individual variable, which is a object that follows the following protocol
+         * {
+         *   type: string
+         *   color: string | null
+         *   repr: string
+         *   properties: object
+         * }
+         */
         if (value) {
           if (isGraphElement(value)) {
             return this.revertGraphObject(key, value);
-          } else if (isNormalElement(value)) {
+          } else if (isSingularElement(value) || isContainerElement(value)) {
             return this.revertNormalObject(key, value);
+          } else if (isInitElement(value)) {
+            return this.emptyObject(key);
           } else {
             // which should never happen
+            console.error('Variable Element Type Not Match!');
             return undefined;
           }
         } else {

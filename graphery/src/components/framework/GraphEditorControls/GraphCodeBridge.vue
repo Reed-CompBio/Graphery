@@ -108,7 +108,7 @@
 
         this.updateEditorLine(element['line']);
 
-        if (steps === 1 || steps === -1) {
+        if (steps === 1) {
           this.singleStep(element);
         } else {
           const noneEmptyElement = this.findLastNoneEmptyElementPos(
