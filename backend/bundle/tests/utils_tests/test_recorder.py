@@ -1,5 +1,7 @@
+import json
 from collections import deque
 from numbers import Number
+from textwrap import dedent
 from typing import List, Tuple, Deque, Sequence
 from collections import Counter
 from collections.abc import Mapping, Set
@@ -8,15 +10,7 @@ import pytest
 
 from bundle.GraphObjects.Edge import Edge
 from bundle.GraphObjects.Node import Node
-from bundle.controller import controller
 from bundle.utils.recorder import Recorder, identifier_to_string, IDENTIFIER_SEPARATOR
-
-
-@pytest.fixture()
-def use_samples():
-    with controller as folder_crater, folder_crater():
-        from tests.seeker_tests.samples import recorder as samples
-        yield samples
 
 
 @pytest.fixture()
@@ -134,4 +128,112 @@ def test_generating_changes(empty_recorder):
 
 
 def test_json_dump(empty_recorder):
-    pass
+    result_string = dedent(u"""\
+    [
+       {
+          "line":1,
+          "variables":{
+             "main\u200b@var_1":{
+                "color":"#1F78B4",
+                "type":"Number",
+                "repr":"1"
+             },
+             "main\u200b@var_2":{
+                "color":"#B2DF8A",
+                "type":"Node",
+                "repr":"Node(id: 1)",
+                "properties":"{}"
+             },
+             "main\u200b@var_4":{
+                "color":"#FB9A99",
+                "type":"None",
+                "repr":"None"
+             }
+          },
+          "accesses":[
+             {
+                "color":"#A6CEE3",
+                "type":"Node",
+                "repr":"Node(id: 1)",
+                "properties":"{}"
+             }
+          ]
+       },
+       {
+          "line":2,
+          "variables":{
+             "main\u200b@var_3":{
+                "color":"#33A02C",
+                "type":"String",
+                "repr":"'ab'"
+             }
+          },
+          "accesses":[
+             {
+                "color":"#A6CEE3",
+                "type":"Node",
+                "repr":"Node(id: 1)",
+                "properties":"{}"
+             }
+          ]
+       },
+       {
+          "line":20,
+          "variables":null,
+          "accesses":null
+       }
+    ] 
+    """)
+    first_line_no = 1
+    empty_recorder.add_record(first_line_no)
+
+    first_var_id = ('main', 'var_1')
+    first_var_id_string = empty_recorder.register_variable(first_var_id)
+    first_var_value = 1
+    empty_recorder.add_vc_to_last_record(
+        first_var_id_string, first_var_value
+    )
+
+    second_var_id = ('main', 'var_2')
+    second_var_id_string = empty_recorder.register_variable(second_var_id)
+    second_var_value = Node('1')
+    empty_recorder.add_vc_to_last_record(
+        second_var_id_string, second_var_value
+    )
+
+    first_accessed_var_value = Node('1')
+    empty_recorder.add_ac_to_last_record(
+        first_accessed_var_value
+    )
+
+    second_line_no = 2
+    empty_recorder.add_record(second_line_no)
+
+    third_var_id = ('main', 'var_3')
+    third_var_id_string = empty_recorder.register_variable(third_var_id)
+    third_var_value = 'abc'
+    empty_recorder.add_vc_to_last_record(
+        third_var_id_string, third_var_value
+    )
+
+    fourth_var_id = ('main', 'var_4')
+    fourth_var_id_string = empty_recorder.register_variable(fourth_var_id)
+    fourth_var_value = None
+    empty_recorder.add_vc_to_previous_record(
+        fourth_var_id_string, fourth_var_value
+    )
+
+    second_accessed_var_value = Node('1')
+    empty_recorder.add_ac_to_last_record(
+        second_accessed_var_value
+    )
+
+    third_line_no = 20
+    empty_recorder.add_record(third_line_no)
+
+    third_var_value = 'ab'
+    empty_recorder.add_vc_to_previous_record(
+        third_var_id_string, third_var_value
+    )
+
+    assert json.loads(empty_recorder.get_change_list_json()) == json.loads(result_string)
