@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from collections.abc import Mapping, Set
 from collections import Counter
-from copy import deepcopy
 from numbers import Number
 from random import randint
 from typing import Any, List, MutableMapping, Sequence, Tuple, Deque, Union
@@ -104,6 +103,7 @@ class Recorder:
     _TYPE_HEADER = 'type'
     _COLOR_HEADER = 'color'
     _REPR_HEADER = 'repr'
+    _ID_HEADER = 'id'
     _PROPERTY_HEADER = 'properties'
 
     _LINE_HEADER = 'line'
@@ -208,9 +208,7 @@ class Recorder:
         return repr(variable_state)
 
     def process_variable_state(self, identifier_string: str, variable_state: Any) -> MutableMapping:
-        state_mapping: MutableMapping = {
-            self._COLOR_HEADER: self._color_mapping[identifier_string],
-        }
+        state_mapping: MutableMapping = {}
 
         for type_candidate, type_string in self._TYPE_MAPPING.items():
             if isinstance(variable_state, type_candidate):
@@ -227,6 +225,8 @@ class Recorder:
             variable_state: Union[Node, Edge]
             state_mapping[self._PROPERTY_HEADER] = self.custom_repr(variable_state.properties,
                                                                     self._TYPE_MAPPING[Mapping])
+            state_mapping[self._COLOR_HEADER] = self._color_mapping[identifier_string]
+            state_mapping[self._ID_HEADER] = variable_state.identity
 
         return state_mapping
 
@@ -264,10 +264,26 @@ class Recorder:
         self.get_last_ac().append(self.process_variable_state(self._ACCESSED_IDENTIFIER_STRING, access_change))
 
     def get_change_list(self) -> List[MutableMapping]:
-        return self._changes
+        temp = [
+            {
+                'line': 0,
+                'variables': {
+                    key: {
+                        'type': 'init',
+                        'color': value,
+                        'repr': ''
+                    }
+                    for key, value in self._color_mapping.items()
+                    if not (key == self._INNER_IDENTIFIER_STRING or key == self._ACCESSED_IDENTIFIER_STRING)
+                },
+                'accesses': None
+            },
+            *self._changes
+        ]
+        return temp
 
     def get_change_list_json(self) -> str:
-        return json.dumps(self._changes)
+        return json.dumps(self.get_change_list())
 
     def purge(self) -> None:
         """Empty previous recorded items"""
