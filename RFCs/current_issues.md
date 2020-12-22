@@ -24,6 +24,8 @@
 
 - [ ] Unify `Processor` and `Recorder`. There is no need to collect variables first and then serialize them.
 
+- [ ] Fix `Controller` logging. 
+
 - [ ] IP restriction should be imposed to reduce malicious requests. The execution time should be limited to 1 second. 
 
 - [ ] Unify the server error response. _This will be another document._ 
