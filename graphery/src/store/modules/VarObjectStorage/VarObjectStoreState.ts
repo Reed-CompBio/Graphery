@@ -8,4 +8,5 @@ export interface VariableType {
 
 export interface VariableStoreType {
   currentVariables: VariableType[] | null;
+  currentAccessedVariables: VariableType[] | null;
 }

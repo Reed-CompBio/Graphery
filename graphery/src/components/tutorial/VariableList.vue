@@ -30,24 +30,39 @@
     revertNameCombo,
   } from '@/components/framework/GraphEditorControls/ElementsUtils';
 
+  const _EMPTY_VALUE_STRING = '<EMPTY>';
+
+  const _EMPTY_VARIABLE_LIST_OBJ = [
+    {
+      label: 'Status',
+      value: _EMPTY_VALUE_STRING,
+    },
+  ];
+
+  const _ACCESSED_VARIABLE_OBJ_LABEL = 'Accessed';
+
+  const _EMPTY_ACCESSED_VARIABLE_LIST_OBJ = [
+    {
+      label: _ACCESSED_VARIABLE_OBJ_LABEL,
+      value: _EMPTY_VALUE_STRING,
+    },
+  ];
+
   export default {
     props: ['variableObject'],
     computed: {
       ...mapGetters('variables', [
         'getCurrentVariables',
         'currentVariablesEmpty',
+        'getCurrentAccessedVariables',
+        'currentAccessedVariableEmpty',
       ]),
       currentVariables() {
         return this.getCurrentVariables;
       },
       variableDisplayList() {
         if (this.currentVariablesEmpty) {
-          return [
-            {
-              label: 'Status',
-              value: '<Empty>',
-            },
-          ];
+          return _EMPTY_VARIABLE_LIST_OBJ;
         }
         const variableList = [];
 
@@ -55,6 +70,24 @@
           variableList.push(this.processVariableElement(key, value));
         }
         return variableList;
+      },
+      currentAccessedVariables() {
+        return this.getCurrentAccessedVariables;
+      },
+      accessedVariableDisplayList() {
+        if (this.currentAccessedVariableEmpty) {
+          return _EMPTY_ACCESSED_VARIABLE_LIST_OBJ;
+        }
+
+        const accessedVariableList = [];
+
+        for (const value of this.currentAccessedVariables) {
+          accessedVariableList.push(
+            this.processVariableElement(_ACCESSED_VARIABLE_OBJ_LABLE, value)
+          );
+        }
+
+        return accessedVariableList;
       },
     },
     methods: {

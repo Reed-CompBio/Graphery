@@ -65,9 +65,9 @@
             i
           );
           if (!this.emptyVariables(element)) {
-            return element;
-            // TODO what's the first element?
+            return [element, i];
           }
+          // which should never happen
         }
         // return number
       },
@@ -75,25 +75,57 @@
         // element: {line: number, variables: object}
 
         if (!this.emptyVariables(element)) {
-          this.viewUpdater(element);
+          this.viewUpdater(element, true);
         }
       },
-      multipleSteps(noneEmptyElement) {
-        this.viewUpdater(noneEmptyElement);
+      multipleSteps(noneEmptyElement, updateAccessed) {
+        this.viewUpdater(noneEmptyElement, updateAccessed);
       },
-      updateCytoscapeView(variables) {
+      highlightVariablesOnCytoscapeView(variables) {
         if (this.$refs.cytoscapeWrapper) {
           this.$refs.cytoscapeWrapper.highlightVarObj(variables);
+        }
+      },
+      highlightAccessedVariablesOnCytoscapeView(accessedVariables) {
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper.highlightAccessedVariables(
+            accessedVariables
+          );
+        }
+      },
+      unhighlightAccessedVariablesOnCytoscapeView() {
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper.unhighlightAccessedVariables();
         }
       },
       updateVariableList(variables) {
         this.$store.commit('variables/LOAD_CURRENT_VARIABLES', variables);
       },
-      viewUpdater(element) {
+      updateAccessedVariables(accessedVariables) {
+        this.$store.commit(
+          'variables/LOAD_CURRENT_ACCESSES',
+          accessedVariables
+        );
+      },
+      clearAccessedVariables() {
+        this.$store.commit('variables/CLEAR_CURRENT_ACCESSES');
+      },
+      viewUpdater(element, updateAccessed) {
         // elements: non null
+        if (updateAccessed) {
+          // update accessed variables
+          const accessedVariables = element['accesses'];
+          this.updateAccessedVariables(accessedVariables);
+          this.highlightAccessedVariablesOnCytoscapeView(accessedVariables);
+        } else {
+          // clear accessed variables
+          this.clearAccessedVariables();
+          this.unhighlightAccessedVariablesOnCytoscapeView();
+        }
+
         const variables = element['variables'];
         this.updateVariableList(variables);
-        this.updateCytoscapeView(variables);
+        this.highlightVariablesOnCytoscapeView(variables);
       },
       stepper(newPosition, steps) {
         this.updateResultJsonPosition(this.currentPositionId, newPosition);
@@ -111,10 +143,11 @@
         if (steps === 1) {
           this.singleStep(element);
         } else {
-          const noneEmptyElement = this.findLastNoneEmptyElementPos(
-            newPosition
-          );
-          this.multipleSteps(noneEmptyElement);
+          const [
+            noneEmptyElement,
+            searchedPos,
+          ] = this.findLastNoneEmptyElementPos(newPosition);
+          this.multipleSteps(noneEmptyElement, searchedPos === newPosition);
         }
       },
       restartWithNewPosition(pos) {
