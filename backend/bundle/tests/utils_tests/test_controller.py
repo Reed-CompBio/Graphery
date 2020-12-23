@@ -7,18 +7,15 @@ def new_controller():
     return _Controller()
 
 
-def test_controller_creation():
-    default_path_auto_delete_controller = _Controller(auto_delete=True)
+@pytest.mark.parametrize('auto_delete', [
+    True, False
+])
+def test_controller_creation(auto_delete):
+    default_path_auto_delete_controller = _Controller(auto_delete=auto_delete)
     assert default_path_auto_delete_controller.log_folder.exists()
     log_folder = default_path_auto_delete_controller.log_folder
     del default_path_auto_delete_controller
-    assert not log_folder.exists()
-
-    default_path_no_delete_controller = _Controller()
-    assert default_path_no_delete_controller.log_folder.exists()
-    log_folder = default_path_no_delete_controller.log_folder
-    del default_path_no_delete_controller
-    assert log_folder.exists()
+    assert not log_folder.exists() == auto_delete
 
 
 def test_controller_logging(new_controller):

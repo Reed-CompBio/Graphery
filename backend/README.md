@@ -39,7 +39,7 @@ cd Graphery
 
 * for production 
     
-    make sure the the folder `/var/log/graphery`exists and production settings is installed to `server/graphery/settings/production.py`
+    make sure the the folder `/var/log/graphery` exists and production settings is installed to `server/graphery/settings/production.py`
 
 ### Install PostgreSQL and Redis 
 
