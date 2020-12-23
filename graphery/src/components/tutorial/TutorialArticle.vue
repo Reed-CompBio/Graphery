@@ -1,6 +1,10 @@
 <template>
   <div id="articleWrapper" style="overflow-y: hidden;">
-    <q-scroll-area ref="tutorialScrollArea" class="fit">
+    <q-scroll-area
+      ref="tutorialScrollArea"
+      @scroll="updateViewPercentage"
+      class="fit"
+    >
       <div
         id="tutorial-container"
         ref="tc"
@@ -86,7 +90,7 @@
         <!-- TODO use quasar native utils to get percentage and replace the scroll func I wrote  -->
         <q-circular-progress
           size="42px"
-          :value="1"
+          :value="articleViewPercentage"
           :max="1"
           color="primary"
           :thickness="0.1"
@@ -128,7 +132,7 @@
     },
     data() {
       return {
-        // articleViewPercentage: 0,
+        articleViewPercentage_: 0,
       };
     },
     computed: {
@@ -146,9 +150,20 @@
       headerTitle() {
         return this.title ? this.title : this.$t('metaInfo.Tutorial');
       },
+      articleViewPercentage: {
+        get() {
+          return this.articleViewPercentage_;
+        },
+        set(d) {
+          this.articleViewPercentage_ = d;
+        },
+      },
     },
     methods: {
       toLocalDateString,
+      updateViewPercentage(info) {
+        this.articleViewPercentage = info.verticalPercentage;
+      },
       share() {
         saveTextToClipboard(window.location.href);
         // TODO use uniform notify
