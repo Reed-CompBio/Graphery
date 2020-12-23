@@ -8,12 +8,12 @@ from bundle.seeker import tracer
 from time import time
 
 
-class Controller:
+class _Controller:
     def __init__(self, cache_path=USER_DOCS_PATH, auto_delete: bool = False):
         self.main_cache_folder = CacheFolder(cache_path, auto_delete=auto_delete)
         self.log_folder = CacheFolder(cache_path / 'log', auto_delete=auto_delete)
         # TODO think about this, and the log file location in the sight class
-        self.log_folder.cache_folder_path.mkdir(parents=True, exist_ok=True)
+        self.log_folder.mkdir(parents=True, exist_ok=True)
         self.tracer_cls = tracer
         self.recorder = Recorder()
 
@@ -47,17 +47,15 @@ class Controller:
             return self.main_cache_folder
 
     def __enter__(self):
-        self.tracer_cls.set_log_file_name(str(time()))
+        self.tracer_cls.set_log_file_name(f'{time()}.log')
         # TODO give a prompt that the current session is under this time stamp
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
+        self.tracer_cls.set_log_file_name(None)
 
     def __del__(self):
         self.main_cache_folder.__exit__(None, None, None)
 
 
-controller = Controller()
-
-del Controller  # User should only have one controller
+controller = _Controller()

@@ -125,6 +125,9 @@ class CacheFolder(contextlib.AbstractContextManager):
     def __repr__(self):
         return self.__str__()
 
+    def mkdir(self, mode: int = 0o777, parents: bool = False, exist_ok: bool = False):
+        self.cache_folder_path.mkdir(mode=mode, parents=parents, exist_ok=exist_ok)
+
     def exists(self) -> bool:
         return self.cache_folder_path.exists()
 

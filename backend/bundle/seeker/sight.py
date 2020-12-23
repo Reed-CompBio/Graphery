@@ -130,11 +130,14 @@ def get_write_function(output, overwrite):
         return FileWriter(output, overwrite).write
     elif callable(output):
         write = output
-    else:
+    elif output:
         assert isinstance(output, utils.WritableStream)
 
         def write(s):
             output.write(s)
+    else:
+        def write(_: Any):
+            pass
     return write
 
 
@@ -159,19 +162,23 @@ class Tracer:
     _log_file_name: Optional[pathlib.Path] = None
     _log_file_dir: Optional[str] = None
 
-    def __init__(self, *watch_list, default_output: bool = True,
+    def __init__(self, *watch_list,
+                 default_output: bool = True,
+                 log_output: bool = True,
                  output: Union[str, Callable, utils.WritableStream, StringIO] = None,
                  watch=(), watch_explode=(), depth: int = 1, prefix: str = '', overwrite: bool = False,
                  thread_info: bool = False, custom_repr=(), max_variable_length: int = 100,
                  relative_time: bool = False, only_watch: bool = True):
 
         if output:
-            self.log_path = output
-        elif self._log_file_name and self._log_file_dir and not default_output:
-            self.log_path = self._log_file_dir / self._log_file_name
+            self._log_path = output
+        elif self._log_file_name and self._log_file_dir and log_output:
+            self._log_path = self._log_file_dir / self._log_file_name
+        elif default_output:
+            self._log_path = None
         else:
-            self.log_path = None
-        self._write = get_write_function(self.log_path, overwrite)
+            self._log_path = False
+        self._write = get_write_function(self._log_path, overwrite)
 
         self.watch = [
                          v if isinstance(v, BaseVariable) else CommonVariable(v)
