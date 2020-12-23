@@ -1,5 +1,6 @@
 from __future__ import annotations
 import pathlib
+from os import getenv
 from typing import Union, List, Mapping
 
 from bundle.utils.recorder import Recorder
@@ -8,9 +9,13 @@ from bundle.seeker import tracer
 
 from time import time
 
+_CACHE_FOLDER_AUTO_DELETE_ENV_NAME = 'CONTROLLER_CACHE_AUTO_DELETE'
+
+is_auto_delete = getenv(_CACHE_FOLDER_AUTO_DELETE_ENV_NAME, False)
+
 
 class _Controller:
-    def __init__(self, cache_path=USER_DOCS_PATH, auto_delete: bool = False):
+    def __init__(self, cache_path=USER_DOCS_PATH, auto_delete: bool = is_auto_delete):
         self.main_cache_folder = CacheFolder(cache_path, auto_delete=auto_delete)
         self.log_folder = CacheFolder(cache_path / 'log', auto_delete=auto_delete)
         # TODO think about this, and the log file location in the sight class
