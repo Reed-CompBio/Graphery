@@ -110,6 +110,8 @@ class Recorder:
     _VARIABLE_HEADER = 'variables'
     _ACCESS_HEADER = 'accesses'
 
+    _BAD_REPR_STRING = 'BAD REPR FUNCTION'
+
     def __init__(self):
         self._changes: List[MutableMapping] = []
         # self.variables: Set[str] = set()
@@ -205,7 +207,12 @@ class Recorder:
         #     return repr(variable_state)
 
         # return deepcopy(variable_state)
-        return repr(variable_state)
+        try:
+            repr_result = repr(variable_state)
+        except Exception:
+            repr_result = self._BAD_REPR_STRING
+
+        return repr_result
 
     def process_variable_state(self, identifier_string: str, variable_state: Any) -> MutableMapping:
         state_mapping: MutableMapping = {}
