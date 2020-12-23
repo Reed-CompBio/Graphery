@@ -49,9 +49,8 @@ const getters: GetterTree<VariableStoreType, RootState> = {
     return state.currentAccessedVariables;
   },
   currentAccessedVariableEmpty(state) {
-    return (
-      state.currentAccessedVariables === null ||
-      state.currentAccessedVariables.length == 0
+    return !(
+      state.currentAccessedVariables && state.currentAccessedVariables.length
     );
   },
 };
