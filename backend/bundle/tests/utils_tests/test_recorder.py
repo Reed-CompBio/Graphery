@@ -146,23 +146,23 @@ def test_json_dump(empty_recorder):
           "variables":{
              "main\u200b@var_1":{
                 "type":"init",
-                "color":"#A6CEE3",
-                "repr":""
+                "color":null,
+                "repr":null
              },
              "main\u200b@var_2":{
                 "type":"init",
-                "color":"#1F78B4",
-                "repr":""
+                "color":null,
+                "repr":null
              },
              "main\u200b@var_3":{
                 "type":"init",
-                "color":"#B2DF8A",
-                "repr":""
+                "color":null,
+                "repr":null
              },
              "main\u200b@var_4":{
                 "type":"init",
-                "color":"#33A02C",
-                "repr":""
+                "color":null,
+                "repr":null
              }
           },
           "accesses":null
@@ -276,5 +276,5 @@ def test_json_dump(empty_recorder):
         third_var_id_string, third_var_value
     )
 
-    # assert json.loads(empty_recorder.get_change_list_json()) == json.loads(result_string)
-    print(empty_recorder.get_change_list_json())
+    assert json.loads(empty_recorder.get_change_list_json()) == json.loads(result_string)
+    # print(empty_recorder.get_change_list_json())
