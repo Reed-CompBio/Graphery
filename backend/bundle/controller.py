@@ -1,7 +1,6 @@
 import pathlib
 from typing import Union, List, Mapping
 
-from bundle.utils.processor import Processor
 from bundle.utils.recorder import Recorder
 from bundle.utils.cache_file_helpers import CacheFolder, USER_DOCS_PATH
 from bundle.seeker import tracer
@@ -17,7 +16,6 @@ class Controller:
         self.log_folder.cache_folder_path.mkdir(parents=True, exist_ok=True)
         self.tracer_cls = tracer
         self.recorder = Recorder()
-        self.processor = Processor()
 
         self.main_cache_folder.__enter__()
         self.tracer_cls.set_log_file_dir(self.log_folder.cache_folder_path)
@@ -35,7 +33,6 @@ class Controller:
 
     def purge_records(self):
         self.recorder.purge()
-        self.processor.purge()
 
     def generate_processed_record(self):
         raise DeprecationWarning()
