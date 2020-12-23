@@ -28,18 +28,17 @@ class Controller:
         return self.recorder.get_change_list()
 
     def get_processed_result(self) -> List[Mapping]:
-        return self.processor.result
+        return self.recorder.get_change_list()
 
     def get_processed_result_json(self) -> str:
-        return self.processor.result_json
+        return self.recorder.get_change_list_json()
 
     def purge_records(self):
         self.recorder.purge()
         self.processor.purge()
 
     def generate_processed_record(self):
-        self.processor.load_data(change_list=self.recorder.get_change_list(), variables=self.recorder.variables)
-        self.processor.generate_result_json()
+        raise DeprecationWarning()
 
     def __call__(self, dir_name: Union[str, pathlib.Path] = None,
                        mode: int = 0o777,
