@@ -8,30 +8,29 @@ def new_controller():
 
 
 def test_controller_creation():
-    default_path_no_delete_controller = _Controller()
-    assert default_path_no_delete_controller.log_folder.exists()
-    log_folder = default_path_no_delete_controller.log_folder
-    del default_path_no_delete_controller
-    assert log_folder.exists()
-    log_folder.delete_cache_folder()
-
     default_path_auto_delete_controller = _Controller(auto_delete=True)
     assert default_path_auto_delete_controller.log_folder.exists()
     log_folder = default_path_auto_delete_controller.log_folder
     del default_path_auto_delete_controller
     assert not log_folder.exists()
 
+    default_path_no_delete_controller = _Controller()
+    assert default_path_no_delete_controller.log_folder.exists()
+    log_folder = default_path_no_delete_controller.log_folder
+    del default_path_no_delete_controller
+    assert log_folder.exists()
+
 
 def test_controller_logging(new_controller):
     assert new_controller.log_folder.exists()
-    assert new_controller.tracer_cls._log_file_dir is not None
+    assert new_controller.tracer_cls._logger is None
 
 
 def test_controller_enter_and_exit(new_controller):
     with new_controller as folder_generator, folder_generator() as work_folder:
         assert work_folder.exists()
-        assert new_controller.tracer_cls._log_file_name is not None
-    assert new_controller.tracer_cls._log_file_name is None
+        assert new_controller.tracer_cls._logger is not None
+    assert new_controller.tracer_cls._logger is None
 
 
 def test_controller_working(new_controller):

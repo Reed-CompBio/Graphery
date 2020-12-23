@@ -3,6 +3,7 @@ import json
 import sys
 import pathlib
 from importlib import import_module
+from inspect import getsource
 from typing import Mapping, Any, Callable, Union, List, Tuple
 
 from .params import DEFAULT_PORT, GRAPH_OBJ_ANCHOR_NAME, ENTRY_PY_MODULE_NAME, MAIN_FUNCTION_NAME, \
@@ -64,6 +65,8 @@ def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool 
 
         try:
             imported_module = import_module(ENTRY_PY_MODULE_NAME)
+            source_code = getsource(imported_module)
+            controller.tracer_cls.log_output(source_code)
 
         except Exception as e:
             raise ExecutionException(f'Cannot import module. Error: {e}')

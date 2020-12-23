@@ -154,17 +154,23 @@ class FileWriter(object):
 
 
 thread_global = threading.local()
-DISABLED = bool(os.getenv('SEEKER_DISABLED', ''))
+_SEEKER_DISABLE_ENV_NAME = 'SEEKER_DISABLED'
+DISABLED = bool(os.getenv(_SEEKER_DISABLE_ENV_NAME, ''))
 
 
 class Tracer:
+    _LOG_OUTPUT_ENV_NAME = 'SEEKER_LOG_OUTPUT_FLAG'
+    using_log_output = bool(os.getenv(_LOG_OUTPUT_ENV_NAME, True))
+
+    _DEFAULT_OUTPUT_ENV_NAME = 'SEEKER_DEFAULT_OUTPUT_FLAG'
+    using_default_output = bool(os.getenv(_DEFAULT_OUTPUT_ENV_NAME, True))
+
     _recorder: Recorder = None
-    _log_file_name: Optional[pathlib.Path] = None
-    _log_file_dir: Optional[str] = None
+    _logger: logging.Logger = None
 
     def __init__(self, *watch_list,
-                 default_output: bool = True,
-                 log_output: bool = True,
+                 default_output: bool = using_log_output,
+                 log_output: bool = using_default_output,
                  output: Union[str, Callable, utils.WritableStream, StringIO] = None,
                  watch=(), watch_explode=(), depth: int = 1, prefix: str = '', overwrite: bool = False,
                  thread_info: bool = False, custom_repr=(), max_variable_length: int = 100,
@@ -172,8 +178,8 @@ class Tracer:
 
         if output:
             self._log_path = output
-        elif self._log_file_name and self._log_file_dir and log_output:
-            self._log_path = self._log_file_dir / self._log_file_name
+        elif self._logger is not None and log_output:
+            self._log_path = self.log_output
         elif default_output:
             self._log_path = None
         else:
@@ -227,12 +233,12 @@ class Tracer:
         return cls.get_recorder().get_change_list()
 
     @classmethod
-    def set_log_file_name(cls, file_name: Optional[str]) -> None:
-        cls._log_file_name = file_name
+    def set_logger(cls, logger: Optional[logging.Logger]) -> None:
+        cls._logger = logger
 
     @classmethod
-    def set_log_file_dir(cls, file_dir: Optional[pathlib.Path]) -> None:
-        cls._log_file_dir = file_dir
+    def log_output(cls, message: Any) -> None:
+        cls._logger.info(message)
 
     def __call__(self, function_or_class):
         if DISABLED:
