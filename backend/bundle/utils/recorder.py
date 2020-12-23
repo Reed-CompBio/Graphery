@@ -97,6 +97,7 @@ class Recorder:
         # wildcard
         object: 'Object',
     }
+    _INIT_TYPE_STRING = 'init'
 
     _GRAPH_OBJECT_TYPES = {'Node', 'Edge'}
 
@@ -203,10 +204,6 @@ class Recorder:
         return self.get_last_record()['accesses']
 
     def custom_repr(self, variable_state: Any, variable_type: str) -> Any:
-        # if variable_type == self._TYPE_MAPPING[object]:
-        #     return repr(variable_state)
-
-        # return deepcopy(variable_state)
         try:
             repr_result = repr(variable_state)
         except Exception:
@@ -276,9 +273,9 @@ class Recorder:
                 'line': 0,
                 'variables': {
                     key: {
-                        'type': 'init',
-                        'color': value,
-                        'repr': ''
+                        'type': self._INIT_TYPE_STRING,
+                        'color': None,
+                        'repr': None
                     }
                     for key, value in self._color_mapping.items()
                     if not (key == self._INNER_IDENTIFIER_STRING or key == self._ACCESSED_IDENTIFIER_STRING)

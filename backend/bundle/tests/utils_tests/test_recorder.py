@@ -100,14 +100,21 @@ def test_process_variable_state(empty_recorder):
 
 
 def test_generating_changes(empty_recorder):
-    change_list = empty_recorder.get_change_list()
     first_line_no = 1
     empty_recorder.add_record(first_line_no)
-    assert len(change_list) == 1
-    first_change = change_list[0]
+    change_list = empty_recorder.get_change_list()
+    assert len(change_list) == 2
+    first_change = change_list[1]
     assert first_change[empty_recorder._LINE_HEADER] == first_line_no
     assert first_change[empty_recorder._VARIABLE_HEADER] is None
     assert first_change[empty_recorder._ACCESS_HEADER] is None
+
+    default_start = change_list[0]
+    assert default_start[empty_recorder._LINE_HEADER] == 0
+    assert all(item[empty_recorder._TYPE_HEADER] == empty_recorder._INIT_TYPE_STRING and
+               item[empty_recorder._REPR_HEADER] is None and
+               item[empty_recorder._COLOR_HEADER] is None
+               for item in default_start[empty_recorder._VARIABLE_HEADER])
 
     first_var_id = ('main', 'var_1')
     first_var_id_string = empty_recorder.register_variable(first_var_id)
