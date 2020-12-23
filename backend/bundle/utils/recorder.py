@@ -43,7 +43,7 @@ class Recorder:
                         }
                     }
                 },
-                'accessed': [
+                'accesses': [
                     {
                        'type': 'some_type',
                         'color': 'some_color_hex',
