@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import argparse
 import json
 import sys
@@ -43,6 +45,13 @@ def create_data_response(data: Any) -> dict:
     }
 
 
+_SOURCE_CODE_STARTS_LOGGING_TEMPLATE = '========== code starts =========='
+_SOURCE_CODE_ENDS_LOGGING_TEMPLATE = '========== code ends =========='
+_SOURCE_CODE_LOGGING_TEMPLATE = '\n{code_string}'
+_EXECUTION_STARTS_LOGGING_TEMPLATE = '========== execution starts =========='
+_EXECUTION_ENDS_LOGGING_TEMPLATE = '========== execution ends ==========\n'
+
+
 def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool = False) -> Tuple[str, List[Mapping]]:
     folder_hash: str = get_md5_of_a_string(code)
 
@@ -66,7 +75,10 @@ def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool 
         try:
             imported_module = import_module(ENTRY_PY_MODULE_NAME)
             source_code = getsource(imported_module)
-            controller.tracer_cls.log_output(source_code)
+            controller.tracer_cls.log_output(_SOURCE_CODE_STARTS_LOGGING_TEMPLATE)
+            controller.tracer_cls.log_output(_SOURCE_CODE_LOGGING_TEMPLATE.format(code_string=source_code))
+            controller.tracer_cls.log_output(_SOURCE_CODE_ENDS_LOGGING_TEMPLATE)
+            controller.tracer_cls.log_output(_EXECUTION_STARTS_LOGGING_TEMPLATE)
 
         except Exception as e:
             raise ExecutionException(f'Cannot import module. Error: {e}')
@@ -89,5 +101,7 @@ def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool 
         finally:
             del sys.modules[ENTRY_PY_MODULE_NAME]
             del imported_module
+
+            controller.tracer_cls.log_output(_EXECUTION_ENDS_LOGGING_TEMPLATE)
 
     return folder_hash, controller.get_processed_result()

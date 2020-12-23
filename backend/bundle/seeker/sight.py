@@ -2,7 +2,6 @@ import functools
 import inspect
 import opcode
 import os
-import pathlib
 import sys
 import re
 import collections
@@ -237,8 +236,8 @@ class Tracer:
         cls._logger = logger
 
     @classmethod
-    def log_output(cls, message: Any) -> None:
-        cls._logger.info(message)
+    def log_output(cls, message: str) -> None:
+        cls._logger.info(message.rstrip())
 
     def __call__(self, function_or_class):
         if DISABLED:
