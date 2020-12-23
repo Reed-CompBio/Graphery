@@ -81,7 +81,6 @@ def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool 
 
             controller.purge_records()
             main_function()
-            controller.generate_processed_record()
         except Exception as e:
             raise ExecutionException(e)
         finally:

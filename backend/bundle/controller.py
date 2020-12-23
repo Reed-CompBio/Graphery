@@ -1,3 +1,4 @@
+from __future__ import annotations
 import pathlib
 from typing import Union, List, Mapping
 
@@ -31,11 +32,8 @@ class _Controller:
     def get_processed_result_json(self) -> str:
         return self.recorder.get_change_list_json()
 
-    def purge_records(self):
+    def purge_records(self) -> None:
         self.recorder.purge()
-
-    def generate_processed_record(self):
-        raise DeprecationWarning()
 
     def __call__(self, dir_name: Union[str, pathlib.Path] = None,
                        mode: int = 0o777,
@@ -46,15 +44,15 @@ class _Controller:
         else:
             return self.main_cache_folder
 
-    def __enter__(self):
+    def __enter__(self) -> _Controller:
         self.tracer_cls.set_log_file_name(f'{time()}.log')
         # TODO give a prompt that the current session is under this time stamp
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         self.tracer_cls.set_log_file_name(None)
 
-    def __del__(self):
+    def __del__(self) -> None:
         self.main_cache_folder.__exit__(None, None, None)
 
 
