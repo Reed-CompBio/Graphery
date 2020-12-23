@@ -1,4 +1,3 @@
-<!-- TODO use pop up edit? -->
 <template>
   <div
     id="code-controller-wrapper"
@@ -59,6 +58,11 @@
     },
   ];
 
+  const _EMPTY_TYPE_STRING = 'Empty';
+  const _COLOR_HEADER = 'color';
+  const _REPR_HEADER = 'repr';
+  const _TYPE_HEADER = 'type';
+
   export default {
     props: ['variableObject'],
     computed: {
@@ -106,15 +110,17 @@
         return {
           // TODO temporary work round figure out how to style it
           label: revertNameCombo(nameCombo),
-          color: element['color'],
-          value: element['repr'],
+          color: element[_COLOR_HEADER],
+          value: element[_REPR_HEADER],
+          type: element[_TYPE_HEADER],
         };
       },
       revertNormalObject(nameCombo, element) {
         return {
           label: revertNameCombo(nameCombo),
           color: undefined,
-          value: element['repr'],
+          value: element[_REPR_HEADER],
+          type: element[_TYPE_HEADER],
         };
       },
       emptyObject(nameCombo) {
@@ -122,6 +128,7 @@
           label: revertNameCombo(nameCombo),
           color: undefined,
           value: EMPTY_VARIABLE_ELEMENT_DISPLAY,
+          type: _EMPTY_VALUE_STRING,
         };
       },
       processVariableElement(key, value) {
