@@ -1,21 +1,32 @@
 <!-- TODO use pop up edit? -->
 <template>
-  <div id="code-controller-wrapper" class="full-height row flex-center">
-    <q-virtual-scroll
-      class="full-height"
-      :items="variableDisplayList"
-      id="variable-list-scroll"
-    >
-      <!-- make cards wrap when the width is enough -->
-      <template v-slot="{ item, index }">
-        <q-card :key="index" class="q-my-md q-py-sm q-px-md text-center">
-          <div class="mock-h6" :style="`background-color: ${item.color}`">
-            {{ item.label }}
-          </div>
-          {{ item.value }}
-        </q-card>
-      </template>
-    </q-virtual-scroll>
+  <div
+    id="code-controller-wrapper"
+    class="full-height full-width row flex-center"
+  >
+    <q-scroll-area class="fit q-px-sm" id="variable-list-scroll-area">
+      <q-card
+        :key="index"
+        v-for="(item, index) in variableDisplayList"
+        class="q-my-md q-py-sm q-px-md text-center"
+      >
+        <div class="mock-h6" :style="`background-color: ${item.color}`">
+          {{ item.label }}
+        </div>
+        {{ item.value }}
+      </q-card>
+      <q-separator />
+      <q-card
+        v-for="(item, index) in accessedVariableDisplayList"
+        :key="index"
+        class="q-my-md q-py-sm q-px-md text-center"
+      >
+        <div class="mock-h6" :style="`background-color: ${item.color}`">
+          {{ item.label }}
+        </div>
+        {{ item.value }}
+      </q-card>
+    </q-scroll-area>
   </div>
 </template>
 
@@ -83,7 +94,7 @@
 
         for (const value of this.currentAccessedVariables) {
           accessedVariableList.push(
-            this.processVariableElement(_ACCESSED_VARIABLE_OBJ_LABLE, value)
+            this.processVariableElement(_ACCESSED_VARIABLE_OBJ_LABEL, value)
           );
         }
 
