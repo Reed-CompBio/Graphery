@@ -19,15 +19,15 @@ class StringEncoder(json.JSONEncoder):
             return str(obj)
 
 
-def main(port: int = 7590) -> None:
-    with make_server('127.0.0.1', port, application) as httpd:
+def main(url: str, port: int) -> None:
+    with make_server(url, port, application) as httpd:
         print('Press <ctrl+c> to stop the server. ')
-        print(f'Ready for Python code on port {port} ...')
+        print(f'Ready for Python code on {url}:{port} ...')
         httpd.serve_forever()
 
 
-def run_server(port: int) -> None:
-    main(port)
+def run_server(url: str, port: int) -> None:
+    main(url, port)
 
 
 def application(environ: Mapping, start_response: Callable) -> List:

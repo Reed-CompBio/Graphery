@@ -9,7 +9,7 @@ from inspect import getsource
 from typing import Mapping, Any, Callable, Union, List, Tuple
 
 from .params import DEFAULT_PORT, GRAPH_OBJ_ANCHOR_NAME, ENTRY_PY_MODULE_NAME, MAIN_FUNCTION_NAME, \
-    ENTRY_PY_FILE_NAME
+    ENTRY_PY_FILE_NAME, DEFAULT_SERVE_URL
 
 from ..GraphObjects.Graph import Graph
 from ..utils.cache_file_helpers import TempSysPathAdder, get_md5_of_a_string
@@ -20,8 +20,12 @@ class ExecutionException(Exception):
     pass
 
 
-def arg_parser() -> Mapping[str, int]:
+def arg_parser() -> Mapping[str, Union[int, str]]:
     parser = argparse.ArgumentParser(description='Graphery Local Server')
+    parser.add_argument('-u', '--url',
+                        default=DEFAULT_SERVE_URL,
+                        type=str,
+                        help='The url the local server will run on')
     parser.add_argument('-p', '--port',
                         default=DEFAULT_PORT,
                         type=int,
