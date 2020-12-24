@@ -78,6 +78,18 @@ TODO: modify the content of footer
 
 # Graph
 
+## Tutorials & Graphs
+
+The page of archive indexing, redesign:
+
+- the search box
+
+- paginator
+
+- Filter categories placeholder blank - label name
+
+  *Practice in* `/src/components/ControlPanel/parts/selectors/CategorySelection.vue`
+
 ## Separator
 
 (Maybe) An option for remember/ not remember the position of the separators
