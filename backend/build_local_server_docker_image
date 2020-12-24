@@ -5,4 +5,4 @@ find . -type d -name __pycache__ -prune -exec rm -rf {} \;
 find . -type d -name .pytest_cache -prune -exec rm -rf {} \;
 find . -type f -name .DS_Store -prune -exec rm -rf {} \;
 
-zip -r user_server.zip launch launch.bat user_server.py bundle -x \*tests\*
+docker build -t local-server -f bundle/Dockerfile .

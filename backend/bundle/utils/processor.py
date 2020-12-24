@@ -31,6 +31,7 @@ class Processor:
         self.variable_color_map: dict = {}
         self.result: List[MutableMapping] = []
         self.result_json: Optional[str] = None
+        raise DeprecationWarning()
 
     def _no_limit_override(self, flag: bool) -> None:
         self._no_limit = flag

@@ -3,8 +3,10 @@ export interface VariableType {
   repr: string;
   id?: string;
   color?: string;
+  properties?: object;
 }
 
 export interface VariableStoreType {
   currentVariables: VariableType[] | null;
+  currentAccessedVariables: VariableType[] | null;
 }
