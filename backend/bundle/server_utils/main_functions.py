@@ -21,12 +21,12 @@ class StringEncoder(json.JSONEncoder):
 
 def main(url: str, port: int) -> None:
     with make_server(url, port, application) as httpd:
-        print(f'Press <ctrl+c> to stop the server. Server Ver: {VERSION}')
+        print(f'Server Ver: {VERSION}. Press <ctrl+c> to stop the server.')
         print(f'Ready for Python code on {url}:{port} ...')
         print(f'Time out is set to {TIMEOUT_SECONDS}s.')
-        print(f'The origin is {ACCEPTED_ORIGIN}. The server accepts other other origin: {not ONLY_ACCEPTED_ORIGIN}')
-        print(f'Request graph name: {REQUEST_GRAPH_NAME}; request code name: {REQUEST_CODE_NAME}; '
-              f'request version name: {REQUEST_VERSION_NAME};')
+        print(f'The origin is `{ACCEPTED_ORIGIN}`. Accepting other other origins too: {not ONLY_ACCEPTED_ORIGIN}')
+        print(f'Request graph name: `{REQUEST_GRAPH_NAME}`; request code name: `{REQUEST_CODE_NAME}`; '
+              f'request version name: `{REQUEST_VERSION_NAME}`;')
         httpd.serve_forever()
 
 
