@@ -86,6 +86,8 @@ The page of archive indexing, redesign:
 
 - paginator
 
+  ? on the top of article cards
+
 - Filter categories placeholder blank - label name
 
   *Practice in* `/src/components/ControlPanel/parts/selectors/CategorySelection.vue`
