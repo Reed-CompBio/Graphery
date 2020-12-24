@@ -4,7 +4,7 @@
       <q-card-section>
         <div :class="$q.screen.gt.xs ? 'q-pl-xl' : 'q-pl.md'">
           <h3 class="material-page-shorter-h3">
-            {{ $t('nav.Login') }}
+            {{ $t('account.Register') }}
           </h3>
         </div>
         <div>
