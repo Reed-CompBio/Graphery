@@ -12,6 +12,7 @@
       map-options
       option-label="category"
       option-value="id"
+      :label="labelName"
       :loading="loadingContent"
     >
       <template v-slot:no-option>
@@ -48,6 +49,7 @@
     data() {
       return {
         categoryOptions: null,
+        labelName: 'Categories',
       };
     },
     methods: {
