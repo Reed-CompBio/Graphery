@@ -11,14 +11,16 @@ from bundle.utils.cache_file_helpers import CacheFolder, USER_DOCS_PATH
 from bundle.seeker import tracer
 
 _CACHE_FOLDER_AUTO_DELETE_ENV_NAME = 'CONTROLLER_CACHE_AUTO_DELETE'
-
 is_auto_delete = getenv(_CACHE_FOLDER_AUTO_DELETE_ENV_NAME, False)
+
+_CACHE_PATH_ENV_NAME = 'CONTROLLER_CACHE_PATH'
+controller_cache_path = pathlib.Path(getenv(_CACHE_PATH_ENV_NAME, USER_DOCS_PATH))
 
 
 class _Controller:
     _LOG_FILE_NAME = f'graphery_controller_execution.log'
 
-    def __init__(self, cache_path=USER_DOCS_PATH, auto_delete: bool = is_auto_delete):
+    def __init__(self, cache_path=controller_cache_path, auto_delete: bool = is_auto_delete):
         self.main_cache_folder = CacheFolder(cache_path, auto_delete=auto_delete)
         self.log_folder = CacheFolder(cache_path / 'log', auto_delete=auto_delete)
         # TODO think about this, and the log file location in the sight class
