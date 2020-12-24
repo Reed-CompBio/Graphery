@@ -30,13 +30,13 @@
 
 - [ ] Unify the server error response. _This will be another document._ 
 
-- [ ] Wrap user server with docker and setup a portal environment. 
+- [x] Wrap user server with docker and setup a portal environment. 
 
-- [ ] Implement reading from env for global setting variables, like for user server for example. 
+- [x] Implement reading from env for global setting variables, like for user server for example. 
 
 - [ ] Implement tooltips on graph elements to show their properties. (Fix #60). The tooltips should go away when any operation is taken on the Cytoscape. Also, there should be a disable showing graph tooltip option on the control strip. 
 
-- [ ] Implement auto run in the step controller. 
+- [ ] Implement (or delete) auto run in the step controller. 
 
 - [ ] Add name to code snippets. 
 
