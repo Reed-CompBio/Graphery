@@ -951,8 +951,7 @@ def test_repr_exception():
     def my_function():
         bad = Bad()
 
-    with mini_toolbox.OutputCapturer(stdout=False,
-                                     stderr=True) as output_capturer:
+    with mini_toolbox.OutputCapturer(stdout=False) as output_capturer:
         result = my_function()
     assert result is None
     output = output_capturer.string_io.getvalue()
