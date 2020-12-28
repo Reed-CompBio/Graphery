@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import abstractmethod, ABC
 
 from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, MutableMapping, TypeVar, Generic
@@ -52,7 +54,7 @@ class ModelWrapperBase(Generic[T], ABC):
     def load_model_var(self, loaded_model: T) -> None:
         pass
 
-    def load_model(self, loaded_model: T, load_var: bool = True) -> 'ModelWrapperBase':
+    def load_model(self, loaded_model: T, load_var: bool = True) -> ModelWrapperBase:
         self.model = loaded_model
 
         if load_var:
@@ -101,7 +103,7 @@ class ModelWrapperBase(Generic[T], ABC):
 
 
 class SettableBase(ABC):
-    def set_variables(self, **kwargs) -> 'SettableBase':
+    def set_variables(self, **kwargs) -> SettableBase:
         return self
 
     @staticmethod
@@ -124,7 +126,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
         super().load_model_var(loaded_model)
         self.id = loaded_model.id
 
-    def set_variables(self, **kwargs) -> 'AbstractWrapper':
+    def set_variables(self, **kwargs) -> AbstractWrapper:
         for key, value in kwargs.items():
             if key in self.field_names:
                 setattr(self, key, value)
