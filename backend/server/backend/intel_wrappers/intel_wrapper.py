@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import json
 from random import random
-from typing import Optional, Iterable, Mapping, Type, Union, Any
+from typing import Optional, Iterable, Mapping, Type, Union, Any, TypeVar, Generic
 
 from django.core.files import File
 
@@ -345,7 +347,10 @@ class UploadsWrapper(PublishedWrapper):
             raise ValueError(f'Cannot create upload since `file` {self.file} is not a File instance.')
 
 
-class TutorialTranslationContentWrapper(VariedContentWrapper[Type[TranslationBase]]):
+_T = TypeVar('_T')
+
+
+class TutorialTranslationContentWrapper(VariedContentWrapper[_T], Generic[_T]):
     def __init__(self):
         self.title: Optional[str] = None
         self.authors: Optional[Iterable[UserWrapper]] = None
@@ -363,7 +368,7 @@ class TutorialTranslationContentWrapper(VariedContentWrapper[Type[TranslationBas
             'content_html': non_empty_text_validator,
         })
 
-    def load_model_var(self, loaded_model: TranslationBase) -> None:
+    def load_model_var(self, loaded_model: _T) -> None:
         super().load_model_var(loaded_model)
 
         self.model_class = type(loaded_model)
@@ -374,11 +379,11 @@ class TutorialTranslationContentWrapper(VariedContentWrapper[Type[TranslationBas
         self.content_md = loaded_model.content_md
         self.content_html = loaded_model.content_html
 
-    def set_model_class(self, model_class: Type[TranslationBase]) -> 'TutorialTranslationContentWrapper':
+    def set_model_class(self, model_class: Type[_T]) -> TutorialTranslationContentWrapper[_T]:
         self.model_class = model_class
         return self
 
-    def set_variables(self, **kwargs) -> 'TutorialTranslationContentWrapper':
+    def set_variables(self, **kwargs) -> TutorialTranslationContentWrapper:
         the_model_class = kwargs.pop('model_class', None)
         if the_model_class is not None and issubclass(the_model_class, TranslationBase):
             self.set_model_class(the_model_class)
@@ -418,15 +423,18 @@ class TutorialTranslationContentWrapper(VariedContentWrapper[Type[TranslationBas
         return self.__str__()
 
 
-class ENUSTutorialContentWrapper(TutorialTranslationContentWrapper):
+class ENUSTutorialContentWrapper(TutorialTranslationContentWrapper[ENUS]):
     model_class = ENUS
 
 
-class ZHCNTutorialContentWrapper(TutorialTranslationContentWrapper):
+class ZHCNTutorialContentWrapper(TutorialTranslationContentWrapper[ZHCN]):
     model_class = ZHCN
 
 
-class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationBase]]):
+_S = TypeVar('_S')
+
+
+class GraphTranslationContentWrapper(VariedContentWrapper[_S], Generic[_S]):
     def __init__(self):
         self.title: Optional[str] = None
         self.abstract_md: Optional[str] = None
@@ -440,7 +448,7 @@ class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationB
             'graph_anchor': wrapper_validator,
         })
 
-    def load_model_var(self, loaded_model: GraphTranslationBase) -> None:
+    def load_model_var(self, loaded_model: _S) -> None:
         super().load_model_var(loaded_model)
 
         self.model_class = type(loaded_model)
@@ -449,11 +457,11 @@ class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationB
         self.abstract = loaded_model.abstract
         self.graph_anchor = GraphWrapper().load_model(loaded_model.graph_anchor)
 
-    def set_model_class(self, model_class: Type[GraphTranslationBase]) -> 'GraphTranslationContentWrapper':
+    def set_model_class(self, model_class: Type[_S]) -> GraphTranslationContentWrapper[_S]:
         self.model_class = model_class
         return self
 
-    def set_variables(self, **kwargs) -> 'GraphTranslationContentWrapper':
+    def set_variables(self, **kwargs) -> GraphTranslationContentWrapper:
         the_model_class = kwargs.pop('model_class', None)
         if the_model_class is not None and issubclass(the_model_class, GraphTranslationBase):
             self.set_model_class(the_model_class)
@@ -483,11 +491,11 @@ class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationB
         return self.__str__()
 
 
-class ENUSGraphContentWrapper(GraphTranslationContentWrapper):
+class ENUSGraphContentWrapper(GraphTranslationContentWrapper[ENUSGraphContent]):
     model_class = ENUSGraphContent
 
 
-class ZHCNGraphContentWrapper(GraphTranslationContentWrapper):
+class ZHCNGraphContentWrapper(GraphTranslationContentWrapper[ZHCNGraphContent]):
     model_class = ZHCNGraphContent
 
 
@@ -496,7 +504,11 @@ FixedTypeWrapper = Union[UserWrapper,
                          TutorialAnchorWrapper,
                          GraphWrapper,
                          CodeWrapper,
-                         ExecResultJsonWrapper]
+                         ExecResultJsonWrapper,
+                         ENUSTutorialContentWrapper,
+                         ZHCNTutorialContentWrapper,
+                         ENUSGraphContentWrapper,
+                         ZHCNGraphContentWrapper]
 
 VariedTypeWrapper = Union[TutorialTranslationContentWrapper,
                           GraphTranslationContentWrapper]

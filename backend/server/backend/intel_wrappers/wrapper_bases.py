@@ -126,7 +126,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_T], SettableBase, Gene
         super().load_model_var(loaded_model)
         self.id = loaded_model.id
 
-    def set_variables(self, **kwargs) -> AbstractWrapper:
+    def set_variables(self, **kwargs) -> AbstractWrapper[_T]:
         for key, value in kwargs.items():
             if key in self.field_names:
                 setattr(self, key, value)
@@ -200,11 +200,8 @@ class PublishedWrapper(AbstractWrapper[_T], Generic[_T], ABC):
         self.is_published = loaded_model.is_published
 
 
-_S = TypeVar('_S')
-
-
-class VariedContentWrapper(PublishedWrapper[_S], Generic[_S], ABC):
+class VariedContentWrapper(PublishedWrapper[_T], Generic[_T], ABC):
     def __init__(self, validators: MutableMapping[str, Callable]):
         super(VariedContentWrapper, self).__init__(validators)
 
-        self.model_class: _S = self.model_class
+        self.model_class: _T = self.model_class
