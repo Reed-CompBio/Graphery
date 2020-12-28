@@ -35,26 +35,26 @@ class IntelWrapperBase(ABC):
                 raise
 
 
-T = TypeVar('T')
+_T = TypeVar('_T')
 
 
-class ModelWrapperBase(Generic[T], ABC):
-    model_class: Optional[Type[T]] = None
+class ModelWrapperBase(Generic[_T], ABC):
+    model_class: Optional[Type[_T]] = None
 
     def __init__(self):
-        self.model: Optional[T] = None
+        self.model: Optional[_T] = None
 
     def model_exists(self) -> bool:
         return self.model and isinstance(self.model, models.Model)
 
     @classmethod
-    def set_model_class(cls, model_class: Type[T]) -> None:
+    def set_model_class(cls, model_class: Type[_T]) -> None:
         cls.model_class = model_class
 
-    def load_model_var(self, loaded_model: T) -> None:
+    def load_model_var(self, loaded_model: _T) -> None:
         pass
 
-    def load_model(self, loaded_model: T, load_var: bool = True) -> ModelWrapperBase:
+    def load_model(self, loaded_model: _T, load_var: bool = True) -> ModelWrapperBase:
         self.model = loaded_model
 
         if load_var:
@@ -95,7 +95,7 @@ class ModelWrapperBase(Generic[T], ABC):
         else:
             raise AssertionError('Cannot save %s since model does not exist.' % self)
 
-    def delete_model(self) -> T:
+    def delete_model(self) -> _T:
         if self.model_exists():
             return self.model.delete()
         else:
@@ -111,7 +111,7 @@ class SettableBase(ABC):
         return kwargs.get(var_name, None)
 
 
-class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
+class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_T], SettableBase, Generic[_T], ABC):
     def __init__(self, validators: MutableMapping[str, Callable]):
         self.id: Optional[str] = None
         validators['id'] = dummy_validator
@@ -122,7 +122,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
 
         self.field_names = [*self.validators.keys()]
 
-    def load_model_var(self, loaded_model: T) -> None:
+    def load_model_var(self, loaded_model: _T) -> None:
         super().load_model_var(loaded_model)
         self.id = loaded_model.id
 
@@ -189,7 +189,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
                                  .format(self.model_class, list(self.validators.keys()), e))
 
 
-class PublishedWrapper(AbstractWrapper, ABC):
+class PublishedWrapper(AbstractWrapper[_T], Generic[_T], ABC):
     def __init__(self, validators: MutableMapping[str, Callable]):
         self.is_published: bool = False
         validators['is_published'] = is_published_validator
@@ -200,11 +200,11 @@ class PublishedWrapper(AbstractWrapper, ABC):
         self.is_published = loaded_model.is_published
 
 
-S = TypeVar('S')
+_S = TypeVar('_S')
 
 
-class VariedContentWrapper(PublishedWrapper, Generic[S], ABC):
+class VariedContentWrapper(PublishedWrapper[_S], Generic[_S], ABC):
     def __init__(self, validators: MutableMapping[str, Callable]):
         super(VariedContentWrapper, self).__init__(validators)
 
-        self.model_class: S = self.model_class
+        self.model_class: _S = self.model_class
