@@ -28,6 +28,9 @@ class IntelWrapperBase(ABC):
             except AssertionError as e:
                 e.args = f'The field {field_name} does not pass the validator and has following error: {e}',
                 raise
+            except Exception as e:
+                e.args = f'Unknown error occurs during validating field {field_name}. Error: {e}'
+                raise
 
 
 T = TypeVar('T')
