@@ -61,9 +61,9 @@ class UserWrapper(AbstractWrapper):
         self.model = User.objects.get(username=self.username, email=self.email)
 
     def make_new_model(self) -> None:
-        self.model = User.objects.create_user(username=self.username,
-                                              email=self.email,
-                                              role=self.role)
+        self.model = User(username=self.username,
+                          email=self.email,
+                          role=self.role)
 
     def __str__(self):
         return f'<UserWrapper\n' \
