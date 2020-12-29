@@ -153,7 +153,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_T], SettableBase, Gene
             if isinstance(models_field, models.Manager):
                 if not (isinstance(field_value, Iterable) and
                         all(isinstance(field_wrapper, ModelWrapperBase) for field_wrapper in field_value)):
-                    raise ValueError('Many-to-many/many-to-one field has to use iterable wrapper collections')
+                    raise ValueError('Many-to-many/many-to-one field only accepts iterable wrapper collections')
                 models_field.set(model_wrapper.model for model_wrapper in field_value)
             else:
                 if isinstance(field_value, ModelWrapperBase):
