@@ -205,7 +205,6 @@ def make_new_model_data_fixture_fixed(mock_user,
         (UserWrapper, {
             'username': 'make-new-model-test',
             'email': 'test-new-model_test@test.com',
-            # 'password': 'password',  # omitted since the password field is a encrypted version of it
             'role': ROLES.AUTHOR,
         }),
         (CategoryWrapper, {

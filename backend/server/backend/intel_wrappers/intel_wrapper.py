@@ -8,7 +8,7 @@ from django.core.files import File
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
     categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
-    graph_priority_validator, json_validator, email_validator, username_validator, password_validator, FAKE_PASSWORD, \
+    graph_priority_validator, json_validator, email_validator, username_validator,  \
     tutorial_anchors_validator, level_validator, section_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase, ENUS, ZHCN, ENUSGraphContent, \
     ZHCNGraphContent
@@ -39,14 +39,16 @@ class UserWrapper(AbstractWrapper):
         AbstractWrapper.__init__(self, {
             'email': email_validator,
             'username': username_validator,
-            'password': password_validator,
+            'first_name': dummy_validator,
+            'last_name': dummy_validator,
             'role': dummy_validator,
         })
 
         self.id = FAKE_UUID
         self.username: Optional[str] = None
         self.email: Optional[str] = None
-        self.password: str = FAKE_PASSWORD
+        self.first_name: str = ''
+        self.last_name: str = ''
         self.role: Optional[int] = None
 
     def load_model_var(self, loaded_model: User) -> None:
@@ -55,35 +57,19 @@ class UserWrapper(AbstractWrapper):
         self.email = loaded_model.email
         self.role = loaded_model.role
 
-    def overwrite_model(self) -> None:
-        if not self.model_exists():
-            return
-
-        field_list = [field for field in self.validators.keys() if field != 'password']
-        for field in field_list:
-            setattr(self.model, field, getattr(self, field))
-
-        if self.password == FAKE_PASSWORD:
-            # TODO change this framework, added a exist/not modify flag
-            raise ValueError('Internal Error: password cannot be set to placeholder.')
-
-        if len(self.password) <= 25:
-            self.model.set_password(self.password)
-
     def retrieve_model(self) -> None:
         self.model = User.objects.get(username=self.username, email=self.email)
 
     def make_new_model(self) -> None:
         self.model = User.objects.create_user(username=self.username,
                                               email=self.email,
-                                              password=self.password,
                                               role=self.role)
 
     def __str__(self):
         return f'<UserWrapper\n' \
                f'email={self.email}\n' \
                f'username={self.username}\n' \
-               f'password={self.password}>'
+               f'fullname={f"{self.first_name} {self.last_name}"}>'
 
     def __repr__(self):
         return self.__str__()
