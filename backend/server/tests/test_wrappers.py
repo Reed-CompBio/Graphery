@@ -10,7 +10,8 @@ from backend.model.UserModel import ROLES, User
 from backend.model.translation_collection import translation_table_mapping, graph_info_translation_table_mapping
 from backend.intel_wrappers.intel_wrapper import UserWrapper, TutorialAnchorWrapper, CategoryWrapper, GraphWrapper, \
     ExecResultJsonWrapper, CodeWrapper, TutorialTranslationContentWrapper, GraphTranslationContentWrapper, \
-    VariedTypeWrapper, FixedTypeWrapper
+    VariedTypeWrapper, FixedTypeWrapper, ENUSGraphContentWrapper, ZHCNTutorialContentWrapper, \
+    ENUSTutorialContentWrapper, ZHCNGraphContentWrapper
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 from tests.utils import EmptyValue
 
@@ -52,6 +53,10 @@ def load_module_helper(model_instance: models.Model, module_wrapper: AbstractWra
     GraphWrapper,
     CodeWrapper,
     ExecResultJsonWrapper,
+    ENUSTutorialContentWrapper,
+    ZHCNTutorialContentWrapper,
+    ENUSGraphContentWrapper,
+    ZHCNGraphContentWrapper
 ])
 @pytest.mark.django_db
 def test_load_model_of_fixed_class_wrapper(wrapper_class: Type[FixedTypeWrapper]):
@@ -178,6 +183,7 @@ def get_fixture(request):
 
     return _get_fixture
 
+
 # @pytest.fixture()
 # @pytest.mark.django_db
 # def mock_exec_result(mock_code, mock_graph):
@@ -199,7 +205,6 @@ def make_new_model_data_fixture_fixed(mock_user,
         (UserWrapper, {
             'username': 'make-new-model-test',
             'email': 'test-new-model_test@test.com',
-            # 'password': 'password',  # omitted since the password field is a encrypted version of it
             'role': ROLES.AUTHOR,
         }),
         (CategoryWrapper, {

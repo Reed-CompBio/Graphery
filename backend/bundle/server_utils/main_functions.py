@@ -5,8 +5,8 @@ from typing import Mapping, Callable, Any, List
 from wsgiref.simple_server import make_server
 from multiprocessing import Pool, TimeoutError
 
-from bundle.server_utils.params import TIMEOUT_SECONDS, REQUEST_CODE_NAME, ONLY_ACCEPTED_ORIGIN, ACCEPTED_ORIGIN, \
-    REQUEST_GRAPH_NAME, REQUEST_VERSION_NAME, VERSION
+from bundle.server_utils.params import TIMEOUT_SECONDS, ONLY_ACCEPTED_ORIGIN, ACCEPTED_ORIGIN, \
+    REQUEST_GRAPH_NAME, REQUEST_CODE_NAME, REQUEST_VERSION_NAME, VERSION
 from bundle.server_utils.utils import create_error_response, create_data_response, execute, \
     ExecutionException
 
@@ -21,8 +21,12 @@ class StringEncoder(json.JSONEncoder):
 
 def main(url: str, port: int) -> None:
     with make_server(url, port, application) as httpd:
-        print('Press <ctrl+c> to stop the server. ')
+        print(f'Server Ver: {VERSION}. Press <ctrl+c> to stop the server.')
         print(f'Ready for Python code on {url}:{port} ...')
+        print(f'Time out is set to {TIMEOUT_SECONDS}s.')
+        print(f'The origin is `{ACCEPTED_ORIGIN}`. Accepting other other origins too: {not ONLY_ACCEPTED_ORIGIN}')
+        print(f'Request graph name: `{REQUEST_GRAPH_NAME}`; request code name: `{REQUEST_CODE_NAME}`; '
+              f'request version name: `{REQUEST_VERSION_NAME}`;')
         httpd.serve_forever()
 
 
@@ -64,7 +68,7 @@ def time_out_execute(*args, **kwargs) -> Mapping:
 
             response_dict = create_data_response({'codeHash': code_hash, 'execResult': exec_result})
         except TimeoutError:
-            response_dict = create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS} s.')
+            response_dict = create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS}s.')
         except ExecutionException as e:
             # TODO try to give detailed exception location feedback
             response_dict = create_error_response(f'Exception: {e}.')

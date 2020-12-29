@@ -115,7 +115,7 @@ def password_validator(password: str):
         raise ValidationError('Password %s is not valid. A valid password must contain '
                               'least one upper case, lower case of letters, '
                               'one number, AND one special character (!@#$^&*). '
-                              'The length should be between 8 to 25' % password)
+                              'The length should be between 8 to 25')
 
 
 def level_validator(level: int):

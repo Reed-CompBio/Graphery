@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import abstractmethod, ABC
 
 from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, MutableMapping, TypeVar, Generic
@@ -9,7 +11,7 @@ from backend.intel_wrappers.validators import is_published_validator, dummy_vali
 from backend.model.mixins import PublishedMixin
 
 
-class EmptyValue:
+class _EmptyValue:
     pass
 
 
@@ -20,36 +22,39 @@ class IntelWrapperBase(ABC):
     def validate(self):
         for field_name, validator in self.validators.items():
             # TODO change error class
-            field = getattr(self, field_name, EmptyValue)
-            if field == EmptyValue:
+            field = getattr(self, field_name, _EmptyValue)
+            if field == _EmptyValue:
                 raise AssertionError('Cannot find the field `%s` during validation' % field_name)
             try:
                 validator(field)
             except AssertionError as e:
                 e.args = f'The field {field_name} does not pass the validator and has following error: {e}',
                 raise
+            except Exception as e:
+                e.args = f'Unknown error occurs during validating field {field_name}. Error: {e}'
+                raise
 
 
-T = TypeVar('T')
+_T = TypeVar('_T')
 
 
-class ModelWrapperBase(Generic[T], ABC):
-    model_class: Optional[Type[T]] = None
+class ModelWrapperBase(Generic[_T], ABC):
+    model_class: Optional[Type[_T]] = None
 
     def __init__(self):
-        self.model: Optional[T] = None
+        self.model: Optional[_T] = None
 
     def model_exists(self) -> bool:
         return self.model and isinstance(self.model, models.Model)
 
     @classmethod
-    def set_model_class(cls, model_class: Type[T]) -> None:
+    def set_model_class(cls, model_class: Type[_T]) -> None:
         cls.model_class = model_class
 
-    def load_model_var(self, loaded_model: T) -> None:
+    def load_model_var(self, loaded_model: _T) -> None:
         pass
 
-    def load_model(self, loaded_model: T, load_var: bool = True) -> 'ModelWrapperBase':
+    def load_model(self, loaded_model: _T, load_var: bool = True) -> ModelWrapperBase:
         self.model = loaded_model
 
         if load_var:
@@ -90,7 +95,7 @@ class ModelWrapperBase(Generic[T], ABC):
         else:
             raise AssertionError('Cannot save %s since model does not exist.' % self)
 
-    def delete_model(self) -> T:
+    def delete_model(self) -> _T:
         if self.model_exists():
             return self.model.delete()
         else:
@@ -98,7 +103,7 @@ class ModelWrapperBase(Generic[T], ABC):
 
 
 class SettableBase(ABC):
-    def set_variables(self, **kwargs) -> 'SettableBase':
+    def set_variables(self, **kwargs) -> SettableBase:
         return self
 
     @staticmethod
@@ -106,7 +111,7 @@ class SettableBase(ABC):
         return kwargs.get(var_name, None)
 
 
-class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
+class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_T], SettableBase, Generic[_T], ABC):
     def __init__(self, validators: MutableMapping[str, Callable]):
         self.id: Optional[str] = None
         validators['id'] = dummy_validator
@@ -117,11 +122,11 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
 
         self.field_names = [*self.validators.keys()]
 
-    def load_model_var(self, loaded_model: T) -> None:
+    def load_model_var(self, loaded_model: _T) -> None:
         super().load_model_var(loaded_model)
         self.id = loaded_model.id
 
-    def set_variables(self, **kwargs) -> 'AbstractWrapper':
+    def set_variables(self, **kwargs) -> AbstractWrapper[_T]:
         for key, value in kwargs.items():
             if key in self.field_names:
                 setattr(self, key, value)
@@ -148,7 +153,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
             if isinstance(models_field, models.Manager):
                 if not (isinstance(field_value, Iterable) and
                         all(isinstance(field_wrapper, ModelWrapperBase) for field_wrapper in field_value)):
-                    raise ValueError('Many-to-many/many-to-one field has to use iterable wrapper collections')
+                    raise ValueError('Many-to-many/many-to-one field only accepts iterable wrapper collections')
                 models_field.set(model_wrapper.model for model_wrapper in field_value)
             else:
                 if isinstance(field_value, ModelWrapperBase):
@@ -184,7 +189,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase, SettableBase, ABC):
                                  .format(self.model_class, list(self.validators.keys()), e))
 
 
-class PublishedWrapper(AbstractWrapper, ABC):
+class PublishedWrapper(AbstractWrapper[_T], Generic[_T], ABC):
     def __init__(self, validators: MutableMapping[str, Callable]):
         self.is_published: bool = False
         validators['is_published'] = is_published_validator
@@ -195,11 +200,8 @@ class PublishedWrapper(AbstractWrapper, ABC):
         self.is_published = loaded_model.is_published
 
 
-S = TypeVar('S')
-
-
-class VariedContentWrapper(PublishedWrapper, Generic[S], ABC):
+class VariedContentWrapper(PublishedWrapper[_T], Generic[_T], ABC):
     def __init__(self, validators: MutableMapping[str, Callable]):
         super(VariedContentWrapper, self).__init__(validators)
 
-        self.model_class: S = self.model_class
+        self.model_class: _T = self.model_class

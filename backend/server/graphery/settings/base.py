@@ -175,7 +175,7 @@ LOGGING = {
             'filename': os.getenv('GRAPHERY_EXECUTION_LOG_PATH', '/var/log/graphery/graphery_execution.log'),
             'when': 'D',  # this specifies the interval
             'interval': 1,  # defaults to 1, only necessary for other values
-            'backupCount': 30,  # how many backup file to keep, 10 days
+            'backupCount': 30,  # how many backup file to keep, 30 days
             'formatter': 'verbose',
         },
         'normal_operation_log': {
@@ -184,7 +184,16 @@ LOGGING = {
             'filename': os.getenv('GRAPHERY_NORMAL_LOG_PATH', '/var/log/graphery/graphery_normal.log'),
             'when': 'D',  # this specifies the interval
             'interval': 1,  # defaults to 1, only necessary for other values
-            'backupCount': 30,  # how many backup file to keep, 10 days
+            'backupCount': 30,  # how many backup file to keep, 30 days
+            'formatter': 'verbose',
+        },
+        'api_operation_log': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.getenv('GRAPHERY_API_LOG_PATH', '/var/log/graphery/graphery_api.log'),
+            'when': 'D',
+            'interval': 1,
+            'backupCount': 30,
             'formatter': 'verbose',
         }
     },
@@ -198,9 +207,15 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
             'propagate': False,
         },
+        'django.api': {
+            'handlers': ['console', 'api_operation_log'],
+            'level': os.getenv('DJANGO_API_LOG_LEVEL', 'DEBUG'),
+            'propagate': False,
+        },
         'execution_request': {
             'handlers': ['execution_request_log'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False
         }
     },
 }

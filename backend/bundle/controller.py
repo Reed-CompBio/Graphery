@@ -11,7 +11,7 @@ from bundle.utils.cache_file_helpers import CacheFolder, USER_DOCS_PATH
 from bundle.seeker import tracer
 
 _CACHE_FOLDER_AUTO_DELETE_ENV_NAME = 'CONTROLLER_CACHE_AUTO_DELETE'
-is_auto_delete = getenv(_CACHE_FOLDER_AUTO_DELETE_ENV_NAME, False)
+is_auto_delete = bool(int(getenv(_CACHE_FOLDER_AUTO_DELETE_ENV_NAME, False)))
 
 _CACHE_PATH_ENV_NAME = 'CONTROLLER_CACHE_PATH'
 controller_cache_path = pathlib.Path(getenv(_CACHE_PATH_ENV_NAME, USER_DOCS_PATH))

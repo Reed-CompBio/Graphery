@@ -156,14 +156,14 @@ thread_global = threading.local()
 _SEEKER_DISABLE_ENV_NAME = 'SEEKER_DISABLED'
 DISABLED = bool(os.getenv(_SEEKER_DISABLE_ENV_NAME, ''))
 
+_LOG_OUTPUT_ENV_NAME = 'SEEKER_LOG_OUTPUT_FLAG'
+using_log_output = bool(int(os.getenv(_LOG_OUTPUT_ENV_NAME, True)))
+
+_DEFAULT_OUTPUT_ENV_NAME = 'SEEKER_DEFAULT_OUTPUT_FLAG'
+using_default_output = bool(int(os.getenv(_DEFAULT_OUTPUT_ENV_NAME, True)))
+
 
 class Tracer:
-    _LOG_OUTPUT_ENV_NAME = 'SEEKER_LOG_OUTPUT_FLAG'
-    using_log_output = bool(os.getenv(_LOG_OUTPUT_ENV_NAME, True))
-
-    _DEFAULT_OUTPUT_ENV_NAME = 'SEEKER_DEFAULT_OUTPUT_FLAG'
-    using_default_output = bool(os.getenv(_DEFAULT_OUTPUT_ENV_NAME, True))
-
     _recorder: Recorder = None
     _logger: logging.Logger = None
 

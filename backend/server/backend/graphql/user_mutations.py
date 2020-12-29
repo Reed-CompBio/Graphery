@@ -5,30 +5,23 @@ import graphene
 from graphql import GraphQLError
 from django.contrib.auth import authenticate, login, logout
 
-from backend.graphql.decorators import admin_required, anonymous_required
+from backend.graphql.decorators import anonymous_required
 from backend.graphql.mutation_base import SuccessMutationBase
 from backend.graphql.utils import process_model_wrapper
 from backend.intel_wrappers.intel_wrapper import UserWrapper
+from backend.intel_wrappers.validators import password_validator
 from backend.model.MetaModel import InvitationCode
 from backend.graphql.decorators import login_required
 from backend.graphql.types import UserType
 from backend.model.UserModel import User
 
 
-class RefreshInvitationCode(SuccessMutationBase):
-    invitation_codes = graphene.JSONString(required=True)
-
-    @admin_required
-    @graphene.resolve_only_args
-    def mutate(self):
-        InvitationCode.refresh_all_code()
-        return RefreshInvitationCode(success=True, invitation_codes=InvitationCode.code_collection)
-
-
 class Register(SuccessMutationBase):
     class Arguments:
         email = graphene.String(required=True)
         username = graphene.String(required=True)
+        first_name = graphene.String()
+        last_name = graphene.String()
         password = graphene.String(required=True)
         invitation_code = graphene.String(required=True)
 
@@ -43,11 +36,14 @@ class Register(SuccessMutationBase):
 
     @anonymous_required
     @graphene.resolve_only_args
-    def mutate(self, email: str, username: str, password: str, invitation_code: str):
+    def mutate(self, email: str, username: str, password: str, invitation_code: str,
+               first_name: str = '', last_name: str = ''):
         email = email.strip()
         username = username.strip()
         password = password.strip()
         invitation_code = invitation_code.strip()
+        first_name = first_name.strip()
+        last_name = last_name.strip()
 
         Register.check_existence(email, username)
 
@@ -63,7 +59,13 @@ class Register(SuccessMutationBase):
         role: int = InvitationCode.role_mapping[role_string]
 
         user_wrapper: UserWrapper = process_model_wrapper(UserWrapper,
-                                                          email=email, username=username, password=password, role=role)
+                                                          email=email, username=username, role=role,
+                                                          first_name=first_name, last_name=last_name)
+        try:
+            password_validator(password)
+        except AssertionError as e:
+            raise GraphQLError(f'Malformed password. Error: {e}')
+        user_wrapper.model.set_password(password)
 
         return Register(success=True, user=user_wrapper.model)
 
