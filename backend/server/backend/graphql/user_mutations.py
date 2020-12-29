@@ -5,7 +5,7 @@ import graphene
 from graphql import GraphQLError
 from django.contrib.auth import authenticate, login, logout
 
-from backend.graphql.decorators import admin_required, anonymous_required
+from backend.graphql.decorators import anonymous_required
 from backend.graphql.mutation_base import SuccessMutationBase
 from backend.graphql.utils import process_model_wrapper
 from backend.intel_wrappers.intel_wrapper import UserWrapper
@@ -14,16 +14,6 @@ from backend.model.MetaModel import InvitationCode
 from backend.graphql.decorators import login_required
 from backend.graphql.types import UserType
 from backend.model.UserModel import User
-
-
-class RefreshInvitationCode(SuccessMutationBase):
-    invitation_codes = graphene.JSONString(required=True)
-
-    @admin_required
-    @graphene.resolve_only_args
-    def mutate(self):
-        InvitationCode.refresh_all_code()
-        return RefreshInvitationCode(success=True, invitation_codes=InvitationCode.code_collection)
 
 
 class Register(SuccessMutationBase):
@@ -71,7 +61,10 @@ class Register(SuccessMutationBase):
         user_wrapper: UserWrapper = process_model_wrapper(UserWrapper,
                                                           email=email, username=username, role=role,
                                                           first_name=first_name, last_name=last_name)
-        password_validator(password)
+        try:
+            password_validator(password)
+        except AssertionError as e:
+            raise GraphQLError(f'Malformed password. Error: {e}')
         user_wrapper.model.set_password(password)
 
         return Register(success=True, user=user_wrapper.model)
