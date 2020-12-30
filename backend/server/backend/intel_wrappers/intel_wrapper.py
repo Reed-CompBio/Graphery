@@ -9,8 +9,8 @@ from django.db.models import Model
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
     categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
-    graph_priority_validator, json_validator, email_validator, username_validator,  \
-    tutorial_anchors_validator, level_validator, section_validator
+    graph_priority_validator, json_validator, email_validator, username_validator, \
+    tutorial_anchors_validator, level_validator, section_validator, user_name_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase, ENUS, ZHCN, ENUSGraphContent, \
     ZHCNGraphContent
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
@@ -40,8 +40,8 @@ class UserWrapper(AbstractWrapper):
         AbstractWrapper.__init__(self, {
             'email': email_validator,
             'username': username_validator,
-            'first_name': dummy_validator,
-            'last_name': dummy_validator,
+            'first_name': user_name_validator,
+            'last_name': user_name_validator,
             'role': dummy_validator,
         })
 

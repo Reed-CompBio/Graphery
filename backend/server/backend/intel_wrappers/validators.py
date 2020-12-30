@@ -105,6 +105,14 @@ def username_validator(username: str):
         raise ValidationError('Username %s is not valid.' % username)
 
 
+NAME_LENGTH = 150
+
+
+def user_name_validator(name: str):
+    if not isinstance(name, str) or not len(name) < NAME_LENGTH:
+        raise ValidationError('Name %s is not valid.' % name)
+
+
 password_regex = re.compile(r'^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$^&*])[\w\d!@#$^&*]{6,25}$')
 
 FAKE_PASSWORD = 'Password1!'
