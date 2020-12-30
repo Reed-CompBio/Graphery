@@ -6,7 +6,7 @@ from backend.model.UserModel import ROLES
 from tests.wrapper_test.test_wrapper_helper import gen_wrapper_test_class
 
 
-# for pycharm quick start 
+# for pycharm quick start
 class TestUserWrapper:
     def test_func(self):
         pass
@@ -45,8 +45,10 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
         }
     ],
     'test_retrieve_model': [
-        pytest.param('stored_mock_user', {'username': 'mock_user', }, marks=pytest.mark.xfail),
-        pytest.param('stored_mock_user', {'email': 'mock_user@test.com', }, marks=pytest.mark.xfail),
+        pytest.param('stored_mock_user', {'username': 'mock_user', },
+                     marks=pytest.mark.xfail(raises=UserWrapper.model_class.DoesNotExist)),
+        pytest.param('stored_mock_user', {'email': 'mock_user@test.com', },
+                     marks=pytest.mark.xfail(raises=UserWrapper.model_class.DoesNotExist)),
         pytest.param('stored_mock_user', {'username': 'mock_user', 'email': 'mock_user@test.com', }),
     ],
     'test_overwrite': [
