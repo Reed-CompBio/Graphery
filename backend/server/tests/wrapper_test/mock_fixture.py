@@ -1,3 +1,5 @@
+from uuid import UUID
+
 import pytest
 
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, GraphPriority, Code
@@ -8,6 +10,7 @@ from backend.model.UserModel import User, ROLES
 def mock_user(django_db_setup, django_db_blocker):
     with django_db_blocker.unblock():
         return User.objects.create(**{
+            'id': UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'),
             'username': 'mock_user',
             'email': 'mock_user@test.com',
             'password': 'password',  # omitted since the password field is a encrypted version of it

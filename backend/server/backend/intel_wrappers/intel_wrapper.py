@@ -59,6 +59,7 @@ class UserWrapper(AbstractWrapper):
         self.role = loaded_model.role
 
     def retrieve_model(self) -> None:
+        # TODO do we need exact two arguments to get the model?
         self.model = User.objects.get(username=self.username, email=self.email)
 
     def make_new_model(self) -> None:

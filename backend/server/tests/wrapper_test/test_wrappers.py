@@ -77,6 +77,15 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
             # the object is created but not injected to db
             assert self.wrapper_type.model_class.objects.filter(id=created_model.id).count() == 0
 
+        @apply_param_wrapper('mock_instance_name, required_info', test_params)
+        def test_retrieve_model(self, get_fixture, django_db_setup, django_db_blocker,
+                                mock_instance_name, required_info):
+            model_instance = get_fixture(mock_instance_name)
+            model_wrapper = self.wrapper_type().set_variables(**required_info)
+            with django_db_blocker.unblock():
+                model_wrapper.retrieve_model()
+            assert model_wrapper.model.pk == model_instance.pk
+
         def test_overwrite(self):
             pass
 
@@ -110,6 +119,11 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
             'last_name': 'user',
             'role': ROLES.VISITOR,
         }
+    ],
+    'test_retrieve_model': [
+        pytest.param('mock_user', {'username': 'mock_user', }, marks=pytest.mark.xfail),
+        pytest.param('mock_user', {'email': 'mock_user@test.com', }, marks=pytest.mark.xfail),
+        pytest.param('mock_user', {'username': 'mock_user', 'email': 'mock_user@test.com', }),
     ]
 })
 
