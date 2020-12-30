@@ -114,7 +114,7 @@ NAME_LENGTH = 150
 def _user_name_validator(name: str):
     if not isinstance(name, str):
         raise ValidationError('The name is not a string')
-    if not len(name) < NAME_LENGTH:
+    if not len(name) <= NAME_LENGTH:
         raise ValidationError('Name %s is longer than %i letters' % (name, NAME_LENGTH))
 
 
