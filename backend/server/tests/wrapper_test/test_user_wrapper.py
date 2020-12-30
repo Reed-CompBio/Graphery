@@ -33,6 +33,9 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
         },
         {
             'last_name': 'user',
+        },
+        {
+
         }
     ],
     'test_making_new_model': [
@@ -107,4 +110,7 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
             'last_name': 'ck_mod',
         }, True, True, None, None, id='overwrite_model'),
     ]
+}, default_params={
+    'first_name': '',
+    'last_name': ''
 })

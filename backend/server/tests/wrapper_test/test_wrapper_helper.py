@@ -16,10 +16,11 @@ def apply_param_wrapper(param_string: str, param_mapping: Mapping) -> Callable:
     return _wrapper
 
 
-def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Mapping) -> Type:
+def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Mapping, default_params: Mapping = {}) -> Type:
     # noinspection PyArgumentList
     class TestWrapper:
         wrapper_type: Type[AbstractWrapper] = wrapper_class
+        default_args: Mapping = default_params
 
         @apply_param_wrapper('mock_instance_name, load_var', test_params)
         def test_load(self, get_fixture,
@@ -44,6 +45,8 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
 
                 if key in variable_dict:
                     assert loaded_value == variable_dict[key]
+                elif key in self.default_args:
+                    assert loaded_value == self.default_args[key]
                 else:
                     assert loaded_value is None
 

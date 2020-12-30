@@ -48,8 +48,8 @@ class UserWrapper(AbstractWrapper):
         self.id = None
         self.username: Optional[str] = None
         self.email: Optional[str] = None
-        self.first_name: Optional[str] = None
-        self.last_name: Optional[str] = None
+        self.first_name: str = ''
+        self.last_name: str = ''
         self.role: Optional[int] = None
 
     def load_model_var(self, loaded_model: User) -> None:
