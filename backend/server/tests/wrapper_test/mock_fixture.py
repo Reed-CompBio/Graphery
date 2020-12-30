@@ -7,7 +7,7 @@ from backend.model.UserModel import User, ROLES
 
 
 @pytest.fixture(scope='module')
-def stored_mock_user(django_db_blocker):
+def stored_mock_user(django_db_setup, django_db_blocker):
     with django_db_blocker.unblock():
         return User.objects.create(**{
             'id': UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'),
@@ -21,7 +21,7 @@ def stored_mock_user(django_db_blocker):
 
 
 @pytest.fixture()
-def temp_mock_user(django_db_blocker):
+def temp_mock_user():
     return User(**{
         'id': UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'),
         'username': 'mock_user',
@@ -34,10 +34,21 @@ def temp_mock_user(django_db_blocker):
 
 
 @pytest.fixture(scope='module')
-@pytest.mark.django_db
-def mock_category():
-    return Category.objects.create(**{
+def stored_mock_category(django_db_setup, django_db_blocker):
+    with django_db_blocker.unblock():
+        return Category.objects.create(**{
+            'id': UUID('a58912ae-0343-4827-9dc1-b8518faf13ff'),
+            'category': 'mock_category',
+            'is_published': True
+        })
+
+
+@pytest.fixture()
+def temp_mock_category():
+    return Category(**{
+        'id': UUID('a58912ae-0343-4827-9dc1-b8518faf13ff'),
         'category': 'mock_category',
+        'is_published': True
     })
 
 
