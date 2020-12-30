@@ -14,6 +14,8 @@ def mock_user(django_db_setup, django_db_blocker):
             'username': 'mock_user',
             'email': 'mock_user@test.com',
             'password': 'password',  # omitted since the password field is a encrypted version of it
+            'first_name': 'mo',
+            'last_name': 'ck',
             'role': ROLES.AUTHOR,
         })
 

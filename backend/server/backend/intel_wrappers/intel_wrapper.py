@@ -45,17 +45,19 @@ class UserWrapper(AbstractWrapper):
             'role': dummy_validator,
         })
 
-        self.id = FAKE_UUID
+        self.id = None
         self.username: Optional[str] = None
         self.email: Optional[str] = None
-        self.first_name: str = ''
-        self.last_name: str = ''
+        self.first_name: Optional[str] = None
+        self.last_name: Optional[str] = None
         self.role: Optional[int] = None
 
     def load_model_var(self, loaded_model: User) -> None:
         super().load_model_var(loaded_model)
         self.username = loaded_model.username
         self.email = loaded_model.email
+        self.first_name = loaded_model.first_name
+        self.last_name = loaded_model.last_name
         self.role = loaded_model.role
 
     def retrieve_model(self) -> None:

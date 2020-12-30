@@ -1,6 +1,8 @@
-from typing import Type, Mapping, Callable
+from typing import Type, Mapping, Callable, Any
+from uuid import UUID
 
 import pytest
+from django.db.models import Model
 
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 from backend.model.TutorialRelatedModel import Category, GraphPriority, Tutorial
@@ -14,7 +16,7 @@ from tests.utils import EmptyValue
 from tests.wrapper_test.utils import make_new_model_test_helper
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 @pytest.mark.django_db
 def get_fixture(request):
     def _get_fixture(name):
@@ -57,9 +59,13 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
         def test_set_variables(self, variable_dict: Mapping):
             model_wrapper = self.wrapper_type()
             model_wrapper.set_variables(**variable_dict)
-            for key, expected_value in variable_dict.items():
+            for key in model_wrapper.validators.keys():
                 loaded_value = getattr(model_wrapper, key)
-                assert loaded_value == expected_value
+
+                if key in variable_dict:
+                    assert loaded_value == variable_dict[key]
+                else:
+                    assert loaded_value is None
 
         @apply_param_wrapper('init_params', test_params)
         @pytest.mark.django_db
@@ -84,10 +90,25 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
             model_wrapper = self.wrapper_type().set_variables(**required_info)
             with django_db_blocker.unblock():
                 model_wrapper.retrieve_model()
-            assert model_wrapper.model.pk == model_instance.pk
+            assert model_wrapper.model == model_instance
 
-        def test_overwrite(self):
-            pass
+        @apply_param_wrapper('mock_instance_name, modified_fields, pk', test_params)
+        def test_overwrite(self, get_fixture, django_db_blocker,
+                           mock_instance_name: str, modified_fields: Mapping, pk: Any):
+            model_instance = get_fixture(mock_instance_name)
+            model_wrapper = self.wrapper_type().load_model(model_instance).set_variables(**modified_fields)
+            model_wrapper.overwrite_model()
+            with django_db_blocker.unblock():
+                model_wrapper.model.save()
+                stored_model = self.wrapper_type.model_class.objects.get(pk=pk)
+
+            for key in model_wrapper.validators.keys():
+                injected_value = getattr(stored_model, key)
+
+                if key in modified_fields:
+                    assert injected_value == modified_fields[key]
+                else:
+                    assert injected_value == getattr(model_wrapper, key)
 
     return TestWrapper
 
@@ -109,6 +130,14 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
             'first_name': 'set',
             'last_name': 'user',
             'role': ROLES.VISITOR,
+        },
+        {
+            'email': 'set_user@email.com',
+            'last_name': 'user',
+            'role': ROLES.VISITOR,
+        },
+        {
+            'last_name': 'user',
         }
     ],
     'test_making_new_model': [
@@ -124,6 +153,21 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
         pytest.param('mock_user', {'username': 'mock_user', }, marks=pytest.mark.xfail),
         pytest.param('mock_user', {'email': 'mock_user@test.com', }, marks=pytest.mark.xfail),
         pytest.param('mock_user', {'username': 'mock_user', 'email': 'mock_user@test.com', }),
+    ],
+    'test_overwrite': [
+        pytest.param('mock_user', {'username': 'mock_user_modified'}, UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59')),
+        pytest.param('mock_user', {'username': 'mock_user_modified',
+                                   'email': 'mock_user_modified@test.com',
+                                   'last_name': 'ck_mod',
+                                   },
+                     UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59')),
+        pytest.param('mock_user', {'username': 'mock_user_modified',
+                                   'email': 'mock_user_modified@test.com',
+                                   'first_name': 'mo_mod',
+                                   'last_name': 'ck_mod',
+                                   'role': ROLES.VISITOR,
+                                   },
+                     UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'))
     ]
 })
 
