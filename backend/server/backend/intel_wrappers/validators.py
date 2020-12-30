@@ -1,6 +1,9 @@
 import json
 import re
+from enum import Enum
 from typing import Sequence, Mapping, Union
+
+from backend.model.UserModel import ROLES
 
 
 class ValidationError(AssertionError):
@@ -108,9 +111,22 @@ def username_validator(username: str):
 NAME_LENGTH = 150
 
 
-def user_name_validator(name: str):
-    if not isinstance(name, str) or not len(name) < NAME_LENGTH:
-        raise ValidationError('Name %s is not valid.' % name)
+def _user_name_validator(name: str):
+    if not isinstance(name, str):
+        raise ValidationError('The name is not a string')
+    if not len(name) < NAME_LENGTH:
+        raise ValidationError('Name %s is longer than %i letters' % (name, NAME_LENGTH))
+
+
+first_name_validator = _user_name_validator
+last_name_validator = _user_name_validator
+
+
+def user_role_validator(role: int):
+    if not isinstance(role, (int, Enum)):
+        raise ValidationError('The role has to be an integer or an Enum.')
+    if role not in ROLES:
+        raise ValidationError('The role %i is not valid.' % role)
 
 
 password_regex = re.compile(r'^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$^&*])[\w\d!@#$^&*]{6,25}$')
