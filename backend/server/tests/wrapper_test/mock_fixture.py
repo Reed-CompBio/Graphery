@@ -53,9 +53,18 @@ def temp_mock_category():
 
 
 @pytest.fixture(scope='module')
-@pytest.mark.django_db
-def mock_tutorial():
-    return Tutorial.objects.create(**{
+def stored_mock_tutorial_anchor(django_db_setup, django_db_blocker):
+    with django_db_blocker.unblock():
+        return Tutorial.objects.create(**{
+            'url': 'mock_test_tutorial',
+            'name': 'mock test tutorial',
+            'level': '305'
+        })
+
+
+@pytest.fixture()
+def temp_mock_tutorial_anchor():
+    return Tutorial(**{
         'url': 'mock_test_tutorial',
         'name': 'mock test tutorial',
         'level': '305'
