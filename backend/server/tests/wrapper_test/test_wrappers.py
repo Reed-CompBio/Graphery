@@ -45,6 +45,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
             model_instance = get_fixture(mock_instance_name)
             model_wrapper = self.wrapper_type().load_model(model_instance)
 
+            # TODO user fixture to test loading
             assert model_wrapper.model is not None and model_wrapper.model == model_instance
             if load_var:
                 for key in model_wrapper.validators.keys():
@@ -59,6 +60,25 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
             for key, expected_value in variable_dict.items():
                 loaded_value = getattr(model_wrapper, key)
                 assert loaded_value == expected_value
+
+        @apply_param_wrapper('init_params', test_params)
+        @pytest.mark.django_db
+        def test_making_new_model(self, init_params: Mapping):
+            model_wrapper = self.wrapper_type().set_variables(**init_params)
+            model_wrapper.make_new_model()
+            created_model = model_wrapper.model
+            assert created_model is not None
+            for key in model_wrapper.validators.keys():
+                # since id doesn't exist before the model is created
+                if key != 'id':
+                    injected_value = getattr(created_model, key)
+                    expected_value = init_params[key]
+                    assert injected_value == expected_value
+            # the object is created but not injected to db
+            assert self.wrapper_type.model_class.objects.filter(id=created_model.id).count() == 0
+
+        def test_overwrite(self):
+            pass
 
     return TestWrapper
 
@@ -78,6 +98,15 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
             'email': 'set_user@email.com',
             'username': 'set_user',
             'first_name': 'set',
+            'last_name': 'user',
+            'role': ROLES.VISITOR,
+        }
+    ],
+    'test_making_new_model': [
+        {
+            'email': 'new_user@email.com',
+            'username': 'new_user',
+            'first_name': 'new',
             'last_name': 'user',
             'role': ROLES.VISITOR,
         }
