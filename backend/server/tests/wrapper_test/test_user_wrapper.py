@@ -1,5 +1,3 @@
-from uuid import UUID
-
 import pytest
 
 from backend.intel_wrappers.intel_wrapper import UserWrapper
@@ -14,6 +12,7 @@ class TestUserWrapper:
         pass
 
 
+# noinspection PyRedeclaration
 TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params={
     'test_load': [
         ('stored_mock_user', True),
@@ -51,21 +50,19 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
         pytest.param('stored_mock_user', {'username': 'mock_user', 'email': 'mock_user@test.com', }),
     ],
     'test_overwrite': [
-        pytest.param('temp_mock_user', {'username': 'mock_user_modified'}, UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59')),
+        pytest.param('temp_mock_user', {'username': 'mock_user_modified'}, ),
         pytest.param('temp_mock_user', {
             'username': 'mock_user_modified',
             'email': 'mock_user_modified@test.com',
             'last_name': 'ck_mod',
-        },
-                     UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59')),
+        }),
         pytest.param('temp_mock_user', {
             'username': 'mock_user_modified',
             'email': 'mock_user_modified@test.com',
             'first_name': 'mo_mod',
             'last_name': 'ck_mod',
             'role': ROLES.VISITOR,
-        },
-                     UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'))
+        },)
     ],
     'test_validation': [
         pytest.param({'email': 'Abc.example.com'}, ValidationError, r'Email .* is not valid', id='email__error'),

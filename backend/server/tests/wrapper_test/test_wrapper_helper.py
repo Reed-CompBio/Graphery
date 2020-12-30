@@ -1,17 +1,8 @@
-from typing import Type, Mapping, Callable, Any, Optional
+from typing import Type, Mapping, Callable, Optional
 
 import pytest
 
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
-from backend.model.TutorialRelatedModel import Category, GraphPriority, Tutorial
-from backend.model.UserModel import ROLES, User
-
-from backend.model.TranslationModels import ENUS, ENUSGraphContent
-from backend.intel_wrappers.intel_wrapper import UserWrapper, TutorialAnchorWrapper, CategoryWrapper, GraphWrapper, \
-    ExecResultJsonWrapper, CodeWrapper, TutorialTranslationContentWrapper, GraphTranslationContentWrapper, \
-    ENUSGraphContentWrapper, ENUSTutorialContentWrapper
-from tests.utils import EmptyValue
-from tests.wrapper_test.utils import make_new_model_test_helper
 
 
 def apply_param_wrapper(param_string: str, param_mapping: Mapping) -> Callable:
@@ -25,7 +16,7 @@ def apply_param_wrapper(param_string: str, param_mapping: Mapping) -> Callable:
     return _wrapper
 
 
-def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Mapping):
+def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Mapping) -> Type:
     # noinspection PyArgumentList
     class TestWrapper:
         wrapper_type: Type[AbstractWrapper] = wrapper_class
@@ -62,8 +53,8 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
             model_wrapper = self.wrapper_type().set_variables(**init_params)
             assert model_wrapper.model is None
             model_wrapper.make_new_model()
+            assert model_wrapper.model is not None
             created_model = model_wrapper.model
-            assert created_model is not None
             for key in model_wrapper.validators.keys():
                 # since id doesn't exist before the model is created
                 if key != 'id':
@@ -82,9 +73,9 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
                 model_wrapper.retrieve_model()
             assert model_wrapper.model == model_instance
 
-        @apply_param_wrapper('mock_instance_name, modified_fields, pk', test_params)
+        @apply_param_wrapper('mock_instance_name, modified_fields', test_params)
         def test_overwrite(self, get_fixture,
-                           mock_instance_name: str, modified_fields: Mapping, pk: Any):
+                           mock_instance_name: str, modified_fields: Mapping):
             model_instance = get_fixture(mock_instance_name)
             model_wrapper = self.wrapper_type().load_model(model_instance).set_variables(**modified_fields)
             model_wrapper.overwrite_model()
