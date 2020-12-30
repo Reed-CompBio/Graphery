@@ -2,8 +2,9 @@ import graphene
 
 
 from backend.graphql.admin_mutations import UpdateCategory, UpdateTutorialAnchor, UpdateGraph, UpdateCode, \
-    UploadStatic, UpdateTutorialContent, DeleteStatic, UpdateGraphInfoContent, UpdateResultJson, DeleteContent
-from backend.graphql.user_mutations import Login, Logout, Register, RefreshInvitationCode
+    UploadStatic, UpdateTutorialContent, DeleteStatic, UpdateGraphInfoContent, UpdateResultJson, DeleteContent, \
+    RefreshInvitationCode
+from backend.graphql.user_mutations import Login, Logout, Register
 
 
 class Mutation(graphene.ObjectType):
