@@ -14,15 +14,6 @@ from tests.utils import EmptyValue
 from tests.wrapper_test.utils import make_new_model_test_helper
 
 
-@pytest.fixture()
-@pytest.mark.django_db
-def get_fixture(request):
-    def _get_fixture(name):
-        return request.getfixturevalue(name)
-
-    return _get_fixture
-
-
 def apply_param_wrapper(param_string: str, param_mapping: Mapping) -> Callable:
     def _wrapper(f):
         injected_mapping = param_mapping.get(f.__name__, None)
@@ -91,14 +82,12 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
             assert model_wrapper.model == model_instance
 
         @apply_param_wrapper('mock_instance_name, modified_fields, pk', test_params)
-        def test_overwrite(self, get_fixture, django_db_blocker,
+        def test_overwrite(self, get_fixture,
                            mock_instance_name: str, modified_fields: Mapping, pk: Any):
             model_instance = get_fixture(mock_instance_name)
             model_wrapper = self.wrapper_type().load_model(model_instance).set_variables(**modified_fields)
             model_wrapper.overwrite_model()
-            with django_db_blocker.unblock():
-                model_wrapper.model.save()
-                stored_model = self.wrapper_type.model_class.objects.get(pk=pk)
+            stored_model = model_wrapper.model
 
             for key in model_wrapper.validators.keys():
                 injected_value = getattr(stored_model, key)
@@ -119,11 +108,23 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
                 with pytest.raises(expected_error, match=error_text_match):
                     model_wrapper.validate()
 
+        @apply_param_wrapper('init_param', test_params)
+        def test_make_new_model(self, django_db_blocker, init_params: Mapping):
+            model_wrapper = self.wrapper_type()
+            assert model_wrapper.model is None
+            model_wrapper.set_variables(**init_params)
+            model_wrapper.make_new_model()
+            assert model_wrapper.model is not None
+            for key in model_wrapper.validators.keys():
+                model_field_value = getattr(model_wrapper.model, key)
+                expected_value = init_params[key]
+                assert model_field_value == expected_value
+
         @apply_param_wrapper('mock_instance_name, init_params, overwrite, validate, expected_error, error_text_match',
                              test_params)
         def test_get_model(self, get_fixture, django_db_blocker,
-                           mock_instance_name: Optional[str], init_params: Optional[Mapping], overwrite: bool, validate: bool,
-                           expected_error: Optional[Type[Exception]], error_text_match: str):
+                           mock_instance_name: Optional[str], init_params: Optional[Mapping], overwrite: bool,
+                           validate: bool, expected_error: Optional[Type[Exception]], error_text_match: str):
             model_wrapper = self.wrapper_type()
 
             if mock_instance_name is not None:
@@ -131,13 +132,14 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
                 model_wrapper.load_model(model_instance)
 
             if init_params is not None:
-                model_wrapper.set_variables(init_params)
+                model_wrapper.set_variables(**init_params)
 
-            if expected_error is None:
-                model_wrapper.get_model(overwrite=overwrite, validate=validate)
-            else:
-                with pytest.raises(expected_error, match=error_text_match):
+            with django_db_blocker.unblock():
+                if expected_error is None:
                     model_wrapper.get_model(overwrite=overwrite, validate=validate)
+                else:
+                    with pytest.raises(expected_error, match=error_text_match):
+                        model_wrapper.get_model(overwrite=overwrite, validate=validate)
 
     return TestWrapper
 
