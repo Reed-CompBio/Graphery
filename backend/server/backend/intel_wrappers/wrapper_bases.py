@@ -6,6 +6,7 @@ from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, Muta
 
 from django.core.exceptions import ValidationError
 from django.db import models, IntegrityError
+from django.db.models import Model
 
 from backend.intel_wrappers.validators import is_published_validator, dummy_validator
 from backend.model.mixins import PublishedMixin
@@ -35,7 +36,7 @@ class IntelWrapperBase(ABC):
                 raise
 
 
-_T = TypeVar('_T')
+_T = TypeVar('_T', bound=Model)
 
 
 class ModelWrapperBase(Generic[_T], ABC):

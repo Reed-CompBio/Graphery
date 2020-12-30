@@ -5,6 +5,7 @@ from random import random
 from typing import Optional, Iterable, Mapping, Type, Union, Any, TypeVar, Generic
 
 from django.core.files import File
+from django.db.models import Model
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
     categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
@@ -335,7 +336,7 @@ class UploadsWrapper(PublishedWrapper):
             raise ValueError(f'Cannot create upload since `file` {self.file} is not a File instance.')
 
 
-_T = TypeVar('_T')
+_T = TypeVar('_T', bound=Model)
 
 
 class TutorialTranslationContentWrapper(VariedContentWrapper[_T], Generic[_T]):
@@ -419,7 +420,7 @@ class ZHCNTutorialContentWrapper(TutorialTranslationContentWrapper[ZHCN]):
     model_class = ZHCN
 
 
-_S = TypeVar('_S')
+_S = TypeVar('_S', bound=Model)
 
 
 class GraphTranslationContentWrapper(VariedContentWrapper[_S], Generic[_S]):
