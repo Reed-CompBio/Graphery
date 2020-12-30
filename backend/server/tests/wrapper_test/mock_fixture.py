@@ -7,7 +7,7 @@ from backend.model.UserModel import User, ROLES
 
 
 @pytest.fixture(scope='module')
-def mock_user(django_db_setup, django_db_blocker):
+def stored_mock_user(django_db_blocker):
     with django_db_blocker.unblock():
         return User.objects.create(**{
             'id': UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'),
@@ -18,6 +18,19 @@ def mock_user(django_db_setup, django_db_blocker):
             'last_name': 'ck',
             'role': ROLES.AUTHOR,
         })
+
+
+@pytest.fixture()
+def temp_mock_user(django_db_blocker):
+    return User(**{
+        'id': UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'),
+        'username': 'mock_user',
+        'email': 'mock_user@test.com',
+        'password': 'password',  # omitted since the password field is a encrypted version of it
+        'first_name': 'mo',
+        'last_name': 'ck',
+        'role': ROLES.AUTHOR,
+    })
 
 
 @pytest.fixture(scope='module')
@@ -58,7 +71,7 @@ def mock_code(mock_tutorial):
     })
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture()
 @pytest.mark.django_db
 def get_fixture(request):
     def _get_fixture(name):
