@@ -16,8 +16,8 @@ class TestUserWrapper:
 
 TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params={
     'test_load': [
-        ('mock_user', True),
-        ('mock_user', False)
+        ('stored_mock_user', True),
+        ('stored_mock_user', False)
     ],
     'test_set_variables': [
         {
@@ -46,23 +46,25 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
         }
     ],
     'test_retrieve_model': [
-        pytest.param('mock_user', {'username': 'mock_user', }, marks=pytest.mark.xfail),
-        pytest.param('mock_user', {'email': 'mock_user@test.com', }, marks=pytest.mark.xfail),
-        pytest.param('mock_user', {'username': 'mock_user', 'email': 'mock_user@test.com', }),
+        pytest.param('stored_mock_user', {'username': 'mock_user', }, marks=pytest.mark.xfail),
+        pytest.param('stored_mock_user', {'email': 'mock_user@test.com', }, marks=pytest.mark.xfail),
+        pytest.param('stored_mock_user', {'username': 'mock_user', 'email': 'mock_user@test.com', }),
     ],
     'test_overwrite': [
-        pytest.param('mock_user', {'username': 'mock_user_modified'}, UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59')),
-        pytest.param('mock_user', {'username': 'mock_user_modified',
-                                   'email': 'mock_user_modified@test.com',
-                                   'last_name': 'ck_mod',
-                                   },
+        pytest.param('temp_mock_user', {'username': 'mock_user_modified'}, UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59')),
+        pytest.param('temp_mock_user', {
+            'username': 'mock_user_modified',
+            'email': 'mock_user_modified@test.com',
+            'last_name': 'ck_mod',
+        },
                      UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59')),
-        pytest.param('mock_user', {'username': 'mock_user_modified',
-                                   'email': 'mock_user_modified@test.com',
-                                   'first_name': 'mo_mod',
-                                   'last_name': 'ck_mod',
-                                   'role': ROLES.VISITOR,
-                                   },
+        pytest.param('temp_mock_user', {
+            'username': 'mock_user_modified',
+            'email': 'mock_user_modified@test.com',
+            'first_name': 'mo_mod',
+            'last_name': 'ck_mod',
+            'role': ROLES.VISITOR,
+        },
                      UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'))
     ],
     'test_validation': [
@@ -71,11 +73,39 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
                      id='username_error'),
         pytest.param({'email': 'test@test.com', 'username': 'valid_user', 'first_name': 'a' * 151}, ValidationError,
                      r'Name .* is longer than .* letters', id='first_name_error'),
-        pytest.param({'email': 'test@test.com', 'username': 'valid_user', 'first_name': 'a' * 150, 'last_name': 'a' * 151},
-                     ValidationError, r'Name .* is longer than .* letters', id='first_name_error'),
-        pytest.param({'email': 'test@test.com', 'username': 'valid_user', 'first_name': 'a' * 150, 'last_name': 'a' * 150, 'role': ROLES.VISITOR}, None, None, id='user_normal'),
+        pytest.param(
+            {'email': 'test@test.com', 'username': 'valid_user', 'first_name': 'a' * 150, 'last_name': 'a' * 151},
+            ValidationError, r'Name .* is longer than .* letters', id='first_name_error'),
+        pytest.param(
+            {'email': 'test@test.com', 'username': 'valid_user', 'first_name': 'a' * 150, 'last_name': 'a' * 150,
+             'role': ROLES.VISITOR}, None, None, id='user_normal'),
     ],
     'test_get_model': [
-
+        pytest.param(None, {
+            'username': 'non_existed_user',
+            'email': 'non_existed_user@test.com',
+            'first_name': 'no_mo',
+            'last_name': 'no_ck',
+            'role': ROLES.VISITOR,
+        }, True, False, AssertionError, 'Cannot make new model without validations!',
+                     id='no_validate_no_model_assertion_err'),
+        pytest.param('stored_mock_user', {
+            'first_name': 'mo_mod',
+            'last_name': 'ck_mod',
+            'role': ROLES.TRANSLATOR,
+        }, True, False, AssertionError, 'Cannot overwrite model without validations!',
+                     id='no_validate_cant_overwrite_err'),
+        pytest.param(None, {
+            'email': 'get_new_user@email.com',
+            'username': 'get_new_user',
+            'first_name': 'get_ne',
+            'last_name': 'w_user',
+            'role': ROLES.VISITOR,
+        }, True, True, None, None, id='make_new_model'),
+        pytest.param('stored_mock_user', {
+            'username': 'mock_user_modified',
+            'email': 'mock_user_modified@test.com',
+            'last_name': 'ck_mod',
+        }, True, True, None, None, id='overwrite_model'),
     ]
 })
