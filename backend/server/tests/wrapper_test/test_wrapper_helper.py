@@ -1,8 +1,6 @@
-from typing import Type, Mapping, Callable, Any
-from uuid import UUID
+from typing import Type, Mapping, Callable, Any, Optional
 
 import pytest
-from django.db.models import Model
 
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 from backend.model.TutorialRelatedModel import Category, GraphPriority, Tutorial
@@ -110,66 +108,39 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
                 else:
                     assert injected_value == getattr(model_wrapper, key)
 
+        @apply_param_wrapper('init_params, expected_error, error_text_match', test_params)
+        def test_validation(self, init_params: Mapping, expected_error: Optional[Type[Exception]],
+                            error_text_match: str):
+            model_wrapper = self.wrapper_type().set_variables(**init_params)
+
+            if expected_error is None:
+                model_wrapper.validate()
+            else:
+                with pytest.raises(expected_error, match=error_text_match):
+                    model_wrapper.validate()
+
+        @apply_param_wrapper('mock_instance_name, init_params, overwrite, validate, expected_error, error_text_match',
+                             test_params)
+        def test_get_model(self, get_fixture, django_db_blocker,
+                           mock_instance_name: Optional[str], init_params: Optional[Mapping], overwrite: bool, validate: bool,
+                           expected_error: Optional[Type[Exception]], error_text_match: str):
+            model_wrapper = self.wrapper_type()
+
+            if mock_instance_name is not None:
+                model_instance = get_fixture(mock_instance_name)
+                model_wrapper.load_model(model_instance)
+
+            if init_params is not None:
+                model_wrapper.set_variables(init_params)
+
+            if expected_error is None:
+                model_wrapper.get_model(overwrite=overwrite, validate=validate)
+            else:
+                with pytest.raises(expected_error, match=error_text_match):
+                    model_wrapper.get_model(overwrite=overwrite, validate=validate)
+
     return TestWrapper
 
-
-class TestUserWrapper:
-    def test_func(self):
-        pass
-
-
-TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params={
-    'test_load': [
-        ('mock_user', True),
-        ('mock_user', False)
-    ],
-    'test_set_variables': [
-        {
-            'email': 'set_user@email.com',
-            'username': 'set_user',
-            'first_name': 'set',
-            'last_name': 'user',
-            'role': ROLES.VISITOR,
-        },
-        {
-            'email': 'set_user@email.com',
-            'last_name': 'user',
-            'role': ROLES.VISITOR,
-        },
-        {
-            'last_name': 'user',
-        }
-    ],
-    'test_making_new_model': [
-        {
-            'email': 'new_user@email.com',
-            'username': 'new_user',
-            'first_name': 'new',
-            'last_name': 'user',
-            'role': ROLES.VISITOR,
-        }
-    ],
-    'test_retrieve_model': [
-        pytest.param('mock_user', {'username': 'mock_user', }, marks=pytest.mark.xfail),
-        pytest.param('mock_user', {'email': 'mock_user@test.com', }, marks=pytest.mark.xfail),
-        pytest.param('mock_user', {'username': 'mock_user', 'email': 'mock_user@test.com', }),
-    ],
-    'test_overwrite': [
-        pytest.param('mock_user', {'username': 'mock_user_modified'}, UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59')),
-        pytest.param('mock_user', {'username': 'mock_user_modified',
-                                   'email': 'mock_user_modified@test.com',
-                                   'last_name': 'ck_mod',
-                                   },
-                     UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59')),
-        pytest.param('mock_user', {'username': 'mock_user_modified',
-                                   'email': 'mock_user_modified@test.com',
-                                   'first_name': 'mo_mod',
-                                   'last_name': 'ck_mod',
-                                   'role': ROLES.VISITOR,
-                                   },
-                     UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'))
-    ]
-})
 
 #
 # @pytest.fixture
