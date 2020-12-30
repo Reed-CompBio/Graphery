@@ -60,6 +60,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
         @pytest.mark.django_db
         def test_making_new_model(self, init_params: Mapping):
             model_wrapper = self.wrapper_type().set_variables(**init_params)
+            assert model_wrapper.model is None
             model_wrapper.make_new_model()
             created_model = model_wrapper.model
             assert created_model is not None
@@ -107,18 +108,6 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
             else:
                 with pytest.raises(expected_error, match=error_text_match):
                     model_wrapper.validate()
-
-        @apply_param_wrapper('init_param', test_params)
-        def test_make_new_model(self, django_db_blocker, init_params: Mapping):
-            model_wrapper = self.wrapper_type()
-            assert model_wrapper.model is None
-            model_wrapper.set_variables(**init_params)
-            model_wrapper.make_new_model()
-            assert model_wrapper.model is not None
-            for key in model_wrapper.validators.keys():
-                model_field_value = getattr(model_wrapper.model, key)
-                expected_value = init_params[key]
-                assert model_field_value == expected_value
 
         @apply_param_wrapper('mock_instance_name, init_params, overwrite, validate, expected_error, error_text_match',
                              test_params)
