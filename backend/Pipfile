@@ -14,7 +14,7 @@ websockets = "*"
 
 [packages]
 django = "==3.1.*"
-graphene-django = "~=2.14.0"
+graphene-django = "~=2.15.0"
 psycopg2-binary = "~=2.8.5"
 django-filter = "*"
 django-cors-headers = "~=3.5.0"
