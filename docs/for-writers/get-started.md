@@ -42,6 +42,12 @@ The tutorial anchor is a weird concept. Every anchor stores the url and the name
 
 You can't delete an anchor when there are content associated with it. You have to delete all the content manually first before deleting the anchor. 
 
+Tutorial anchor now contains `rank` field. The `rank` field is built from two numbers: `level` and `section`. The `level`, a three-digit number, indicates how hard the tutorial is. The first digit is the _difficulty level_ and the rest two digits serve as the _index_ within the course level. Say `403`, which is a 400 level course and is probably the third one in the 400 level courses. The `section` number is a number from `0` to `9` (for now). `0` means the current tutorial is the only tutorial related to the topic discussed in the tutorial. The `section` should be consecutive, meaning if the `section` is set to `n`, there should already be `n-1` tutorials in the related topic. And each of the existing tutorial should take one number from `1` to `n-1`.
+
+Some conventions should be followed during choosing the `rank`. The _index_ should be set as far apart as possible to accommodate potential future tutorials. The section number should follow the guideline mentioned in the previous paragraph. 
+
+To accommodate the `rank` field, the `name` and the `url` of the tutorial anchors related to the same topic should follow additional conventions. The names should start with the related topic, and the rest of name should the specific part discussed in individual tutorials. Say we can have `Shortest Path: Dijkstra's Algorithm` and `Shortest Path: ‎Bellman–Ford Algorithm`. 
+
 ## Tutorial Content
 
 In tutorial content page, on the top of the table, a language selector is present. You can use that to navigate to a specific language and the table will load up the tutorial content in that language. The default is loaded to the current language of the user interface. If the tutorial content is not added to the database, a `<None>` label is presented. 
