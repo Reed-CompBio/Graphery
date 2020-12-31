@@ -2,6 +2,7 @@ from uuid import UUID
 
 import pytest
 
+from backend.intel_wrappers.intel_wrapper import CategoryWrapper
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, GraphPriority, Code
 from backend.model.UserModel import User, ROLES
 
@@ -53,22 +54,29 @@ def temp_mock_category():
 
 
 @pytest.fixture(scope='module')
-def stored_mock_tutorial_anchor(django_db_setup, django_db_blocker):
+def stored_mock_tutorial_anchor(django_db_setup, django_db_blocker, stored_mock_category):
     with django_db_blocker.unblock():
-        return Tutorial.objects.create(**{
+        t = Tutorial.objects.create(**{
             'url': 'mock_test_tutorial',
             'name': 'mock test tutorial',
-            'level': '305'
+            'section': 1,
+            'level': 210
         })
+        t.categories.add(stored_mock_category)
+    return t
 
 
 @pytest.fixture()
-def temp_mock_tutorial_anchor():
-    return Tutorial(**{
+def temp_mock_tutorial_anchor(temp_mock_category):
+    t = Tutorial(**{
         'url': 'mock_test_tutorial',
         'name': 'mock test tutorial',
-        'level': '305'
+        'section': 1,
+        'level': 210
     })
+
+    t.categories.add(temp_mock_category)
+    return t
 
 
 @pytest.fixture(scope='module')
