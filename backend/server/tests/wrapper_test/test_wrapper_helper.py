@@ -1,6 +1,7 @@
-from typing import Type, Mapping, Callable, Optional
+from typing import Type, Mapping, Callable, Optional, Sequence
 
 import pytest
+from django.db.models import Manager
 
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 
@@ -15,7 +16,6 @@ def apply_param_wrapper(param_string: str, param_mapping: Mapping) -> Callable:
 
     return _wrapper
 
-
 def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Mapping, default_params: Mapping = {}) -> Type:
     # noinspection PyArgumentList
     class TestWrapper:
@@ -23,10 +23,15 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
         default_args: Mapping = default_params
 
         @apply_param_wrapper('mock_instance_name, load_var', test_params)
-        def test_load(self, get_fixture,
+        def test_load(self, get_fixture, django_db_blocker,
                       mock_instance_name: str, load_var: bool):
             model_instance = get_fixture(mock_instance_name)
-            model_wrapper = self.wrapper_type().load_model(model_instance)
+
+            if load_var:
+                with django_db_blocker.unblock():
+                    model_wrapper = self.wrapper_type().load_model(model_instance, load_var=load_var)
+            else:
+                model_wrapper = self.wrapper_type().load_model(model_instance, load_var=load_var)
 
             # TODO user fixture to test loading
             assert model_wrapper.model is not None and model_wrapper.model == model_instance
@@ -34,7 +39,13 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
                 for key in model_wrapper.validators.keys():
                     field_value = getattr(model_wrapper, key)
                     expected_value = getattr(model_instance, key)
-                    assert field_value == expected_value
+                    if isinstance(expected_value, Manager):
+                        with django_db_blocker.unblock():
+                            expected_value = list(expected_value.all())
+                        for wrapper in field_value:
+                            assert wrapper.model in expected_value
+                    else:
+                        assert field_value == expected_value
 
         @apply_param_wrapper('variable_dict', test_params)
         def test_set_variables(self, variable_dict: Mapping):
@@ -44,7 +55,11 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
                 loaded_value = getattr(model_wrapper, key)
 
                 if key in variable_dict:
-                    assert loaded_value == variable_dict[key]
+                    if isinstance(loaded_value, Sequence) and all(isinstance(item, AbstractWrapper) for item in loaded_value):
+                        for item in loaded_value:
+                            assert item.model == variable_dict[key]
+                    else:
+                        assert loaded_value == variable_dict[key]
                 elif key in self.default_args:
                     assert loaded_value == self.default_args[key]
                 else:
