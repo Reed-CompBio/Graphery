@@ -1,4 +1,3 @@
-from os.path import join
 from typing import Callable, Optional
 
 from django.conf import settings
@@ -151,4 +150,5 @@ class Uploads(PublishedMixin, UUIDMixin, models.Model):
 
     @property
     def relative_url(self) -> str:
-        return join('/', settings.UPLOAD_STATICS_ENTRY, self.file.url)
+        # TODO maybe there is a better solution
+        return f'/{settings.UPLOAD_STATICS_ENTRY}' + self.file.url
