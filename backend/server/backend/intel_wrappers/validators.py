@@ -28,7 +28,7 @@ name_regex = re.compile(r'^[a-zA-Z0-9- ]+\Z')
 
 
 def name_validator(name: str):
-    if not isinstance(name, str) or not name or not name_regex.match(name):
+    if not isinstance(name, str) or not name or name.startswith(('-', '_')) or name.endswith(('-', '_')):
         raise ValidationError('`name` must be a non-empty string and does not start or end with `-` or `_`.')
 
 
