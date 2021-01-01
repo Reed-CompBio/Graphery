@@ -1,21 +1,54 @@
 <template>
-  <MaterialPage>
-    <div class="flex-center text-center ">
-      <h3>Welcome to Graphery</h3>
-      <div class="home-intro-text">
-        <p>
-          This is a interactive graph algorithm tutorial website.
-        </p>
-        <p>
-          Check out our tutorials and play with graphs.
-        </p>
-        <p>
-          More info is listed in
-          <router-link :to="{ name: 'About' }"> About </router-link>
-        </p>
+  <!--  <MaterialPage>-->
+  <div class="page">
+    <!-- <div class="flex-center text-center">-->
+    <div class="welcome-box flex-center">
+      <!-- FIXME: mobile breakpoint (responsive adaption)-->
+      <!-- FIXME: beautify the logo -->
+      <img :src="logoSrc" class="logo" alt="" />
+      <div class="graphery-text">
+        <h3 class="welcome-title">
+          Welcome to <br /><span class="logo-text">GRAPHERY</span>
+        </h3>
+        <div class="home-intro-text">
+          <p>
+            This is a interactive graph algorithm tutorial website.
+          </p>
+          <p>
+            Check out our tutorials and play with graphs.
+          </p>
+          <p>
+            More info is listed in
+            <router-link :to="{ name: 'About' }"> About </router-link>
+          </p>
+        </div>
       </div>
     </div>
     <q-separator />
+    <div class="quick-facts flex-center">
+      <div class="feature">
+        <div class="icon">
+          <q-icon name="announcement"></q-icon>
+        </div>
+        <div class="title">Feature</div>
+        <div class="description">Description</div>
+      </div>
+      <div class="feature">
+        <div class="icon">
+          <q-icon name="announcement"></q-icon>
+        </div>
+        <div class="title">Feature</div>
+        <div class="description">Description</div>
+      </div>
+      <div class="feature">
+        <div class="icon">
+          <q-icon name="announcement"></q-icon>
+        </div>
+        <div class="title">Feature</div>
+        <div class="description">Description</div>
+      </div>
+    </div>
+    <!-- TODO:Alter these buttons below-->
     <div class="q-mx-auto">
       <div
         :class="{
@@ -45,7 +78,8 @@
         </div>
       </div>
     </div>
-  </MaterialPage>
+  </div>
+  <!--  </MaterialPage>-->
 </template>
 
 <script>
@@ -56,19 +90,22 @@
       return { title: titleText };
     },
     components: {
-      MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
+      // MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       FeedbackDropdown: () =>
         import('@/components/framework/FeedbackDropdown.vue'),
+    },
+    data() {
+      return {
+        logoSrc: require('@/assets/images/compbio-lab.png'),
+      };
     },
   };
 </script>
 
 <style lang="sass">
-  .button-wrapper
-    margin: 5px 10px
-  .feedback-item
-    text-align: center
-    font-weight: bold
-  .home-intro-text
-    font-size: 18px
+    @import "~@/styles/home.sass"
+
+  .page
+    background: #fff
+    padding: 30px
 </style>
