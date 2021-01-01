@@ -15,37 +15,37 @@ class TestUserWrapper:
 # noinspection PyRedeclaration
 TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params={
     'test_load': [
-        ('stored_mock_user', True),
-        ('stored_mock_user', False)
+        pytest.param('stored_mock_user', True),
+        pytest.param('stored_mock_user', False)
     ],
     'test_set_variables': [
-        {
+        pytest.param({
             'email': 'set_user@email.com',
             'username': 'set_user',
             'first_name': 'set',
             'last_name': 'user',
             'role': ROLES.VISITOR,
-        },
-        {
+        }),
+        pytest.param({
             'email': 'set_user@email.com',
             'last_name': 'user',
             'role': ROLES.VISITOR,
-        },
-        {
+        }),
+        pytest.param({
             'last_name': 'user',
-        },
-        {
+        }),
+        pytest.param({
 
-        }
+        })
     ],
     'test_making_new_model': [
-        {
+        pytest.param({
             'email': 'new_user@email.com',
             'username': 'new_user',
             'first_name': 'new',
             'last_name': 'user',
             'role': ROLES.VISITOR,
-        }
+        }),
     ],
     'test_retrieve_model': [
         pytest.param('stored_mock_user', {'username': 'mock_user', },
