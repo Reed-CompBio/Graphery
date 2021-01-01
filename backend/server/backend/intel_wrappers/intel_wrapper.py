@@ -18,19 +18,9 @@ from backend.model.UserModel import User
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper, VariedContentWrapper
 
 
-def finalize_prerequisite_wrapper(model_wrapper: AbstractWrapper, overwrite: bool = False) -> None:
-    model_wrapper.prepare_model()
-    model_wrapper.get_model(overwrite=overwrite)
-    model_wrapper.finalize_model()
-
-
-def finalize_wrapper_without_preparation(model_wrapper: AbstractWrapper):
-    model_wrapper.get_model(validate=False)
-
-
 def finalize_prerequisite_wrapper_iter(model_wrappers: Iterable[AbstractWrapper]) -> None:
     for model_wrapper in model_wrappers:
-        finalize_prerequisite_wrapper(model_wrapper)
+        model_wrapper.finalize_model(overwrite=False)
 
 
 class UserWrapper(AbstractWrapper):
@@ -145,10 +135,10 @@ class TutorialAnchorWrapper(PublishedWrapper):
     def prepare_model(self) -> None:
         finalize_prerequisite_wrapper_iter(self.categories)
 
-    def finalize_model(self) -> None:
-        self.save_model()
-        self.model.categories.set(wrapper.model for wrapper in self.categories)
-        self.save_model()
+    def _finalize_model_helper(self, overwrite: bool) -> None:
+        if overwrite:
+            super(TutorialAnchorWrapper, self)._finalize_model_helper(overwrite=overwrite)
+            self.model.categories.set(wrapper.model for wrapper in self.categories)
 
     def __str__(self):
         return f'<TutorialWrapper\n' \
@@ -206,14 +196,12 @@ class GraphWrapper(PublishedWrapper):
         finalize_prerequisite_wrapper_iter(self.tutorials)
         finalize_prerequisite_wrapper_iter(self.authors)
 
-    def finalize_model(self) -> None:
-        self.save_model()
-
-        self.model.categories.set(wrapper.model for wrapper in self.categories)
-        self.model.tutorials.set(wrapper.model for wrapper in self.tutorials)
-        self.model.authors.set(wrapper.model for wrapper in self.authors)
-
-        self.save_model()
+    def _finalize_model_helper(self, overwrite: bool) -> None:
+        if overwrite:
+            super(GraphWrapper, self)._finalize_model_helper(overwrite=overwrite)
+            self.model.categories.set(wrapper.model for wrapper in self.categories)
+            self.model.tutorials.set(wrapper.model for wrapper in self.tutorials)
+            self.model.authors.set(wrapper.model for wrapper in self.authors)
 
     def __str__(self):
         return f'<GraphWrapper url={self.url} \n' \
@@ -396,10 +384,10 @@ class TutorialTranslationContentWrapper(VariedContentWrapper[_T], Generic[_T]):
     def prepare_model(self) -> None:
         finalize_prerequisite_wrapper_iter(self.authors)
 
-    def finalize_model(self) -> None:
-        self.save_model()
-        self.model.authors.set(wrapper.model for wrapper in self.authors)
-        self.save_model()
+    def _finalize_model_helper(self, overwrite: bool) -> None:
+        if overwrite:
+            super(TutorialTranslationContentWrapper, self)._finalize_model_helper(overwrite=overwrite)
+            self.model.authors.set(wrapper.model for wrapper in self.authors)
 
     def __str__(self):
         return f'<TutorialContentWrapper\n' \

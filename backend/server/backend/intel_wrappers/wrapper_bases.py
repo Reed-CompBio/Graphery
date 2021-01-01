@@ -5,7 +5,7 @@ from abc import abstractmethod, ABC
 from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, MutableMapping, TypeVar, Generic
 
 from django.core.exceptions import ValidationError
-from django.db import models, IntegrityError
+from django.db import models, IntegrityError, transaction
 from django.db.models import Model
 
 from backend.intel_wrappers.validators import is_published_validator, dummy_validator
@@ -71,7 +71,7 @@ class ModelWrapperBase(Generic[_T], ABC):
     def make_new_model(self) -> None:
         raise NotImplementedError
 
-    def get_model(self, overwrite: bool = False, validate: bool = True) -> None:
+    def get_model(self, validate: bool = True) -> None:
         if not self.model_class:
             raise AssertionError
         # TODO use other error
@@ -82,6 +82,9 @@ class ModelWrapperBase(Generic[_T], ABC):
 
     def prepare_model(self) -> None:
         pass
+
+    def _finalize_model_helper(self, overwrite: bool) -> None:
+        raise NotImplementedError
 
     def finalize_model(self) -> None:
         self.save_model()
@@ -165,7 +168,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, Gene
                 else:
                     setattr(self.model, field, field_value)
 
-    def get_model(self, overwrite: bool = False, validate: bool = True) -> None:
+    def get_model(self, validate: bool = True) -> bool:
         if validate:
             try:
                 self.validate()
@@ -177,20 +180,32 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, Gene
 
         try:
             self.retrieve_model()
-            if overwrite:
-                if validate:
-                    self.overwrite_model()
-                else:
-                    raise AssertionError('Cannot overwrite model without validations!')
+            return False
         except (self.model_class.DoesNotExist, ValidationError):
             if validate:
                 self.make_new_model()
+                return True
             else:
                 raise AssertionError('Cannot make new model without validations!')
         except self.model_class.MultipleObjectsReturned as e:
             # which should never happen
             raise AssertionError('Multiple model instances received with model {} and variables {}. Error: {}'
                                  .format(self.model_class, list(self.validators.keys()), e))
+
+    def _finalize_model_helper(self, overwrite: bool) -> None:
+        if overwrite:
+            self.validate()
+            self.overwrite_model()
+
+    def finalize_model(self, overwrite: bool = True, validate: bool = True) -> None:
+        with transaction.atomic:
+            self.prepare_model()
+            is_newly_created = self.get_model(validate=validate)
+            if is_newly_created:
+                self.save_model()
+            self._finalize_model_helper(overwrite=overwrite)
+            if overwrite and validate:
+                self.save_model()
 
 
 _V = TypeVar('_V', bound=PublishedMixin)
