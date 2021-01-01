@@ -143,8 +143,11 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
         def test_overwrite(self, get_fixture, django_db_blocker,
                            mock_instance_name: str, modified_fields: Mapping):
             model_instance = get_fixture(mock_instance_name)
-            model_wrapper = self.wrapper_type().load_model(model_instance).set_variables(**modified_fields)
-            model_wrapper.overwrite_model()
+
+            with django_db_blocker.unblock():
+                model_wrapper = self.wrapper_type().load_model(model_instance).set_variables(**modified_fields)
+                model_wrapper.overwrite_model()
+
             stored_model = model_wrapper.model
 
             for key in model_wrapper.validators.keys():

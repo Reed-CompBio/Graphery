@@ -10,7 +10,7 @@ from backend.model.UserModel import User, ROLES
 @pytest.fixture(scope='module')
 def stored_mock_user(django_db_setup, django_db_blocker):
     with django_db_blocker.unblock():
-        return User.objects.create(**{
+        u = User.objects.create(**{
             'id': UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'),
             'username': 'mock_user',
             'email': 'mock_user@test.com',
@@ -19,6 +19,7 @@ def stored_mock_user(django_db_setup, django_db_blocker):
             'last_name': 'ck',
             'role': ROLES.AUTHOR,
         })
+    return u
 
 
 @pytest.fixture()
@@ -37,11 +38,13 @@ def temp_mock_user():
 @pytest.fixture(scope='module')
 def stored_mock_category(django_db_setup, django_db_blocker):
     with django_db_blocker.unblock():
-        return Category.objects.create(**{
+        c = Category.objects.create(**{
             'id': UUID('a58912ae-0343-4827-9dc1-b8518faf13ff'),
             'category': 'mock_category',
             'is_published': True
         })
+
+    return c
 
 
 @pytest.fixture()
@@ -57,26 +60,33 @@ def temp_mock_category():
 def stored_mock_tutorial_anchor(django_db_setup, django_db_blocker, stored_mock_category):
     with django_db_blocker.unblock():
         t = Tutorial.objects.create(**{
+            'id': UUID('b0015ac8-5376-4b99-b649-6f25771dbd91'),
             'url': 'mock_test_tutorial',
             'name': 'mock test tutorial',
             'section': 1,
-            'level': 210
+            'level': 210,
+            'is_published': True
         })
         t.categories.add(stored_mock_category)
     return t
 
 
 @pytest.fixture()
-def temp_mock_tutorial_anchor(temp_mock_category):
-    t = Tutorial(**{
-        'url': 'mock_test_tutorial',
-        'name': 'mock test tutorial',
-        'section': 1,
-        'level': 210
-    })
+def one_time_mock_tutorial_anchor(django_db_setup, django_db_blocker, stored_mock_category):
+    with django_db_blocker.unblock():
+        t = Tutorial.objects.create(**{
+            'id': UUID('98158c8f-9e57-4222-bd22-834863cfbeb6'),
+            'url': 'one_time_mock_test_tutorial',
+            'name': 'one time mock test tutorial',
+            'section': 1,
+            'level': 212,
+            'is_published': True
+        })
+        t.categories.add(stored_mock_category)
+    yield t
 
-    t.categories.add(temp_mock_category)
-    return t
+    with django_db_blocker.unblock():
+        t.delete()
 
 
 @pytest.fixture(scope='module')
