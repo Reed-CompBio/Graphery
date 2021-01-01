@@ -18,7 +18,7 @@ def _apply_param_wrapper(param_string: str, param_mapping: Mapping) -> Callable:
 
 
 def test_variable_equality(django_db_blocker, loaded_var: Any, expected_var: Any) -> bool:
-    if isinstance(expected_var, Sequence) and all(isinstance(wrapper, AbstractWrapper) for wrapper in expected_var):
+    if isinstance(loaded_var, Sequence) and all(isinstance(wrapper, AbstractWrapper) for wrapper in loaded_var):
         for wrapper in loaded_var:
             assert wrapper.model == expected_var
     elif isinstance(loaded_var, Manager):
@@ -177,7 +177,6 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                         model_wrapper.get_model(overwrite=overwrite, validate=validate)
 
     return TestWrapper
-
 
 #
 # @pytest.fixture
