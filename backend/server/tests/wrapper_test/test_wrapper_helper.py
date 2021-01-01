@@ -6,7 +6,7 @@ from django.db.models import Manager
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 
 
-def apply_param_wrapper(param_string: str, param_mapping: Mapping) -> Callable:
+def _apply_param_wrapper(param_string: str, param_mapping: Mapping) -> Callable:
     def _wrapper(f):
         injected_mapping = param_mapping.get(f.__name__, None)
         if injected_mapping is None:
@@ -42,13 +42,19 @@ def test_variable_equality(django_db_blocker, loaded_var: Any, expected_var: Any
 
 def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                            test_params: Mapping,
-                           default_params: Mapping = {}) -> Type:
+                           default_params: Mapping = None) -> Type:
+    if default_params is None:
+        default_params = {}
+
+    def apply_param_wrapper(arg_list_str: str) -> Callable:
+        return _apply_param_wrapper(arg_list_str, test_params)
+
     # noinspection PyArgumentList
     class TestWrapper:
         wrapper_type: Type[AbstractWrapper] = wrapper_class
         default_args: Mapping = default_params
 
-        @apply_param_wrapper('mock_instance_name, load_var', test_params)
+        @apply_param_wrapper('mock_instance_name, load_var')
         def test_load(self, get_fixture, django_db_blocker,
                       mock_instance_name: str, load_var: bool):
             model_instance = get_fixture(mock_instance_name)
@@ -69,7 +75,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                                            loaded_var=loaded_var,
                                            expected_var=field_value)
 
-        @apply_param_wrapper('variable_dict', test_params)
+        @apply_param_wrapper('variable_dict')
         def test_set_variables(self, django_db_blocker, variable_dict: Mapping):
             model_wrapper = self.wrapper_type()
             model_wrapper.set_variables(**variable_dict)
@@ -89,7 +95,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                 else:
                     assert loaded_value is None
 
-        @apply_param_wrapper('init_params', test_params)
+        @apply_param_wrapper('init_params')
         @pytest.mark.django_db
         def test_making_new_model(self, django_db_blocker, init_params: Mapping):
             model_wrapper = self.wrapper_type().set_variables(**init_params)
@@ -108,7 +114,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
             # the object is created but not injected to db
             assert self.wrapper_type.model_class.objects.filter(id=created_model.id).count() == 0
 
-        @apply_param_wrapper('mock_instance_name, required_info', test_params)
+        @apply_param_wrapper('mock_instance_name, required_info')
         def test_retrieve_model(self, get_fixture, django_db_setup, django_db_blocker,
                                 mock_instance_name, required_info):
             model_instance = get_fixture(mock_instance_name)
@@ -119,7 +125,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                                    loaded_var=model_wrapper.model,
                                    expected_var=model_instance)
 
-        @apply_param_wrapper('mock_instance_name, modified_fields', test_params)
+        @apply_param_wrapper('mock_instance_name, modified_fields')
         def test_overwrite(self, get_fixture, django_db_blocker,
                            mock_instance_name: str, modified_fields: Mapping):
             model_instance = get_fixture(mock_instance_name)
@@ -139,7 +145,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                                        loaded_var=loaded_value,
                                        expected_var=expected_value)
 
-        @apply_param_wrapper('init_params, expected_error, error_text_match', test_params)
+        @apply_param_wrapper('init_params, expected_error, error_text_match')
         def test_validation(self, init_params: Mapping, expected_error: Optional[Type[Exception]],
                             error_text_match: str):
             model_wrapper = self.wrapper_type().set_variables(**init_params)
@@ -150,8 +156,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                 with pytest.raises(expected_error, match=error_text_match):
                     model_wrapper.validate()
 
-        @apply_param_wrapper('mock_instance_name, init_params, overwrite, validate, expected_error, error_text_match',
-                             test_params)
+        @apply_param_wrapper('mock_instance_name, init_params, overwrite, validate, expected_error, error_text_match')
         def test_get_model(self, get_fixture, django_db_blocker,
                            mock_instance_name: Optional[str], init_params: Optional[Mapping], overwrite: bool,
                            validate: bool, expected_error: Optional[Type[Exception]], error_text_match: str):
