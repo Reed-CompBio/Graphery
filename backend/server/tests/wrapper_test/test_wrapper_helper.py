@@ -17,13 +17,19 @@ def _apply_param_wrapper(param_string: str, param_mapping: Mapping) -> Callable:
     return _wrapper
 
 
-def test_variable_equality(django_db_blocker, loaded_var: Any, expected_var: Any) -> bool:
+def test_variable_equality(django_db_blocker,
+                           loaded_var: Any,
+                           expected_var: Any,
+                           manager_prepared: bool = False) -> bool:
     if isinstance(loaded_var, Sequence) and all(isinstance(wrapper, AbstractWrapper) for wrapper in loaded_var):
         for wrapper in loaded_var:
             assert wrapper.model == expected_var
     elif isinstance(loaded_var, Manager):
         # loaded_instance_var could be many-to-many fields, ForeignKey etc.
         # and in this case, the expected values are sequences
+
+        if not manager_prepared:
+            return True
 
         with django_db_blocker.unblock():
             # load vars from the manager
@@ -73,7 +79,8 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                     loaded_var = getattr(model_instance, key)
                     test_variable_equality(django_db_blocker=django_db_blocker,
                                            loaded_var=loaded_var,
-                                           expected_var=field_value)
+                                           expected_var=field_value,
+                                           manager_prepared=True)
 
         @apply_param_wrapper('variable_dict')
         def test_set_variables(self, django_db_blocker, variable_dict: Mapping):
@@ -107,7 +114,13 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                 # since id doesn't exist before the model is created
                 if key != 'id':
                     loaded_instance_var = getattr(created_model, key)
-                    expected_value = init_params[key]
+                    if key in init_params:
+                        expected_value = init_params[key]
+                    elif key in self.default_args:
+                        expected_value = self.default_args[key]
+                    else:
+                        # which should never happen
+                        raise Exception('bad testing suit')
                     test_variable_equality(django_db_blocker=django_db_blocker,
                                            loaded_var=loaded_instance_var,
                                            expected_var=expected_value)
@@ -123,7 +136,8 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                 model_wrapper.retrieve_model()
             test_variable_equality(django_db_blocker=django_db_blocker,
                                    loaded_var=model_wrapper.model,
-                                   expected_var=model_instance)
+                                   expected_var=model_instance,
+                                   manager_prepared=True)
 
         @apply_param_wrapper('mock_instance_name, modified_fields')
         def test_overwrite(self, get_fixture, django_db_blocker,
@@ -138,12 +152,15 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
 
                 if key in modified_fields:
                     expected_value = modified_fields[key]
+                    test_variable_equality(django_db_blocker=django_db_blocker,
+                                           loaded_var=loaded_value,
+                                           expected_var=expected_value)
                 else:
                     expected_value = getattr(model_wrapper, key)
-
-                test_variable_equality(django_db_blocker=django_db_blocker,
-                                       loaded_var=loaded_value,
-                                       expected_var=expected_value)
+                    test_variable_equality(django_db_blocker=django_db_blocker,
+                                           loaded_var=loaded_value,
+                                           expected_var=expected_value,
+                                           manager_prepared=True)
 
         @apply_param_wrapper('init_params, expected_error, error_text_match')
         def test_validation(self, init_params: Mapping, expected_error: Optional[Type[Exception]],
