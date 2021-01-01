@@ -1,4 +1,4 @@
-from typing import Type, Mapping, Callable, Optional, Sequence
+from typing import Type, Mapping, Callable, Optional, Sequence, Any
 
 import pytest
 from django.db.models import Manager
@@ -16,7 +16,33 @@ def apply_param_wrapper(param_string: str, param_mapping: Mapping) -> Callable:
 
     return _wrapper
 
-def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Mapping, default_params: Mapping = {}) -> Type:
+
+def test_variable_equality(django_db_blocker, loaded_var: Any, expected_var: Any) -> bool:
+    if isinstance(expected_var, Sequence) and all(isinstance(wrapper, AbstractWrapper) for wrapper in expected_var):
+        for wrapper in loaded_var:
+            assert wrapper.model == expected_var
+    elif isinstance(loaded_var, Manager):
+        # loaded_instance_var could be many-to-many fields, ForeignKey etc.
+        # and in this case, the expected values are sequences
+
+        with django_db_blocker.unblock():
+            # load vars from the manager
+            loaded_var = list(loaded_var.all())
+
+        # the two results should have the same length and elements
+        assert len(expected_var) == len(loaded_var)
+        for wrapper in expected_var:
+            assert isinstance(wrapper, AbstractWrapper)
+            assert wrapper.model in loaded_var
+    else:
+        assert loaded_var == expected_var
+
+    return True
+
+
+def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
+                           test_params: Mapping,
+                           default_params: Mapping = {}) -> Type:
     # noinspection PyArgumentList
     class TestWrapper:
         wrapper_type: Type[AbstractWrapper] = wrapper_class
@@ -38,36 +64,34 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
             if load_var:
                 for key in model_wrapper.validators.keys():
                     field_value = getattr(model_wrapper, key)
-                    expected_value = getattr(model_instance, key)
-                    if isinstance(expected_value, Manager):
-                        with django_db_blocker.unblock():
-                            expected_value = list(expected_value.all())
-                        for wrapper in field_value:
-                            assert wrapper.model in expected_value
-                    else:
-                        assert field_value == expected_value
+                    loaded_var = getattr(model_instance, key)
+                    test_variable_equality(django_db_blocker=django_db_blocker,
+                                           loaded_var=loaded_var,
+                                           expected_var=field_value)
 
         @apply_param_wrapper('variable_dict', test_params)
-        def test_set_variables(self, variable_dict: Mapping):
+        def test_set_variables(self, django_db_blocker, variable_dict: Mapping):
             model_wrapper = self.wrapper_type()
             model_wrapper.set_variables(**variable_dict)
             for key in model_wrapper.validators.keys():
                 loaded_value = getattr(model_wrapper, key)
 
                 if key in variable_dict:
-                    if isinstance(loaded_value, Sequence) and all(isinstance(item, AbstractWrapper) for item in loaded_value):
-                        for item in loaded_value:
-                            assert item.model == variable_dict[key]
-                    else:
-                        assert loaded_value == variable_dict[key]
+                    expected_var = variable_dict[key]
+                    test_variable_equality(django_db_blocker=django_db_blocker,
+                                           loaded_var=loaded_value,
+                                           expected_var=expected_var)
                 elif key in self.default_args:
-                    assert loaded_value == self.default_args[key]
+                    expected_var = self.default_args[key]
+                    test_variable_equality(django_db_blocker=django_db_blocker,
+                                           loaded_var=loaded_value,
+                                           expected_var=expected_var)
                 else:
                     assert loaded_value is None
 
         @apply_param_wrapper('init_params', test_params)
         @pytest.mark.django_db
-        def test_making_new_model(self, init_params: Mapping):
+        def test_making_new_model(self, django_db_blocker, init_params: Mapping):
             model_wrapper = self.wrapper_type().set_variables(**init_params)
             assert model_wrapper.model is None
             model_wrapper.make_new_model()
@@ -76,9 +100,11 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
             for key in model_wrapper.validators.keys():
                 # since id doesn't exist before the model is created
                 if key != 'id':
-                    injected_value = getattr(created_model, key)
+                    loaded_instance_var = getattr(created_model, key)
                     expected_value = init_params[key]
-                    assert injected_value == expected_value
+                    test_variable_equality(django_db_blocker=django_db_blocker,
+                                           loaded_var=loaded_instance_var,
+                                           expected_var=expected_value)
             # the object is created but not injected to db
             assert self.wrapper_type.model_class.objects.filter(id=created_model.id).count() == 0
 
@@ -89,10 +115,12 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
             model_wrapper = self.wrapper_type().set_variables(**required_info)
             with django_db_blocker.unblock():
                 model_wrapper.retrieve_model()
-            assert model_wrapper.model == model_instance
+            test_variable_equality(django_db_blocker=django_db_blocker,
+                                   loaded_var=model_wrapper.model,
+                                   expected_var=model_instance)
 
         @apply_param_wrapper('mock_instance_name, modified_fields', test_params)
-        def test_overwrite(self, get_fixture,
+        def test_overwrite(self, get_fixture, django_db_blocker,
                            mock_instance_name: str, modified_fields: Mapping):
             model_instance = get_fixture(mock_instance_name)
             model_wrapper = self.wrapper_type().load_model(model_instance).set_variables(**modified_fields)
@@ -100,12 +128,16 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper], test_params: Ma
             stored_model = model_wrapper.model
 
             for key in model_wrapper.validators.keys():
-                injected_value = getattr(stored_model, key)
+                loaded_value = getattr(stored_model, key)
 
                 if key in modified_fields:
-                    assert injected_value == modified_fields[key]
+                    expected_value = modified_fields[key]
                 else:
-                    assert injected_value == getattr(model_wrapper, key)
+                    expected_value = getattr(model_wrapper, key)
+
+                test_variable_equality(django_db_blocker=django_db_blocker,
+                                       loaded_var=loaded_value,
+                                       expected_var=expected_value)
 
         @apply_param_wrapper('init_params, expected_error, error_text_match', test_params)
         def test_validation(self, init_params: Mapping, expected_error: Optional[Type[Exception]],
