@@ -55,19 +55,19 @@ TestCategoryWrapper = gen_wrapper_test_class(wrapper_class=CategoryWrapper, test
     'test_get_model': [
         pytest.param(None, {
             'category': 'get_model_cat'
-        }, True, False, AssertionError, 'Cannot make new model without validations!',
+        }, False, AssertionError, 'Cannot make new model without validations!',
                      id='no_validate_no_model_assertion_err'),
         pytest.param('stored_mock_category', {
             'category': 'get_model_cat',
             'is_published': False
-        }, True, False, AssertionError, 'Cannot overwrite model without validations!',
-                     id='no_validate_cant_overwrite_err'),
+        }, False, AssertionError, 'Cannot overwrite model without validations!',
+                     id='no_validate_cant_overwrite_err', marks=pytest.mark.skip(reason='API change')),
         pytest.param(None, {
             'category': 'get_model_cat',
             'is_published': False
-        }, True, True, None, None, id='make_new_model'),
+        }, True, None, None, id='make_new_model'),
         pytest.param('stored_mock_category', {
             'category': 'get_model_cat_mod'
-        }, True, True, None, None, id='overwrite_model'),
+        }, True, None, None, id='overwrite_model'),
     ]
 }, default_params={'is_published': False})
