@@ -85,6 +85,7 @@
               class="col q-ml-md q-pr-xl q-my-md"
             >
               <div style="display: flex;" class="flex-center">
+                <!-- FIXME: The mobile breakpoint is improper.-->
                 <q-img :src="logoSrc" style="width: 90%"></q-img>
               </div>
             </div>
