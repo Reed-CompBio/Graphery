@@ -22,9 +22,7 @@ Initilize
 pg_ctl -D /usr/local/var/postgres start && brew services start postgresql
 ```
 
-### Install dependencies
-
-### one repository and cd to the repo root
+### clone repository and cd to the repo root
 
 ```shell
 git clone https://github.com/FlickerSoul/Graphery/
