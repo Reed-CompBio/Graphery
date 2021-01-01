@@ -39,7 +39,7 @@
         </div>
       </section>
       <section>
-        <h4>Project Leader</h4>
+        <h4>Project Team</h4>
         <p>
           <a href="https://www.reed.edu/biology/ritz/" target="_blank">
             Anna Ritz
