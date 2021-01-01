@@ -5,11 +5,12 @@ from random import random
 from typing import Optional, Iterable, Mapping, Type, Union, Any, TypeVar, Generic
 
 from django.core.files import File
+from django.db.models import Model
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
     categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
-    graph_priority_validator, json_validator, email_validator, username_validator,  \
-    tutorial_anchors_validator, level_validator, section_validator
+    graph_priority_validator, json_validator, email_validator, username_validator, \
+    tutorial_anchors_validator, level_validator, section_validator, first_name_validator, last_name_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase, ENUS, ZHCN, ENUSGraphContent, \
     ZHCNGraphContent
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
@@ -39,12 +40,12 @@ class UserWrapper(AbstractWrapper):
         AbstractWrapper.__init__(self, {
             'email': email_validator,
             'username': username_validator,
-            'first_name': dummy_validator,
-            'last_name': dummy_validator,
+            'first_name': first_name_validator,
+            'last_name': last_name_validator,
             'role': dummy_validator,
         })
 
-        self.id = FAKE_UUID
+        self.id = None
         self.username: Optional[str] = None
         self.email: Optional[str] = None
         self.first_name: str = ''
@@ -55,15 +56,20 @@ class UserWrapper(AbstractWrapper):
         super().load_model_var(loaded_model)
         self.username = loaded_model.username
         self.email = loaded_model.email
+        self.first_name = loaded_model.first_name
+        self.last_name = loaded_model.last_name
         self.role = loaded_model.role
 
     def retrieve_model(self) -> None:
+        # TODO do we need exact two arguments to get the model?
         self.model = User.objects.get(username=self.username, email=self.email)
 
     def make_new_model(self) -> None:
-        self.model = User.objects.create_user(username=self.username,
-                                              email=self.email,
-                                              role=self.role)
+        self.model = User(username=self.username,
+                          email=self.email,
+                          role=self.role,
+                          first_name=self.first_name,
+                          last_name=self.last_name)
 
     def __str__(self):
         return f'<UserWrapper\n' \
@@ -333,7 +339,7 @@ class UploadsWrapper(PublishedWrapper):
             raise ValueError(f'Cannot create upload since `file` {self.file} is not a File instance.')
 
 
-_T = TypeVar('_T')
+_T = TypeVar('_T', bound=Model)
 
 
 class TutorialTranslationContentWrapper(VariedContentWrapper[_T], Generic[_T]):
@@ -417,7 +423,7 @@ class ZHCNTutorialContentWrapper(TutorialTranslationContentWrapper[ZHCN]):
     model_class = ZHCN
 
 
-_S = TypeVar('_S')
+_S = TypeVar('_S', bound=Model)
 
 
 class GraphTranslationContentWrapper(VariedContentWrapper[_S], Generic[_S]):

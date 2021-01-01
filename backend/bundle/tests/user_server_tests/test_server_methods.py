@@ -154,7 +154,7 @@ def mock_normal_code() -> str:
                 while True:
                     sleep(6000)        
         '''), graph=mock_graph_json())
-    }).content, create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS} s.')),  # timeout error
+    }).content, create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS}s.')),  # timeout error
 ])
 def test_application_helper(env, response):
     mock_response = application_helper(env)

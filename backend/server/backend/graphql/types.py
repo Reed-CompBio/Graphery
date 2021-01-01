@@ -252,10 +252,6 @@ class ExecResultJsonType(DjangoObjectType):
 class UploadsType(PublishedFilterBase, DjangoObjectType):
     relative_url = graphene.String()
 
-    @graphene.resolve_only_args
-    def resolve_url(self):
-        return self.relative_url
-
     @field_adder(published_mixin_field, uuid_mixin_field)
     class Meta:
         model = Uploads

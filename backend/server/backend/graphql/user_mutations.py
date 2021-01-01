@@ -58,13 +58,15 @@ class Register(SuccessMutationBase):
 
         role: int = InvitationCode.role_mapping[role_string]
 
-        user_wrapper: UserWrapper = process_model_wrapper(UserWrapper,
-                                                          email=email, username=username, role=role,
-                                                          first_name=first_name, last_name=last_name)
         try:
             password_validator(password)
         except AssertionError as e:
             raise GraphQLError(f'Malformed password. Error: {e}')
+
+        user_wrapper: UserWrapper = process_model_wrapper(UserWrapper,
+                                                          email=email, username=username, role=role,
+                                                          first_name=first_name, last_name=last_name)
+
         user_wrapper.model.set_password(password)
 
         return Register(success=True, user=user_wrapper.model)

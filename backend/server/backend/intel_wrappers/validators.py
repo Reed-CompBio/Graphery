@@ -1,6 +1,9 @@
 import json
 import re
+from enum import Enum
 from typing import Sequence, Mapping, Union
+
+from backend.model.UserModel import ROLES
 
 
 class ValidationError(AssertionError):
@@ -28,7 +31,7 @@ name_regex = re.compile(r'^[a-zA-Z0-9- ]+\Z')
 
 
 def name_validator(name: str):
-    if not isinstance(name, str) or not name or not name_regex.match(name):
+    if not isinstance(name, str) or not name or name.startswith(('-', '_')) or name.endswith(('-', '_')):
         raise ValidationError('`name` must be a non-empty string and does not start or end with `-` or `_`.')
 
 
@@ -103,6 +106,27 @@ username_regex = re.compile(r'^[^0-9][\w-]{4,}[^-_]\Z')
 def username_validator(username: str):
     if not isinstance(username, str) or not username_regex.match(username):
         raise ValidationError('Username %s is not valid.' % username)
+
+
+NAME_LENGTH = 150
+
+
+def _user_name_validator(name: str):
+    if not isinstance(name, str):
+        raise ValidationError('The name is not a string')
+    if not len(name) <= NAME_LENGTH:
+        raise ValidationError('Name %s is longer than %i letters' % (name, NAME_LENGTH))
+
+
+first_name_validator = _user_name_validator
+last_name_validator = _user_name_validator
+
+
+def user_role_validator(role: int):
+    if not isinstance(role, (int, Enum)):
+        raise ValidationError('The role has to be an integer or an Enum.')
+    if role not in ROLES:
+        raise ValidationError('The role %i is not valid.' % role)
 
 
 password_regex = re.compile(r'^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$^&*])[\w\d!@#$^&*]{6,25}$')

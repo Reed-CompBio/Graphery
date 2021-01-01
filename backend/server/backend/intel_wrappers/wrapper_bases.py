@@ -6,9 +6,10 @@ from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, Muta
 
 from django.core.exceptions import ValidationError
 from django.db import models, IntegrityError
+from django.db.models import Model
 
 from backend.intel_wrappers.validators import is_published_validator, dummy_validator
-from backend.model.mixins import PublishedMixin
+from backend.model.mixins import PublishedMixin, UUIDMixin
 
 
 class _EmptyValue:
@@ -35,7 +36,7 @@ class IntelWrapperBase(ABC):
                 raise
 
 
-_T = TypeVar('_T')
+_T = TypeVar('_T', bound=Model)
 
 
 class ModelWrapperBase(Generic[_T], ABC):
@@ -111,7 +112,10 @@ class SettableBase(ABC):
         return kwargs.get(var_name, None)
 
 
-class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_T], SettableBase, Generic[_T], ABC):
+_S = TypeVar('_S', bound=UUIDMixin)
+
+
+class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, Generic[_S], ABC):
     def __init__(self, validators: MutableMapping[str, Callable]):
         self.id: Optional[str] = None
         validators['id'] = dummy_validator
@@ -122,11 +126,11 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_T], SettableBase, Gene
 
         self.field_names = [*self.validators.keys()]
 
-    def load_model_var(self, loaded_model: _T) -> None:
+    def load_model_var(self, loaded_model: _S) -> None:
         super().load_model_var(loaded_model)
         self.id = loaded_model.id
 
-    def set_variables(self, **kwargs) -> AbstractWrapper[_T]:
+    def set_variables(self, **kwargs) -> AbstractWrapper[_S]:
         for key, value in kwargs.items():
             if key in self.field_names:
                 setattr(self, key, value)
@@ -189,19 +193,22 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_T], SettableBase, Gene
                                  .format(self.model_class, list(self.validators.keys()), e))
 
 
-class PublishedWrapper(AbstractWrapper[_T], Generic[_T], ABC):
+_V = TypeVar('_V', bound=PublishedMixin)
+
+
+class PublishedWrapper(AbstractWrapper[_V], Generic[_V], ABC):
     def __init__(self, validators: MutableMapping[str, Callable]):
         self.is_published: bool = False
         validators['is_published'] = is_published_validator
         super(PublishedWrapper, self).__init__(validators)
 
-    def load_model_var(self, loaded_model: PublishedMixin) -> None:
+    def load_model_var(self, loaded_model: _V) -> None:
         super().load_model_var(loaded_model)
         self.is_published = loaded_model.is_published
 
 
-class VariedContentWrapper(PublishedWrapper[_T], Generic[_T], ABC):
+class VariedContentWrapper(PublishedWrapper[_V], Generic[_V], ABC):
     def __init__(self, validators: MutableMapping[str, Callable]):
         super(VariedContentWrapper, self).__init__(validators)
 
-        self.model_class: _T = self.model_class
+        self.model_class: _V = self.model_class

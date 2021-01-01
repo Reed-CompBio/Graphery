@@ -14,7 +14,7 @@ services:
   - postgresql
 
 env:
-  - GRAPHERY_NORMAL_LOG_PATH=graphery_normal.log GRAPHERY_EXECUTION_LOG_PATH=graphery_execution.log PIPENV_IGNORE_VIRTUALENVS=1
+  - GRAPHERY_NORMAL_LOG_PATH=graphery_normal.log GRAPHERY_EXECUTION_LOG_PATH=graphery_execution.log GRAPHERY_API_LOG_PATH=graphery_api.log PIPENV_IGNORE_VIRTUALENVS=1 
 
 install:
   - sudo pip install pipenv

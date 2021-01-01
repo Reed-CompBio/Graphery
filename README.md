@@ -39,3 +39,8 @@ To activate users' local server:
 cd backend
 python user_server.py
 ```
+
+## Update Frequence 
+
+* general updates: weekly
+* feature updates: biweekly/monthly
