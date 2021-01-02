@@ -22,6 +22,25 @@ def stored_mock_user(django_db_setup, django_db_blocker):
 
 
 @pytest.fixture()
+def one_time_mock_user(django_db_setup, django_db_blocker):
+    with django_db_blocker.unblock():
+        u = User.objects.create(**{
+            'id': UUID('c3ab4052-4188-404b-a1a5-1dc7ce5112f7'),
+            'username': 'one_time_user',
+            'email': 'one-time-user@test.com',
+            'password': 'password',  # omitted since the password field is a encrypted version of it
+            'first_name': 'one',
+            'last_name': 'time',
+            'role': ROLES.VISITOR,
+        })
+
+    yield u
+
+    with django_db_blocker.unblock():
+        u.delete()
+
+
+@pytest.fixture()
 def temp_mock_user():
     return User(**{
         'id': UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'),
