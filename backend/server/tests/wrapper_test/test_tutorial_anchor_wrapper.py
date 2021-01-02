@@ -1,11 +1,11 @@
-from typing import Callable, Tuple, Sequence
 from uuid import UUID
 
 import pytest
 
-from backend.intel_wrappers.intel_wrapper import TutorialAnchorWrapper, CategoryWrapper
+from backend.intel_wrappers.intel_wrapper import TutorialAnchorWrapper
 from backend.intel_wrappers.validators import ValidationError
 from backend.model.TutorialRelatedModel import Category
+from tests.wrapper_test.factories import category_wrapper_factory
 from tests.wrapper_test.test_wrapper_helper import gen_wrapper_test_class
 
 
@@ -13,21 +13,6 @@ from tests.wrapper_test.test_wrapper_helper import gen_wrapper_test_class
 class TestTutorialAnchorWrapper:
     def test_func(self):
         pass
-
-
-def category_wrapper_factory(template: str, num: int) -> Tuple[Callable, Callable]:
-    def _maker() -> Sequence[CategoryWrapper]:
-        return [
-            CategoryWrapper().load_model(
-                Category.objects.create(category=template.format(i))
-            ) for i in range(num)
-        ]
-
-    def _destructor(category_wrappers: Sequence[CategoryWrapper]) -> None:
-        for wrapper in category_wrappers:
-            wrapper.delete_model()
-
-    return _maker, _destructor
 
 
 # noinspection PyRedeclaration
@@ -235,5 +220,4 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
             'is_published': True
         }, True, False, AssertionError, None),
     ]
-
 }, default_params={'is_published': False})
