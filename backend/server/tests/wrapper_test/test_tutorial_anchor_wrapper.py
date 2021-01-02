@@ -4,7 +4,6 @@ import pytest
 
 from backend.intel_wrappers.intel_wrapper import TutorialAnchorWrapper
 from backend.intel_wrappers.validators import ValidationError
-from backend.model.TutorialRelatedModel import Category
 from tests.wrapper_test.factories import category_wrapper_factory
 from tests.wrapper_test.test_wrapper_helper import gen_wrapper_test_class
 
@@ -25,14 +24,14 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
         {
             'url': 'test-set-var',
             'name': 'test set var',
-            'categories': [Category(category='temp cat')],
+            'categories': category_wrapper_factory('temp cat {}', 1),
             'level': 101,
             'section': 0,
         },
         {
             'url': 'test-set-var',
             'name': 'test set var',
-            'categories': [Category(category=f'temp cat {i}') for i in range(10)],
+            'categories': category_wrapper_factory('temp cat {}', 10),
             'level': 101,
             'section': 0,
         },
@@ -61,7 +60,7 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
         pytest.param({
             'url': 'test-make-new-model',
             'name': 'test make new model',
-            'categories': [Category(category='new model cat')],
+            'categories': category_wrapper_factory('make new model {}', 1),
             'level': 101,
             'section': 0,
         }),
@@ -120,8 +119,7 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
             'name': 'one time mock test tutorial mode',
             'is_published': True
         }),
-        pytest.param(
-            'one_time_mock_tutorial_anchor', {
+        pytest.param('one_time_mock_tutorial_anchor', {
 
             }
         )
