@@ -178,6 +178,62 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
             'level': 210,
             'is_published': True
         }, True, False, None, None, id='get old model')
+    ],
+    'test_finalize': [
+        pytest.param('one_time_mock_tutorial_anchor', {
+            'url': 'finalize-test-tutorial',
+            'name': 'finalize test tutorial',
+            'categories': category_wrapper_factory('full mod finalize {}', 5),
+            'section': 3,
+            'level': 220,
+            'is_published': False
+        }, True, True, None, None),
+        pytest.param('one_time_mock_tutorial_anchor', {
+            'url': 'finalize-test-tutorial',
+            'name': 'finalize test tutorial',
+            'section': 1,
+            'level': 212,
+            'is_published': False
+        }, True, False, None, None),
+        pytest.param('one_time_mock_tutorial_anchor', {
+            'url': 'finalize-test-tutorial',
+            'name': 'finalize test tutorial',
+            'categories': []
+        }, True, True, None, None),
+        pytest.param('one_time_mock_tutorial_anchor', {
+            'url': ''
+        }, True, True, ValidationError, None),
+        pytest.param(None, {
+            'url': 'finalize-mock-test-tutorial',
+            'name': 'finalize mock test tutorial',
+            'categories': category_wrapper_factory('finalize cat {}', 7),
+            'section': 1,
+            'level': 213,
+            'is_published': True
+        }, True, True, None, None),
+        pytest.param(None, {
+            'url': 'finalize-mock-test-tutorial',
+            'name': 'finalize mock test tutorial',
+            'categories': category_wrapper_factory('finalize cat {}', 10),
+            'section': 1,
+            'level': 213,
+        }, True, True, None, None),
+        pytest.param(None, {
+            'url': 'finalize-mock-test-tutorial',
+            'name': 'finalize mock test tutorial',
+            'categories': [],
+            'section': 1,
+            'level': 213,
+            'is_published': True
+        }, False, True, AssertionError, None),
+        pytest.param(None, {
+            'url': 'finalize-mock-test-tutorial',
+            'name': 'finalize mock test tutorial',
+            'categories': [],
+            'section': 1,
+            'level': 213,
+            'is_published': True
+        }, True, False, AssertionError, None),
     ]
 
 }, default_params={'is_published': False})

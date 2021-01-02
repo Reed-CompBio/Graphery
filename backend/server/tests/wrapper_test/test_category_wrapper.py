@@ -69,5 +69,34 @@ TestCategoryWrapper = gen_wrapper_test_class(wrapper_class=CategoryWrapper, test
         pytest.param('stored_mock_category', {
             'category': 'get_model_cat_mod'
         }, True, False, None, None, id='overwrite_model'),
+    ],
+    'test_finalize': [
+        pytest.param('one_time_mock_category', {
+            'category': 'finalize cat',
+            'is_published': False
+        }, True, True, None, None),
+        pytest.param('one_time_mock_category', {
+            'category': 'finalize cat',
+            'is_published': False
+        }, True, False, None, None),
+        pytest.param('one_time_mock_category', {
+            'category': 'only finalize cat'
+        }, True, True, None, None),
+        pytest.param('one_time_mock_category', {
+            'category': '',
+        }, True, True, ValidationError, None),
+        pytest.param(None, {
+            'category': 'finalize new cat',
+        }, True, True, None, None),
+        pytest.param(None, {
+            'category': 'finalize new published cat',
+            'is_published': True
+        }, True, True, None, None),
+        pytest.param(None, {
+            'category': 'finalize cat',
+        }, False, True, AssertionError, None),
+        pytest.param(None, {
+            'category': 'finalize cat',
+        }, True, False, AssertionError, None),
     ]
 }, default_params={'is_published': False})

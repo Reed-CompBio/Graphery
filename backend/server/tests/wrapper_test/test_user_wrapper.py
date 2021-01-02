@@ -71,7 +71,7 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
             'first_name': 'mo_mod',
             'last_name': 'ck_mod',
             'role': ROLES.VISITOR,
-        },)
+        }, )
     ],
     'test_validation': [
         pytest.param({'email': 'Abc.example.com'}, ValidationError, r'Email .* is not valid', id='email__error'),
@@ -119,6 +119,48 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
             'email': 'mock_user_modified@test.com',
             'last_name': 'ck_mod',
         }, True, False, None, None, id='overwrite_model_by_model'),
+    ],
+    'test_finalize': [
+        pytest.param('one_time_mock_user', {
+            'email': 'finalize_email@email.com',
+        }, True, True, None, None),
+        pytest.param('one_time_mock_user', {
+            'email': 'finalize_email@email.com',
+        }, True, False, None, None),
+        pytest.param('one_time_mock_user', {
+            'email': 'finalize_email@email.com',
+            'username': 'finalize_user_name',
+            'first_name': 'fina',
+            'last_name': 'lize',
+            'role': ROLES.TRANSLATOR,
+        }, True, True, None, None),
+        pytest.param('one_time_mock_user', {
+
+        }, True, True, None, None),
+        pytest.param('one_time_mock_user', {
+            'email': 'abc'
+        }, True, True, ValidationError, None),
+        pytest.param(None, {
+            'email': 'finalize_new_email@email.com',
+            'username': 'finalize_absolute_new_model',
+            'first_name': 'fina_new',
+            'last_name': 'lize_new',
+            'role': ROLES.VISITOR
+        }, True, True, None, None),
+        pytest.param(None, {
+            'email': 'finalize_new_email@email.com',
+            'username': 'finalize_absolute_new_model',
+            'first_name': 'fina_new',
+            'last_name': 'lize_new',
+            'role': ROLES.VISITOR
+        }, True, False, AssertionError, None),
+        pytest.param(None, {
+            'email': 'finalize_new_email@email.com',
+            'username': 'finalize_absolute_new_model',
+            'first_name': 'fina_new',
+            'last_name': 'lize_new',
+            'role': ROLES.VISITOR
+        }, False, True, AssertionError, None),
     ]
 }, default_params={
     'first_name': '',
