@@ -66,6 +66,21 @@ def stored_mock_category(django_db_setup, django_db_blocker):
 
 
 @pytest.fixture()
+def one_time_mock_category(django_db_setup, django_db_blocker):
+    with django_db_blocker.unblock():
+        c = Category.objects.create(**{
+            'id': UUID('c7b36800-f84f-4b3b-9077-6b8d389445af'),
+            'category': 'one_time_mock_category',
+            'is_published': True
+        })
+
+    yield c
+
+    with django_db_blocker.unblock():
+        c.delete()
+
+
+@pytest.fixture()
 def temp_mock_category():
     return Category(**{
         'id': UUID('a58912ae-0343-4827-9dc1-b8518faf13ff'),
