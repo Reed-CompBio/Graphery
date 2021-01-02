@@ -1,3 +1,5 @@
+from uuid import UUID
+
 import pytest
 
 from backend.intel_wrappers.intel_wrapper import UserWrapper
@@ -52,7 +54,9 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
                      marks=pytest.mark.xfail(raises=UserWrapper.model_class.DoesNotExist)),
         pytest.param('stored_mock_user', {'email': 'mock_user@test.com', },
                      marks=pytest.mark.xfail(raises=UserWrapper.model_class.DoesNotExist)),
-        pytest.param('stored_mock_user', {'username': 'mock_user', 'email': 'mock_user@test.com', }),
+        pytest.param('stored_mock_user', {'username': 'mock_user', 'email': 'mock_user@test.com', },
+                     marks=pytest.mark.xfail()),
+        pytest.param('stored_mock_user', {'id': UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59')})
     ],
     'test_overwrite': [
         pytest.param('temp_mock_user', {'username': 'mock_user_modified'}, ),
@@ -104,11 +108,17 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
             'last_name': 'w_user',
             'role': ROLES.VISITOR,
         }, True, True, None, None, id='make_new_model'),
+        pytest.param(None, {
+            'id': UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'),
+            'username': 'mock_user_modified',
+            'email': 'mock_user_modified@test.com',
+            'last_name': 'ck_mod',
+        }, True, False, None, None, id='overwrite_model_by_id'),
         pytest.param('stored_mock_user', {
             'username': 'mock_user_modified',
             'email': 'mock_user_modified@test.com',
             'last_name': 'ck_mod',
-        }, True, False, None, None, id='overwrite_model'),
+        }, True, False, None, None, id='overwrite_model_by_model'),
     ]
 }, default_params={
     'first_name': '',

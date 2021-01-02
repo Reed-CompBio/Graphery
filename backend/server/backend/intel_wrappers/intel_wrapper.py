@@ -52,7 +52,7 @@ class UserWrapper(AbstractWrapper):
 
     def retrieve_model(self) -> None:
         # TODO do we need exact two arguments to get the model?
-        self.model = User.objects.get(username=self.username, email=self.email)
+        self.model = User.objects.get(id=self.id)
 
     def make_new_model(self) -> None:
         self.model = User(username=self.username,
