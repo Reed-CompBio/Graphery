@@ -124,5 +124,5 @@ def level_validator(level: int):
 
 
 def section_validator(section: int):
-    if not isinstance(section, int) or section > 9 or section <= 0:
+    if not isinstance(section, int) or section > 9 or section < 0:
         raise ValidationError('`section` must be a positive number that\' smaller than 10')
