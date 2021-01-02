@@ -1,4 +1,4 @@
-from typing import Callable, Sequence
+from typing import Callable, Sequence, Any, Optional
 
 import pytest
 from django.db.models import Model
@@ -15,10 +15,18 @@ def get_fixture(request):
 
 @pytest.fixture()
 def model_factory(django_db_setup, django_db_blocker):
-    def _model_factory(model_maker: Callable, model_destructor: Callable = lambda *args: None) -> Sequence[Model]:
-        with django_db_blocker.unblock():
-            models = model_maker()
+    _cache: Any = None
+    _destructor: Optional[Callable] = None
 
+    def _model_factory(model_maker: Callable, model_destructor: Callable = None) -> Sequence[Model]:
+        nonlocal _cache, _destructor
+        with django_db_blocker.unblock():
+            _cache = models = model_maker()
+            _destructor = model_destructor
         return models
 
-    return _model_factory
+    yield _model_factory
+
+    if _destructor is not None:
+        with django_db_blocker.unblock():
+            _destructor(_cache)
