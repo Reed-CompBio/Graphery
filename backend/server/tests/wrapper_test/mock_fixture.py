@@ -106,12 +106,3 @@ def mock_code(mock_tutorial):
         'tutorial': mock_tutorial,
         'code': 'def hello(): \tprint("hello world")'
     })
-
-
-@pytest.fixture()
-@pytest.mark.django_db
-def get_fixture(request):
-    def _get_fixture(name):
-        return request.getfixturevalue(name)
-
-    return _get_fixture
