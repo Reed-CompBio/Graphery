@@ -1,0 +1,92 @@
+{
+  "tooltips": {
+    "graphInfo": "Graph Info",
+    "Share": "Share",
+    "runCodeOnTheCloud": "Run code on the cloud",
+    "runCodeLocally": "Run code locally",
+    "copyCodes": "Copy codes",
+    "pasteCodes": "Paste codes",
+    "showEditorAndMore": "Show editor and more",
+    "oneStepBack": "One Step Back",
+    "oneStepForward": "One Step Forward",
+    "fiveStepsBack": "Five Steps Back",
+    "fiveStepsForward": "Five Steps Forward",
+    "autoRun": "Auto Run",
+    "showLabelAlways": "Show Slider Always",
+    "notShowLabelAlways": "Not Always Show Slider Label",
+    "editor": "Editor",
+    "howTo": "How To",
+    "notAvailableCurrently": "Not Available Currently",
+    "goToSettingsToChangeEditingPermission": "Please Go To Settings To Change Editing Permission",
+    "changeVariableListOrientation": "Change Variable List Orientation",
+    "openWorkSpace": "Open Work Space"
+  },
+  "nav": {
+    "Home": "Home",
+    "Tutorials": "Tutorials",
+    "Graphs": "Graphs",
+    "About": "About",
+    "Account": "Account",
+    "Settings": "Settings",
+    "Feedback": "Feedback/Suggest New",
+    "Login": "Login",
+    "EmailMe": "Email Me"
+  },
+  "collectionPage": {
+    "Filter": "Filter",
+    "searchHint": "Please use keywords. Press enter to search.",
+    "Categories": "Categories",
+    "ReadMore": "Read More",
+    "PlayWithIt": "Play With It"
+  },
+  "settings": {
+    "Display": "Display",
+    "graphRender": "Graph Render",
+    "editorSettings": "Editor Settings",
+    "performanceTip": "Turn on to gain performance",
+    "darkMode": "Dark Mode",
+    "graphBackgroundDark": "Graph Background Dark",
+    "hideEdgesWhenRendering": "Hide Edges When Rendering (Moving Graphs) ",
+    "renderViewportOnly": "Render Viewport Only",
+    "motionBlurEnabled": "Motion Blur Enabled",
+    "motionSensitivityLevel": "Motion Sensitivity Level",
+    "splitPos": "Tutorial Page Default Split Pos",
+    "softTab": "Soft Tab",
+    "lineWrap": "Line Wrap",
+    "tabNum": "Tab Space Number",
+    "fontSize": "Font Size",
+    "showTooltips": "Show Tooltips",
+    "cardsDisplayedNum": "Number of Search Results in Each Page",
+    "enableEditing": "Enable Editing"
+  },
+  "notify": {
+    "editorEntry": "Open code editor using {...} button"
+  },
+  "license": {
+    "licenseInfo1": "All the articles without special specification are licensed under a",
+    "licenseInfo2": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License"
+  },
+  "account": {
+    "Username": "Username",
+    "Email": "Email",
+    "Password": "Password",
+    "Role": "Role",
+    "Login": "Login",
+    "LogOut": "Log out",
+    "Register": "Register",
+    "ControlPanel": "Control Panel",
+    "DjangoAdminPage": "Django Admin Page",
+    "noNewAccount": "We don't accept new accounts for now.",
+    "notEmpty": "It cannot be empty",
+    "twoPwdNotMatch": "Two passwords must match!",
+    "ConfirmPassword": "Confirm Password",
+    "InvitationCode": "Invitation Code"
+  },
+  "dialog": {
+    "ok": "OK!",
+    "mobileWarning": "We believe coding on a phone is a torture, so the mobile view is not perfected. Please use a larger screen to get the full experience"
+  },
+  "metaInfo": {
+    "Tutorial": "Tutorial"
+  }
+}
