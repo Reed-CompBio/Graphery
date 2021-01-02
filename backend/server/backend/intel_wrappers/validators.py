@@ -71,7 +71,7 @@ def code_validator(code: str):
 
 def non_empty_text_validator(text: str):
     if not isinstance(text, str) or not text.strip():
-        raise ValidationError('`abstract` must be a non-empty string.')
+        raise ValidationError('input must be a non-empty string.')
 
 
 def graph_priority_validator(priority: int):
@@ -124,5 +124,5 @@ def level_validator(level: int):
 
 
 def section_validator(section: int):
-    if not isinstance(section, int) or section > 9 or section < 0:
+    if not isinstance(section, int) or section > 9 or section <= 0:
         raise ValidationError('`section` must be a positive number that\' smaller than 10')
