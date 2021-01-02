@@ -19,9 +19,6 @@ def model_factory(django_db_setup, django_db_blocker):
         with django_db_blocker.unblock():
             models = model_maker()
 
-        yield models
-
-        with django_db_blocker.unblock():
-            model_destructor(models)
+        return models
 
     return _model_factory

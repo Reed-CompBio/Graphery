@@ -1,4 +1,4 @@
-from typing import Type, Mapping, Callable, Optional, Sequence, Any
+from typing import Type, Mapping, Callable, Optional, Sequence, Any, Tuple, Dict
 
 import pytest
 from django.db.models import Manager
@@ -46,6 +46,25 @@ def test_variable_equality(django_db_blocker,
     return True
 
 
+def is_factory_tuple(value: Any) -> bool:
+    return isinstance(value, Tuple) and len(value) == 2 \
+           and all(hasattr(item, '__name__') for item in value) and \
+           value[0].__name__.endswith('_maker') and value[1].__name__.endswith('_destructor')
+
+
+def get_actual_value(value: Any, factory_maker: Callable) -> Any:
+    if is_factory_tuple(value):
+        return factory_maker(*value)
+    return value
+
+
+def remake_input_mapping(mapping: Dict, factory_maker: Callable) -> Dict:
+    for key, value in mapping.items():
+        mapping[key] = get_actual_value(value, factory_maker)
+
+    return mapping
+
+
 def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                            test_params: Mapping,
                            default_params: Mapping = None) -> Type:
@@ -83,7 +102,9 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                                            manager_prepared=True)
 
         @apply_param_wrapper('variable_dict')
-        def test_set_variables(self, django_db_blocker, variable_dict: Mapping):
+        def test_set_variables(self, django_db_blocker, model_factory, variable_dict: Dict):
+            remake_input_mapping(variable_dict, model_factory)
+
             model_wrapper = self.wrapper_type()
             model_wrapper.set_variables(**variable_dict)
             for key in model_wrapper.validators.keys():
@@ -104,7 +125,9 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
 
         @apply_param_wrapper('init_params')
         @pytest.mark.django_db
-        def test_making_new_model(self, django_db_blocker, init_params: Mapping):
+        def test_making_new_model(self, django_db_blocker, model_factory, init_params: Dict):
+            remake_input_mapping(init_params, model_factory)
+
             model_wrapper = self.wrapper_type().set_variables(**init_params)
             assert model_wrapper.model is None
             model_wrapper.make_new_model()
@@ -128,8 +151,10 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
             assert self.wrapper_type.model_class.objects.filter(id=created_model.id).count() == 0
 
         @apply_param_wrapper('mock_instance_name, required_info')
-        def test_retrieve_model(self, get_fixture, django_db_setup, django_db_blocker,
-                                mock_instance_name, required_info):
+        def test_retrieve_model(self, get_fixture, django_db_setup, django_db_blocker, model_factory,
+                                mock_instance_name: str, required_info: Dict):
+            remake_input_mapping(required_info, model_factory)
+
             model_instance = get_fixture(mock_instance_name)
             model_wrapper = self.wrapper_type().set_variables(**required_info)
             with django_db_blocker.unblock():
@@ -140,8 +165,10 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                                    manager_prepared=True)
 
         @apply_param_wrapper('mock_instance_name, modified_fields')
-        def test_overwrite(self, get_fixture, django_db_blocker,
-                           mock_instance_name: str, modified_fields: Mapping):
+        def test_overwrite(self, get_fixture, django_db_blocker, model_factory,
+                           mock_instance_name: str, modified_fields: Dict):
+            remake_input_mapping(modified_fields, model_factory)
+
             model_instance = get_fixture(mock_instance_name)
 
             with django_db_blocker.unblock():
@@ -164,8 +191,10 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                                        manager_prepared=True)
 
         @apply_param_wrapper('init_params, expected_error, error_text_match')
-        def test_validation(self, init_params: Mapping, expected_error: Optional[Type[Exception]],
-                            error_text_match: str):
+        def test_validation(self, model_factory,
+                            init_params: Dict, expected_error: Optional[Type[Exception]], error_text_match: str):
+            remake_input_mapping(init_params, model_factory)
+
             model_wrapper = self.wrapper_type().set_variables(**init_params)
 
             if expected_error is None:
@@ -175,9 +204,12 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                     model_wrapper.validate()
 
         @apply_param_wrapper('mock_instance_name, init_params, validate, expected_error, error_text_match')
-        def test_get_model(self, get_fixture, django_db_blocker,
-                           mock_instance_name: Optional[str], init_params: Optional[Mapping],
+        def test_get_model(self, get_fixture, django_db_blocker, model_factory,
+                           mock_instance_name: Optional[str], init_params: Optional[Dict],
                            validate: bool, expected_error: Optional[Type[Exception]], error_text_match: str):
+            if init_params is not None:
+                remake_input_mapping(init_params, model_factory)
+
             model_wrapper = self.wrapper_type()
 
             if mock_instance_name is not None:

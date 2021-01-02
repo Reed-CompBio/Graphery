@@ -1,3 +1,4 @@
+from typing import Callable, Tuple, Sequence
 from uuid import UUID
 
 import pytest
@@ -12,6 +13,21 @@ from tests.wrapper_test.test_wrapper_helper import gen_wrapper_test_class
 class TestTutorialAnchorWrapper:
     def test_func(self):
         pass
+
+
+def category_wrapper_factory(template: str, num: int) -> Tuple[Callable, Callable]:
+    def _maker() -> Sequence[CategoryWrapper]:
+        return [
+            CategoryWrapper().load_model(
+                Category.objects.create(category=template.format(i))
+            ) for i in range(num)
+        ]
+
+    def _destructor(category_wrappers: Sequence[CategoryWrapper]) -> None:
+        for wrapper in category_wrappers:
+            wrapper.delete_model()
+
+    return _maker, _destructor
 
 
 # noinspection PyRedeclaration
@@ -67,7 +83,7 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
         pytest.param({
             'url': 'test-make-new-model',
             'name': 'test make new model',
-            'categories': [],
+            'categories': category_wrapper_factory('test making new {}', 10),
             'level': 101,
             'section': 0,
         }),
@@ -86,7 +102,7 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
         pytest.param('one_time_mock_tutorial_anchor', {
             'url': 'one_time_mock_test_tutorial_mod',
             'name': 'one time mock test tutorial mode',
-            'categories': [],
+            'categories': category_wrapper_factory('test overwrite {}', 5),
             'section': 2,
             'level': 222,
             'is_published': False
