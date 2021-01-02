@@ -198,7 +198,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, Gene
             self.overwrite_model()
 
     def finalize_model(self, overwrite: bool = True, validate: bool = True) -> None:
-        with transaction.atomic:
+        with transaction.atomic():
             self.prepare_model()
             is_newly_created = self.get_model(validate=validate)
             if is_newly_created:
