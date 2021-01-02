@@ -184,6 +184,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, Gene
         except (self.model_class.DoesNotExist, ValidationError):
             if validate:
                 self.make_new_model()
+                self.id = self.model.id
                 return True
             else:
                 raise AssertionError('Cannot make new model without validations!')
@@ -202,6 +203,8 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, Gene
             self.prepare_model()
             is_newly_created = self.get_model(validate=validate)
             if is_newly_created:
+                if not overwrite or not validate:
+                    raise AssertionError('When a model is created, the overwrite flag and validate flag must be True.')
                 self.save_model()
             self._finalize_model_helper(overwrite=overwrite)
             if overwrite and validate:
