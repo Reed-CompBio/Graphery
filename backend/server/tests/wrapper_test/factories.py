@@ -1,6 +1,8 @@
 import random
 from typing import Tuple, Callable, Sequence, Type, TypeVar, Mapping
 
+from django.db.models import Model
+
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, TutorialAnchorWrapper, UserWrapper
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 from backend.model.UserModel import ROLES
@@ -43,7 +45,7 @@ def category_wrapper_factory(template: str, num: int) -> FactoryType:
     ])
 
 
-def tutorial_anchor_factory(url_template: str, name_template: str, num: int, rank_base_num: int = 500) -> FactoryType:
+def tutorial_anchor_wrapper_factory(url_template: str, name_template: str, num: int, rank_base_num: int = 500) -> FactoryType:
     return _general_factory(TutorialAnchorWrapper, [
         {
             'url': url_template.format(i),
@@ -52,3 +54,7 @@ def tutorial_anchor_factory(url_template: str, name_template: str, num: int, ran
             'section': random.randint(0, 9)
         } for i in range(num)
     ])
+
+
+def wrappers_to_models(wrappers: Sequence[_T]) -> Sequence[Model]:
+    return [wrapper.model for wrapper in wrappers]

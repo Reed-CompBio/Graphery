@@ -5,6 +5,7 @@ import pytest
 from django.db.models import Manager
 
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
+from tests.wrapper_test.factories import wrappers_to_models
 
 
 def _apply_param_wrapper(param_string: str, param_mapping: Mapping) -> Callable:
@@ -68,15 +69,15 @@ def is_factory_tuple(value: Any) -> bool:
            value[0].__name__.endswith('_maker') and value[1].__name__.endswith('_destructor')
 
 
-def get_actual_value(value: Any, factory_maker: Callable) -> Any:
+def get_actual_value(value: Any, factory_maker: Callable, wrapper_to_model: bool) -> Any:
     if is_factory_tuple(value):
-        return factory_maker(*value)
+        return wrappers_to_models(factory_maker(*value)) if wrapper_to_model else factory_maker(*value)
     return value
 
 
-def remake_input_mapping(mapping: Dict, factory_maker: Callable) -> Dict:
+def remake_input_mapping(mapping: Dict, factory_maker: Callable, wrapper_to_model: bool = False) -> Dict:
     for key, value in mapping.items():
-        mapping[key] = get_actual_value(value, factory_maker)
+        mapping[key] = get_actual_value(value, factory_maker, wrapper_to_model)
 
     return mapping
 
@@ -119,7 +120,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
 
         @apply_param_wrapper('variable_dict')
         def test_set_variables(self, django_db_blocker, model_factory, variable_dict: Dict):
-            remake_input_mapping(variable_dict, model_factory)
+            remake_input_mapping(variable_dict, model_factory, wrapper_to_model=True)
 
             model_wrapper = self.wrapper_type()
             model_wrapper.set_variables(**variable_dict)
