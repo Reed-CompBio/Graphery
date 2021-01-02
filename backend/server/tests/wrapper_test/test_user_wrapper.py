@@ -89,13 +89,13 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
             'first_name': 'no_mo',
             'last_name': 'no_ck',
             'role': ROLES.VISITOR,
-        }, False, AssertionError, 'Cannot make new model without validations!',
+        }, False, False, AssertionError, 'Cannot make new model without validations!',
                      id='no_validate_no_model_assertion_err'),
         pytest.param('stored_mock_user', {
             'first_name': 'mo_mod',
             'last_name': 'ck_mod',
             'role': ROLES.TRANSLATOR,
-        }, False, AssertionError, 'Cannot overwrite model without validations!',
+        }, False, False, AssertionError, 'Cannot overwrite model without validations!',
                      id='no_validate_cant_overwrite_err', marks=pytest.mark.skip(reason='api change')),
         pytest.param(None, {
             'email': 'get_new_user@email.com',
@@ -103,12 +103,12 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
             'first_name': 'get_ne',
             'last_name': 'w_user',
             'role': ROLES.VISITOR,
-        }, True, None, None, id='make_new_model'),
+        }, True, True, None, None, id='make_new_model'),
         pytest.param('stored_mock_user', {
             'username': 'mock_user_modified',
             'email': 'mock_user_modified@test.com',
             'last_name': 'ck_mod',
-        }, True, None, None, id='overwrite_model'),
+        }, True, False, None, None, id='overwrite_model'),
     ]
 }, default_params={
     'first_name': '',

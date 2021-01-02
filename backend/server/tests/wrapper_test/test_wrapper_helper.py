@@ -203,10 +203,12 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                 with pytest.raises(expected_error, match=error_text_match):
                     model_wrapper.validate()
 
-        @apply_param_wrapper('mock_instance_name, init_params, validate, expected_error, error_text_match')
+        @apply_param_wrapper('mock_instance_name, init_params, validate, is_new_model, '
+                             'expected_error, error_text_match')
         def test_get_model(self, get_fixture, django_db_blocker, model_factory,
                            mock_instance_name: Optional[str], init_params: Optional[Dict],
-                           validate: bool, expected_error: Optional[Type[Exception]], error_text_match: str):
+                           validate: bool, is_new_model: bool,
+                           expected_error: Optional[Type[Exception]], error_text_match: str):
             if init_params is not None:
                 remake_input_mapping(init_params, model_factory)
 
@@ -222,7 +224,8 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
 
             with django_db_blocker.unblock():
                 if expected_error is None:
-                    model_wrapper.get_model(validate=validate)
+                    is_new_model = model_wrapper.get_model(validate=validate)
+                    assert is_new_model == is_new_model
                 else:
                     with pytest.raises(expected_error, match=error_text_match):
                         model_wrapper.get_model(validate=validate)

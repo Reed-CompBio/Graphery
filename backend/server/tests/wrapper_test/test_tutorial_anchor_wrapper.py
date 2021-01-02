@@ -116,6 +116,9 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
             'is_published': False
         }),
         pytest.param('one_time_mock_tutorial_anchor', {
+            'categories': category_wrapper_factory('test overwrite cat only {}', 7)
+        }),
+        pytest.param('one_time_mock_tutorial_anchor', {
             'url': 'one_time_mock_test_tutorial_mod',
             'name': 'one time mock test tutorial mode',
             'categories': [],
@@ -158,7 +161,7 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
             'section': 2,
             'level': 222,
             'is_published': False
-        }, False, AssertionError, 'Cannot make new model without validations!'),
+        }, False, False, AssertionError, 'Cannot make new model without validations!'),
         pytest.param(None, {
             'url': 'one-time-mock-test-tutorial-mod',
             'name': 'one time mock test tutorial mode',
@@ -166,7 +169,7 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
             'section': 2,
             'level': 222,
             'is_published': False
-        }, True, None, None),
+        }, True, True, None, None, id='make new model'),
         pytest.param('stored_mock_tutorial_anchor', {
             'id': UUID('b0015ac8-5376-4b99-b649-6f25771dbd91'),
             'url': 'mock-test-tutorial',
@@ -174,7 +177,7 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
             'section': 1,
             'level': 210,
             'is_published': True
-        }, True, None, None)
+        }, True, False, None, None, id='get old model')
     ]
 
 }, default_params={'is_published': False})
