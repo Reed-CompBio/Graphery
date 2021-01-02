@@ -3,6 +3,7 @@ import re
 from enum import Enum
 from typing import Sequence, Mapping, Union
 
+from backend.model.TutorialRelatedModel import GraphPriority
 from backend.model.UserModel import ROLES
 
 
@@ -78,7 +79,7 @@ def non_empty_text_validator(text: str):
 
 
 def graph_priority_validator(priority: int):
-    if priority not in {60, 40, 20}:
+    if priority not in GraphPriority:
         raise ValidationError(f'`GraphPriority` {priority} is not valid.')
 
 
@@ -88,7 +89,12 @@ def json_validator(js: Union[str, Mapping, Sequence]):
             json.loads(js)
         except Exception as e:
             raise ValidationError(f'JSON string is not valid. Error: {e}')
-    elif not isinstance(js, (Mapping, Sequence)):
+    elif isinstance(js, (Mapping, Sequence)):
+        try:
+            json.dumps(js)
+        except Exception as e:
+            raise ValidationError(f'JSON object is not valid. Error: {e}')
+    else:
         raise ValidationError('JSON must a string, a mapping, or a sequence.')
 
 
