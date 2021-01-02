@@ -155,15 +155,13 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
 
                 if key in modified_fields:
                     expected_value = modified_fields[key]
-                    test_variable_equality(django_db_blocker=django_db_blocker,
-                                           loaded_var=loaded_value,
-                                           expected_var=expected_value)
                 else:
                     expected_value = getattr(model_wrapper, key)
-                    test_variable_equality(django_db_blocker=django_db_blocker,
-                                           loaded_var=loaded_value,
-                                           expected_var=expected_value,
-                                           manager_prepared=True)
+
+                test_variable_equality(django_db_blocker=django_db_blocker,
+                                       loaded_var=loaded_value,
+                                       expected_var=expected_value,
+                                       manager_prepared=True)
 
         @apply_param_wrapper('init_params, expected_error, error_text_match')
         def test_validation(self, init_params: Mapping, expected_error: Optional[Type[Exception]],
@@ -184,7 +182,8 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
 
             if mock_instance_name is not None:
                 model_instance = get_fixture(mock_instance_name)
-                model_wrapper.load_model(model_instance)
+                with django_db_blocker.unblock():
+                    model_wrapper.load_model(model_instance)
 
             if init_params is not None:
                 model_wrapper.set_variables(**init_params)

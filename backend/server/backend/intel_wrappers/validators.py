@@ -74,7 +74,7 @@ def code_validator(code: str):
 
 def non_empty_text_validator(text: str):
     if not isinstance(text, str) or not text.strip():
-        raise ValidationError('`abstract` must be a non-empty string.')
+        raise ValidationError('input must be a non-empty string.')
 
 
 def graph_priority_validator(priority: int):

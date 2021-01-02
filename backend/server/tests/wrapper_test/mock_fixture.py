@@ -2,7 +2,6 @@ from uuid import UUID
 
 import pytest
 
-from backend.intel_wrappers.intel_wrapper import CategoryWrapper
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, GraphPriority, Code
 from backend.model.UserModel import User, ROLES
 
