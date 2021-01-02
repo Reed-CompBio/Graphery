@@ -9,7 +9,7 @@ from backend.intel_wrappers.validators import dummy_validator, category_validato
     graph_priority_validator, json_validator, email_validator, username_validator, password_validator, FAKE_PASSWORD, \
     tutorial_anchors_validator, level_validator, section_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase, ENUS, ZHCN, ENUSGraphContent, \
-    ZHCNGraphContent
+    ZHCNGraphContent, ESGraphContent, ES
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
 from backend.model.UserModel import User
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper, VariedContentWrapper
@@ -426,6 +426,10 @@ class ZHCNTutorialContentWrapper(TutorialTranslationContentWrapper):
     model_class = ZHCN
 
 
+class ESTutorialContentWrapper(TutorialTranslationContentWrapper):
+    model_class = ES
+
+
 class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationBase]]):
     def __init__(self):
         self.title: Optional[str] = None
@@ -489,6 +493,10 @@ class ENUSGraphContentWrapper(GraphTranslationContentWrapper):
 
 class ZHCNGraphContentWrapper(GraphTranslationContentWrapper):
     model_class = ZHCNGraphContent
+
+
+class ESGraphContentWrapper(GraphTranslationContentWrapper):
+    model_class = ESGraphContent
 
 
 FixedTypeWrapper = Union[UserWrapper,

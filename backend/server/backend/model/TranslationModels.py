@@ -41,6 +41,12 @@ class ZHCN(TranslationBase):
         verbose_name = 'ZH-CN translation'
 
 
+@add_trans_table
+class ES(TranslationBase):
+    class Meta:
+        verbose_name = 'ES translation'
+
+
 class GraphTranslationBase(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
     title = models.CharField(max_length=100, unique=True, blank=False, null=False)
     abstract_md = models.TextField()
@@ -61,6 +67,11 @@ class ENUSGraphContent(GraphTranslationBase):
 
 @add_graph_info_trans_table
 class ZHCNGraphContent(GraphTranslationBase):
+    pass
+
+
+@add_graph_info_trans_table
+class ESGraphContent(GraphTranslationBase):
     pass
 
 
