@@ -224,8 +224,8 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
 
             with django_db_blocker.unblock():
                 if expected_error is None:
-                    is_new_model = model_wrapper.get_model(validate=validate)
-                    assert is_new_model == is_new_model
+                    new_model = model_wrapper.get_model(validate=validate)
+                    assert new_model == is_new_model
                 else:
                     with pytest.raises(expected_error, match=error_text_match):
                         model_wrapper.get_model(validate=validate)
