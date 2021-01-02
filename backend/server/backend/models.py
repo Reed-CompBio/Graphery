@@ -1,9 +1,9 @@
 from .model.UserModel import *
 from .model.TutorialRelatedModel import \
     Category, Tutorial, Graph, Code, ExecResultJson, Uploads
-from .model.TranslationModels import ENUS, ZHCN, ENUSGraphContent, ZHCNGraphContent
+from .model.TranslationModels import ENUS, ZHCN, ENUSGraphContent, ZHCNGraphContent, ESGraphContent, ES
 
 model_list = [User,
               Category, Tutorial, Graph, Code, ExecResultJson, Uploads,
-              ENUS, ZHCN,
-              ENUSGraphContent, ZHCNGraphContent]
+              ENUS, ZHCN, ES,
+              ENUSGraphContent, ZHCNGraphContent, ESGraphContent]
