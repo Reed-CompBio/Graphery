@@ -62,23 +62,26 @@ class GraphTranslationBase(PublishedMixin, TimeDateMixin, UUIDMixin, models.Mode
 
 @add_graph_info_trans_table
 class ENUSGraphContent(GraphTranslationBase):
-    pass
+    class Meta:
+        verbose_name = 'EN-US graph content'
 
 
 @add_graph_info_trans_table
 class ZHCNGraphContent(GraphTranslationBase):
-    pass
+    class Meta:
+        verbose_name = 'ZH-CN graph content'
 
 
 @add_graph_info_trans_table
 class ESGraphContent(GraphTranslationBase):
-    pass
+    class Meta:
+        verbose_name = 'ES graph content'
 
 
-T = TypeVar("T")
+_T = TypeVar("_T")
 
 
-def make_dummy_content(content_model: Type[T]) -> T:
+def make_dummy_content(content_model: Type[_T]) -> _T:
     return content_model(id=FAKE_UUID,
                          title=NULL_CONTENT_TITLE,
                          abstract='This is an empty anchor. No Text content exists. We are working on this!',
