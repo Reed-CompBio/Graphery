@@ -10,7 +10,7 @@ from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, GraphP
 from backend.model.UserModel import User, ROLES
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session')
 def stored_mock_user(django_db_setup, django_db_blocker):
     with django_db_blocker.unblock():
         u = User.objects.create(**{
@@ -57,7 +57,7 @@ def temp_mock_user():
     })
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session')
 def stored_mock_category(django_db_setup, django_db_blocker):
     with django_db_blocker.unblock():
         c = Category.objects.create(**{
@@ -93,7 +93,7 @@ def temp_mock_category():
     })
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session')
 def stored_mock_tutorial_anchor(django_db_setup, django_db_blocker, stored_mock_category):
     with django_db_blocker.unblock():
         t = Tutorial.objects.create(**{
@@ -126,7 +126,7 @@ def one_time_mock_tutorial_anchor(django_db_setup, django_db_blocker, stored_moc
         t.delete()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session')
 def stored_mock_graph(django_db_setup, django_db_blocker,
                       stored_mock_user, stored_mock_category, stored_mock_tutorial_anchor):
     with django_db_blocker.unblock():
@@ -169,7 +169,7 @@ def one_time_mock_graph(django_db_setup, django_db_blocker,
         g.delete()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session')
 def stored_mock_code(django_db_setup, django_db_blocker, stored_mock_tutorial_anchor):
     with django_db_blocker.unblock():
         return Code.objects.create(**{
@@ -194,7 +194,7 @@ def one_time_mock_code(django_db_setup, django_db_blocker, one_time_mock_tutoria
         c.delete()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session')
 def stored_mock_execution_result(django_db_setup, django_db_blocker,
                                  stored_mock_code, stored_mock_graph):
     with django_db_blocker.unblock():
@@ -235,7 +235,7 @@ _ONE_TIME_TEST_FILE = _FILE_PATH_ROOT / 'one_time_temp'
 _ADD_ON_TEST_FILE = _FILE_PATH_ROOT / 'add_on_temp'
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session')
 def stored_test_file():
     with open(_STORED_TEST_FILE, 'w+') as test_file:
         test_file.write('temp')
@@ -262,7 +262,7 @@ def add_on_test_file():
     os.remove(_ADD_ON_TEST_FILE)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session')
 def stored_uploads(django_db_setup, django_db_blocker, stored_test_file):
     with django_db_blocker.unblock():
         return Uploads.objects.create(
