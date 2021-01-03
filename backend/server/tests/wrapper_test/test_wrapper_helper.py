@@ -57,17 +57,17 @@ def _test_variable(django_db_blocker,
     return True
 
 
-def test_variable_equality(django_db_blocker,
-                           loaded_var: Any,
-                           expected_var: Any,
-                           manager_prepared: bool = False) -> bool:
+def _test_variable_equality(django_db_blocker,
+                            loaded_var: Any,
+                            expected_var: Any,
+                            manager_prepared: bool = False) -> bool:
     return _test_variable(django_db_blocker, loaded_var, expected_var, eq, manager_prepared)
 
 
-def test_variable_non_equality(django_db_blocker,
-                               loaded_var: Any,
-                               expected_var: Any,
-                               manager_prepared: bool = False) -> bool:
+def _test_variable_non_equality(django_db_blocker,
+                                loaded_var: Any,
+                                expected_var: Any,
+                                manager_prepared: bool = False) -> bool:
     return _test_variable(django_db_blocker, loaded_var, expected_var, ne, manager_prepared)
 
 
@@ -146,10 +146,10 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                 for key in model_wrapper.validators.keys():
                     field_value = getattr(model_wrapper, key)
                     loaded_var = getattr(model_instance, key)
-                    test_variable_equality(django_db_blocker=django_db_blocker,
-                                           loaded_var=loaded_var,
-                                           expected_var=field_value,
-                                           manager_prepared=True)
+                    _test_variable_equality(django_db_blocker=django_db_blocker,
+                                            loaded_var=loaded_var,
+                                            expected_var=field_value,
+                                            manager_prepared=True)
 
         @apply_param_wrapper('variable_dict')
         def test_set_variables(self, django_db_blocker, model_factory, get_fixture,
@@ -164,14 +164,14 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
 
                 if key in variable_dict:
                     expected_var = variable_dict[key]
-                    test_variable_equality(django_db_blocker=django_db_blocker,
-                                           loaded_var=loaded_value,
-                                           expected_var=expected_var)
+                    _test_variable_equality(django_db_blocker=django_db_blocker,
+                                            loaded_var=loaded_value,
+                                            expected_var=expected_var)
                 elif key in self.default_args:
                     expected_var = self.default_args[key]
-                    test_variable_equality(django_db_blocker=django_db_blocker,
-                                           loaded_var=loaded_value,
-                                           expected_var=expected_var)
+                    _test_variable_equality(django_db_blocker=django_db_blocker,
+                                            loaded_var=loaded_value,
+                                            expected_var=expected_var)
                 else:
                     assert loaded_value is None
 
@@ -198,9 +198,9 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                     else:
                         # which should never happen
                         raise Exception(f'bad testing suit: mysterious key {key}')
-                    test_variable_equality(django_db_blocker=django_db_blocker,
-                                           loaded_var=loaded_instance_var,
-                                           expected_var=expected_value)
+                    _test_variable_equality(django_db_blocker=django_db_blocker,
+                                            loaded_var=loaded_instance_var,
+                                            expected_var=expected_value)
             with django_db_blocker.unblock():
                 # the object is created but not injected to db
                 assert self.wrapper_type.model_class.objects.filter(id=created_model.id).count() == 0
@@ -214,10 +214,10 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
             model_wrapper = self.wrapper_type().set_variables(**required_info)
             with django_db_blocker.unblock():
                 model_wrapper.retrieve_model()
-            test_variable_equality(django_db_blocker=django_db_blocker,
-                                   loaded_var=model_wrapper.model,
-                                   expected_var=model_instance,
-                                   manager_prepared=True)
+            _test_variable_equality(django_db_blocker=django_db_blocker,
+                                    loaded_var=model_wrapper.model,
+                                    expected_var=model_instance,
+                                    manager_prepared=True)
 
         @apply_param_wrapper('mock_instance_name, modified_fields')
         def test_overwrite(self, get_fixture, django_db_blocker, model_factory,
@@ -240,10 +240,10 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                 else:
                     expected_value = getattr(model_wrapper, key)
 
-                test_variable_equality(django_db_blocker=django_db_blocker,
-                                       loaded_var=loaded_value,
-                                       expected_var=expected_value,
-                                       manager_prepared=True)
+                _test_variable_equality(django_db_blocker=django_db_blocker,
+                                        loaded_var=loaded_value,
+                                        expected_var=expected_value,
+                                        manager_prepared=True)
 
         @apply_param_wrapper('init_params, expected_error, error_text_match')
         def test_validation(self, model_factory, get_fixture,
@@ -333,13 +333,13 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                     if key in init_params and overwrite or \
                             key == 'id' and mock_instance_name is None:
                         # overwritten values
-                        test_variable_equality(django_db_blocker, loaded_var=loaded_var, expected_var=expected_var,
-                                               manager_prepared=True)
-                        test_variable_non_equality(django_db_blocker, loaded_var=loaded_var, expected_var=original_var)
+                        _test_variable_equality(django_db_blocker, loaded_var=loaded_var, expected_var=expected_var,
+                                                manager_prepared=True)
+                        _test_variable_non_equality(django_db_blocker, loaded_var=loaded_var, expected_var=original_var)
                     else:
                         # original value
-                        test_variable_equality(django_db_blocker, loaded_var=loaded_var, expected_var=original_var,
-                                               manager_prepared=True)
+                        _test_variable_equality(django_db_blocker, loaded_var=loaded_var, expected_var=original_var,
+                                                manager_prepared=True)
             else:
                 with pytest.raises(expected_error, match=error_text_match), django_db_blocker.unblock():
                     model_wrapper.finalize_model(overwrite=overwrite, validate=validate)
@@ -353,8 +353,8 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                     for key in model_wrapper.validators.keys():
                         loaded_var = getattr(model_wrapper.model, key)
                         original_var = getattr(original_model_wrapper, key)
-                        test_variable_equality(django_db_blocker, loaded_var=loaded_var, expected_var=original_var,
-                                               manager_prepared=True)
+                        _test_variable_equality(django_db_blocker, loaded_var=loaded_var, expected_var=original_var,
+                                                manager_prepared=True)
 
             if no_initial_model and model_wrapper.model is not None:
                 with django_db_blocker.unblock():
