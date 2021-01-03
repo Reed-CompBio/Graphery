@@ -175,7 +175,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                         expected_value = self.default_args[key]
                     else:
                         # which should never happen
-                        raise Exception('bad testing suit')
+                        raise Exception(f'bad testing suit: mysterious key {key}')
                     test_variable_equality(django_db_blocker=django_db_blocker,
                                            loaded_var=loaded_instance_var,
                                            expected_var=expected_value)
@@ -303,7 +303,8 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                     assert new_count == original_count + 1
 
                 for key in model_wrapper.validators.keys():
-                    loaded_var = getattr(model_wrapper.model, key)
+                    with django_db_blocker.unblock():
+                        loaded_var = getattr(model_wrapper.model, key)
                     expected_var = getattr(model_wrapper, key)
                     original_var = getattr(original_model_wrapper, key)
 
