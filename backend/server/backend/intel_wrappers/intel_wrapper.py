@@ -10,7 +10,8 @@ from django.db.models import Model
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
     categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
     graph_priority_validator, json_validator, email_validator, username_validator, \
-    tutorial_anchors_validator, level_validator, section_validator, first_name_validator, last_name_validator
+    tutorial_anchors_validator, level_validator, section_validator, first_name_validator, last_name_validator, \
+    file_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase, ENUS, ZHCN, ENUSGraphContent, \
     ZHCNGraphContent
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
@@ -268,7 +269,7 @@ class UploadsWrapper(PublishedWrapper):
         self.alias: Optional[str] = None
 
         super(UploadsWrapper, self).__init__({
-            'file': dummy_validator,
+            'file': file_validator,
             'alias': non_empty_text_validator
         })
 
@@ -280,12 +281,10 @@ class UploadsWrapper(PublishedWrapper):
         self.alias = loaded_model.alias
 
     def retrieve_model(self) -> None:
-        if self.id is not None or self.id != FAKE_UUID:
+        if self.id is not None and self.id != FAKE_UUID:
             self.model: Uploads = Uploads.objects.get(id=self.id)
         elif self.alias:
             self.model: Uploads = Uploads.objects.get(alias=self.alias)
-        elif isinstance(self.file, str):
-            self.model: Uploads = Uploads.objects.get(file=self.file)
         elif isinstance(self.file, File):
             self.model: Uploads = Uploads.objects.get(file=self.file.name)
         else:
@@ -294,9 +293,14 @@ class UploadsWrapper(PublishedWrapper):
 
     def make_new_model(self) -> None:
         if isinstance(self.file, File):
-            self.model: Uploads = Uploads(file=self.file, alias=f'{self.file.name}_{int(random() * 100000)}')
+            self.model: Uploads = Uploads(file=self.file,
+                                          alias=(
+                                              self.alias if self.alias else f'{self.file.name}_{int(random() * 100000)}'
+                                          ),
+                                          is_published=self.is_published)
         else:
-            raise ValueError(f'Cannot create upload since `file` {self.file} is not a File instance.')
+            raise ValueError(f'Cannot create upload since `file` {self.file} '
+                             f'(alias: {self.alias}) is not a File instance.')
 
 
 _T = TypeVar('_T', bound=Model)
@@ -351,7 +355,8 @@ class TutorialTranslationContentWrapper(VariedContentWrapper[_T], Generic[_T]):
                                                        tutorial_anchor=self.tutorial_anchor.model,
                                                        abstract=self.abstract,
                                                        content_md=self.content_md,
-                                                       content_html=self.content_html)
+                                                       content_html=self.content_html,
+                                                       is_published=self.is_published)
 
     def prepare_model(self) -> None:
         finalize_prerequisite_wrapper_iter(self.authors)
@@ -423,7 +428,8 @@ class GraphTranslationContentWrapper(VariedContentWrapper[_S], Generic[_S]):
         self.model: GraphTranslationBase = self.model_class(graph_anchor=self.graph_anchor.model,
                                                             title=self.title,
                                                             abstract=self.abstract,
-                                                            abstract_md=self.abstract_md)
+                                                            abstract_md=self.abstract_md,
+                                                            is_published=self.is_published)
 
     def __str__(self):
         return f'<GraphContentWrapper\n' \
