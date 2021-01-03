@@ -79,18 +79,34 @@ def is_wrapper_factory_tuple(value: Any) -> bool:
            value[0].__name__.endswith('_w_maker') and value[1].__name__.endswith('_w_destructor')
 
 
-def get_actual_value(value: Any, factory_maker: Callable, wrappers_to_models: bool, wrapper_to_model: bool) -> Any:
+FIXTURE_HEADER = u'\u200bget_fixture_\u200bb'
+
+
+def is_fixture(value: Any) -> bool:
+    return isinstance(value, str) and value.startswith(FIXTURE_HEADER)
+
+
+def get_fixture_from_pattern(get_fixture: Callable, value: str) -> Any:
+    return get_fixture(
+        value.lstrip(FIXTURE_HEADER)
+    )
+
+
+def get_actual_value(value: Any, factory_maker: Callable, get_fixture: Callable,
+                     wrappers_to_models: bool, wrapper_to_model: bool) -> Any:
     if is_wrappers_factory_tuple(value):
         return wrappers_to_models_helper(factory_maker(*value)) if wrappers_to_models else factory_maker(*value)
     elif is_wrapper_factory_tuple(value):
         return wrapper_to_model_helper(factory_maker(*value)) if wrapper_to_model else factory_maker(*value)
+    elif is_fixture(value):
+        return get_fixture_from_pattern(get_fixture, value)
     return value
 
 
-def remake_input_mapping(mapping: Dict, factory_maker: Callable,
+def remake_input_mapping(mapping: Dict, factory_maker: Callable, get_fixture: Callable,
                          wrappers_to_models: bool = False, wrapper_to_model: bool = False) -> Dict:
     for key, value in mapping.items():
-        mapping[key] = get_actual_value(value, factory_maker, wrappers_to_models, wrapper_to_model)
+        mapping[key] = get_actual_value(value, factory_maker, get_fixture, wrappers_to_models, wrapper_to_model)
 
     return mapping
 
@@ -132,8 +148,10 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                                            manager_prepared=True)
 
         @apply_param_wrapper('variable_dict')
-        def test_set_variables(self, django_db_blocker, model_factory, variable_dict: Dict):
-            remake_input_mapping(variable_dict, model_factory, wrappers_to_models=True, wrapper_to_model=True)
+        def test_set_variables(self, django_db_blocker, model_factory, get_fixture,
+                               variable_dict: Dict):
+            remake_input_mapping(variable_dict, model_factory, get_fixture,
+                                 wrappers_to_models=True, wrapper_to_model=True)
 
             model_wrapper = self.wrapper_type()
             model_wrapper.set_variables(**variable_dict)
@@ -154,9 +172,9 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                     assert loaded_value is None
 
         @apply_param_wrapper('init_params')
-        def test_making_new_model(self, django_db_setup, django_db_blocker, model_factory,
+        def test_making_new_model(self, django_db_setup, django_db_blocker, model_factory, get_fixture,
                                   init_params: Dict):
-            remake_input_mapping(init_params, model_factory)
+            remake_input_mapping(init_params, model_factory, get_fixture)
 
             model_wrapper = self.wrapper_type().set_variables(**init_params)
             assert model_wrapper.model is None
@@ -186,7 +204,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
         @apply_param_wrapper('mock_instance_name, required_info')
         def test_retrieve_model(self, get_fixture, django_db_setup, django_db_blocker, model_factory,
                                 mock_instance_name: str, required_info: Dict):
-            remake_input_mapping(required_info, model_factory)
+            remake_input_mapping(required_info, model_factory, get_fixture)
 
             model_instance = get_fixture(mock_instance_name)
             model_wrapper = self.wrapper_type().set_variables(**required_info)
@@ -200,7 +218,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
         @apply_param_wrapper('mock_instance_name, modified_fields')
         def test_overwrite(self, get_fixture, django_db_blocker, model_factory,
                            mock_instance_name: str, modified_fields: Dict):
-            remake_input_mapping(modified_fields, model_factory)
+            remake_input_mapping(modified_fields, model_factory, get_fixture)
 
             model_instance = get_fixture(mock_instance_name)
 
@@ -224,9 +242,9 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                                        manager_prepared=True)
 
         @apply_param_wrapper('init_params, expected_error, error_text_match')
-        def test_validation(self, model_factory,
+        def test_validation(self, model_factory, get_fixture,
                             init_params: Dict, expected_error: Optional[Type[Exception]], error_text_match: str):
-            remake_input_mapping(init_params, model_factory)
+            remake_input_mapping(init_params, model_factory, get_fixture)
 
             model_wrapper = self.wrapper_type().set_variables(**init_params)
 
@@ -243,7 +261,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                            validate: bool, is_new_model: bool,
                            expected_error: Optional[Type[Exception]], error_text_match: str):
             if init_params is not None:
-                remake_input_mapping(init_params, model_factory)
+                remake_input_mapping(init_params, model_factory, get_fixture)
 
             model_wrapper = self.wrapper_type()
 
@@ -273,7 +291,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                           validate: bool, overwrite: bool,
                           expected_error: Optional[Type[Exception]], error_text_match: Optional[str]):
             if init_params is not None:
-                remake_input_mapping(init_params, model_factory)
+                remake_input_mapping(init_params, model_factory, get_fixture)
 
             model_wrapper = self.wrapper_type()
             original_model_wrapper = self.wrapper_type()
@@ -339,126 +357,3 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
                     model_wrapper.delete_model()
 
     return TestWrapper
-
-#
-# @pytest.fixture
-# @pytest.mark.django_db
-# def make_new_model_data_fixture_fixed(mock_user,
-#                                       mock_category,
-#                                       mock_tutorial,
-#                                       mock_graph,
-#                                       mock_code):
-#     return [
-#         (UserWrapper, {
-#             'username': 'make-new-model-test',
-#             'email': 'test-new-model_test@test.com',
-#             'role': ROLES.AUTHOR,
-#         }),
-#         (CategoryWrapper, {
-#             'category': 'make-new-category-test',
-#         }),
-#         (TutorialAnchorWrapper, {
-#             'url': 'make-new-model-test',
-#             'name': 'make new model test',
-#             'categories': [CategoryWrapper().load_model(mock_category)],
-#         }),
-#         (GraphWrapper, {
-#             'url': 'make-new-model-test-graph',
-#             'name': 'make nem model test graph',
-#             'categories': [CategoryWrapper().load_model(cat) for cat in Category.objects.all()],
-#             'authors': [UserWrapper().load_model(mock_user)],
-#             'priority': GraphPriority.MAIN,
-#             'cyjs': {'json': 'hello'},
-#             'tutorials': [TutorialAnchorWrapper().load_model(tutorial) for tutorial in Tutorial.objects.all()],
-#         }),
-#         (CodeWrapper, {
-#             'tutorial': TutorialAnchorWrapper().load_model(Tutorial.objects.get(url='cli-test')),
-#             'code': 'def hello(): \tprint("hello world")'
-#         }),
-#         (ExecResultJsonWrapper, {
-#             'code': CodeWrapper().load_model(mock_code),
-#             'graph': GraphWrapper().load_model(mock_graph),
-#             'json': {'json': 'hello hello'}
-#         }),
-#         (ENUSTutorialContentWrapper, {
-#             'title': 'new-model-test',
-#             'authors': [UserWrapper().load_model(model) for model in User.objects.all()],
-#             'tutorial_anchor': TutorialAnchorWrapper().load_model(mock_tutorial),
-#             'abstract': 'this is an abstract actually',
-#             'content_md': '# hello',
-#             'content_html': '<h1>hello</h1>'
-#         }),
-#         (ENUSGraphContentWrapper, {
-#             'title': 'this is the title',
-#             'abstract': 'this is the abstract :).',
-#             'graph_anchor': GraphWrapper().load_model(mock_graph)
-#         })
-#     ]
-#
-# @pytest.mark.django_db
-# def test_make_new_model_from_fixed_wrappers(make_new_model_data_fixture_fixed):
-#     for wrapper_class, new_data in make_new_model_data_fixture_fixed:
-#         make_new_model_test_helper(wrapper_class(), new_data)
-#
-# @pytest.fixture
-# @pytest.mark.django_db
-# def make_new_model_varied(mock_tutorial, mock_graph):
-#     return [
-#         (TutorialTranslationContentWrapper, ENUS, {
-#             'title': 'new-model-test',
-#             'authors': [UserWrapper().load_model(model) for model in User.objects.all()],
-#             'tutorial_anchor': TutorialAnchorWrapper().load_model(mock_tutorial),
-#             'abstract': 'this is an abstract actually',
-#             'content_md': '# hello',
-#             'content_html': '<h1>hello</h1>'
-#         }),
-#         (GraphTranslationContentWrapper, ENUSGraphContent, {
-#             'title': 'this is the title',
-#             'abstract': 'this is the abstract :).',
-#             'graph_anchor': GraphWrapper().load_model(mock_graph)
-#         })
-#     ]
-#
-# @pytest.mark.django_db
-# def test_make_new_model_from_varied_wrappers(make_new_model_varied):
-#     for wrapper_class, wrapped_class, data in make_new_model_varied:
-#         make_new_model_test_helper(wrapper_class().set_model_class(wrapped_class), data)
-#
-# @pytest.mark.skip(reason='API change')
-# @pytest.mark.parametrize('wrapper_class, mock_fixture, changed_data', [
-#     (UserWrapper, 'mock_user', {
-#         'username': 'new-user-name',
-#         'email': 'new-email@emai.com',
-#         'password': 'new-password',
-#         'role': ROLES.VISITOR,
-#     }),
-#     (CategoryWrapper, 'mock_category', {
-#         'category': 'new-category',
-#     }),
-#     (TutorialAnchorWrapper, 'mock_tutorial', {
-#         'url': 'new-url',
-#         'name': 'new name',
-#     }),
-#     (GraphWrapper, 'mock_graph', {
-#         'url': 'new-url-graph',
-#         'name': 'new url graph',
-#         'priority': GraphPriority.TRIV,
-#         'cyjs': {'new': 'json'},
-#     }),
-#     (CodeWrapper, 'mock_code', {
-#         'code': 'new code!'
-#     }),
-#     # TODO add exec result test
-#     # TODO add relationship overwrite test
-#     # ('mock_exec_result', {
-#     #
-#     # })
-# ])
-# @pytest.mark.django_db
-# def test_overwrite(wrapper_class, mock_fixture, changed_data, get_fixture):
-#     wrapper_instance = wrapper_class().load_model(get_fixture(mock_fixture))
-#     wrapper_instance.set_variables(**changed_data)
-#     wrapper_instance.prepare_model()
-#     wrapper_instance.get_model()
-#
-#
