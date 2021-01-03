@@ -129,6 +129,9 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, Gene
 
         self.field_names = [*self.validators.keys()]
 
+    def retrieve_model(self) -> None:
+        self.model: _S = self.model_class.objects.get(id=self.id)
+
     def load_model_var(self, loaded_model: _S) -> None:
         super().load_model_var(loaded_model)
         self.id = loaded_model.id

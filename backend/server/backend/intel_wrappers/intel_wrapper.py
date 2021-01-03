@@ -50,10 +50,6 @@ class UserWrapper(AbstractWrapper):
         self.last_name = loaded_model.last_name
         self.role = loaded_model.role
 
-    def retrieve_model(self) -> None:
-        # TODO do we need exact two arguments to get the model?
-        self.model = User.objects.get(id=self.id)
-
     def make_new_model(self) -> None:
         self.model = User(username=self.username,
                           email=self.email,
@@ -84,9 +80,6 @@ class CategoryWrapper(PublishedWrapper):
     def load_model_var(self, loaded_model: Category) -> None:
         super().load_model_var(loaded_model)
         self.category = loaded_model.category
-
-    def retrieve_model(self) -> None:
-        self.model: Category = self.model_class.objects.get(id=self.id)
 
     def make_new_model(self) -> None:
         self.model: Category = self.model_class(category=self.category, is_published=self.is_published)
@@ -123,9 +116,6 @@ class TutorialAnchorWrapper(PublishedWrapper):
         self.categories = [CategoryWrapper().load_model(cat) for cat in loaded_model.categories.all()]
         self.level = loaded_model.level
         self.section = loaded_model.section
-
-    def retrieve_model(self) -> None:
-        self.model: Tutorial = self.model_class.objects.get(id=self.id)
 
     def make_new_model(self) -> None:
         self.model: Tutorial = self.model_class(url=self.url, name=self.name,
@@ -178,9 +168,6 @@ class GraphWrapper(PublishedWrapper):
         self.tutorials = [TutorialAnchorWrapper().load_model(tutorial_anchor)
                           for tutorial_anchor in loaded_model.tutorials.all()]
 
-    def retrieve_model(self) -> None:
-        self.model: Graph = self.model_class.objects.get(id=self.id)
-
     def make_new_model(self) -> None:
         self.model: Graph = self.model_class(url=self.url, name=self.name,
                                              priority=self.priority, cyjs=self.cyjs,
@@ -221,9 +208,6 @@ class CodeWrapper(AbstractWrapper):
         super().load_model_var(loaded_model)
         self.tutorial = TutorialAnchorWrapper().load_model(loaded_model.tutorial)
         self.code = loaded_model.code
-
-    def retrieve_model(self) -> None:
-        self.model: Code = self.model_class.objects.get(id=self.id)
 
     def make_new_model(self) -> None:
         self.model: Code = self.model_class(tutorial=self.tutorial.model, code=self.code)
