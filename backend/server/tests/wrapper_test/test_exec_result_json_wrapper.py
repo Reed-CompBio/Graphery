@@ -1,10 +1,8 @@
-from uuid import UUID
-
 import pytest
 
 from backend.intel_wrappers.intel_wrapper import ExecResultJsonWrapper
 from backend.intel_wrappers.validators import ValidationError
-from tests.wrapper_test.factories import tutorial_anchor_wrapper_factory, code_wrapper_factory, graph_wrapper_factory
+from tests.wrapper_test.factories import code_wrapper_factory, graph_wrapper_factory
 from tests.wrapper_test.test_wrapper_helper import gen_wrapper_test_class
 
 
