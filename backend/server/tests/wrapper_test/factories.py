@@ -67,9 +67,8 @@ def _general_wrapper_factory(wrapper_type: Type[_T], params: Mapping) -> Wrapper
                 wrapper_type.model_class.objects.create(**params)
             )
 
-    def _w_destructor(wrappers: _T) -> None:
-        for wrapper in wrappers:
-            wrapper.delete_model()
+    def _w_destructor(wrapper: _T) -> None:
+        wrapper.delete_model()
 
     return _w_maker, _w_destructor
 

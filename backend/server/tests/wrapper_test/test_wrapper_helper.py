@@ -133,7 +133,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
 
         @apply_param_wrapper('variable_dict')
         def test_set_variables(self, django_db_blocker, model_factory, variable_dict: Dict):
-            remake_input_mapping(variable_dict, model_factory, wrappers_to_models=True)
+            remake_input_mapping(variable_dict, model_factory, wrappers_to_models=True, wrapper_to_model=True)
 
             model_wrapper = self.wrapper_type()
             model_wrapper.set_variables(**variable_dict)
