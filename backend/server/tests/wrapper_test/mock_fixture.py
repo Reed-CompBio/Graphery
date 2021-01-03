@@ -2,7 +2,7 @@ from uuid import UUID
 
 import pytest
 
-from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, GraphPriority, Code
+from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, GraphPriority, Code, ExecResultJson
 from backend.model.UserModel import User, ROLES
 
 
@@ -94,7 +94,7 @@ def stored_mock_tutorial_anchor(django_db_setup, django_db_blocker, stored_mock_
     with django_db_blocker.unblock():
         t = Tutorial.objects.create(**{
             'id': UUID('b0015ac8-5376-4b99-b649-6f25771dbd91'),
-            'url': 'mock_test_tutorial',
+            'url': 'mock-test-tutorial',
             'name': 'mock test tutorial',
             'section': 1,
             'level': 210,
@@ -109,7 +109,7 @@ def one_time_mock_tutorial_anchor(django_db_setup, django_db_blocker, stored_moc
     with django_db_blocker.unblock():
         t = Tutorial.objects.create(**{
             'id': UUID('98158c8f-9e57-4222-bd22-834863cfbeb6'),
-            'url': 'one_time_mock_test_tutorial',
+            'url': 'one-time-mock-test-tutorial',
             'name': 'one time mock test tutorial',
             'section': 1,
             'level': 212,
@@ -145,7 +145,6 @@ def stored_mock_graph(django_db_setup, django_db_blocker,
 @pytest.fixture()
 def one_time_mock_graph(django_db_setup, django_db_blocker,
                         stored_mock_user, stored_mock_category, stored_mock_tutorial_anchor):
-
     with django_db_blocker.unblock():
         g = Graph.objects.create(**{
             'id': UUID('e4fa4bdc-6189-4cbc-bc7a-ab6767100cfa'),
@@ -189,3 +188,38 @@ def one_time_mock_code(django_db_setup, django_db_blocker, one_time_mock_tutoria
 
     with django_db_blocker.unblock():
         c.delete()
+
+
+@pytest.fixture(scope='module')
+def stored_mock_execution_result(django_db_setup, django_db_blocker,
+                                 stored_mock_code, stored_mock_graph):
+    with django_db_blocker.unblock():
+        return ExecResultJson.objects.create(
+            **{
+                'id': UUID('1b9952bf-fd26-4189-b657-8a2a982e9c23'),
+                'code': stored_mock_code,
+                'graph': stored_mock_graph,
+                'json': {'object': 'hello world'},
+                # no breakpoints for now
+            }
+        )
+
+
+@pytest.fixture()
+def one_time_mock_execution_result(django_db_setup, django_db_blocker,
+                                   one_time_mock_code, one_time_mock_graph):
+    with django_db_blocker.unblock():
+        e = ExecResultJson.objects.create(
+            **{
+                'id': UUID('fd82bcc0-0886-4a56-88b8-1d3c1d110bd4'),
+                'code': one_time_mock_code,
+                'graph': one_time_mock_graph,
+                'json': {'object': 'hello world!'},
+                # no breakpoints for now
+            }
+        )
+
+    yield e
+
+    with django_db_blocker.unblock():
+        e.delete()
