@@ -5,7 +5,8 @@ import pytest
 from django.db.models import Manager
 
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
-from tests.wrapper_test.factories import wrappers_to_models
+from tests.wrapper_test.factories import wrappers_to_models_helper, \
+    wrapper_to_model_helper
 
 
 def _apply_param_wrapper(param_string: str, param_mapping: Mapping) -> Callable:
@@ -44,7 +45,10 @@ def _test_variable(django_db_blocker,
             assert isinstance(wrapper, AbstractWrapper)
             assert wrapper.model in loaded_var
     else:
-        assert operator(loaded_var, expected_var)
+        if isinstance(expected_var, AbstractWrapper):
+            assert operator(loaded_var, expected_var.model)
+        else:
+            assert operator(loaded_var, expected_var)
 
     return True
 
@@ -63,21 +67,30 @@ def test_variable_non_equality(django_db_blocker,
     return _test_variable(django_db_blocker, loaded_var, expected_var, ne, manager_prepared)
 
 
-def is_factory_tuple(value: Any) -> bool:
+def is_wrappers_factory_tuple(value: Any) -> bool:
     return isinstance(value, Tuple) and len(value) == 2 \
            and all(hasattr(item, '__name__') for item in value) and \
-           value[0].__name__.endswith('_maker') and value[1].__name__.endswith('_destructor')
+           value[0].__name__.endswith('_ws_maker') and value[1].__name__.endswith('_ws_destructor')
 
 
-def get_actual_value(value: Any, factory_maker: Callable, wrapper_to_model: bool) -> Any:
-    if is_factory_tuple(value):
-        return wrappers_to_models(factory_maker(*value)) if wrapper_to_model else factory_maker(*value)
+def is_wrapper_factory_tuple(value: Any) -> bool:
+    return isinstance(value, Tuple) and len(value) == 2 \
+           and all(hasattr(item, '__name__') for item in value) and \
+           value[0].__name__.endswith('_w_maker') and value[1].__name__.endswith('_w_destructor')
+
+
+def get_actual_value(value: Any, factory_maker: Callable, wrappers_to_models: bool, wrapper_to_model: bool) -> Any:
+    if is_wrappers_factory_tuple(value):
+        return wrappers_to_models_helper(factory_maker(*value)) if wrappers_to_models else factory_maker(*value)
+    elif is_wrapper_factory_tuple(value):
+        return wrapper_to_model_helper(factory_maker(*value)) if wrapper_to_model else factory_maker(*value)
     return value
 
 
-def remake_input_mapping(mapping: Dict, factory_maker: Callable, wrapper_to_model: bool = False) -> Dict:
+def remake_input_mapping(mapping: Dict, factory_maker: Callable,
+                         wrappers_to_models: bool = False, wrapper_to_model: bool = False) -> Dict:
     for key, value in mapping.items():
-        mapping[key] = get_actual_value(value, factory_maker, wrapper_to_model)
+        mapping[key] = get_actual_value(value, factory_maker, wrappers_to_models, wrapper_to_model)
 
     return mapping
 
@@ -120,7 +133,7 @@ def gen_wrapper_test_class(wrapper_class: Type[AbstractWrapper],
 
         @apply_param_wrapper('variable_dict')
         def test_set_variables(self, django_db_blocker, model_factory, variable_dict: Dict):
-            remake_input_mapping(variable_dict, model_factory, wrapper_to_model=True)
+            remake_input_mapping(variable_dict, model_factory, wrappers_to_models=True)
 
             model_wrapper = self.wrapper_type()
             model_wrapper.set_variables(**variable_dict)

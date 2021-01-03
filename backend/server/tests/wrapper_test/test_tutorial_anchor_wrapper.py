@@ -4,7 +4,7 @@ import pytest
 
 from backend.intel_wrappers.intel_wrapper import TutorialAnchorWrapper
 from backend.intel_wrappers.validators import ValidationError
-from tests.wrapper_test.factories import category_wrapper_factory
+from tests.wrapper_test.factories import category_wrappers_factory
 from tests.wrapper_test.test_wrapper_helper import gen_wrapper_test_class
 
 
@@ -24,14 +24,14 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
         {
             'url': 'test-set-var',
             'name': 'test set var',
-            'categories': category_wrapper_factory('temp cat {}', 1),
+            'categories': category_wrappers_factory('temp cat {}', 1),
             'level': 101,
             'section': 0,
         },
         {
             'url': 'test-set-var',
             'name': 'test set var',
-            'categories': category_wrapper_factory('temp cat {}', 10),
+            'categories': category_wrappers_factory('temp cat {}', 10),
             'level': 101,
             'section': 0,
         },
@@ -60,14 +60,14 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
         pytest.param({
             'url': 'test-make-new-model',
             'name': 'test make new model',
-            'categories': category_wrapper_factory('make new model {}', 1),
+            'categories': category_wrappers_factory('make new model {}', 1),
             'level': 101,
             'section': 0,
         }),
         pytest.param({
             'url': 'test-make-new-model',
             'name': 'test make new model',
-            'categories': category_wrapper_factory('test making new {}', 10),
+            'categories': category_wrappers_factory('test making new {}', 10),
             'level': 101,
             'section': 0,
         }),
@@ -86,7 +86,7 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
         pytest.param('one_time_mock_tutorial_anchor', {
             'url': 'one_time_mock_test_tutorial_mod',
             'name': 'one time mock test tutorial mode',
-            'categories': category_wrapper_factory('test overwrite {}', 5),
+            'categories': category_wrappers_factory('test overwrite {}', 5),
             'section': 2,
             'level': 222,
             'is_published': False
@@ -100,7 +100,7 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
             'is_published': False
         }),
         pytest.param('one_time_mock_tutorial_anchor', {
-            'categories': category_wrapper_factory('test overwrite cat only {}', 7)
+            'categories': category_wrappers_factory('test overwrite cat only {}', 7)
         }),
         pytest.param('one_time_mock_tutorial_anchor', {
             'url': 'one_time_mock_test_tutorial_mod',
@@ -166,7 +166,7 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
         pytest.param('one_time_mock_tutorial_anchor', {
             'url': 'finalize-test-tutorial',
             'name': 'finalize test tutorial',
-            'categories': category_wrapper_factory('full mod finalize {}', 5),
+            'categories': category_wrappers_factory('full mod finalize {}', 5),
             'section': 3,
             'level': 220,
             'is_published': False
@@ -189,7 +189,7 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
         pytest.param(None, {
             'url': 'finalize-mock-test-tutorial',
             'name': 'finalize mock test tutorial',
-            'categories': category_wrapper_factory('finalize cat {}', 7),
+            'categories': category_wrappers_factory('finalize cat {}', 7),
             'section': 1,
             'level': 213,
             'is_published': True
@@ -197,7 +197,7 @@ TestTutorialAnchorWrapper = gen_wrapper_test_class(wrapper_class=TutorialAnchorW
         pytest.param(None, {
             'url': 'finalize-mock-test-tutorial',
             'name': 'finalize mock test tutorial',
-            'categories': category_wrapper_factory('finalize cat {}', 10),
+            'categories': category_wrappers_factory('finalize cat {}', 10),
             'section': 1,
             'level': 213,
         }, True, True, None, None),

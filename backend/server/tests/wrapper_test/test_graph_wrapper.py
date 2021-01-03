@@ -5,8 +5,8 @@ import pytest
 from backend.intel_wrappers.intel_wrapper import GraphWrapper
 from backend.intel_wrappers.validators import ValidationError
 from backend.model.TutorialRelatedModel import GraphPriority
-from tests.wrapper_test.factories import category_wrapper_factory, user_wrapper_factory, \
-    tutorial_anchor_wrapper_factory
+from tests.wrapper_test.factories import category_wrappers_factory, user_wrappers_factory, \
+    tutorial_anchor_wrappers_factory
 from tests.wrapper_test.test_wrapper_helper import gen_wrapper_test_class
 
 
@@ -26,7 +26,7 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
         pytest.param({
             'url': 'test-set-var-graph',
             'name': 'test set var graph',
-            'categories': category_wrapper_factory('graph wrapper set var {}', 1),
+            'categories': category_wrappers_factory('graph wrapper set var {}', 1),
             'priority': GraphPriority.MAIN,
             'cyjs': {'json': 'hello'},
             'is_published': False
@@ -34,11 +34,11 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
         pytest.param({
             'url': 'test-set-var-graph',
             'name': 'test set var graph',
-            'categories': category_wrapper_factory('graph wrapper set var {}', 10),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('graph wrapper set var {}', 10),
+            'authors': user_wrappers_factory(
                 username_template='graph_user_{}', email_template='graph_user_{}@graph.com', num=10
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
                 url_template='graph-tutorial-url-{}', name_template='graph tutorial {}', num=10
             ),
             'priority': GraphPriority.MAIN,
@@ -46,20 +46,20 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
             'is_published': False
         }),
         pytest.param({
-            'categories': category_wrapper_factory('graph wrapper set var {}', 10),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('graph wrapper set var {}', 10),
+            'authors': user_wrappers_factory(
                 username_template='graph_user_{}', email_template='graph_user_{}@graph.com', num=10
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
                 url_template='graph-tutorial-url-{}', name_template='graph tutorial {}', num=10
             ),
         }),
         {
-            'categories': category_wrapper_factory('graph wrapper set var {}', 0),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('graph wrapper set var {}', 0),
+            'authors': user_wrappers_factory(
                 username_template='graph_user_{}', email_template='graph_user_{}@graph.com', num=0
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
                 url_template='graph-tutorial-url-{}', name_template='graph tutorial {}', num=0
             ),
         },
@@ -85,11 +85,11 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
         pytest.param({
             'url': 'test-set-var-graph',
             'name': 'test set var graph',
-            'categories': category_wrapper_factory('graph wrapper set var {}', 7),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('graph wrapper set var {}', 7),
+            'authors': user_wrappers_factory(
                 username_template='graph_user_{}', email_template='graph_user_{}@graph.com', num=5
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
                 url_template='graph-tutorial-url-{}', name_template='graph tutorial {}', num=0
             ),
             'priority': GraphPriority.MAIN,
@@ -114,11 +114,11 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
         pytest.param('one_time_mock_graph', {
             'url': 'one-time-mock-test-graph-mod',
             'name': 'one time mock test graph mod',
-            'categories': category_wrapper_factory('test overwrite {}', 5),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('test overwrite {}', 5),
+            'authors': user_wrappers_factory(
                 username_template='graph_user_{}', email_template='graph_user_{}@graph.com', num=5
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
                 url_template='graph-tutorial-url-{}', name_template='graph tutorial {}', num=0
             ),
             'priority': GraphPriority.MAIN,
@@ -128,11 +128,11 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
         pytest.param('one_time_mock_graph', {
             'url': 'one-time-mock-test-graph-mod',
             'name': 'one time mock test graph mod',
-            'categories': category_wrapper_factory('test overwrite {}', 0),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('test overwrite {}', 0),
+            'authors': user_wrappers_factory(
                 username_template='graph_user_{}', email_template='graph_user_{}@graph.com', num=0
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
                 url_template='graph-tutorial-url-{}', name_template='graph tutorial {}', num=0
             ),
             'priority': GraphPriority.MAIN,
@@ -140,11 +140,11 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
             'is_published': False
         }),
         pytest.param('one_time_mock_graph', {
-            'categories': category_wrapper_factory('test overwrite {}', 0),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('test overwrite {}', 0),
+            'authors': user_wrappers_factory(
                 username_template='graph_user_{}', email_template='graph_user_{}@graph.com', num=9
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
                 url_template='graph-tutorial-url-{}', name_template='graph tutorial {}', num=8
             ),
         }),
@@ -218,11 +218,11 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
         pytest.param('one_time_mock_graph', {
             'url': 'finalize-test-graph',
             'name': 'finalize test graph',
-            'categories': category_wrapper_factory('full mod finalize {}', 5),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('full mod finalize {}', 5),
+            'authors': user_wrappers_factory(
                 username_template='full-mod-finalize-user-{}', email_template='mod-user-{}@user.com', num=10
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
               url_template='full-mod-graph-t-{}',
               name_template='full mod graph t {}',
               num=9
@@ -234,11 +234,11 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
         pytest.param('one_time_mock_graph', {
             'url': 'finalize-test-graph',
             'name': 'finalize test graph',
-            'categories': category_wrapper_factory('full mod finalize {}', 5),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('full mod finalize {}', 5),
+            'authors': user_wrappers_factory(
                 username_template='full-mod-finalize-user-{}', email_template='mod-user-{}@user.com', num=10
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
               url_template='full-mod-graph-t-{}',
               name_template='full mod graph t {}',
               num=6
@@ -250,11 +250,11 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
         pytest.param('one_time_mock_graph', {
             'url': 'finalize-test-graph',
             'name': 'finalize test graph',
-            'categories': category_wrapper_factory('full mod finalize {}', 5),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('full mod finalize {}', 5),
+            'authors': user_wrappers_factory(
                 username_template='full-mod-finalize-user-{}', email_template='mod-user-{}@user.com', num=0
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
               url_template='full-mod-graph-t-{}',
               name_template='full mod graph t {}',
               num=0
@@ -266,11 +266,11 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
         pytest.param(None, {
             'url': 'finalize-test-graph',
             'name': 'finalize test graph',
-            'categories': category_wrapper_factory('full mod finalize {}', 5),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('full mod finalize {}', 5),
+            'authors': user_wrappers_factory(
                 username_template='full-mod-finalize-user-{}', email_template='mod-user-{}@user.com', num=10
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
               url_template='full-mod-graph-t-{}',
               name_template='full mod graph t {}',
               num=2
@@ -282,11 +282,11 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
         pytest.param(None, {
             'url': 'finalize-test-empty-graph',
             'name': 'finalize test empty graph',
-            'categories': category_wrapper_factory('full mod finalize {}', 5),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('full mod finalize {}', 5),
+            'authors': user_wrappers_factory(
                 username_template='full-mod-finalize-user-{}', email_template='mod-user-{}@user.com', num=2
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
               url_template='full-mod-graph-t-{}',
               name_template='full mod graph t {}',
               num=3
@@ -298,11 +298,11 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
         pytest.param(None, {
             'url': 'finalize-test-graph',
             'name': 'finalize test graph',
-            'categories': category_wrapper_factory('full mod finalize {}', 5),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('full mod finalize {}', 5),
+            'authors': user_wrappers_factory(
                 username_template='full-mod-finalize-user-{}', email_template='mod-user-{}@user.com', num=5
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
               url_template='full-mod-graph-t-{}',
               name_template='full mod graph t {}',
               num=7
@@ -314,11 +314,11 @@ TestGraphWrapper = gen_wrapper_test_class(wrapper_class=GraphWrapper, test_param
         pytest.param(None, {
             'url': 'finalize-test-graph',
             'name': 'finalize test graph',
-            'categories': category_wrapper_factory('full mod finalize {}', 5),
-            'authors': user_wrapper_factory(
+            'categories': category_wrappers_factory('full mod finalize {}', 5),
+            'authors': user_wrappers_factory(
                 username_template='full-mod-finalize-user-{}', email_template='mod-user-{}@user.com', num=10
             ),
-            'tutorials': tutorial_anchor_wrapper_factory(
+            'tutorials': tutorial_anchor_wrappers_factory(
               url_template='full-mod-graph-t-{}',
               name_template='full mod graph t {}',
               num=1
