@@ -2,7 +2,9 @@ from operator import eq, ne
 from typing import Type, Mapping, Callable, Optional, Sequence, Any, Tuple, Dict
 
 import pytest
+from django.core.files import File
 from django.db.models import Manager
+from django.db.models.fields.files import FieldFile
 
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 from tests.wrapper_test.factories import wrappers_to_models_helper, \
@@ -47,6 +49,8 @@ def _test_variable(django_db_blocker,
     else:
         if isinstance(expected_var, AbstractWrapper):
             assert operator(loaded_var, expected_var.model)
+        elif isinstance(loaded_var, FieldFile) and isinstance(expected_var, File):
+            assert loaded_var.name.startswith(expected_var.name)
         else:
             assert operator(loaded_var, expected_var)
 
