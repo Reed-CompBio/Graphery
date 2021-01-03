@@ -1,8 +1,12 @@
+import os
+import pathlib
 from uuid import UUID
 
 import pytest
+from django.conf import settings
+from django.core.files import File
 
-from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, GraphPriority, Code, ExecResultJson
+from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, GraphPriority, Code, ExecResultJson, Uploads
 from backend.model.UserModel import User, ROLES
 
 
@@ -223,3 +227,61 @@ def one_time_mock_execution_result(django_db_setup, django_db_blocker,
 
     with django_db_blocker.unblock():
         e.delete()
+
+
+_FILE_PATH_ROOT = pathlib.Path(settings.MEDIA_ROOT)
+_STORED_TEST_FILE = _FILE_PATH_ROOT / 'stored_temp'
+_ONE_TIME_TEST_FILE = _FILE_PATH_ROOT / 'one_time_temp'
+_ADD_ON_TEST_FILE = _FILE_PATH_ROOT / 'add_on_temp'
+
+
+@pytest.fixture(scope='module')
+def stored_test_file():
+    with open(_STORED_TEST_FILE, 'w+') as test_file:
+        test_file.write('temp')
+        yield File(test_file)
+
+    os.remove(_STORED_TEST_FILE)
+
+
+@pytest.fixture()
+def one_time_test_file():
+    with open(_ONE_TIME_TEST_FILE, 'w+') as test_file:
+        test_file.write('temp')
+        yield File(test_file)
+
+    os.remove(_ONE_TIME_TEST_FILE)
+
+
+@pytest.fixture()
+def add_on_test_file():
+    with open(_ADD_ON_TEST_FILE, 'w+') as test_file:
+        test_file.write('temp')
+        yield File(test_file)
+
+    os.remove(_ADD_ON_TEST_FILE)
+
+
+@pytest.fixture(scope='module')
+def stored_uploads(django_db_setup, django_db_blocker, stored_test_file):
+    with django_db_blocker.unblock():
+        return Uploads.objects.create(
+            id=UUID('d4c31662-2de5-44c3-af1d-bad04360dab1'),
+            file=stored_test_file,
+            alias='uploads store testing'
+        )
+
+
+@pytest.fixture()
+def one_time_uploads(django_db_setup, django_db_blocker, one_time_test_file):
+    with django_db_blocker.unblock():
+        u = Uploads.objects.create(
+            id=UUID('b6150a4e-f8bb-4f46-932d-9cb80b1279b5'),
+            file=one_time_test_file,
+            alias='uploads temp testing'
+        )
+
+    yield u
+
+    with django_db_blocker.unblock():
+        u.delete()
