@@ -95,7 +95,7 @@ def _general_wrapper_factory(wrapper_type: Type[_T], params: Mapping,
         _secondary_models = secondary_model_parser(secondary_models_info)
         _collection_models = collection_model_parser(collection_models_info)
 
-        model_instance = wrapper_type.model_class.objects.create(
+        model_instance, created = wrapper_type.model_class.objects.get_or_create(
             **params,
             **_secondary_models,
             **_collection_models
@@ -113,7 +113,7 @@ def _general_wrapper_factory(wrapper_type: Type[_T], params: Mapping,
             value.delete()
         for value in _collection_models.values():
             value.delete()
-        
+
     return _w_maker, _w_destructor
 
 
