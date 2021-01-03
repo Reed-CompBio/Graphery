@@ -167,9 +167,25 @@ def one_time_mock_graph(django_db_setup, django_db_blocker,
 
 
 @pytest.fixture(scope='module')
-@pytest.mark.django_db
-def mock_code(mock_tutorial):
-    return Code.objects.create(**{
-        'tutorial': mock_tutorial,
-        'code': 'def hello(): \tprint("hello world")'
-    })
+def stored_mock_code(django_db_setup, django_db_blocker, stored_mock_tutorial_anchor):
+    with django_db_blocker.unblock():
+        return Code.objects.create(**{
+            'id': UUID('24d137dc-5cc2-4ace-b71c-e5b9386a2281'),
+            'tutorial': stored_mock_tutorial_anchor,
+            'code': 'def hello(): \tprint("hello world!")'
+        })
+
+
+@pytest.fixture()
+def one_time_mock_code(django_db_setup, django_db_blocker, one_time_mock_tutorial_anchor):
+    with django_db_blocker.unblock():
+        c = Code.objects.create(**{
+            'id': UUID('8ceb0d01-cd29-4fe9-a37b-758b8e6d943c'),
+            'tutorial': one_time_mock_tutorial_anchor,
+            'code': 'def hello(): \tprint("hello world!!!")'
+        })
+
+    yield c
+
+    with django_db_blocker.unblock():
+        c.delete()
