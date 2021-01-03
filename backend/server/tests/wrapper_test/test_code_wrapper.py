@@ -118,7 +118,7 @@ TestCodeWrapper = gen_wrapper_test_class(wrapper_class=CodeWrapper, test_params=
             ),
         }, True, True, None, None),
         pytest.param('one_time_mock_code', {
-            'code': 'test finalize model'
+            'code': 1
         }, True, True, ValidationError, None),
         pytest.param(None, {
             'tutorial': tutorial_anchor_wrapper_factory(
