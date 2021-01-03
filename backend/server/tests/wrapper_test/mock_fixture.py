@@ -123,14 +123,47 @@ def one_time_mock_tutorial_anchor(django_db_setup, django_db_blocker, stored_moc
 
 
 @pytest.fixture(scope='module')
-@pytest.mark.django_db
-def mock_graph():
-    return Graph.objects.create(**{
-        'url': 'make-new-model-test-graph',
-        'name': 'make nem model test graph',
-        'priority': GraphPriority.MAIN,
-        'cyjs': {'json': 'hello'},
-    })
+def stored_mock_graph(django_db_setup, django_db_blocker,
+                      stored_mock_user, stored_mock_category, stored_mock_tutorial_anchor):
+    with django_db_blocker.unblock():
+        g = Graph.objects.create(**{
+            'id': UUID('6a831c16-903d-47d8-94ac-61d8bd419bd3'),
+            'url': 'make-new-model-test-graph',
+            'name': 'make nem model test graph',
+            'priority': GraphPriority.MAIN,
+            'cyjs': {'json': 'hello'},
+            'is_published': True,
+        })
+
+        g.categories.set([stored_mock_category])
+        g.authors.set([stored_mock_user])
+        g.tutorials.set([stored_mock_tutorial_anchor])
+
+    return g
+
+
+@pytest.fixture()
+def one_time_mock_graph(django_db_setup, django_db_blocker,
+                        stored_mock_user, stored_mock_category, stored_mock_tutorial_anchor):
+
+    with django_db_blocker.unblock():
+        g = Graph.objects.create(**{
+            'id': UUID('e4fa4bdc-6189-4cbc-bc7a-ab6767100cfa'),
+            'url': 'make-one-time-model-test-graph',
+            'name': 'make one time model test graph',
+            'priority': GraphPriority.MAIN,
+            'cyjs': {'json': 'hello'},
+            'is_published': True,
+        })
+
+        g.categories.set([stored_mock_category])
+        g.authors.set([stored_mock_user])
+        g.tutorials.set([stored_mock_tutorial_anchor])
+
+    yield g
+
+    with django_db_blocker.unblock():
+        g.delete()
 
 
 @pytest.fixture(scope='module')
