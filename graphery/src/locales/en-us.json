@@ -80,7 +80,9 @@
     "notEmpty": "It cannot be empty",
     "twoPwdNotMatch": "Two passwords must match!",
     "ConfirmPassword": "Confirm Password",
-    "InvitationCode": "Invitation Code"
+    "InvitationCode": "Invitation Code",
+    "firstName": "First Name",
+    "lastName": "Last Name"
   },
   "dialog": {
     "ok": "OK!",

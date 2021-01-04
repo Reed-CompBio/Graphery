@@ -80,7 +80,9 @@
     "notEmpty": "它不能为空",
     "twoPwdNotMatch": "两次输入不一致",
     "ConfirmPassword": "确认密码",
-    "InvitationCode": "邀请码"
+    "InvitationCode": "邀请码",
+    "firstName": "名",
+    "lastName": "姓"
   },
   "dialog": {
     "ok": "好的!",

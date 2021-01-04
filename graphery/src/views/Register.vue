@@ -43,6 +43,26 @@
                       :disable="loading"
                     />
                   </div>
+                  <div id="firstName" class="q-my-md">
+                    <q-input
+                      outlined
+                      v-model="firstName"
+                      :label="$t('account.firstName')"
+                      type="text"
+                      :loading="loading"
+                      :disable="loading"
+                    />
+                  </div>
+                  <div id="lastName" class="q-my-md">
+                    <q-input
+                      outlined
+                      v-model="lastName"
+                      :label="$t('account.lastName')"
+                      type="text"
+                      :loading="loading"
+                      :disable="loading"
+                    />
+                  </div>
                   <div id="password" class="q-my-md">
                     <q-input
                       outlined
@@ -152,6 +172,8 @@
       return {
         email: '',
         username: '',
+        firstName: '',
+        lastName: '',
         password: '',
         confirmPassword: '',
         invitationCode: '',
@@ -183,6 +205,8 @@
           !this.email ||
           !this.username ||
           !this.password ||
+          !this.firstName ||
+          !this.lastName ||
           !this.confirmPassword ||
           !this.invitationCode
         ) {
@@ -204,6 +228,8 @@
         const registerInfo = {
           email: this.email,
           username: this.username,
+          firstName: this.firstName,
+          lastName: this.lastName,
           password: this.confirmPassword,
           invitationCode: this.invitationCode,
         };
@@ -234,6 +260,8 @@
       resetForm() {
         this.username = '';
         this.password = '';
+        this.firstName = '';
+        this.lastName = '';
         this.confirmPassword = '';
         this.showPwd = false;
         this.loading = false;
