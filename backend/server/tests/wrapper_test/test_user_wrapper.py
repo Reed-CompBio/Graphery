@@ -1,3 +1,5 @@
+from uuid import UUID
+
 import pytest
 
 from backend.intel_wrappers.intel_wrapper import UserWrapper
@@ -15,44 +17,46 @@ class TestUserWrapper:
 # noinspection PyRedeclaration
 TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params={
     'test_load': [
-        ('stored_mock_user', True),
-        ('stored_mock_user', False)
+        pytest.param('stored_mock_user', True),
+        pytest.param('stored_mock_user', False)
     ],
     'test_set_variables': [
-        {
+        pytest.param({
             'email': 'set_user@email.com',
             'username': 'set_user',
             'first_name': 'set',
             'last_name': 'user',
             'role': ROLES.VISITOR,
-        },
-        {
+        }),
+        pytest.param({
             'email': 'set_user@email.com',
             'last_name': 'user',
             'role': ROLES.VISITOR,
-        },
-        {
+        }),
+        pytest.param({
             'last_name': 'user',
-        },
-        {
+        }),
+        pytest.param({
 
-        }
+        })
     ],
     'test_making_new_model': [
-        {
+        pytest.param({
             'email': 'new_user@email.com',
             'username': 'new_user',
             'first_name': 'new',
             'last_name': 'user',
             'role': ROLES.VISITOR,
-        }
+        }),
     ],
     'test_retrieve_model': [
         pytest.param('stored_mock_user', {'username': 'mock_user', },
                      marks=pytest.mark.xfail(raises=UserWrapper.model_class.DoesNotExist)),
         pytest.param('stored_mock_user', {'email': 'mock_user@test.com', },
                      marks=pytest.mark.xfail(raises=UserWrapper.model_class.DoesNotExist)),
-        pytest.param('stored_mock_user', {'username': 'mock_user', 'email': 'mock_user@test.com', }),
+        pytest.param('stored_mock_user', {'username': 'mock_user', 'email': 'mock_user@test.com', },
+                     marks=pytest.mark.xfail()),
+        pytest.param('stored_mock_user', {'id': UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59')})
     ],
     'test_overwrite': [
         pytest.param('temp_mock_user', {'username': 'mock_user_modified'}, ),
@@ -67,7 +71,7 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
             'first_name': 'mo_mod',
             'last_name': 'ck_mod',
             'role': ROLES.VISITOR,
-        },)
+        }, )
     ],
     'test_validation': [
         pytest.param({'email': 'Abc.example.com'}, ValidationError, r'Email .* is not valid', id='email__error'),
@@ -89,14 +93,14 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
             'first_name': 'no_mo',
             'last_name': 'no_ck',
             'role': ROLES.VISITOR,
-        }, True, False, AssertionError, 'Cannot make new model without validations!',
+        }, False, False, AssertionError, 'Cannot make new model without validations!',
                      id='no_validate_no_model_assertion_err'),
         pytest.param('stored_mock_user', {
             'first_name': 'mo_mod',
             'last_name': 'ck_mod',
             'role': ROLES.TRANSLATOR,
-        }, True, False, AssertionError, 'Cannot overwrite model without validations!',
-                     id='no_validate_cant_overwrite_err'),
+        }, False, False, AssertionError, 'Cannot overwrite model without validations!',
+                     id='no_validate_cant_overwrite_err', marks=pytest.mark.skip(reason='api change')),
         pytest.param(None, {
             'email': 'get_new_user@email.com',
             'username': 'get_new_user',
@@ -104,11 +108,59 @@ TestUserWrapper = gen_wrapper_test_class(wrapper_class=UserWrapper, test_params=
             'last_name': 'w_user',
             'role': ROLES.VISITOR,
         }, True, True, None, None, id='make_new_model'),
+        pytest.param(None, {
+            'id': UUID('96e65d54-8daa-4ba0-bf3a-1169acc81b59'),
+            'username': 'mock_user_modified',
+            'email': 'mock_user_modified@test.com',
+            'last_name': 'ck_mod',
+        }, True, False, None, None, id='overwrite_model_by_id'),
         pytest.param('stored_mock_user', {
             'username': 'mock_user_modified',
             'email': 'mock_user_modified@test.com',
             'last_name': 'ck_mod',
-        }, True, True, None, None, id='overwrite_model'),
+        }, True, False, None, None, id='overwrite_model_by_model'),
+    ],
+    'test_finalize': [
+        pytest.param('one_time_mock_user', {
+            'email': 'finalize_email@email.com',
+        }, True, True, None, None),
+        pytest.param('one_time_mock_user', {
+            'email': 'finalize_email@email.com',
+        }, True, False, None, None),
+        pytest.param('one_time_mock_user', {
+            'email': 'finalize_email@email.com',
+            'username': 'finalize_user_name',
+            'first_name': 'fina',
+            'last_name': 'lize',
+            'role': ROLES.TRANSLATOR,
+        }, True, True, None, None),
+        pytest.param('one_time_mock_user', {
+
+        }, True, True, None, None),
+        pytest.param('one_time_mock_user', {
+            'email': 'abc'
+        }, True, True, ValidationError, None),
+        pytest.param(None, {
+            'email': 'finalize_new_email@email.com',
+            'username': 'finalize_absolute_new_model',
+            'first_name': 'fina_new',
+            'last_name': 'lize_new',
+            'role': ROLES.VISITOR
+        }, True, True, None, None),
+        pytest.param(None, {
+            'email': 'finalize_new_email@email.com',
+            'username': 'finalize_absolute_new_model',
+            'first_name': 'fina_new',
+            'last_name': 'lize_new',
+            'role': ROLES.VISITOR
+        }, True, False, AssertionError, None),
+        pytest.param(None, {
+            'email': 'finalize_new_email@email.com',
+            'username': 'finalize_absolute_new_model',
+            'first_name': 'fina_new',
+            'last_name': 'lize_new',
+            'role': ROLES.VISITOR
+        }, False, True, AssertionError, None),
     ]
 }, default_params={
     'first_name': '',

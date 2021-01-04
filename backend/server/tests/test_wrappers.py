@@ -17,12 +17,6 @@ from tests.utils import EmptyValue
 from django.core.management import call_command
 
 
-@pytest.fixture(scope='module')
-def django_db_setup(django_db_setup, django_db_blocker):
-    with django_db_blocker.unblock():
-        call_command('loaddata', 'test_data.json')
-
-
 @pytest.mark.django_db
 def load_module_helper(model_instance: models.Model, module_wrapper: AbstractWrapper):
     for field_name in module_wrapper.field_names:

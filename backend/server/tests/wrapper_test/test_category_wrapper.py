@@ -55,19 +55,48 @@ TestCategoryWrapper = gen_wrapper_test_class(wrapper_class=CategoryWrapper, test
     'test_get_model': [
         pytest.param(None, {
             'category': 'get_model_cat'
-        }, True, False, AssertionError, 'Cannot make new model without validations!',
+        }, False, False, AssertionError, 'Cannot make new model without validations!',
                      id='no_validate_no_model_assertion_err'),
         pytest.param('stored_mock_category', {
             'category': 'get_model_cat',
             'is_published': False
-        }, True, False, AssertionError, 'Cannot overwrite model without validations!',
-                     id='no_validate_cant_overwrite_err'),
+        }, False, False, AssertionError, 'Cannot overwrite model without validations!',
+                     id='no_validate_cant_overwrite_err', marks=pytest.mark.skip(reason='API change')),
         pytest.param(None, {
             'category': 'get_model_cat',
             'is_published': False
         }, True, True, None, None, id='make_new_model'),
         pytest.param('stored_mock_category', {
             'category': 'get_model_cat_mod'
-        }, True, True, None, None, id='overwrite_model'),
+        }, True, False, None, None, id='overwrite_model'),
+    ],
+    'test_finalize': [
+        pytest.param('one_time_mock_category', {
+            'category': 'finalize cat',
+            'is_published': False
+        }, True, True, None, None),
+        pytest.param('one_time_mock_category', {
+            'category': 'finalize cat',
+            'is_published': False
+        }, True, False, None, None),
+        pytest.param('one_time_mock_category', {
+            'category': 'only finalize cat'
+        }, True, True, None, None),
+        pytest.param('one_time_mock_category', {
+            'category': '',
+        }, True, True, ValidationError, None),
+        pytest.param(None, {
+            'category': 'finalize new cat',
+        }, True, True, None, None),
+        pytest.param(None, {
+            'category': 'finalize new published cat',
+            'is_published': True
+        }, True, True, None, None),
+        pytest.param(None, {
+            'category': 'finalize cat',
+        }, False, True, AssertionError, None),
+        pytest.param(None, {
+            'category': 'finalize cat',
+        }, True, False, AssertionError, None),
     ]
 }, default_params={'is_published': False})

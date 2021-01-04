@@ -3,6 +3,9 @@ import re
 from enum import Enum
 from typing import Sequence, Mapping, Union
 
+from django.core.files import File
+
+from backend.model.TutorialRelatedModel import GraphPriority
 from backend.model.UserModel import ROLES
 
 
@@ -74,11 +77,11 @@ def code_validator(code: str):
 
 def non_empty_text_validator(text: str):
     if not isinstance(text, str) or not text.strip():
-        raise ValidationError('`abstract` must be a non-empty string.')
+        raise ValidationError('input must be a non-empty string.')
 
 
 def graph_priority_validator(priority: int):
-    if priority not in {60, 40, 20}:
+    if priority not in GraphPriority:
         raise ValidationError(f'`GraphPriority` {priority} is not valid.')
 
 
@@ -88,7 +91,12 @@ def json_validator(js: Union[str, Mapping, Sequence]):
             json.loads(js)
         except Exception as e:
             raise ValidationError(f'JSON string is not valid. Error: {e}')
-    elif not isinstance(js, (Mapping, Sequence)):
+    elif isinstance(js, (Mapping, Sequence)):
+        try:
+            json.dumps(js)
+        except Exception as e:
+            raise ValidationError(f'JSON object is not valid. Error: {e}')
+    else:
         raise ValidationError('JSON must a string, a mapping, or a sequence.')
 
 
@@ -150,3 +158,13 @@ def level_validator(level: int):
 def section_validator(section: int):
     if not isinstance(section, int) or section > 9 or section < 0:
         raise ValidationError('`section` must be a positive number that\' smaller than 10')
+
+
+def file_validator(file: File):
+    if not isinstance(file, File):
+        raise ValidationError(f'`file` {file} is not a File instance.')
+
+
+def string_validator(string: str):
+    if not isinstance(string, str):
+        raise ValidationError('The field must be a string object')
