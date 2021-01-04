@@ -1,6 +1,7 @@
-from typing import Callable, Sequence, Any, Optional, List
+from typing import Callable, Sequence, Optional, List
 
 import pytest
+from django.core.management import call_command
 from django.db.models import Model
 
 
@@ -32,3 +33,10 @@ def model_factory(django_db_setup, django_db_blocker):
     for handler in _destructors:
         with django_db_blocker.unblock():
             handler()
+
+
+@pytest.fixture(scope='session')
+def django_db_setup(django_db_setup, django_db_blocker):
+    with django_db_blocker.unblock():
+        call_command('loaddata', 'test_data.json')
+
