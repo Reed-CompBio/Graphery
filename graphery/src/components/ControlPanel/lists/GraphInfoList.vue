@@ -162,6 +162,7 @@
         graphContentTypeMapping: {
           'en-us': 'ENUS_GRAPH_CONTENT',
           'zh-cn': 'ZHCN_GRAPH_CONTENT',
+          es: 'ES_GRAPH_CONTENT',
         },
       };
     },

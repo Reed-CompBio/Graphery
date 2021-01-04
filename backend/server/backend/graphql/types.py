@@ -6,7 +6,8 @@ from graphql import ResolveInfo
 
 from ..intel_wrappers.intel_wrapper import CategoryWrapper, TutorialAnchorWrapper, GraphWrapper, CodeWrapper, \
     ExecResultJsonWrapper, ENUSGraphContentWrapper, ZHCNTutorialContentWrapper, ENUSTutorialContentWrapper, \
-    ZHCNGraphContentWrapper, UploadsWrapper
+    ZHCNGraphContentWrapper, UploadsWrapper, ESTutorialContentWrapper, ESGraphContentWrapper
+from ..model.TranslationModels import ES, ESGraphContent
 from ..model.TutorialRelatedModel import FAKE_UUID, GraphPriority, Uploads
 from ..model.UserModel import ROLES
 from ..model.filters import show_published_only
@@ -21,7 +22,6 @@ from graphene_django.types import DjangoObjectType
 import graphene
 
 from copy import copy
-
 
 InvitationCode.refresh_all_code()
 
@@ -268,8 +268,10 @@ class DeletionEnum(graphene.Enum):
     UPLOADS = UploadsWrapper
     ENUS_TUTORIAL_CONTENT = ENUSTutorialContentWrapper
     ZHCN_TUTORIAL_CONTENT = ZHCNTutorialContentWrapper
+    ES_TUTORIAL_CONTENT = ESTutorialContentWrapper
     ENUS_GRAPH_CONTENT = ENUSGraphContentWrapper
     ZHCN_GRAPH_CONTENT = ZHCNGraphContentWrapper
+    ES_GRAPH_CONTENT = ESGraphContentWrapper
 
 
 class FilterContentType(graphene.InputObjectType):
@@ -278,7 +280,7 @@ class FilterContentType(graphene.InputObjectType):
 
 
 TutorialTransBaseFields = ('tutorial_anchor', 'authors',
-                           'abstract', 'content_md', 'content_html', )
+                           'abstract', 'content_md', 'content_html',)
 
 
 @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
@@ -296,18 +298,35 @@ def model_class_constructor(base_meta: type, attributes: Iterable[Tuple[str, Any
 
 @add_trans_type
 class ENUSTransType(PublishedFilterBase, DjangoObjectType):
-    Meta = model_class_constructor(TutorialTransMetaBase, (
-        ('model', ENUS),
-        ('description', 'The en-us translations of tutorials')
-    ))
+    Meta = model_class_constructor(
+        TutorialTransMetaBase,
+        (
+            ('model', ENUS),
+            ('description', 'The en-us translations of tutorials')
+        )
+    )
 
 
 @add_trans_type
 class ZHCNTransType(PublishedFilterBase, DjangoObjectType):
-    Meta = model_class_constructor(TutorialTransMetaBase, (
-        ('model', ZHCN),
-        ('description', 'The zh-cn translations of tutorials')
-    ))
+    Meta = model_class_constructor(
+        TutorialTransMetaBase,
+        (
+            ('model', ZHCN),
+            ('description', 'The zh-cn translations of tutorials')
+        )
+    )
+
+
+@add_trans_type
+class ESTransType(PublishedFilterBase, DjangoObjectType):
+    Meta = model_class_constructor(
+        TutorialTransMetaBase,
+        (
+            ('model', ES),
+            ('description', 'The spanish translations of tutorials')
+        )
+    )
 
 
 GraphTransBaseFields = ('title', 'abstract_md', 'abstract')
@@ -321,15 +340,32 @@ class GraphTransMetaBase:
 
 @add_trans_type
 class ENUSGraphTransType(PublishedFilterBase, DjangoObjectType):
-    Meta = model_class_constructor(GraphTransMetaBase, (
-        ('model', ENUSGraphContent),
-        ('description', 'The en-us translation of graphs')
-    ))
+    Meta = model_class_constructor(
+        GraphTransMetaBase,
+        (
+            ('model', ENUSGraphContent),
+            ('description', 'The en-us translation of graphs')
+        )
+    )
 
 
 @add_trans_type
 class ZHCNGraphTransType(PublishedFilterBase, DjangoObjectType):
-    Meta = model_class_constructor(GraphTransMetaBase, (
-        ('model', ZHCNGraphContent),
-        ('description', 'The zh-cn translation of graphs')
-    ))
+    Meta = model_class_constructor(
+        GraphTransMetaBase,
+        (
+            ('model', ZHCNGraphContent),
+            ('description', 'The zh-cn translation of graphs')
+        )
+    )
+
+
+@add_trans_type
+class ESGraphTransType(PublishedFilterBase, DjangoObjectType):
+    Meta = model_class_constructor(
+        GraphTransMetaBase,
+        (
+            ('model', ESGraphContent),
+            ('description', 'The spanish translations of graphs ')
+        )
+    )

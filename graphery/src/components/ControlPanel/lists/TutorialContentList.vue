@@ -229,6 +229,7 @@
         tutorialContentTypeMapping: {
           'en-us': 'ENUS_TUTORIAL_CONTENT',
           'zh-cn': 'ZHCN_TUTORIAL_CONTENT',
+          es: 'ES_TUTORIAL_CONTENT',
         },
       };
     },
