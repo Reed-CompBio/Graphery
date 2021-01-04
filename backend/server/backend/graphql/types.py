@@ -50,6 +50,7 @@ class UserType(DjangoObjectType):
     class Meta:
         model = User
         fields = ('username', 'email', 'role',
+                  'first_name', 'last_name',
                   'is_verified', 'date_joined',)
         description = 'User type. Login required to get info an account. '
 

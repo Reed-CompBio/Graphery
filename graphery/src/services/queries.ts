@@ -144,6 +144,8 @@ mutation ($username: String!, $password: String!) {
       username
       email
       role
+      firstName
+      lastName
     }
   }
 }`;
@@ -154,6 +156,8 @@ query {
     username
     email
     role
+    firstName
+    lastName
   }
 }`;
 
