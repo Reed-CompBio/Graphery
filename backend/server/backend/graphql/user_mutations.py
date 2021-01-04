@@ -1,10 +1,11 @@
 from typing import Optional
 
 import graphene
+from django.contrib.auth.models import AbstractUser
 from django.db import transaction
 
 from graphql import GraphQLError
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 
 from backend.graphql.decorators import anonymous_required
 from backend.graphql.mutation_base import SuccessMutationBase
@@ -99,3 +100,35 @@ class Logout(SuccessMutationBase):
             return Login(success=True)
         else:
             raise GraphQLError('Not Logged In')
+
+
+class ChangePassword(SuccessMutationBase):
+    class Arguments:
+        old_password = graphene.String(required=True)
+        new_password = graphene.String(required=True)
+
+    user = graphene.Field(UserType)
+
+    @login_required
+    def mutate(self, info, old_password: str, new_password: str):
+        user: AbstractUser = info.context.user
+        if not user.is_authenticated:
+            raise GraphQLError('You must login to change your password!')
+
+        try:
+            password_validator(new_password)
+        except AssertionError as e:
+            raise GraphQLError(f'Malformed password. Error: {e}')
+
+        if not user.check_password(old_password):
+            raise GraphQLError('The old password is incorrect!')
+
+        with transaction.atomic():
+            user.set_password(new_password)
+
+            user.save()
+
+            update_session_auth_hash(info.context, user)
+
+        return ChangePassword(success=True, user=user)
+
