@@ -18,7 +18,6 @@ from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper, \
     GraphTranslationContentWrapper, ExecResultJsonWrapper, UploadsWrapper
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
-from backend.model.MetaModel import InvitationCode
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import GraphPriority, Graph
 from backend.model.translation_collection import get_translation_table, get_graph_info_trans_table
@@ -254,6 +253,4 @@ class RefreshInvitationCode(SuccessMutationBase):
     @admin_required
     @graphene.resolve_only_args
     def mutate(self):
-        InvitationCode.refresh_all_code()
-        return RefreshInvitationCode(success=True, invitation_codes=InvitationCode.code_collection)
-
+        raise DeprecationWarning('This API is deprecated.')
