@@ -9,7 +9,7 @@ MEDIA_ROOT = getenv('GRAPHERY_MEDIA_ROOT', None)
 if MEDIA_ROOT is None:
     MEDIA_ROOT = Path.home() / 'Downloads' / 'graphery_media'
     if not MEDIA_ROOT.exists():
-        MEDIA_ROOT.mkdir()
+        MEDIA_ROOT.mkdir(parents=True)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'this-is-a-test-key'
