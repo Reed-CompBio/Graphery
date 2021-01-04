@@ -1,6 +1,7 @@
 from typing import Optional
 
 import graphene
+from django.db import transaction
 
 from graphql import GraphQLError
 from django.contrib.auth import authenticate, login, logout
@@ -63,11 +64,13 @@ class Register(SuccessMutationBase):
         except AssertionError as e:
             raise GraphQLError(f'Malformed password. Error: {e}')
 
-        user_wrapper: UserWrapper = process_model_wrapper(UserWrapper,
-                                                          email=email, username=username, role=role,
-                                                          first_name=first_name, last_name=last_name)
+        with transaction.atomic():
+            user_wrapper: UserWrapper = process_model_wrapper(UserWrapper,
+                                                              email=email, username=username, role=role,
+                                                              first_name=first_name, last_name=last_name)
 
-        user_wrapper.model.set_password(password)
+            user_wrapper.model.set_password(password)
+            user_wrapper.save_model()
 
         return Register(success=True, user=user_wrapper.model)
 
