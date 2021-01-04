@@ -24,7 +24,7 @@ def finalize_prerequisite_wrapper_iter(model_wrappers: Iterable[AbstractWrapper]
         model_wrapper.finalize_model(overwrite=False)
 
 
-class UserWrapper(AbstractWrapper):
+class UserWrapper(AbstractWrapper[User]):
     model_class: Type[User] = User
 
     def __init__(self):
@@ -68,7 +68,7 @@ class UserWrapper(AbstractWrapper):
         return self.__str__()
 
 
-class CategoryWrapper(PublishedWrapper):
+class CategoryWrapper(PublishedWrapper[Category]):
     model_class: Type[Category] = Category
 
     def __init__(self):
@@ -92,7 +92,7 @@ class CategoryWrapper(PublishedWrapper):
         return self.__str__()
 
 
-class TutorialAnchorWrapper(PublishedWrapper):
+class TutorialAnchorWrapper(PublishedWrapper[Tutorial]):
     model_class: Type[Tutorial] = Tutorial
 
     def __init__(self):
@@ -136,7 +136,7 @@ class TutorialAnchorWrapper(PublishedWrapper):
         return self.__str__()
 
 
-class GraphWrapper(PublishedWrapper):
+class GraphWrapper(PublishedWrapper[Graph]):
     model_class: Type[Graph] = Graph
 
     def __init__(self):
@@ -193,7 +193,7 @@ class GraphWrapper(PublishedWrapper):
         return self.__str__()
 
 
-class CodeWrapper(AbstractWrapper):
+class CodeWrapper(AbstractWrapper[Code]):
     model_class: Type[Code] = Code
 
     def __init__(self):
@@ -222,7 +222,7 @@ class CodeWrapper(AbstractWrapper):
         return self.__str__()
 
 
-class ExecResultJsonWrapper(AbstractWrapper):
+class ExecResultJsonWrapper(AbstractWrapper[ExecResultJson]):
     model_class: Type[ExecResultJson] = ExecResultJson
 
     def __init__(self):
@@ -261,7 +261,7 @@ class ExecResultJsonWrapper(AbstractWrapper):
         return self.__str__()
 
 
-class UploadsWrapper(PublishedWrapper):
+class UploadsWrapper(PublishedWrapper[Uploads]):
     model_class: Type[Uploads] = Uploads
 
     def __init__(self):
