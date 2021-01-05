@@ -11,6 +11,8 @@ query ($translation: String, $filterContent: FilterContentType) {
       title
       authors {
         username
+        firstName
+        lastName
       }
       abstract
       isPublished
@@ -30,6 +32,8 @@ query ($translation: String, $default: String, $filterContent: FilterContentType
     url
     authors {
       username
+      firstName
+      lastName
     }
     categories {
       id
@@ -61,6 +65,8 @@ query ($url: String, $translation: String) {
       title
       authors {
         username
+        firstName
+        lastName
       }
       contentHtml
       isPublished

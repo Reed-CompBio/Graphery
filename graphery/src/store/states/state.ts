@@ -26,12 +26,18 @@ export interface NotificationState {
   details: string;
 }
 
+export interface AuthorState {
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+}
+
 export interface TutorialMetaState {
   articleId: string | null;
   isAnchorPublished: boolean;
   isTransPublished: boolean;
   rank: RankType;
-  authors: string[];
+  authors: AuthorState[];
   categories: string[];
   modifiedTime: string;
 }
