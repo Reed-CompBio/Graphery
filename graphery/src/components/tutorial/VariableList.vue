@@ -3,7 +3,11 @@
     id="code-controller-wrapper"
     class="full-height full-width row flex-center"
   >
-    <q-scroll-area class="fit q-px-sm" id="variable-list-scroll-area">
+    <q-scroll-area
+      class="fit q-px-sm"
+      id="variable-list-scroll-area"
+      :visible="false"
+    >
       <q-card
         :key="index"
         v-for="(item, index) in variableDisplayList"
