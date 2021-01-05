@@ -1,93 +1,74 @@
+from __future__ import annotations
+
 import json
 from random import random
-from typing import Optional, Iterable, Mapping, Type, Union, Any
+from typing import Optional, Iterable, Mapping, Type, Union, Any, TypeVar, Generic
 
 from django.core.files import File
+from django.db.models import Model
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
     categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
-    graph_priority_validator, json_validator, email_validator, username_validator, password_validator, FAKE_PASSWORD, \
-    tutorial_anchors_validator, level_validator, section_validator
+    graph_priority_validator, json_validator, email_validator, username_validator, \
+    tutorial_anchors_validator, level_validator, section_validator, first_name_validator, last_name_validator, \
+    file_validator, string_validator
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase, ENUS, ZHCN, ENUSGraphContent, \
-    ZHCNGraphContent
+    ZHCNGraphContent, ESGraphContent, ES
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
 from backend.model.UserModel import User
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper, VariedContentWrapper
 
 
-def finalize_prerequisite_wrapper(model_wrapper: AbstractWrapper, overwrite: bool = False) -> None:
-    model_wrapper.prepare_model()
-    model_wrapper.get_model(overwrite=overwrite)
-    model_wrapper.finalize_model()
-
-
-def finalize_wrapper_without_preparation(model_wrapper: AbstractWrapper):
-    model_wrapper.get_model(validate=False)
-
-
 def finalize_prerequisite_wrapper_iter(model_wrappers: Iterable[AbstractWrapper]) -> None:
     for model_wrapper in model_wrappers:
-        finalize_prerequisite_wrapper(model_wrapper)
+        model_wrapper.finalize_model(overwrite=False)
 
 
-class UserWrapper(AbstractWrapper):
+class UserWrapper(AbstractWrapper[User]):
     model_class: Type[User] = User
 
     def __init__(self):
         AbstractWrapper.__init__(self, {
             'email': email_validator,
             'username': username_validator,
-            'password': password_validator,
+            'first_name': first_name_validator,
+            'last_name': last_name_validator,
             'role': dummy_validator,
         })
 
-        self.id = FAKE_UUID
+        self.id = None
         self.username: Optional[str] = None
         self.email: Optional[str] = None
-        self.password: str = FAKE_PASSWORD
+        self.first_name: str = ''
+        self.last_name: str = ''
         self.role: Optional[int] = None
 
     def load_model_var(self, loaded_model: User) -> None:
         super().load_model_var(loaded_model)
         self.username = loaded_model.username
         self.email = loaded_model.email
+        self.first_name = loaded_model.first_name
+        self.last_name = loaded_model.last_name
         self.role = loaded_model.role
 
-    def overwrite_model(self) -> None:
-        if not self.model_exists():
-            return
-
-        field_list = [field for field in self.validators.keys() if field != 'password']
-        for field in field_list:
-            setattr(self.model, field, getattr(self, field))
-
-        if self.password == FAKE_PASSWORD:
-            # TODO change this framework, added a exist/not modify flag
-            raise ValueError('Internal Error: password cannot be set to placeholder.')
-
-        if len(self.password) <= 25:
-            self.model.set_password(self.password)
-
-    def retrieve_model(self) -> None:
-        self.model = User.objects.get(username=self.username, email=self.email)
-
     def make_new_model(self) -> None:
-        self.model = User.objects.create_user(username=self.username,
-                                              email=self.email,
-                                              password=self.password,
-                                              role=self.role)
+        self.model = User(username=self.username,
+                          email=self.email,
+                          role=self.role,
+                          first_name=self.first_name,
+                          last_name=self.last_name)
 
     def __str__(self):
         return f'<UserWrapper\n' \
                f'email={self.email}\n' \
                f'username={self.username}\n' \
-               f'password={self.password}>'
+               f'fullname={f"{self.first_name} {self.last_name}"}>'
 
     def __repr__(self):
         return self.__str__()
 
 
-class CategoryWrapper(PublishedWrapper):
+class CategoryWrapper(PublishedWrapper[Category]):
     model_class: Type[Category] = Category
 
     def __init__(self):
@@ -101,9 +82,6 @@ class CategoryWrapper(PublishedWrapper):
         super().load_model_var(loaded_model)
         self.category = loaded_model.category
 
-    def retrieve_model(self) -> None:
-        self.model: Category = self.model_class.objects.get(id=self.id)
-
     def make_new_model(self) -> None:
         self.model: Category = self.model_class(category=self.category, is_published=self.is_published)
 
@@ -114,7 +92,7 @@ class CategoryWrapper(PublishedWrapper):
         return self.__str__()
 
 
-class TutorialAnchorWrapper(PublishedWrapper):
+class TutorialAnchorWrapper(PublishedWrapper[Tutorial]):
     model_class: Type[Tutorial] = Tutorial
 
     def __init__(self):
@@ -140,9 +118,6 @@ class TutorialAnchorWrapper(PublishedWrapper):
         self.level = loaded_model.level
         self.section = loaded_model.section
 
-    def retrieve_model(self) -> None:
-        self.model: Tutorial = self.model_class.objects.get(id=self.id)
-
     def make_new_model(self) -> None:
         self.model: Tutorial = self.model_class(url=self.url, name=self.name,
                                                 level=self.level, section=self.section,
@@ -150,11 +125,6 @@ class TutorialAnchorWrapper(PublishedWrapper):
 
     def prepare_model(self) -> None:
         finalize_prerequisite_wrapper_iter(self.categories)
-
-    def finalize_model(self) -> None:
-        self.save_model()
-        self.model.categories.set(wrapper.model for wrapper in self.categories)
-        self.save_model()
 
     def __str__(self):
         return f'<TutorialWrapper\n' \
@@ -166,7 +136,7 @@ class TutorialAnchorWrapper(PublishedWrapper):
         return self.__str__()
 
 
-class GraphWrapper(PublishedWrapper):
+class GraphWrapper(PublishedWrapper[Graph]):
     model_class: Type[Graph] = Graph
 
     def __init__(self):
@@ -199,9 +169,6 @@ class GraphWrapper(PublishedWrapper):
         self.tutorials = [TutorialAnchorWrapper().load_model(tutorial_anchor)
                           for tutorial_anchor in loaded_model.tutorials.all()]
 
-    def retrieve_model(self) -> None:
-        self.model: Graph = self.model_class.objects.get(id=self.id)
-
     def make_new_model(self) -> None:
         self.model: Graph = self.model_class(url=self.url, name=self.name,
                                              priority=self.priority, cyjs=self.cyjs,
@@ -211,15 +178,6 @@ class GraphWrapper(PublishedWrapper):
         finalize_prerequisite_wrapper_iter(self.categories)
         finalize_prerequisite_wrapper_iter(self.tutorials)
         finalize_prerequisite_wrapper_iter(self.authors)
-
-    def finalize_model(self) -> None:
-        self.save_model()
-
-        self.model.categories.set(wrapper.model for wrapper in self.categories)
-        self.model.tutorials.set(wrapper.model for wrapper in self.tutorials)
-        self.model.authors.set(wrapper.model for wrapper in self.authors)
-
-        self.save_model()
 
     def __str__(self):
         return f'<GraphWrapper url={self.url} \n' \
@@ -235,7 +193,7 @@ class GraphWrapper(PublishedWrapper):
         return self.__str__()
 
 
-class CodeWrapper(AbstractWrapper):
+class CodeWrapper(AbstractWrapper[Code]):
     model_class: Type[Code] = Code
 
     def __init__(self):
@@ -252,9 +210,6 @@ class CodeWrapper(AbstractWrapper):
         self.tutorial = TutorialAnchorWrapper().load_model(loaded_model.tutorial)
         self.code = loaded_model.code
 
-    def retrieve_model(self) -> None:
-        self.model: Code = self.model_class.objects.get(id=self.id)
-
     def make_new_model(self) -> None:
         self.model: Code = self.model_class(tutorial=self.tutorial.model, code=self.code)
 
@@ -267,7 +222,7 @@ class CodeWrapper(AbstractWrapper):
         return self.__str__()
 
 
-class ExecResultJsonWrapper(AbstractWrapper):
+class ExecResultJsonWrapper(AbstractWrapper[ExecResultJson]):
     model_class: Type[ExecResultJson] = ExecResultJson
 
     def __init__(self):
@@ -306,7 +261,7 @@ class ExecResultJsonWrapper(AbstractWrapper):
         return self.__str__()
 
 
-class UploadsWrapper(PublishedWrapper):
+class UploadsWrapper(PublishedWrapper[Uploads]):
     model_class: Type[Uploads] = Uploads
 
     def __init__(self):
@@ -314,8 +269,8 @@ class UploadsWrapper(PublishedWrapper):
         self.alias: Optional[str] = None
 
         super(UploadsWrapper, self).__init__({
-            'file': dummy_validator,
-            'alias': non_empty_text_validator
+            'file': file_validator,
+            'alias': string_validator,
         })
 
         self.id: str = FAKE_UUID
@@ -326,12 +281,10 @@ class UploadsWrapper(PublishedWrapper):
         self.alias = loaded_model.alias
 
     def retrieve_model(self) -> None:
-        if self.id is not None or self.id != FAKE_UUID:
+        if self.id is not None and self.id != FAKE_UUID:
             self.model: Uploads = Uploads.objects.get(id=self.id)
         elif self.alias:
             self.model: Uploads = Uploads.objects.get(alias=self.alias)
-        elif isinstance(self.file, str):
-            self.model: Uploads = Uploads.objects.get(file=self.file)
         elif isinstance(self.file, File):
             self.model: Uploads = Uploads.objects.get(file=self.file.name)
         else:
@@ -340,12 +293,20 @@ class UploadsWrapper(PublishedWrapper):
 
     def make_new_model(self) -> None:
         if isinstance(self.file, File):
-            self.model: Uploads = Uploads(file=self.file, alias=f'{self.file.name}_{int(random() * 100000)}')
+            self.model: Uploads = Uploads(file=self.file,
+                                          alias=(
+                                              self.alias if self.alias else f'{self.file.name}_{int(random() * 100000)}'
+                                          ),
+                                          is_published=self.is_published)
         else:
-            raise ValueError(f'Cannot create upload since `file` {self.file} is not a File instance.')
+            raise ValueError(f'Cannot create upload since `file` {self.file} '
+                             f'(alias: {self.alias}) is not a File instance.')
 
 
-class TutorialTranslationContentWrapper(VariedContentWrapper[Type[TranslationBase]]):
+_T = TypeVar('_T', bound=Model)
+
+
+class TutorialTranslationContentWrapper(VariedContentWrapper[_T], Generic[_T]):
     def __init__(self):
         self.title: Optional[str] = None
         self.authors: Optional[Iterable[UserWrapper]] = None
@@ -363,7 +324,7 @@ class TutorialTranslationContentWrapper(VariedContentWrapper[Type[TranslationBas
             'content_html': non_empty_text_validator,
         })
 
-    def load_model_var(self, loaded_model: TranslationBase) -> None:
+    def load_model_var(self, loaded_model: _T) -> None:
         super().load_model_var(loaded_model)
 
         self.model_class = type(loaded_model)
@@ -374,11 +335,11 @@ class TutorialTranslationContentWrapper(VariedContentWrapper[Type[TranslationBas
         self.content_md = loaded_model.content_md
         self.content_html = loaded_model.content_html
 
-    def set_model_class(self, model_class: Type[TranslationBase]) -> 'TutorialTranslationContentWrapper':
+    def set_model_class(self, model_class: Type[_T]) -> TutorialTranslationContentWrapper[_T]:
         self.model_class = model_class
         return self
 
-    def set_variables(self, **kwargs) -> 'TutorialTranslationContentWrapper':
+    def set_variables(self, **kwargs) -> TutorialTranslationContentWrapper[_T]:
         the_model_class = kwargs.pop('model_class', None)
         if the_model_class is not None and issubclass(the_model_class, TranslationBase):
             self.set_model_class(the_model_class)
@@ -394,15 +355,11 @@ class TutorialTranslationContentWrapper(VariedContentWrapper[Type[TranslationBas
                                                        tutorial_anchor=self.tutorial_anchor.model,
                                                        abstract=self.abstract,
                                                        content_md=self.content_md,
-                                                       content_html=self.content_html)
+                                                       content_html=self.content_html,
+                                                       is_published=self.is_published)
 
     def prepare_model(self) -> None:
         finalize_prerequisite_wrapper_iter(self.authors)
-
-    def finalize_model(self) -> None:
-        self.save_model()
-        self.model.authors.set(wrapper.model for wrapper in self.authors)
-        self.save_model()
 
     def __str__(self):
         return f'<TutorialContentWrapper\n' \
@@ -418,15 +375,22 @@ class TutorialTranslationContentWrapper(VariedContentWrapper[Type[TranslationBas
         return self.__str__()
 
 
-class ENUSTutorialContentWrapper(TutorialTranslationContentWrapper):
+class ENUSTutorialContentWrapper(TutorialTranslationContentWrapper[ENUS]):
     model_class = ENUS
 
 
-class ZHCNTutorialContentWrapper(TutorialTranslationContentWrapper):
+class ZHCNTutorialContentWrapper(TutorialTranslationContentWrapper[ZHCN]):
     model_class = ZHCN
 
 
-class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationBase]]):
+class ESTutorialContentWrapper(TutorialTranslationContentWrapper[ES]):
+    model_class = ES
+
+
+_S = TypeVar('_S', bound=Model)
+
+
+class GraphTranslationContentWrapper(VariedContentWrapper[_S], Generic[_S]):
     def __init__(self):
         self.title: Optional[str] = None
         self.abstract_md: Optional[str] = None
@@ -440,7 +404,7 @@ class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationB
             'graph_anchor': wrapper_validator,
         })
 
-    def load_model_var(self, loaded_model: GraphTranslationBase) -> None:
+    def load_model_var(self, loaded_model: _S) -> None:
         super().load_model_var(loaded_model)
 
         self.model_class = type(loaded_model)
@@ -449,11 +413,11 @@ class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationB
         self.abstract = loaded_model.abstract
         self.graph_anchor = GraphWrapper().load_model(loaded_model.graph_anchor)
 
-    def set_model_class(self, model_class: Type[GraphTranslationBase]) -> 'GraphTranslationContentWrapper':
+    def set_model_class(self, model_class: Type[_S]) -> GraphTranslationContentWrapper[_S]:
         self.model_class = model_class
         return self
 
-    def set_variables(self, **kwargs) -> 'GraphTranslationContentWrapper':
+    def set_variables(self, **kwargs) -> GraphTranslationContentWrapper[_S]:
         the_model_class = kwargs.pop('model_class', None)
         if the_model_class is not None and issubclass(the_model_class, GraphTranslationBase):
             self.set_model_class(the_model_class)
@@ -468,7 +432,8 @@ class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationB
         self.model: GraphTranslationBase = self.model_class(graph_anchor=self.graph_anchor.model,
                                                             title=self.title,
                                                             abstract=self.abstract,
-                                                            abstract_md=self.abstract_md)
+                                                            abstract_md=self.abstract_md,
+                                                            is_published=self.is_published)
 
     def __str__(self):
         return f'<GraphContentWrapper\n' \
@@ -483,12 +448,16 @@ class GraphTranslationContentWrapper(VariedContentWrapper[Type[GraphTranslationB
         return self.__str__()
 
 
-class ENUSGraphContentWrapper(GraphTranslationContentWrapper):
+class ENUSGraphContentWrapper(GraphTranslationContentWrapper[ENUSGraphContent]):
     model_class = ENUSGraphContent
 
 
-class ZHCNGraphContentWrapper(GraphTranslationContentWrapper):
+class ZHCNGraphContentWrapper(GraphTranslationContentWrapper[ZHCNGraphContent]):
     model_class = ZHCNGraphContent
+
+
+class ESGraphContentWrapper(GraphTranslationContentWrapper[ESGraphContent]):
+    model_class = ESGraphContent
 
 
 FixedTypeWrapper = Union[UserWrapper,
@@ -496,7 +465,11 @@ FixedTypeWrapper = Union[UserWrapper,
                          TutorialAnchorWrapper,
                          GraphWrapper,
                          CodeWrapper,
-                         ExecResultJsonWrapper]
+                         ExecResultJsonWrapper,
+                         ENUSTutorialContentWrapper,
+                         ZHCNTutorialContentWrapper,
+                         ENUSGraphContentWrapper,
+                         ZHCNGraphContentWrapper]
 
 VariedTypeWrapper = Union[TutorialTranslationContentWrapper,
                           GraphTranslationContentWrapper]

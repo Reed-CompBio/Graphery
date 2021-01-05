@@ -9,7 +9,6 @@ from graphql import ResolveInfo
 from .decorators import login_required, write_required, admin_required
 from .filter_helpers import category_id_filter, tutorial_content_search, get_search_text, get_category_ids, \
     graph_content_search
-from ..model.MetaModel import InvitationCode
 from ..model.TutorialRelatedModel import GraphPriority, Uploads
 from ..model.filters import show_published_only
 from ..model.translation_collection import translation_tables
@@ -180,4 +179,4 @@ class Query(graphene.ObjectType):
     @admin_required
     @graphene.resolve_only_args
     def resolve_invitation_codes(self):
-        return InvitationCode.code_collection
+        raise DeprecationWarning('This API is deprecated.')

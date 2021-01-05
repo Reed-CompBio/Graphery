@@ -15,6 +15,14 @@
             :title="$t('account.Role')"
             :content="userRole"
           ></UserInfoItem>
+          <UserInfoItem
+            :title="$t('account.firstName')"
+            :content="userFirstName"
+          />
+          <UserInfoItem
+            :title="$t('account.lastName')"
+            :content="userLastName"
+          />
         </q-card-section>
         <q-separator />
         <q-card-actions align="center">
@@ -62,19 +70,31 @@
         if (this.userObj) {
           return this.userObj['username'];
         }
-        return '';
+        return 'Unavailable';
       },
       userEmail() {
         if (this.userObj) {
           return this.userObj['email'];
         }
-        return '';
+        return 'Unavailable';
       },
       userRole() {
         if (this.userObj) {
           return this.userObj['role'];
         }
-        return '';
+        return 'Unavailable';
+      },
+      userFirstName() {
+        if (this.userObj) {
+          return this.userObj['firstName'];
+        }
+        return 'Unavailable';
+      },
+      userLastName() {
+        if (this.userObj) {
+          return this.userObj['lastName'];
+        }
+        return 'Unavailable';
       },
       isAdmin() {
         return this.userRole === 'Administrator';

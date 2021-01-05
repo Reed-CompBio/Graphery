@@ -2,7 +2,6 @@ import functools
 import inspect
 import opcode
 import os
-import pathlib
 import sys
 import re
 import collections
@@ -11,7 +10,6 @@ import itertools
 import threading
 import traceback
 import logging
-from copy import copy
 from types import FrameType, FunctionType
 from typing import Iterable, Tuple, Any, Mapping, Optional, List, Callable, Union
 
@@ -131,11 +129,14 @@ def get_write_function(output, overwrite):
         return FileWriter(output, overwrite).write
     elif callable(output):
         write = output
-    else:
+    elif output:
         assert isinstance(output, utils.WritableStream)
 
         def write(s):
             output.write(s)
+    else:
+        def write(_: Any):
+            pass
     return write
 
 
@@ -152,27 +153,37 @@ class FileWriter(object):
 
 
 thread_global = threading.local()
-DISABLED = bool(os.getenv('SEEKER_DISABLED', ''))
+_SEEKER_DISABLE_ENV_NAME = 'SEEKER_DISABLED'
+DISABLED = bool(os.getenv(_SEEKER_DISABLE_ENV_NAME, ''))
+
+_LOG_OUTPUT_ENV_NAME = 'SEEKER_LOG_OUTPUT_FLAG'
+using_log_output = bool(int(os.getenv(_LOG_OUTPUT_ENV_NAME, True)))
+
+_DEFAULT_OUTPUT_ENV_NAME = 'SEEKER_DEFAULT_OUTPUT_FLAG'
+using_default_output = bool(int(os.getenv(_DEFAULT_OUTPUT_ENV_NAME, True)))
 
 
 class Tracer:
     _recorder: Recorder = None
-    _log_file_name: Optional[pathlib.Path] = None
-    _log_file_dir: Optional[str] = None
+    _logger: logging.Logger = None
 
-    def __init__(self, *watch_list, default_output: bool = True,
+    def __init__(self, *watch_list,
+                 default_output: bool = using_log_output,
+                 log_output: bool = using_default_output,
                  output: Union[str, Callable, utils.WritableStream, StringIO] = None,
                  watch=(), watch_explode=(), depth: int = 1, prefix: str = '', overwrite: bool = False,
                  thread_info: bool = False, custom_repr=(), max_variable_length: int = 100,
                  relative_time: bool = False, only_watch: bool = True):
 
         if output:
-            self.log_path = output
-        elif self._log_file_name and self._log_file_dir and not default_output:
-            self.log_path = self._log_file_dir / self._log_file_name
+            self._log_path = output
+        elif self._logger is not None and log_output:
+            self._log_path = self.log_output
+        elif default_output:
+            self._log_path = None
         else:
-            self.log_path = None
-        self._write = get_write_function(self.log_path, overwrite)
+            self._log_path = False
+        self._write = get_write_function(self._log_path, overwrite)
 
         self.watch = [
                          v if isinstance(v, BaseVariable) else CommonVariable(v)
@@ -217,16 +228,16 @@ class Tracer:
         cls._recorder = recorder
 
     @classmethod
-    def get_recorder_change_list(cls) -> List[dict]:
-        return cls.get_recorder().changes
+    def get_recorder_change_list(cls) -> List[Mapping]:
+        return cls.get_recorder().get_change_list()
 
     @classmethod
-    def set_log_file_name(cls, file_name: Optional[str]) -> None:
-        cls._log_file_name = file_name
+    def set_logger(cls, logger: Optional[logging.Logger]) -> None:
+        cls._logger = logger
 
     @classmethod
-    def set_log_file_dir(cls, file_dir: Optional[pathlib.Path]) -> None:
-        cls._log_file_dir = file_dir
+    def log_output(cls, message: str) -> None:
+        cls._logger.info(message.rstrip())
 
     def __call__(self, function_or_class):
         if DISABLED:
@@ -426,6 +437,7 @@ class Tracer:
         #                                                                     #
         # Finished dealing with misplaced function definition. ################
 
+        # TODO remove the if statement
         if event != 'return':
             self.recorder.add_record(line_no)
 
@@ -445,21 +457,17 @@ class Tracer:
 
         for name, (value, value_repr) in local_reprs.items():
             identifier = (self.prefix, name)
-            copied_value = copy(value)
-            if name not in old_local_reprs:
-                self.recorder.register_variable(identifier)
+            identifier_string = self.recorder.register_variable(identifier)
 
+            if name not in old_local_reprs:
                 if event == 'call':
-                    # TODO it seems to work but I am not sure about this
-                    self.recorder.add_vc_to_last_record(identifier, copied_value)
+                    self.recorder.add_vc_to_last_record(identifier_string, value)
                 else:
-                    self.recorder.add_vc_to_previous_record(identifier, copied_value)
-                self.write('{indent}{newish_string}{name} = {value_repr}'.format(
-                    **locals()))
+                    self.recorder.add_vc_to_previous_record(identifier_string, value)
+                self.write('{indent}{newish_string}{name} = {value_repr}'.format(**locals()))
             elif old_local_reprs[name][1] != value_repr:
-                self.recorder.add_vc_to_previous_record(identifier, copied_value)
-                self.write('{indent}Modified var:.. {name} = {value_repr}'.format(
-                    **locals()))
+                self.recorder.add_vc_to_previous_record(identifier_string, value)
+                self.write('{indent}Modified var:.. {name} = {value_repr}'.format(**locals()))
 
         #                                                                     #
         # Finished newish and modified variables. #############################

@@ -1,7 +1,11 @@
-from typing import Type, Container
+from __future__ import annotations
+from datetime import date
 
 from django.core.management.utils import get_random_secret_key
+from django.db import models
+
 from .UserModel import ROLES
+from .mixins import UUIDMixin, TimeDateMixin
 
 
 class MetaData:
@@ -11,21 +15,26 @@ class MetaData:
     notification_card_after = ''
 
 
-class InvitationCode:
-    code_collection = {}
-    role_mapping = {label: value for label, value in (reversed(pair) for pair in ROLES.choices)}
+class InvitationCodeModel(UUIDMixin, TimeDateMixin):
+    class Meta:
+        verbose_name = 'Invitation code'
+        constraints = [
+            models.CheckConstraint(
+                check=~(models.Q(expiration_date__isnull=True) & models.Q(expiration_times__isnull=True)),
+                name='has expiration date or expiration times'
+            )
+        ]
 
-    @staticmethod
-    def generate_invitation_code() -> str:
-        return get_random_secret_key()
+    invitation_code = models.CharField(max_length=200, unique=True,
+                                       null=False, blank=False,
+                                       default=get_random_secret_key)
+    expiration_date = models.DateField(blank=True, null=True)
+    expiration_times = models.IntegerField(blank=True, null=True)
+    role = models.PositiveSmallIntegerField(choices=ROLES.choices)
 
-    @classmethod
-    def refresh_all_code(cls) -> Type['InvitationCode']:
-        for label in ROLES.labels:
-            cls.code_collection[label] = cls.generate_invitation_code()
+    @property
+    def usable(self) -> bool:
+        times_flag = not (self.expiration_times is not None and self.expiration_times < 0)
+        date_flag = not (self.expiration_date is not None and self.expiration_date < date.today())
 
-        return cls
-
-    @classmethod
-    def codes(cls) -> Container:
-        return cls.code_collection.values()
+        return times_flag and date_flag

@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import json
-from collections import Mapping
+from collections.abc import Mapping
 from typing import Union
 
 from bundle.server_utils.params import VERSION
@@ -9,7 +11,7 @@ class Env:
     def __init__(self, **kwargs):
         self.content = kwargs
 
-    def add_content(self, mapping: Mapping, **kwargs) -> 'Env':
+    def add_content(self, mapping: Mapping, **kwargs) -> Env:
         self.content.update(**kwargs, **mapping)
         return self
 

@@ -26,14 +26,15 @@ except Exception as e:
 if __name__ == '__main__':
 
     args = arg_parser()
-    server_port = args.get('port', None)
-    compile_content = args.get('compile', None)
+    server_url: str = args.get('url')
+    server_port: int = args.get('port')
+    compile_content = args.get('compile')
 
     try:
         if compile_content is not None and isinstance(compile_content, Mapping):
             raise NotImplementedError('CLI Compiling is not supported yet!')
         elif server_port is not None and isinstance(server_port, int):
-            run_server(server_port)
+            run_server(server_url, server_port)
         else:
             raise ValueError('Invalid Arguments')
     except KeyboardInterrupt:

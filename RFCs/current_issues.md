@@ -22,19 +22,21 @@
 
 - [ ] Create an API for user server (the snooper) and the front end. The stepper works OK right now but some work should be done to make the experience of variable list better. It's are to see the variable names and variable detail right now. The user server should follow the API when sending information to the frontend. The frontend should have a tokenizer that interprets the information sent from the backend. _A separate document will be posted. [user_server_api.md](./user_server_api.md)_
 
-- [ ] Unify `Processor` and `Recorder`. There is no need to collect variables first and then serialize them.
+- [x] Unify `Processor` and `Recorder`. There is no need to collect variables first and then serialize them.
+
+- [x] Fix `Controller` logging. 
 
 - [ ] IP restriction should be imposed to reduce malicious requests. The execution time should be limited to 1 second. 
 
 - [ ] Unify the server error response. _This will be another document._ 
 
-- [ ] Wrap user server with docker and setup a portal environment. 
+- [x] Wrap user server with docker and setup a portal environment. 
 
-- [ ] Implement reading from env for global setting variables, like for user server for example. 
+- [x] Implement reading from env for global setting variables, like for user server for example. 
 
 - [ ] Implement tooltips on graph elements to show their properties. (Fix #60). The tooltips should go away when any operation is taken on the Cytoscape. Also, there should be a disable showing graph tooltip option on the control strip. 
 
-- [ ] Implement auto run in the step controller. 
+- [ ] Implement (or delete) auto run in the step controller. 
 
 - [ ] Add name to code snippets. 
 

@@ -144,6 +144,8 @@ mutation ($username: String!, $password: String!) {
       username
       email
       role
+      firstName
+      lastName
     }
   }
 }`;
@@ -154,6 +156,8 @@ query {
     username
     email
     role
+    firstName
+    lastName
   }
 }`;
 
@@ -490,8 +494,8 @@ mutation {
 }`;
 
 export const registerMutation = `
-mutation ($email: String!, $username: String!, $password: String!, $invitationCode: String!) {
-  register(email: $email, username: $username, password: $password, invitationCode:$invitationCode) {
+mutation ($email: String!, $username: String!, $password: String!, $invitationCode: String!, $firstName: String, $lastName: String) {
+  register(email: $email, username: $username, password: $password, invitationCode:$invitationCode, firstName: $firstName, lastName: $lastName) {
     success
   }
 }`;

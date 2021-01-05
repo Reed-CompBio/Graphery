@@ -36,13 +36,14 @@ The line is the line number of current execution. Say the current line is 17, th
                 'type': 'some_type',
                 'color': 'some_color_hex',
                 'repr': 'some_repr'
+                'id': 'graph_element_id',
                 'properties': {
                     'property_1': str or number,
                     ...
                 }
             }
         }, 
-        'accessed': [
+        'accesses': [
             {
                 'type': 'some_type',
                 'color': 'some_color_hex',
@@ -67,7 +68,7 @@ When the components in the `Sequence` are connected by a separator, they become 
 
 The `identity` should be decoded in the following way. Get the namespaces and the variable name by removing the separator, select useful namespaces, and display the variable with selected ones. 
 
-The `type` should be a enum(mapping) that has the following values. 
+The `type` should be a enum(mapping) that has the following values, with an additional `init` type that indicates the element has not been initialized yet, which should only be used on the variables in the first record. 
 
 ```python
 {
@@ -79,7 +80,7 @@ The `type` should be a enum(mapping) that has the following values.
     Deque: 'Deque',
     #  Counter: 'Counter',
     tyep(None): 'None',
-    Set: 'Set',  # which includes Set, set, KeyView(dict_keys), ValueView(dict_values), ItemView(dict_items), frozenset, MutableSet
+    Set: 'Set',  # which includes Set, set, KeyView(dict_keys), ItemView(dict_items), frozenset, MutableSet
     Mapping: 'Mapping',  # which includes mappingproxy (not sure what that is), MutableMapping, dict 
     Sequence: 'Sequence',  # which includes tuple, str, range, memoryview, MutableSequence, list, bytearray
     #  ByteString: 'ByteString',  # which is optional in this version 
@@ -94,6 +95,8 @@ The order in this dictionary matters. Since if a string is matched as a sequence
 The hex color should be chose in a way that's friendly to color blind people. It's not guaranteed that all colors are friendly. The author should try to expand the palette as much as possible. 
 
 `repr` should be a string representation of the value. The `repr` should be formatted according to the `type` field. Then, if the `__repr__` or `__str__` function is overridden in a instance, the program should use those. It should prefer `__repr__` over `__str__`. Otherwise, the ugly default representation should be used. 
+
+The field `id` is the id of the graph element. The field is facilitate the interaction with the Cytoscape module. 
 
 The item is `property` which is a graph-element-specific item. That is, only graph elements have this item. The `property` contains the properties that's needed to be displayed on the tooltips in the Cytoscape window. Currently, the value of the `property` mapping should only be a string or a number. 
 

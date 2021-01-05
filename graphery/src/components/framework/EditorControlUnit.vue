@@ -45,14 +45,6 @@
       </q-btn>
       <q-btn
         dense
-        icon="mdi-play"
-        @click="onAutoRun"
-        :disable="isNextButtonDisable"
-      >
-        <SwitchTooltip :text="$t('tooltips.autoRun')"></SwitchTooltip>
-      </q-btn>
-      <q-btn
-        dense
         icon="mdi-skip-next"
         @click="onStepForward"
         :disable="isNextButtonDisable"
@@ -109,11 +101,11 @@
       </q-btn>
     </q-btn-group>
 
-    <q-btn-group flat class="q-mr-md">
-      <q-btn dense icon="mdi-folder-network-outline" @click="onCallWorkSpace">
-        <SwitchTooltip :text="$t('tooltips.openWorkSpace')" />
-      </q-btn>
-    </q-btn-group>
+    <!--    <q-btn-group flat class="q-mr-md">-->
+    <!--      <q-btn dense icon="mdi-folder-network-outline" @click="onCallWorkSpace">-->
+    <!--        <SwitchTooltip :text="$t('tooltips.openWorkSpace')" />-->
+    <!--      </q-btn>-->
+    <!--    </q-btn-group>-->
 
     <!-- Editor status -->
     <q-btn-group flat class="q-mr-md">
@@ -213,9 +205,6 @@
       onStepBack() {
         this.setSliderPosition(this.getSliderPosition - 1);
       },
-      onAutoRun() {
-        // TODO
-      },
       onStepForward() {
         this.setSliderPosition(this.getSliderPosition + 1);
       },
@@ -240,9 +229,9 @@
       onChangeVariableListOrientation() {
         this.$emit('onChangeVariableListOrientation');
       },
-      onCallWorkSpace() {
-        this.$emit('onCallWorkSpace');
-      },
+      // onCallWorkSpace() {
+      //   this.$emit('onCallWorkSpace');
+      // },
     },
   };
 </script>

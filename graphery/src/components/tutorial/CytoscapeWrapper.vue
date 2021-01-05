@@ -119,6 +119,7 @@
         tippy: null,
         testValue: 0,
         lastVarObjectStore: {},
+        accessedVarObjectStore: [],
         choseGraphObj: null,
         // TODO remember to clear this out
       };
@@ -313,12 +314,12 @@
         }
       },
       // highlight helper function
-      highlightElement(id, color) {
+      highlightElement(varObj) {
         if (!this.cyInstance) {
           return;
         }
-        this.cyInstance.getElementById(id).style({
-          'overlay-color': color,
+        this.cyInstance.getElementById(varObj.id).style({
+          'overlay-color': varObj.color,
           'overlay-opacity': 0.5,
           'overlay-padding': 5,
         });
@@ -354,12 +355,30 @@
                 this.lastVarObjectStore[varName] = varObj;
               }
 
-              this.highlightElement(varObj.id, varObj.color);
+              this.highlightElement(varObj);
             } else {
               if (isGraphElement(lastVarObject)) {
                 this.unhighlightAndStore(varName, varObj);
               }
             }
+          }
+        }
+      },
+      highlightAccessedVariables(accessedVariables) {
+        this.unhighlightAccessedVariables();
+        if (accessedVariables) {
+          for (const varObj of accessedVariables) {
+            if (isGraphElement(varObj)) {
+              this.accessedVarObjectStore.push(varObj);
+              this.highlightElement(varObj);
+            }
+          }
+        }
+      },
+      unhighlightAccessedVariables() {
+        if (this.accessedVarObjectStore.length > 0) {
+          for (const varObj of this.accessedVarObjectStore) {
+            this.unhighlightElement(varObj);
           }
         }
       },

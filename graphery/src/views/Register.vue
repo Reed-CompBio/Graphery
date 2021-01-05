@@ -4,7 +4,7 @@
       <q-card-section>
         <div :class="$q.screen.gt.xs ? 'q-pl-xl' : 'q-pl.md'">
           <h3 class="material-page-shorter-h3">
-            {{ $t('nav.Login') }}
+            {{ $t('account.Register') }}
           </h3>
         </div>
         <div>
@@ -39,6 +39,26 @@
                       type="text"
                       :rules="[(val) => !!val || $t('account.notEmpty')]"
                       :lazy-rules="true"
+                      :loading="loading"
+                      :disable="loading"
+                    />
+                  </div>
+                  <div id="firstName" class="q-my-md">
+                    <q-input
+                      outlined
+                      v-model="firstName"
+                      :label="$t('account.firstName')"
+                      type="text"
+                      :loading="loading"
+                      :disable="loading"
+                    />
+                  </div>
+                  <div id="lastName" class="q-my-md">
+                    <q-input
+                      outlined
+                      v-model="lastName"
+                      :label="$t('account.lastName')"
+                      type="text"
                       :loading="loading"
                       :disable="loading"
                     />
@@ -152,6 +172,8 @@
       return {
         email: '',
         username: '',
+        firstName: '',
+        lastName: '',
         password: '',
         confirmPassword: '',
         invitationCode: '',
@@ -183,6 +205,8 @@
           !this.email ||
           !this.username ||
           !this.password ||
+          !this.firstName ||
+          !this.lastName ||
           !this.confirmPassword ||
           !this.invitationCode
         ) {
@@ -204,6 +228,8 @@
         const registerInfo = {
           email: this.email,
           username: this.username,
+          firstName: this.firstName,
+          lastName: this.lastName,
           password: this.confirmPassword,
           invitationCode: this.invitationCode,
         };
@@ -234,6 +260,8 @@
       resetForm() {
         this.username = '';
         this.password = '';
+        this.firstName = '';
+        this.lastName = '';
         this.confirmPassword = '';
         this.showPwd = false;
         this.loading = false;

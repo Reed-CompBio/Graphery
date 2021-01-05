@@ -1,19 +1,17 @@
+from __future__ import annotations
 import json
 import os
 import textwrap
 import pathlib
-from time import sleep
-from typing import Union, Mapping, Optional, Any
-from multiprocessing import Pool, TimeoutError
+from typing import Union, Mapping
 from itertools import product
 
 import pytest
-import requests
 
 from bundle.server_utils.utils import create_error_response, create_data_response, execute
-from bundle.server_utils.main_functions import application_helper, main
+from bundle.server_utils.main_functions import application_helper
 from bundle.tests.user_server_tests.server_utils import Env, FileLikeObj, generate_wsgi_input
-from bundle.server_utils.params import TIMEOUT_SECONDS, DEFAULT_PORT, VERSION
+from bundle.server_utils.params import TIMEOUT_SECONDS, VERSION
 
 
 class AnyResp:
@@ -156,7 +154,7 @@ def mock_normal_code() -> str:
                 while True:
                     sleep(6000)        
         '''), graph=mock_graph_json())
-    }).content, create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS} s.')),  # timeout error
+    }).content, create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS}s.')),  # timeout error
 ])
 def test_application_helper(env, response):
     mock_response = application_helper(env)

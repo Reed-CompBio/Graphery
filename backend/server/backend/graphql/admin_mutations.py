@@ -245,3 +245,12 @@ class DeleteContent(SuccessMutationBase):
         wrapper.delete_model()
 
         return DeleteContent(success=True, )
+
+
+class RefreshInvitationCode(SuccessMutationBase):
+    invitation_codes = graphene.JSONString(required=True)
+
+    @admin_required
+    @graphene.resolve_only_args
+    def mutate(self):
+        raise DeprecationWarning('This API is deprecated.')

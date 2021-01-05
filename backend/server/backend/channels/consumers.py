@@ -12,7 +12,6 @@ from .helpers import generate_respond_message, generate_respond_error_message, R
 
 from .utils import process_handler
 
-
 execution_logger = logging.getLogger('execution_request')
 
 PROCESSING_QUEUE_NAME = 'processing_queue'
@@ -110,7 +109,7 @@ class RequestConsumer(JsonWebsocketConsumer):
 
     def executed(self, response_mapping: Mapping) -> None:
         execution_logger.info(f'code (hash: {response_mapping["data"]["codeHash"]}) '
-                           f'provided by {self} consumer is executed.')
+                              f'provided by {self} consumer is executed.')
         if 'errors' in response_mapping:
             self.send_json(generate_respond_message(
                 response_type=ResponseType.STOPPED.value,

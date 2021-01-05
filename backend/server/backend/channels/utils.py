@@ -1,5 +1,6 @@
 import json
 import urllib
+from os import getenv
 from queue import Queue
 from typing import Mapping
 
@@ -7,6 +8,9 @@ from channels.consumer import SyncConsumer
 
 from bundle.server_utils.utils import create_error_response
 from bundle.server_utils.params import VERSION
+
+
+_REMOTE_URL = getenv('GRAPHERY_REMOTE_EXECUTE_URL', 'http://localhost')
 
 
 def post_request(url: str, data: Mapping[str, str]) -> Mapping:
@@ -42,7 +46,7 @@ class ProcessHandler:
     @staticmethod
     def execute(code: str, graph_json_obj: Mapping) -> Mapping:
         if code and graph_json_obj:
-            response = post_request('http://localhost:7590/run',
+            response = post_request(f'{_REMOTE_URL}:7590/run',
                                     data={'code': code,
                                           'graph': graph_json_obj,
                                           'version': VERSION})

@@ -1,6 +1,8 @@
 """
 cache file helpers
 """
+from __future__ import annotations
+
 import logging
 import sys
 import shutil
@@ -27,19 +29,19 @@ class TempSysPathAdder:
             fubar.do_stuff()
 
     """
-    def __init__(self, addition: Union['CacheFolder', pathlib.Path]):
+    def __init__(self, addition: Union[CacheFolder, pathlib.Path]):
         if isinstance(addition, CacheFolder):
             self.addition = [str(addition.cache_folder_path)]
         elif isinstance(addition, pathlib.Path):
             self.addition = [str(addition)]
 
-    def __enter__(self):
+    def __enter__(self) -> TempSysPathAdder:
         self.entries_not_in_sys_path = [entry for entry in self.addition if
                                         entry not in sys.path]
         sys.path += self.entries_not_in_sys_path
         return self
 
-    def __exit__(self, *args, **kwargs):
+    def __exit__(self, *args, **kwargs) -> None:
 
         for entry in self.entries_not_in_sys_path:
 
@@ -96,7 +98,7 @@ class CacheFolder(contextlib.AbstractContextManager):
         self.folder_mode: int = folder_mode
         self.auto_delete: bool = auto_delete
 
-    def __enter__(self) -> 'CacheFolder':
+    def __enter__(self) -> CacheFolder:
         try:
             pathlib.Path.mkdir(self.cache_folder_path, mode=self.folder_mode, parents=True, exist_ok=True)
         except FileExistsError as e:
@@ -110,31 +112,34 @@ class CacheFolder(contextlib.AbstractContextManager):
 
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         if self.auto_delete:
             self.delete_cache_folder()
 
-    def __truediv__(self, other):
+    def __truediv__(self, other) -> pathlib.Path:
         if isinstance(other, str):
             return self.cache_folder_path / other
         raise TypeError('"/" operation only accepts string and returns a folder path object. ')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return 'CacheFolder <%s>' % self.cache_folder_path
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
+
+    def mkdir(self, mode: int = 0o777, parents: bool = False, exist_ok: bool = False) -> None:
+        self.cache_folder_path.mkdir(mode=mode, parents=parents, exist_ok=exist_ok)
 
     def exists(self) -> bool:
         return self.cache_folder_path.exists()
 
-    def delete_cache_folder(self):
+    def delete_cache_folder(self) -> None:
         if self.exists():
             shutil.rmtree(self.cache_folder_path)
 
     def add_cache_folder(self, dir_name: Union[str, pathlib.Path],
                          mode: int = 0o777,
-                         auto_delete: bool = True) -> 'CacheFolder':
+                         auto_delete: bool = True) -> CacheFolder:
         return CacheFolder(self.cache_folder_path / dir_name, folder_mode=mode, auto_delete=auto_delete)
 
 

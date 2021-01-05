@@ -10,7 +10,6 @@ from backend.model.TutorialRelatedModel import FAKE_UUID
 from graphery.schema import schema
 import pytest
 
-from backend.model.MetaModel import InvitationCode
 from backend.models import *
 from tests.utils import camel_to_snake, EmptyValue, AnyNoneEmptyValue, AnyValue
 
@@ -47,6 +46,20 @@ def graphql_client():
     return Client(schema)
 
 
+_INVITATION_CODE = 'invitation code'
+
+
+@pytest.fixture(scope='session')
+def make_invitation_code(django_db_setup, django_db_blocker):
+    with django_db_blocker.unblock():
+        i = InvitationCodeModel.objects.create(
+            invitation_code=_INVITATION_CODE,
+            expiration_times=10,
+            role=ROLES.VISITOR
+        )
+    return i
+
+
 def assert_no_error(result: Mapping) -> Mapping:
     assert 'errors' not in result
     assert 'data' in result
@@ -57,7 +70,8 @@ def assert_model_equal(model_instance: models.Model, variable_mapping: Mapping,
                        validate_against: Mapping = None) -> None:
     for var_name, var_value in {**variable_mapping, **(validate_against if validate_against else {})}.items():
         model_var_value = getattr(model_instance, camel_to_snake(var_name), EmptyValue)
-        if isinstance(var_value, Sequence) and all(isinstance(var_value_ele, models.Model) for var_value_ele in var_value):
+        if isinstance(var_value, Sequence) and \
+                all(isinstance(var_value_ele, models.Model) for var_value_ele in var_value):
             assert all(var_value_ele in model_var_value for var_value_ele in var_value)
         else:
             assert var_value == model_var_value
@@ -67,6 +81,25 @@ def assert_model_equal(model_instance: models.Model, variable_mapping: Mapping,
     'mutation_query, variables, result_chain, model',
     [
         pytest.param(
+            '''mutation ($email: String!, $username: String!, $password: String!, $invitationCode: String!, $firstName: String, $lastName: String) {
+          register(email: $email, username: $username, password: $password, invitationCode:$invitationCode, firstName: $firstName, lastName: $lastName) {
+            user {
+              id
+            }
+          }
+        }''',
+            {
+                'email': 'test_new_register@email.com',
+                'username': 'test_user_name',
+                'password': 'Password!1',
+                'invitationCode': _INVITATION_CODE,
+                'firstName': 'first name',
+                'lastName': 'last name'
+            },
+            ('register', 'user', 'id'),
+            User
+        ),
+        pytest.param(
             '''mutation ($email: String!, $username: String!, $password: String!, $invitationCode: String!) {
           register(email: $email, username: $username, password: $password, invitationCode:$invitationCode) {
             user {
@@ -74,14 +107,18 @@ def assert_model_equal(model_instance: models.Model, variable_mapping: Mapping,
             }
           }
         }''',
-            {'email': 'test_new_register@email.com', 'username': 'test_user_name', 'password': 'Password!1',
-             'invitationCode': InvitationCode.code_collection['Visitor']},
+            {
+                'email': 'test_new_register@email.com',
+                'username': 'test_user_name',
+                'password': 'Password!1',
+                'invitationCode': _INVITATION_CODE,
+            },
             ('register', 'user', 'id'),
             User
         )
     ]
 )
-def test_register_mutation(graphql_client, rq_anonymous,
+def test_register_mutation(graphql_client, rq_anonymous, make_invitation_code,
                            mutation_query: str, variables: Mapping, result_chain: Sequence, model: models.Model):
     result = graphql_client.execute(mutation_query, variable_values=variables, context_value=rq_anonymous)
 
@@ -92,8 +129,14 @@ def test_register_mutation(graphql_client, rq_anonymous,
 
     model_instance = model.objects.get(id=data)
 
-    assert_model_equal(model_instance, variables, validate_against={'password': AnyNoneEmptyValue,
-                                                                    'invitationCode': AnyValue})
+    assert_model_equal(model_instance, variables, validate_against={
+        'first_name': variables.get('firstName', ''),
+        'last_name': variables.get('lastName', ''),
+        'password': AnyNoneEmptyValue,
+        'invitationCode': AnyValue
+    })
+
+    model_instance.delete()
 
 
 id_validation = {'id': AnyNoneEmptyValue}
@@ -131,12 +174,15 @@ id_validation = {'id': AnyNoneEmptyValue}
             ''',
             {'id': FAKE_UUID, 'url': url_name_set[0], 'name': url_name_set[1],
              'rank': rank, 'categories': catList, 'isPublished': False},
-            ('updateTutorialAnchor', 'model', ),
+            ('updateTutorialAnchor', 'model',),
             Tutorial,
-            {**id_validation, 'level': rank['level'], 'section': rank['section'], 'rank': AnyValue, 'categories': AnyValue},
+            {**id_validation, 'level': rank['level'], 'section': rank['section'], 'rank': AnyValue,
+             'categories': AnyValue},
         ) for url_name_set, catList, rank in [
             (('new-test-url-2', 'net test url 2'), [], {'level': 500, 'section': 2}),
-            (('new-test-url-1', 'net test url 1'), ['1e209965-f720-418b-8746-1eaee4c8295c', 'dbe8cf6f-09a5-41b6-86ba-367d7a63763f'], {'level': 501, 'section': 2})
+            (('new-test-url-1', 'net test url 1'),
+             ['1e209965-f720-418b-8746-1eaee4c8295c', 'dbe8cf6f-09a5-41b6-86ba-367d7a63763f'],
+             {'level': 501, 'section': 2})
         ]),
         *(pytest.param(
             '''
@@ -151,12 +197,16 @@ id_validation = {'id': AnyNoneEmptyValue}
             {'id': FAKE_UUID, 'url': url_name_set[0], 'name': url_name_set[1],
              'cyjs': json_string, 'priority': 20,
              'categories': catList, 'isPublished': False, 'tutorials': tutList},
-            ('updateGraph', 'model', ),
+            ('updateGraph', 'model',),
             Graph,
             {**id_validation, 'categories': AnyValue, 'tutorials': AnyValue, 'cyjs': json.loads(json_string)},
         ) for url_name_set, json_string, catList, tutList in [
-            (('new-test-url-2', 'net test url 2'), '{"elements": {"edges": [], "nodes": []}, "layout": {"name": "dagre"}}', [], []),
-            (('new-test-url-1', 'net test url 1'), '{"elements": {"edges": [], "nodes": []}, "layout": {"name": "preset"}}', ['1e209965-f720-418b-8746-1eaee4c8295c', 'dbe8cf6f-09a5-41b6-86ba-367d7a63763f'], ['7b35ec2c-685f-4727-98c6-766e120fb0c0', '3e8c3a27-bb56-4dd2-92a1-069c26b533e4'])
+            (('new-test-url-2', 'net test url 2'),
+             '{"elements": {"edges": [], "nodes": []}, "layout": {"name": "dagre"}}', [], []),
+            (('new-test-url-1', 'net test url 1'),
+             '{"elements": {"edges": [], "nodes": []}, "layout": {"name": "preset"}}',
+             ['1e209965-f720-418b-8746-1eaee4c8295c', 'dbe8cf6f-09a5-41b6-86ba-367d7a63763f'],
+             ['7b35ec2c-685f-4727-98c6-766e120fb0c0', '3e8c3a27-bb56-4dd2-92a1-069c26b533e4'])
         ])
     ]
 )

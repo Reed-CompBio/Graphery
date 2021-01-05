@@ -1,0 +1,8 @@
+version: '3.9'
+services:
+  local_server:
+    build:
+      context: .
+      dockerfile: ./bundle/Dockerfile
+    ports:
+    - "7590:7590"
