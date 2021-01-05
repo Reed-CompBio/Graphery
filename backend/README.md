@@ -33,6 +33,7 @@ cd Graphery
     export DJANGO_SETTINGS_MODULE=graphery.settings.test;
     export GRAPHERY_NORMAL_LOG_PATH=logs/graphery_normal.log;
     export GRAPHERY_EXECUTION_LOG_PATH=logs/graphery_execution.log;
+    export GRAPHERY_API_LOG_PATH=logs/graphery_api.log;
     ```
 
     Make sure directory `logs` exists in `/server`
