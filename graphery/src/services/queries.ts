@@ -126,6 +126,7 @@ query ($url: String, $translation: String, $default: String = "en-us") {
     }
     execresultjsonSet {
       code {
+        name
         id 
         code
       }

@@ -6,6 +6,7 @@ import {
 import { ResultJsonTypeFromQueryData } from '@/store/modules/ResultJsonStorage/ResultJsonStoreState';
 
 export interface CodeType extends UniqueIdMixinType {
+  name?: string;
   code?: string;
 }
 
