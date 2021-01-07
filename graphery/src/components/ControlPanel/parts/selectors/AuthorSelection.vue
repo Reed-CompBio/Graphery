@@ -10,7 +10,8 @@
       :options="authorOptions"
       emit-value
       map-options
-      option-label="username"
+      :readonly="readOnly"
+      :option-label="(item) => `${item.firstName} ${item.lastName}`"
       option-value="id"
       :loading="loadingContent"
     ></q-select>
@@ -36,6 +37,10 @@
     props: {
       authorSelection: {
         type: Array,
+      },
+      readOnly: {
+        type: Boolean,
+        default: false,
       },
     },
     data() {
