@@ -53,7 +53,11 @@ export interface TutorialState {
 }
 
 export interface UserType {
-  username: string;
+  username?: string;
+  email?: string;
+  role?: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 export interface TutorialContent {
@@ -106,12 +110,6 @@ export interface SettingInfos {
 
 export interface SettingState extends SettingInfos {
   settingVer: '1.0.0';
-}
-
-export interface UserType {
-  username: string;
-  email: string;
-  role: string;
 }
 
 export interface BaseState {

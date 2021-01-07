@@ -202,6 +202,8 @@ query {
     }
     authors {
       username
+      firstName
+      lastName
     }
     url
     id
@@ -229,6 +231,8 @@ query ($translation: String, $default: String = "") {
       abstract
       authors {
         username
+        firstName
+        lastName
       }
       contentMd
       contentHtml
@@ -351,6 +355,8 @@ query {
   allAuthors {
     id
     username
+    firstName
+    lastName
   }
 }`;
 
@@ -527,5 +533,19 @@ query {
   allGraphInfo {
     id
     name
+  }
+}`;
+
+export const changePasswordMutation = `
+mutation ($oldPassword: String!, $newPassword: String!) {
+  changePassword(oldPassword: $oldPassword, newPassword: $newPassword) {
+    success
+    user {
+      username
+      firstName
+      lastName
+      email
+      role
+    }
   }
 }`;

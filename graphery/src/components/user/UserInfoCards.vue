@@ -46,19 +46,21 @@
         </q-card-actions>
       </q-card>
     </div>
-    <div id="admin-extra" v-if="isAdmin" class="q-mt-xl">
-      <AdminCard />
+    <div id="edit-info" class="q-mt-xl">
+      <EditUserInfoCard :user-obj="this.userObj" />
     </div>
   </div>
 </template>
 
 <script>
   import { BASE_URL } from '@/services/api_entry';
+  import UserInfoItem from '@/components/user/UserInfoItem';
+  import EditUserInfoCard from '@/components/user/EditPasswordCard';
   export default {
     props: ['userObj'],
     components: {
-      UserInfoItem: () => import('@/components/user/UserInfoItem.vue'),
-      AdminCard: () => import('@/components/user/AdminCard.vue'),
+      UserInfoItem,
+      EditUserInfoCard,
     },
     data() {
       return {
