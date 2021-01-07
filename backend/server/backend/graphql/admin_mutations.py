@@ -110,17 +110,18 @@ class UpdateGraph(SuccessMutationBase):
 class UpdateCode(SuccessMutationBase):
     class Arguments:
         id = graphene.UUID(required=True)
+        name = graphene.String(required=True)
         code = graphene.String(required=True)
         tutorial = graphene.UUID(required=True)
 
     model = graphene.Field(CodeType, required=True)
 
     @write_required
-    def mutate(self, _, id: str, code: str, tutorial: str):
+    def mutate(self, _, id: str, name: str, code: str, tutorial: str):
         tutorial_wrapper = get_wrapper_by_id(TutorialAnchorWrapper, tutorial)
 
         code_wrapper = process_model_wrapper(CodeWrapper,
-                                             id=id, code=code, tutorial=tutorial_wrapper)
+                                             id=id, name=name, code=code, tutorial=tutorial_wrapper)
 
         return UpdateCode(success=True, model=code_wrapper.model)
 

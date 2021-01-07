@@ -266,6 +266,7 @@ export const codeListQuery = `query {
       name
       url
     }
+    name
     code
     id
   }
@@ -373,6 +374,7 @@ mutation ($id: UUID!, $url: String!, $name: String!, $cyjs: JSONString!, $isPubl
 export const codeQuery = `
 query ($id: UUID!) {
   code(id: $id) {
+    name
     code
     tutorial {
       id
@@ -389,8 +391,8 @@ query ($code: UUID) {
 }`;
 
 export const updateCodeMutation = `
-mutation ($id: UUID!, $code: String!, $tutorial: UUID!){
-  updateCode (id:$id, code:$code, tutorial: $tutorial) {
+mutation ($id: UUID!, $name: String!, $code: String!, $tutorial: UUID!){
+  updateCode (id:$id, name: $name, code:$code, tutorial: $tutorial) {
     success
     model {
       id
