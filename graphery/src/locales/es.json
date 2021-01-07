@@ -82,7 +82,11 @@
     "ConfirmPassword": "Confirm Password",
     "InvitationCode": "Invitation Code",
     "firstName": "First Name",
-    "lastName": "Last Name"
+    "lastName": "Last Name",
+    "Old Password": "Old Password",
+    "New Password": "New Password",
+    "Confirm New Password": "Confirm New Password",
+    "Update Password": "Update Password"
   },
   "dialog": {
     "ok": "OK!",

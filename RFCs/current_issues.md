@@ -14,9 +14,9 @@
 
 ### Improvements
 
-- [ ] There must be a user manage page on the admin panel. 
+- [x] There must be a user manage page on the admin panel. (Handled by Django default admin page)
 
-- [ ] Users should be represented by the first name and last name (which can be fake of course). So new fields should be added to the register page and the admin panel. 
+- [x] Users should be represented by the first name and last name (which can be fake of course). So new fields should be added to the register page and the admin panel. 
 
 - [ ] The code for the step controller must be tested. There are still some minor errors when dealing with edge cases. 
 
@@ -36,15 +36,15 @@
 
 - [ ] Implement tooltips on graph elements to show their properties. (Fix #60). The tooltips should go away when any operation is taken on the Cytoscape. Also, there should be a disable showing graph tooltip option on the control strip. 
 
-- [ ] Implement (or delete) auto run in the step controller. 
+- [x] Delete auto run in the step controller. 
 
-- [ ] Add name to code snippets. 
+- [x] Add name to code snippets. 
 
 - [ ] Add "run all code snippets" in the code list on the admin panel. 
 
 - [ ] Add i18n to the error response. 
 
-- [ ] More translations. 
+- [x] More translations. 
 
 - [ ] Change language when the accept-language is used in the request header. (I am not sure if the frontend can read the request header. This might not be possible without SSR). 
 
@@ -57,11 +57,11 @@
 - [ ] (Optional) Create editing lock so that no two people can edit on the same info on the admin panel. 
 ### Bugs 
 
-- [ ] The images on the admin panel cannot be displayed. 
+- [x] The images on the admin panel cannot be displayed. 
 
-- [ ] Fix the tutorial layout overflow bug. 
+- [x] Fix the tutorial layout overflow bug. 
 
-- [ ] Fix the to the top button. 
+- [x] Fix the to the top button. 
 
 - [ ] Fix the unsaved change notification always showing up in the admin panel. Probably by adding a wrapper function and all changes go through the wrapper. 
 

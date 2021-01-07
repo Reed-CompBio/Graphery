@@ -13,7 +13,7 @@
             categories: ele.categories,
             isAnchorPublished: ele.isPublished,
             title: ele.content.title,
-            authors: ele.authors.map((obj) => obj.username),
+            authors: ele.authors,
             modifiedTime: ele.modifiedTime,
             abstract: ele.content.abstract,
             isTransPublished: ele.content.isPublished,

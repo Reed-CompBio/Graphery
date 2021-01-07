@@ -48,6 +48,13 @@ const actions: ActionTree<CodeStoreType, RootState> = {
 };
 
 const getters: GetterTree<CodeStoreType, RootState> = {
+  getCurrentCodeName(state, getters) {
+    const currentCodeObj = getters.getCurrentCodeObject;
+    if (currentCodeObj) {
+      return currentCodeObj.name;
+    }
+    return '';
+  },
   getCurrentCodeId(state) {
     return state.currentCodeId;
   },

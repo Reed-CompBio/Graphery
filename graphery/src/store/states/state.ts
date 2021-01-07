@@ -26,12 +26,18 @@ export interface NotificationState {
   details: string;
 }
 
+export interface AuthorState {
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+}
+
 export interface TutorialMetaState {
   articleId: string | null;
   isAnchorPublished: boolean;
   isTransPublished: boolean;
   rank: RankType;
-  authors: string[];
+  authors: AuthorState[];
   categories: string[];
   modifiedTime: string;
 }
@@ -47,7 +53,11 @@ export interface TutorialState {
 }
 
 export interface UserType {
-  username: string;
+  username?: string;
+  email?: string;
+  role?: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 export interface TutorialContent {
@@ -100,12 +110,6 @@ export interface SettingInfos {
 
 export interface SettingState extends SettingInfos {
   settingVer: '1.0.0';
-}
-
-export interface UserType {
-  username: string;
-  email: string;
-  role: string;
 }
 
 export interface BaseState {

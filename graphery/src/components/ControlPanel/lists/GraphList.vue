@@ -46,13 +46,7 @@
 
             <!-- authors -->
             <q-td key="authors" :props="props">
-              <q-select
-                multiple
-                use-chips
-                readonly
-                :option="props.row.authors"
-                v-model="props.row.authors"
-              ></q-select>
+              <ReadOnlyListAuthorSelector :init-authors="props.row.authors" />
             </q-td>
 
             <!-- tutorials -->
@@ -110,10 +104,12 @@
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import { newModelUUID } from '@/services/params';
   import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
+  import ReadOnlyListAuthorSelector from '@/components/ControlPanel/parts/selectors/ReadOnlyListAuthorSelector';
 
   export default {
     mixins: [loadingMixin],
     components: {
+      ReadOnlyListAuthorSelector,
       DeleteTableCell: () =>
         import('@/components/ControlPanel/parts/table/DeleteTableCell'),
       AllTableHeader,
@@ -206,7 +202,6 @@
 
             this.tableContent = data['allGraphInfo'].map((obj) => {
               obj.priority = obj.priority.label;
-              obj.authors = obj.authors.map((obj) => obj.username);
               obj.tutorials = obj.tutorials.map((obj) => obj.name);
               return obj;
             });

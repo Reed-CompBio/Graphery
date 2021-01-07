@@ -227,7 +227,7 @@ class CodeType(PublishedFilterBase, DjangoObjectType):
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
         model = Code
-        fields = ('tutorial', 'code', 'execresultjson_set')
+        fields = ('name', 'tutorial', 'code', 'execresultjson_set')
         description = 'The code content of a tutorial. '
 
 

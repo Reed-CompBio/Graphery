@@ -4,8 +4,8 @@
     "Share": "Share",
     "runCodeOnTheCloud": "Run code on the cloud",
     "runCodeLocally": "Run code locally",
-    "copyCodes": "Copy codes",
-    "pasteCodes": "Paste codes",
+    "copyCodes": "Copy code",
+    "pasteCodes": "Paste code",
     "showEditorAndMore": "Show editor and more",
     "oneStepBack": "One Step Back",
     "oneStepForward": "One Step Forward",
@@ -60,7 +60,7 @@
     "enableEditing": "Enable Editing"
   },
   "notify": {
-    "editorEntry": "Open code editor using {...} button"
+    "editorEntry": "Use {...} button to view graph details and more!"
   },
   "license": {
     "licenseInfo1": "All the articles without special specification are licensed under a",
@@ -82,7 +82,11 @@
     "ConfirmPassword": "Confirm Password",
     "InvitationCode": "Invitation Code",
     "firstName": "First Name",
-    "lastName": "Last Name"
+    "lastName": "Last Name",
+    "Old Password": "Old Password",
+    "New Password": "New Password",
+    "Confirm New Password": "Confirm New Password",
+    "Update Password": "Update Password"
   },
   "dialog": {
     "ok": "OK!",

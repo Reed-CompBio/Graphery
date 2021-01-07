@@ -27,6 +27,7 @@ TestExecResultJsonWrapper = gen_wrapper_test_class(wrapper_class=ExecResultJsonW
         }, id='empty_variables'),
         pytest.param({
             'code': code_wrapper_factory(
+                code_name='exec test set var code',
                 code_content='this is code',
                 tutorial_url_template='code-set-var-url',
                 tutorial_name_template='code set var url',
@@ -34,6 +35,7 @@ TestExecResultJsonWrapper = gen_wrapper_test_class(wrapper_class=ExecResultJsonW
         }),
         pytest.param({
             'code': code_wrapper_factory(
+                code_name='exec test set var code',
                 code_content='this is code',
                 tutorial_url_template='code-set-var-url',
                 tutorial_name_template='code set var url',
@@ -53,6 +55,7 @@ TestExecResultJsonWrapper = gen_wrapper_test_class(wrapper_class=ExecResultJsonW
                 graph_json={'json': 'object'},
             ),
             'code': code_wrapper_factory(
+                code_name='exec test make new model code',
                 code_content='this is code',
                 tutorial_url_template='code-make-new-url',
                 tutorial_name_template='code make new url',
@@ -71,6 +74,7 @@ TestExecResultJsonWrapper = gen_wrapper_test_class(wrapper_class=ExecResultJsonW
                 graph_json={'json': 'object'},
             ),
             'code': code_wrapper_factory(
+                code_name='exec test overwrite model code',
                 code_content='this is code',
                 tutorial_url_template='code-overwrite-url',
                 tutorial_name_template='code overwrite',
@@ -87,6 +91,7 @@ TestExecResultJsonWrapper = gen_wrapper_test_class(wrapper_class=ExecResultJsonW
         }),
         pytest.param('one_time_mock_execution_result', {
             'code': code_wrapper_factory(
+                code_name='exec test overwrite model code',
                 code_content='this is code',
                 tutorial_url_template='code-overwrite-url',
                 tutorial_name_template='code overwrite',
@@ -101,11 +106,13 @@ TestExecResultJsonWrapper = gen_wrapper_test_class(wrapper_class=ExecResultJsonW
         pytest.param({'code': None, 'graph': None, 'json': object()}, AttributeError, None,
                      id='invalid tutorial'),
         pytest.param({'code': code_wrapper_factory(
+            code_name='exec test validate model code',
             code_content='this is code',
             tutorial_url_template='code-overwrite-url',
             tutorial_name_template='code overwrite',
         ), 'graph': None, 'json': object()}, AttributeError, None, id='invalid graph'),
         pytest.param({'code': code_wrapper_factory(
+            code_name='exec test overwrite model code',
             code_content='this is code',
             tutorial_url_template='code-overwrite-url',
             tutorial_name_template='code overwrite',
@@ -124,6 +131,7 @@ TestExecResultJsonWrapper = gen_wrapper_test_class(wrapper_class=ExecResultJsonW
                 graph_json={'json': 'object'},
             ),
             'code': code_wrapper_factory(
+                code_name='exec test get model code',
                 code_content='this is code',
                 tutorial_url_template='code-get-model-url',
                 tutorial_name_template='code get model',
@@ -138,6 +146,7 @@ TestExecResultJsonWrapper = gen_wrapper_test_class(wrapper_class=ExecResultJsonW
                 graph_json={'json': 'object'},
             ),
             'code': code_wrapper_factory(
+                code_name='exec test get model code',
                 code_content='this is code',
                 tutorial_url_template='code-get-model-url',
                 tutorial_name_template='code get model',
@@ -165,6 +174,7 @@ TestExecResultJsonWrapper = gen_wrapper_test_class(wrapper_class=ExecResultJsonW
                 graph_json={'json': 'object'},
             ),
             'code': code_wrapper_factory(
+                code_name='exec test finalize model code',
                 code_content='this is code',
                 tutorial_url_template='code-finalize-model-url',
                 tutorial_name_template='code finalize model',
@@ -178,6 +188,7 @@ TestExecResultJsonWrapper = gen_wrapper_test_class(wrapper_class=ExecResultJsonW
                 graph_json={'json': 'object'},
             ),
             'code': code_wrapper_factory(
+                code_name='exec test finalize model code',
                 code_content='this is code',
                 tutorial_url_template='code-finalize-model-url',
                 tutorial_name_template='code finalize model',
@@ -191,6 +202,7 @@ TestExecResultJsonWrapper = gen_wrapper_test_class(wrapper_class=ExecResultJsonW
                 graph_json={'json': 'object'},
             ),
             'code': code_wrapper_factory(
+                code_name='exec test finalize model code',
                 code_content='this is code',
                 tutorial_url_template='code-finalize-model-url',
                 tutorial_name_template='code finalize model',

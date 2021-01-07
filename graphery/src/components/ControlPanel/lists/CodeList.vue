@@ -54,6 +54,10 @@
               />
             </q-td>
 
+            <q-td key="name" :props="props">
+              {{ props.row.name }}
+            </q-td>
+
             <q-td key="code" :props="props">
               <q-input
                 outlined
@@ -146,6 +150,12 @@
             },
           },
           {
+            name: 'name',
+            label: 'Name',
+            field: 'name',
+            align: 'center',
+          },
+          {
             name: 'code',
             label: 'Code',
             field: 'code',
@@ -187,6 +197,7 @@
               return {
                 tutorialName: obj.tutorial.name,
                 tutorialUrl: obj.tutorial.url,
+                name: obj.name,
                 code: obj.code,
                 id: obj.id,
               };

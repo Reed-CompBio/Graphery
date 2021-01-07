@@ -104,6 +104,8 @@ class Graph(PublishedMixin, TimeDateMixin, UUIDMixin, models.Model):
 
 
 class Code(UUIDMixin, TimeDateMixin, models.Model):
+    # code name
+    name = models.CharField(max_length=300, blank=False, null=False, unique=True)
     # relations
     tutorial = models.OneToOneField(Tutorial, on_delete=models.PROTECT)
     # content
