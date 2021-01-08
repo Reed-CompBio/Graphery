@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 import logging
 from functools import wraps
+from typing import Union, Sequence
 
+from django.contrib.auth.models import AbstractUser
 from graphql import ResolveInfo, GraphQLError
 
 # Modified from django-graphql-jwt
@@ -34,6 +38,17 @@ def user_passes_test(test_func, exc=GraphQLError('You do not have permission to 
         return wrapper
 
     return decorator
+
+
+def permission_required(perm: Union[str, Sequence[str]]):
+    if isinstance(perm, str):
+        perms = (perm,)
+    else:
+        perms = perm
+
+    def has_permission(user: AbstractUser):
+        return user.is_authenticated and user.has_perms(perms)
+    return user_passes_test(has_permission, GraphQLError('You do not have the permission to perform this action.'))
 
 
 def is_anonymous(u):
