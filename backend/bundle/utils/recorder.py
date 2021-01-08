@@ -78,22 +78,27 @@ class Recorder:
         type(None): 'None',
     }
 
-    _CONTAINER_MAPPING = {
+    _LINEAR_CONTAINER_MAPPING = {
         List: 'List',
         Tuple: 'Tuple',
         Deque: 'Deque',
-        Counter: 'Counter',
         Set: 'Set',  # which includes Set, set, KeyView(dict_keys), ValueView(dict_values), ItemView(dict_items),
         # frozenset, MutableSet
-        Mapping: 'Mapping',  # which includes mappingproxy (not sure what that is), MutableMapping, dict
         Sequence: 'Sequence',  # which includes tuple, str, range, memoryview, MutableSequence, list, bytearray
+    }
+
+    _PAIR_CONTAINER_MAPPING = {
+        Counter: 'Counter',
+        Mapping: 'Mapping',  # which includes mappingproxy (not sure what that is), MutableMapping, dict
     }
 
     _TYPE_MAPPING = {
         # simple individuals
         **_SINGULAR_MAPPING,
-        # simple containers
-        **_CONTAINER_MAPPING,
+        # simple linear containers
+        **_LINEAR_CONTAINER_MAPPING,
+        # simple pair containers
+        **_PAIR_CONTAINER_MAPPING,
         # wildcard
         object: 'Object',
     }
