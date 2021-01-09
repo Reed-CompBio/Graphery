@@ -40,7 +40,8 @@ The line is the line number of current execution. Say the current line is 17, th
                 'properties': {
                     'property_1': str or number,
                     ...
-                }
+                },
+                "python_id": 123456789
             }
         }, 
         'accesses': [
@@ -51,7 +52,8 @@ The line is the line number of current execution. Say the current line is 17, th
                 'properties': {
                     'property_1': str or number,
                     ...
-                }
+                },
+                "python_id": 123456789
             },
         ],
         'order': ['identity1', 'identity2', ...]
@@ -70,7 +72,7 @@ The `identity` should be decoded in the following way. Get the namespaces and th
 
 For future discussion, the value of `identity` field is called Info Object. 
 
-The `type` should be a enum(mapping) that has the following values, with an additional `init` type that indicates the element has not been initialized yet, which should only be used on the variables in the first record. 
+The `type` should be a enum(mapping) that has the following values. 
 
 ```python
 {
@@ -89,6 +91,19 @@ The `type` should be a enum(mapping) that has the following values, with an addi
     object: 'Object'  # the wildcard that matches everything else 
 }
 ```
+
+Some additional types are added to provide more information: 
+
+```python
+[
+    'init',
+    'reference',
+]
+```
+
+`init` type indicates the element has not been initialized yet, which should only be used on the variables in the first record. 
+
+`reference` type indicates the current object is a reference, and guarantees that the object appears in the previous stack trace. To obtain the detail of the object, the program should look backward.  
 
 The type string should follow the naming convention for a class. 
 
@@ -137,7 +152,8 @@ Here is an example:
             "properties": {
                 "property_1": "str or number"
                 ...
-            }
+            },
+            "python_id": 123456789
         }, 
         "value": {
             "type": "some_type",
@@ -147,7 +163,8 @@ Here is an example:
             "properties": {
                 "property_1": "str or number"
                 ...
-            }
+            },
+            "python_id": 123456789
         }
     },
     ...
@@ -163,6 +180,9 @@ The hex color should be chose in a way that's friendly to color blind people. It
 The field `id` is the id of the graph element. The field is facilitate the interaction with the Cytoscape module. 
 
 The item is `property` which is a graph-element-specific item. That is, only graph elements have this item. The `property` contains the properties that's needed to be displayed on the tooltips in the Cytoscape window. Currently, the value of the `property` mapping should only be a string or a number. 
+
+The `python_id` field is to collect the result of `id()` of the object. When there is a recursive structure, the repeated objects can refer to the previous object. 
+
 
 The `accesses` contains a list of accessed values from some function calls. If a function is marked with a decorator `look_at`, the return value of the function will be recorded. 
 
