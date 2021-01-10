@@ -17,6 +17,7 @@
     _SINGULAR_TYPES,
     _TYPE_HEADER,
   } from '@/components/framework/VariableListComponents/variableListConstants';
+  import { nameComboToClassName } from '@/components/framework/GraphEditorControls/ElementsUtils';
 
   export default {
     props: {
@@ -36,7 +37,7 @@
       elementType() {
         return this.element[_TYPE_HEADER];
       },
-      variableName() {
+      variableLabel() {
         return this.element[_LABEL_HEADER];
       },
       isGraphEle() {
@@ -64,13 +65,13 @@
         return this.generateHighlightIds(this.element);
       },
       elementClassName() {
-        return this.variableName;
+        return nameComboToClassName(this.variableLabel);
       },
       elementKeyClassName() {
-        return `${this.variableName}_${_PAIR_KEY_HEADER}`;
+        return `${this.elementClassName}_${_PAIR_KEY_HEADER}`;
       },
       elementValueClassName() {
-        return `${this.variableName}_${_PAIR_VALUE_HEADER}`;
+        return `${this.elementClassName}_${_PAIR_VALUE_HEADER}`;
       },
     },
     methods: {
@@ -158,20 +159,24 @@
           return;
         }
 
+        const elementClassName = nameComboToClassName(
+          newElements[_LABEL_HEADER]
+        );
+
         if (typeof graphIds === 'string' || graphIds instanceof String) {
-          this.$emit('highlight', this.variableName, graphIds);
-        } else if (Array.isArray(graphIds)) {
+          this.$emit('highlight', elementClassName, graphIds);
+        } else if (Array.isArray(graphIds) && graphIds.length === 2) {
           if (graphIds[1] === null) {
-            this.$emit('highlight', this.variableName, graphIds[0]);
+            this.$emit('highlight', elementClassName, graphIds[0]);
           } else if (graphIds[1] !== null) {
             this.$emit(
               'highlight',
-              `${this.variableName}_${_PAIR_KEY_HEADER}`,
+              `${elementClassName}_${_PAIR_KEY_HEADER}`,
               graphIds[0]
             );
             this.$emit(
               'highlight',
-              `${this.variableName}_${_PAIR_VALUE_HEADER}`,
+              `${elementClassName}_${_PAIR_VALUE_HEADER}`,
               graphIds[1]
             );
           }

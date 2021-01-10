@@ -26,6 +26,7 @@
     _LABEL_HEADER,
     _PYTHON_ID_HEADER,
   } from '@/components/framework/VariableListComponents/variableListConstants';
+  import { revertNameCombo } from '@/components/framework/GraphEditorControls/ElementsUtils';
   export default {
     props: {
       initVariableObject: {
@@ -45,7 +46,7 @@
         return this.initVariableObject;
       },
       rootVariableName() {
-        return this.initVariableObject[_LABEL_HEADER];
+        return revertNameCombo(this.initVariableObject[_LABEL_HEADER]);
       },
       variableStack() {
         return [this.rootVariable, ...this.variableStack_];

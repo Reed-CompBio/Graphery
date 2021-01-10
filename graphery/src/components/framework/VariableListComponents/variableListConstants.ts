@@ -1,5 +1,3 @@
-import * as constants from 'constants';
-
 export const _EMPTY_VALUE_STRING = '<EMPTY>';
 export const _ACCESSED_VARIABLE_OBJ_LABEL = 'Accessed';
 export const _EMPTY_TYPE_STRING = 'Empty';
