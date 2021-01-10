@@ -3,9 +3,10 @@ from __future__ import annotations
 import json
 from collections.abc import Mapping, Set
 from collections import Counter
+from copy import deepcopy
 from numbers import Number
 from random import randint
-from typing import Any, List, MutableMapping, Sequence, Tuple, Deque, Union
+from typing import Any, List, MutableMapping, Sequence, Tuple, Deque, Union, Optional
 
 from ..GraphObjects.Edge import Edge
 from ..GraphObjects.Node import Node
@@ -115,10 +116,12 @@ class Recorder:
 
     def __init__(self):
         self._changes: List[MutableMapping] = []
+        self._processed_changes: Optional[List[MutableMapping]] = None
         # self.variables: Set[str] = set()
-        self._color_mapping: MutableMapping = {}
-        self._INNER_IDENTIFIER_STRING = self.register_variable(self._INNER_IDENTIFIER)
-        self._ACCESSED_IDENTIFIER_STRING = self.register_variable(self._ACCESSED_IDENTIFIER)
+        self._color_mapping: MutableMapping = {
+            self._INNER_IDENTIFIER_STRING: self._COLOR_PALETTE[0],
+            self._ACCESSED_IDENTIFIER_STRING: self._COLOR_PALETTE[1]
+        }
 
     def assign_color(self, identifier_string: str) -> None:
         if identifier_string not in self._color_mapping:
@@ -267,9 +270,9 @@ class Recorder:
         """
         self.get_last_ac().append(self.process_variable_state(self._ACCESSED_IDENTIFIER_STRING, access_change))
 
-    def get_change_list(self) -> List[MutableMapping]:
-        temp = [
-            {
+    def _process_change_list(self) -> List[MutableMapping]:
+        if self._processed_changes is None:
+            init_object = {
                 'line': 0,
                 'variables': {
                     key: {
@@ -281,16 +284,48 @@ class Recorder:
                     if not (key == self._INNER_IDENTIFIER_STRING or key == self._ACCESSED_IDENTIFIER_STRING)
                 },
                 'accesses': None
-            },
-            *self._changes
-        ]
-        return temp
+            }
+            temp_container = [init_object]
+
+            previous_variables = init_object[self._VARIABLE_HEADER]
+
+            for change in self._changes:
+                variables_field = change[self._VARIABLE_HEADER]
+
+                temp_object = {
+                    **change
+                }
+
+                if variables_field is None:
+                    temp_object[self._VARIABLE_HEADER] = None
+                else:
+                    current_current_variables = deepcopy(previous_variables)
+                    for changed_var_key, changed_var_value in variables_field.items():
+                        current_current_variables[changed_var_key] = changed_var_value
+                    temp_object[self._VARIABLE_HEADER] = current_current_variables
+                    previous_variables = current_current_variables
+
+                temp_container.append(temp_object)
+
+            self._processed_changes = temp_container
+
+        return self._processed_changes
+
+    def get_change_list(self) -> List[MutableMapping]:
+        return self._changes
+
+    def get_processed_change_list(self) -> List[MutableMapping]:
+        return self._process_change_list()
 
     def get_change_list_json(self) -> str:
-        return json.dumps(self.get_change_list())
+        return json.dumps(self.get_processed_change_list())
 
     def purge(self) -> None:
         """Empty previous recorded items"""
         self._changes: List[dict] = []
+        self._processed_changes = None
         # self.variables: Set[Tuple[str, str]] = set()
-        self._color_mapping: MutableMapping = {}
+        self._color_mapping: MutableMapping = {
+            self._INNER_IDENTIFIER_STRING: self._COLOR_PALETTE[0],
+            self._ACCESSED_IDENTIFIER_STRING: self._COLOR_PALETTE[1]
+        }
