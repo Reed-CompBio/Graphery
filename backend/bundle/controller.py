@@ -50,7 +50,7 @@ class _Controller:
         return self.recorder.get_change_list()
 
     def get_processed_result(self) -> List[Mapping]:
-        return self.recorder.get_change_list()
+        return self.recorder.get_processed_change_list()
 
     def get_processed_result_json(self) -> str:
         return self.recorder.get_change_list_json()
