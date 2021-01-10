@@ -8,27 +8,33 @@
       id="variable-list-scroll-area"
       :visible="false"
     >
-      <q-card
+      <VariableCard
         :key="index"
         v-for="(item, index) in variableDisplayList"
-        class="q-my-md q-py-sm q-px-md text-center"
-      >
-        <div class="mock-h6" :style="`background-color: ${item.color}`">
-          {{ item.label }}
-        </div>
-        {{ item.value }}
-      </q-card>
-      <q-separator />
-      <q-card
-        v-for="(item, index) in accessedVariableDisplayList"
-        :key="index"
-        class="q-my-md q-py-sm q-px-md text-center"
-      >
-        <div class="mock-h6" :style="`background-color: ${item.color}`">
-          {{ item.label }}
-        </div>
-        {{ item.value }}
-      </q-card>
+        :init-variable-object.sync="item"
+        class="q-my-md, q-py-sm q-px-md text-center"
+      ></VariableCard>
+      <!--      <q-card-->
+      <!--        :key="index"-->
+      <!--        v-for="(item, index) in variableDisplayList"-->
+      <!--        class="q-my-md q-py-sm q-px-md text-center"-->
+      <!--      >-->
+      <!--        <div class="mock-h6" :style="`background-color: ${item.color}`">-->
+      <!--          {{ item.label }}-->
+      <!--        </div>-->
+      <!--        {{ item.value }}-->
+      <!--      </q-card>-->
+      <!--      <q-separator />-->
+      <!--      <q-card-->
+      <!--        v-for="(item, index) in accessedVariableDisplayList"-->
+      <!--        :key="index"-->
+      <!--        class="q-my-md q-py-sm q-px-md text-center"-->
+      <!--      >-->
+      <!--        <div class="mock-h6" :style="`background-color: ${item.color}`">-->
+      <!--          {{ item.label }}-->
+      <!--        </div>-->
+      <!--        {{ item.value }}-->
+      <!--      </q-card>-->
     </q-scroll-area>
   </div>
 </template>
@@ -43,8 +49,14 @@
     isSingularElement,
     revertNameCombo,
   } from '@/components/framework/GraphEditorControls/ElementsUtils';
-
-  const _EMPTY_VALUE_STRING = '<EMPTY>';
+  import {
+    _ACCESSED_VARIABLE_OBJ_LABEL,
+    _COLOR_HEADER,
+    _EMPTY_VALUE_STRING,
+    _REPR_HEADER,
+    _TYPE_HEADER,
+  } from '@/components/framework/VariableListComponents/variableListConstants';
+  import VariableCard from '@/components/framework/VariableListComponents/VariableCard';
 
   const _EMPTY_VARIABLE_LIST_OBJ = [
     {
@@ -53,8 +65,6 @@
     },
   ];
 
-  const _ACCESSED_VARIABLE_OBJ_LABEL = 'Accessed';
-
   const _EMPTY_ACCESSED_VARIABLE_LIST_OBJ = [
     {
       label: _ACCESSED_VARIABLE_OBJ_LABEL,
@@ -62,12 +72,8 @@
     },
   ];
 
-  const _EMPTY_TYPE_STRING = 'Empty';
-  const _COLOR_HEADER = 'color';
-  const _REPR_HEADER = 'repr';
-  const _TYPE_HEADER = 'type';
-
   export default {
+    components: { VariableCard },
     props: ['variableObject'],
     computed: {
       ...mapGetters('variables', [
@@ -145,21 +151,26 @@
          *   properties: object
          * }
          */
-        if (value) {
-          if (isGraphElement(value)) {
-            return this.revertGraphObject(key, value);
-          } else if (isSingularElement(value) || isContainerElement(value)) {
-            return this.revertNormalObject(key, value);
-          } else if (isInitElement(value)) {
-            return this.emptyObject(key);
-          } else {
-            // which should never happen
-            console.error('Variable Element Type Not Match!');
-            return undefined;
-          }
-        } else {
-          return this.emptyObject(key);
-        }
+        console.log(key, value);
+        return {
+          label: key,
+          ...value,
+        };
+        // if (value) {
+        //   if (isGraphElement(value)) {
+        //     return this.revertGraphObject(key, value);
+        //   } else if (isSingularElement(value) || isContainerElement(value)) {
+        //     return this.revertNormalObject(key, value);
+        //   } else if (isInitElement(value)) {
+        //     return this.emptyObject(key);
+        //   } else {
+        //     // which should never happen
+        //     console.error(`Variable Element Type ${value} Not Match!`);
+        //     return undefined;
+        //   }
+        // } else {
+        //   return this.emptyObject(key);
+        // }
       },
     },
   };
