@@ -17,8 +17,7 @@
               ref="editorComponent"
               class="full-height"
               :loadingOverride="editorLoadingOverride"
-              @editorContentChanged="emitEditorContentChanged"
-              @editorInstanceLoaded.once="onEditorInstanceLoaded"
+              v-on="$listeners"
             ></Editor>
           </q-card>
         </template>
@@ -102,12 +101,6 @@
           'settings/changeVariableListOrientation',
           !this.variableListHorizontal
         );
-      },
-      emitEditorContentChanged(newCode) {
-        this.$emit('editorContentChanged', newCode);
-      },
-      onEditorInstanceLoaded() {
-        this.$emit('editorInstanceLoaded');
       },
     },
   };

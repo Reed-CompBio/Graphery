@@ -12,18 +12,14 @@
         :key="index"
         v-for="(item, index) in variableDisplayList"
         :init-variable-object.sync="item"
-        @clearHighlightFromVarList="emitClearHighlight"
-        @highlightFromVarList="emitHighlight"
-        @toggleHighlightFromVarList="emitToggleHighlight"
+        v-on="$listeners"
         class="q-my-md, q-py-sm q-px-md text-center"
       ></VariableCard>
       <VariableCard
         v-for="(item, index) in accessedVariableDisplayList"
         :key="index"
         :init-variable-object.sync="item"
-        @clearHighlightFromVarList="emitClearHighlight"
-        @highlightFromVarList="emitHighlight"
-        @toggleHighlightFromVarList="emitToggleHighlight"
+        v-on="$listeners"
         class="q-my-md q-py-sm q-px-md text-center"
       ></VariableCard>
     </q-scroll-area>
@@ -95,32 +91,6 @@
           label: key,
           ...value,
         };
-      },
-      emitClearHighlight() {
-        this.$emit('clearHighlightFromVarList', this.rootVariableName);
-      },
-      emitHighlight(bareClassName, graphIds) {
-        /**
-         * if it's an element, highlight it, and toggle it
-         * if it's a linear container, highlight all, toggle all
-         * if it's a mapping container, highlight all, but only toggle key
-         *
-         * elements is in type of string
-         */
-        this.$emit(
-          'highlightFromVarList',
-          this.rootVariableName,
-          graphIds,
-          this.rootVariableColor
-        );
-      },
-      emitToggleHighlight(elements, flag) {
-        // TODO process states here
-        /**
-         * if it's singular or linear container, just on and off
-         * if it's pair container, key on, value on, off
-         */
-        this.$emit('toggleHighlightFromVarList', elements, flag);
       },
     },
   };
