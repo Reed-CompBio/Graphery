@@ -5,7 +5,7 @@
         <q-btn @click="emitBackAction"> </q-btn>
       </div>
       <q-space />
-      <div id="name-section">
+      <div id="name-section" @click="emitToggleAction">
         {{ elementName }}
       </div>
       <q-space />
@@ -39,11 +39,14 @@
       },
     },
     computed: {
+      element() {
+        return this.initElement;
+      },
       showPreviousButton() {
         return this.hasPrevious;
       },
       elementType() {
-        return this.initElement[_TYPE_HEADER];
+        return this.element[_TYPE_HEADER];
       },
       elementName() {
         return this.initElementName;
@@ -57,9 +60,7 @@
         this.$emit('popVariableStack');
       },
       emitToggleAction() {
-        const toggleClass = '';
-        // TODO implement the toggle class
-        this.$emit('toggle', toggleClass);
+        this.$emit('toggleAction');
       },
     },
   };

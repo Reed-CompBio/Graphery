@@ -126,6 +126,8 @@ class Recorder:
     _LINE_HEADER = 'line'
     _VARIABLE_HEADER = 'variables'
     _ACCESS_HEADER = 'accesses'
+    _PAIR_KEY_HEADER = 'key'
+    _PAIR_VALUE_HEADER = 'value'
 
     _BAD_REPR_STRING = 'BAD REPR FUNCTION'
 
@@ -248,10 +250,10 @@ class Recorder:
         temp = []
         for key, value in variable_state.items():
             temp.append({
-                'key': self.process_variable_state(
+                self._PAIR_KEY_HEADER: self.process_variable_state(
                     self._INNER_IDENTIFIER_STRING, key, copy(memory_trace)
                 ),
-                'value': self.process_variable_state(
+                self._PAIR_VALUE_HEADER: self.process_variable_state(
                     self._INNER_IDENTIFIER_STRING, value, copy(memory_trace)
                 )
             })
@@ -352,17 +354,17 @@ class Recorder:
     @property
     def _init_result_object(self) -> MutableMapping:
         return {
-            'line': 0,
-            'variables': {
+            self._LINE_HEADER: 0,
+            self._VARIABLE_HEADER: {
                 key: {
-                    'type': self._INIT_TYPE_STRING,
-                    'color': value,
-                    'repr': None
+                    self._TYPE_HEADER: self._INIT_TYPE_STRING,
+                    self._COLOR_HEADER: value,
+                    self._REPR_HEADER: None
                 }
                 for key, value in self._color_mapping.items()
                 if not (key == self._INNER_IDENTIFIER_STRING or key == self._ACCESSED_IDENTIFIER_STRING)
             },
-            'accesses': None
+            self._ACCESS_HEADER: None
         }
 
     def _process_change_list(self) -> List[MutableMapping]:
