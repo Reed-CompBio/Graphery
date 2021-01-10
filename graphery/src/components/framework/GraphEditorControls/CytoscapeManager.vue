@@ -1,8 +1,16 @@
 <script>
   export default {
+    data() {
+      return {
+        storedClassNames_: [],
+      };
+    },
     computed: {
       cytoscape_() {
         return null;
+      },
+      storedClassNames() {
+        return this.storedClassNames_;
       },
     },
     methods: {
@@ -21,6 +29,10 @@
           },
         ];
         this.addStyle(colorClassStyle);
+        this.storedClassNames.push(className);
+      },
+      clearStoredClassNames() {
+        this.storedClassNames_ = [];
       },
       addStyle(styleJsonObject) {
         if (!Array.isArray(styleJsonObject)) {
