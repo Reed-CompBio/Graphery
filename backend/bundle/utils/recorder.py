@@ -132,10 +132,9 @@ class Recorder:
     def __init__(self):
         self._changes: List[MutableMapping] = []
         self._processed_changes: Optional[List[MutableMapping]] = None
-        # self.variables: Set[str] = set()
-        self._color_mapping: MutableMapping = copy(self._DEFAULT_COLOR_MAPPING)
-        self._INNER_IDENTIFIER_STRING = self.register_variable(self._INNER_IDENTIFIER)
-        self._ACCESSED_IDENTIFIER_STRING = self.register_variable(self._ACCESSED_IDENTIFIER)
+        self._color_mapping: MutableMapping = {
+            **self._DEFAULT_COLOR_MAPPING
+        }
 
     def assign_color(self, identifier_string: str) -> None:
         if identifier_string not in self._color_mapping:
@@ -243,7 +242,9 @@ class Recorder:
             )
         return temp
 
-    def _generate_pair_container_repr(self, variable_state: Mapping, memory_trace: Set) -> List[Dict[str, MutableMapping]]:
+    def _generate_pair_container_repr(self,
+                                      variable_state: Mapping,
+                                      memory_trace: Set) -> List[Dict[str, MutableMapping]]:
         temp = []
         for key, value in variable_state.items():
             temp.append({
@@ -400,7 +401,9 @@ class Recorder:
 
     def purge_changes(self) -> None:
         self._changes: List[dict] = []
-        self._color_mapping: MutableMapping = copy(self._DEFAULT_COLOR_MAPPING)
+        self._color_mapping: MutableMapping = {
+            **self._DEFAULT_COLOR_MAPPING
+        }
 
     def purge_processed_changes(self) -> None:
         self._processed_changes = None
