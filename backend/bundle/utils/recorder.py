@@ -3,10 +3,10 @@ from __future__ import annotations
 import json
 from collections.abc import Mapping, Set
 from collections import Counter
-from copy import deepcopy
+from copy import deepcopy, copy
 from numbers import Number
 from random import randint
-from typing import Any, List, MutableMapping, Sequence, Tuple, Deque, Union, Dict
+from typing import Any, List, MutableMapping, Sequence, Tuple, Deque, Union, Dict, Optional
 
 from ..GraphObjects.Edge import Edge
 from ..GraphObjects.Node import Node
@@ -131,9 +131,9 @@ class Recorder:
 
     def __init__(self):
         self._changes: List[MutableMapping] = []
-        self._processed_changes: List[MutableMapping] = []
+        self._processed_changes: Optional[List[MutableMapping]] = None
         # self.variables: Set[str] = set()
-        self._color_mapping: MutableMapping = self._DEFAULT_COLOR_MAPPING
+        self._color_mapping: MutableMapping = copy(self._DEFAULT_COLOR_MAPPING)
         self._INNER_IDENTIFIER_STRING = self.register_variable(self._INNER_IDENTIFIER)
         self._ACCESSED_IDENTIFIER_STRING = self.register_variable(self._ACCESSED_IDENTIFIER)
 
@@ -235,7 +235,11 @@ class Recorder:
         temp = []
         for element in variable_state:
             temp.append(
-                self.process_variable_state(self._INNER_IDENTIFIER_STRING, element, memory_trace)
+                self.process_variable_state(
+                    self._INNER_IDENTIFIER_STRING,
+                    element,
+                    copy(memory_trace)
+                )
             )
         return temp
 
@@ -244,10 +248,10 @@ class Recorder:
         for key, value in variable_state.items():
             temp.append({
                 'key': self.process_variable_state(
-                    self._INNER_IDENTIFIER_STRING, key, memory_trace
+                    self._INNER_IDENTIFIER_STRING, key, copy(memory_trace)
                 ),
                 'value': self.process_variable_state(
-                    self._INNER_IDENTIFIER_STRING, value, memory_trace
+                    self._INNER_IDENTIFIER_STRING, value, copy(memory_trace)
                 )
             })
         return temp
@@ -271,8 +275,11 @@ class Recorder:
             if isinstance(variable_state, type_candidate):
                 return type_string
 
-    def process_variable_state(self, identifier_string: str, variable_state: Any,
+    def process_variable_state(self,
+                               identifier_string: str,
+                               variable_state: Any,
                                memory_trace: Set = None) -> MutableMapping:
+        # TODO this is problematic
         if memory_trace is None:
             memory_trace = set()
         var_id = id(variable_state)
@@ -297,7 +304,7 @@ class Recorder:
 
         if state_mapping[self._TYPE_HEADER] in self._GRAPH_OBJECT_TYPES:
             variable_state: Union[Node, Edge]
-            state_mapping[self._PROPERTY_HEADER] = self.custom_repr(
+            state_mapping[self._PROPERTY_HEADER] = self.process_variable_state(
                 variable_state.properties,
                 self._TYPE_MAPPING[Mapping],
                 memory_trace,
@@ -342,51 +349,63 @@ class Recorder:
         self.get_last_ac().append(self.process_variable_state(self._ACCESSED_IDENTIFIER_STRING, access_change))
 
     def _process_change_list(self) -> List[MutableMapping]:
-        init_object = {
-            'line': 0,
-            'variables': {
-                key: {
-                    'type': self._INIT_TYPE_STRING,
-                    'color': value,
-                    'repr': None
-                }
-                for key, value in self._color_mapping.items()
-                if not (key == self._INNER_IDENTIFIER_STRING or key == self._ACCESSED_IDENTIFIER_STRING)
-            },
-            'accesses': None
-        }
-        temp_container = [init_object]
-
-        previous_variables = init_object[self._VARIABLE_HEADER]
-
-        for change in self._changes:
-            variables_field = change[self._VARIABLE_HEADER]
-
-            temp_object = {
-                **change
+        if self._processed_changes is None:
+            init_object = {
+                'line': 0,
+                'variables': {
+                    key: {
+                        'type': self._INIT_TYPE_STRING,
+                        'color': value,
+                        'repr': None
+                    }
+                    for key, value in self._color_mapping.items()
+                    if not (key == self._INNER_IDENTIFIER_STRING or key == self._ACCESSED_IDENTIFIER_STRING)
+                },
+                'accesses': None
             }
+            temp_container = [init_object]
 
-            if variables_field is None:
-                temp_object[self._VARIABLE_HEADER] = None
-            else:
-                current_current_variables = deepcopy(previous_variables)
-                for changed_var_key, changed_var_value in variables_field.items():
-                    current_current_variables[changed_var_key] = changed_var_value
-                temp_object[self._VARIABLE_HEADER] = current_current_variables
-                previous_variables = current_current_variables
+            previous_variables = init_object[self._VARIABLE_HEADER]
 
-            temp_container.append(temp_object)
+            for change in self._changes:
+                variables_field = change[self._VARIABLE_HEADER]
 
-        return temp_container
+                temp_object = {
+                    **change
+                }
+
+                if variables_field is None:
+                    temp_object[self._VARIABLE_HEADER] = None
+                else:
+                    current_current_variables = deepcopy(previous_variables)
+                    for changed_var_key, changed_var_value in variables_field.items():
+                        current_current_variables[changed_var_key] = changed_var_value
+                    temp_object[self._VARIABLE_HEADER] = current_current_variables
+                    previous_variables = current_current_variables
+
+                temp_container.append(temp_object)
+
+            self._processed_changes = temp_container
+
+        return self._processed_changes
 
     def get_change_list(self) -> List[MutableMapping]:
+        return self._changes
+
+    def get_processed_change_list(self) -> List[MutableMapping]:
         return self._process_change_list()
 
     def get_change_list_json(self) -> str:
-        return json.dumps(self.get_change_list())
+        return json.dumps(self.get_processed_change_list())
+
+    def purge_changes(self) -> None:
+        self._changes: List[dict] = []
+        self._color_mapping: MutableMapping = copy(self._DEFAULT_COLOR_MAPPING)
+
+    def purge_processed_changes(self) -> None:
+        self._processed_changes = None
 
     def purge(self) -> None:
         """Empty previous recorded items"""
-        self._changes: List[dict] = []
-        # self.variables: Set[Tuple[str, str]] = set()
-        self._color_mapping: MutableMapping = self._DEFAULT_COLOR_MAPPING
+        self.purge_processed_changes()
+        self.purge_changes()
