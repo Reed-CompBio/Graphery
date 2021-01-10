@@ -19,8 +19,8 @@ env:
 install:
   - sudo pip install pipenv
   - cd graphery
-  - npm install -g npm@latest
-  - npm install
+  - npm install -g yarn
+  - yarn install
 
 before_script:
   - psql -c 'create database graphery;' -U postgres
@@ -29,7 +29,7 @@ before_script:
   - psql -c 'grant all privileges on database graphery to graphery;' -U postgres
 
 script:
-  - npm run build
+  - yarn run build
   - cd ../backend && sudo pipenv install -d && sudo pipenv sync && sudo pipenv graph
   - cd ./bundle && sudo pipenv run pytest -vv -ra -s
   - cd ../server && sudo pipenv run pytest -vv -ra -s
