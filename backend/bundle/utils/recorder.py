@@ -349,21 +349,26 @@ class Recorder:
         """
         self.get_last_ac().append(self.process_variable_state(self._ACCESSED_IDENTIFIER_STRING, access_change))
 
+    @property
+    def _init_result_object(self) -> MutableMapping:
+        return {
+            'line': 0,
+            'variables': {
+                key: {
+                    'type': self._INIT_TYPE_STRING,
+                    'color': value,
+                    'repr': None
+                }
+                for key, value in self._color_mapping.items()
+                if not (key == self._INNER_IDENTIFIER_STRING or key == self._ACCESSED_IDENTIFIER_STRING)
+            },
+            'accesses': None
+        }
+
     def _process_change_list(self) -> List[MutableMapping]:
         if self._processed_changes is None:
-            init_object = {
-                'line': 0,
-                'variables': {
-                    key: {
-                        'type': self._INIT_TYPE_STRING,
-                        'color': value,
-                        'repr': None
-                    }
-                    for key, value in self._color_mapping.items()
-                    if not (key == self._INNER_IDENTIFIER_STRING or key == self._ACCESSED_IDENTIFIER_STRING)
-                },
-                'accesses': None
-            }
+            init_object = self._init_result_object
+
             temp_container = [init_object]
 
             previous_variables = init_object[self._VARIABLE_HEADER]
