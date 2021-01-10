@@ -1,7 +1,9 @@
 matrix:
   include:
     - language: python
-      python: 3.9 
+      python:
+        - "3.9"
+        - "3.8"
       cache: pip
       services:
         - postgresql
@@ -24,7 +26,7 @@ matrix:
       cache: npm
       install:
         - cd graphery
-        - npm install -g npm@latest yarn
+        - npm install -g yarn
         - yarn install
       script:
         - yarn run build
