@@ -19,7 +19,7 @@ env:
 install:
   - sudo pip install pipenv
   - cd graphery
-  - npm install -g yarn
+  - npm install -g npm@latest yarn
   - yarn install
 
 before_script:
