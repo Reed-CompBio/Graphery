@@ -103,18 +103,11 @@ def test_generating_changes(empty_recorder):
     first_line_no = 1
     empty_recorder.add_record(first_line_no)
     change_list = empty_recorder.get_change_list()
-    assert len(change_list) == 2
-    first_change = change_list[1]
+    assert len(change_list) == 1
+    first_change = change_list[0]
     assert first_change[empty_recorder._LINE_HEADER] == first_line_no
     assert first_change[empty_recorder._VARIABLE_HEADER] is None
     assert first_change[empty_recorder._ACCESS_HEADER] is None
-
-    default_start = change_list[0]
-    assert default_start[empty_recorder._LINE_HEADER] == 0
-    assert all(item[empty_recorder._TYPE_HEADER] == empty_recorder._INIT_TYPE_STRING and
-               item[empty_recorder._REPR_HEADER] is None and
-               item[empty_recorder._COLOR_HEADER] is None
-               for item in default_start[empty_recorder._VARIABLE_HEADER])
 
     first_var_id = ('main', 'var_1')
     first_var_id_string = empty_recorder.register_variable(first_var_id)
@@ -125,8 +118,10 @@ def test_generating_changes(empty_recorder):
     target_type = empty_recorder._TYPE_MAPPING[Number]
 
     assert first_change[empty_recorder._VARIABLE_HEADER] is not None
-    assert first_change[empty_recorder._VARIABLE_HEADER][first_var_id_string][empty_recorder._REPR_HEADER] == empty_recorder.custom_repr(first_var_value, target_type)
-    assert first_change[empty_recorder._VARIABLE_HEADER][first_var_id_string][empty_recorder._TYPE_HEADER] == target_type
+    assert first_change[empty_recorder._VARIABLE_HEADER][first_var_id_string][
+               empty_recorder._REPR_HEADER] == empty_recorder.custom_repr(first_var_value, target_type)
+    assert first_change[empty_recorder._VARIABLE_HEADER][first_var_id_string][
+               empty_recorder._TYPE_HEADER] == target_type
 
     accessed_var_value = Node('1')
     empty_recorder.add_ac_to_last_record(
@@ -134,90 +129,60 @@ def test_generating_changes(empty_recorder):
     )
     target_type = empty_recorder._TYPE_MAPPING[Node]
     assert first_change[empty_recorder._ACCESS_HEADER] is not None
-    assert first_change[empty_recorder._ACCESS_HEADER][0][empty_recorder._REPR_HEADER] == empty_recorder.custom_repr(accessed_var_value, target_type)
+    assert first_change[empty_recorder._ACCESS_HEADER][0][empty_recorder._REPR_HEADER] == empty_recorder.custom_repr(
+        accessed_var_value, target_type)
     assert first_change[empty_recorder._ACCESS_HEADER][0][empty_recorder._TYPE_HEADER] == target_type
+
+    default_start = empty_recorder.get_processed_change_list()[0]
+    assert default_start[empty_recorder._LINE_HEADER] == 0
+    assert all(item[empty_recorder._TYPE_HEADER] == empty_recorder._INIT_TYPE_STRING and
+               item[empty_recorder._REPR_HEADER] is None and
+               item[empty_recorder._COLOR_HEADER] is None
+               for item in default_start[empty_recorder._VARIABLE_HEADER].values())
 
 
 def test_json_dump(empty_recorder):
-    result_string = dedent(u"""\
-    [
-       {
-          "line":0,
-          "variables":{
-             "main\u200b@var_1":{
-                "type":"init",
-                "color":null,
-                "repr":null
-             },
-             "main\u200b@var_2":{
-                "type":"init",
-                "color":null,
-                "repr":null
-             },
-             "main\u200b@var_3":{
-                "type":"init",
-                "color":null,
-                "repr":null
-             },
-             "main\u200b@var_4":{
-                "type":"init",
-                "color":null,
-                "repr":null
-             }
-          },
-          "accesses":null
-       },
-       {
-          "line":1,
-          "variables":{
-             "main\u200b@var_1":{
-                "type":"Number",
-                "repr":"1"
-             },
-             "main\u200b@var_2":{
-                "type":"Node",
-                "repr":"Node(id: 1)",
-                "properties":"{}",
-                "color":"#1F78B4",
-                "id":"1"
-             },
-             "main\u200b@var_4":{
-                "type":"None",
-                "repr":"None"
-             }
-          },
-          "accesses":[
-             {
-                "type":"Node",
-                "repr":"Node(id: 1)",
-                "properties":"{}",
-                "color":"#B15928",
-                "id":"1"
-             }
-          ]
-       },
-       {
-          "line":2,
-          "variables":{
-             "main\u200b@var_3":{
-                "type":"String",
-                "repr":"'ab'"
-             }
-          },
-          "accesses":[
-             {
-                "type":"Mapping",
-                "repr":"{1: {2: 3, 4: 5}, (6, 7, 8): 9}"
-             }
-          ]
-       },
-       {
-          "line":20,
-          "variables":null,
-          "accesses":null
-       }
-    ]
-    """)
+    result_string = [{'accesses': None,
+                      'line': 0,
+                      'variables': {'main\u200b@var_1': {'color': None,
+                                                         'repr': None,
+                                                         'type': 'init'},
+                                    'main\u200b@var_2': {'color': None,
+                                                         'repr': None,
+                                                         'type': 'init'},
+                                    'main\u200b@var_3': {'color': None,
+                                                         'repr': None,
+                                                         'type': 'init'},
+                                    'main\u200b@var_4': {'color': None,
+                                                         'repr': None,
+                                                         'type': 'init'}}},
+                     {'accesses': [{'color': '#B15928',
+                                    'id': '1',
+                                    'properties': '{}',
+                                    'repr': 'Node(id: 1)',
+                                    'type': 'Node'}],
+                      'line': 1,
+                      'variables': {'main\u200b@var_1': {'repr': '1', 'type': 'Number'},
+                                    'main\u200b@var_2': {'color': '#1F78B4',
+                                                         'id': '1',
+                                                         'properties': '{}',
+                                                         'repr': 'Node(id: 1)',
+                                                         'type': 'Node'},
+                                    'main\u200b@var_3': {'color': None,
+                                                         'repr': None,
+                                                         'type': 'init'},
+                                    'main\u200b@var_4': {'repr': 'None', 'type': 'None'}}},
+                     {'accesses': [{'repr': '{1: {2: 3, 4: 5}, (6, 7, 8): 9}', 'type': 'Mapping'}],
+                      'line': 2,
+                      'variables': {'main\u200b@var_1': {'repr': '1', 'type': 'Number'},
+                                    'main\u200b@var_2': {'color': '#1F78B4',
+                                                         'id': '1',
+                                                         'properties': '{}',
+                                                         'repr': 'Node(id: 1)',
+                                                         'type': 'Node'},
+                                    'main\u200b@var_3': {'repr': "'ab'", 'type': 'String'},
+                                    'main\u200b@var_4': {'repr': 'None', 'type': 'None'}}},
+                     {'accesses': None, 'line': 20, 'variables': None}]
     first_line_no = 1
     empty_recorder.add_record(first_line_no)
 
@@ -276,5 +241,5 @@ def test_json_dump(empty_recorder):
         third_var_id_string, third_var_value
     )
 
-    assert json.loads(empty_recorder.get_change_list_json()) == json.loads(result_string)
+    assert json.loads(empty_recorder.get_change_list_json()) == result_string
     # print(empty_recorder.get_change_list_json())
