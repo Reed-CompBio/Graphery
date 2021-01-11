@@ -27,6 +27,10 @@
         type: Boolean,
         default: false,
       },
+      pictureZoom: {
+        type: Boolean,
+        default: false,
+      },
       docId: {
         type: String,
         default: 'default',
@@ -147,10 +151,24 @@
           });
         }
       },
+      processPictureZoom() {
+        for (const tag of this.$refs.markdownMountingPoint.getElementsByTagName(
+          'img'
+        )) {
+          console.log(tag);
+          tag.addEventListener('click', (event) => {
+            this.$emit('pictureZoomRequest', event.target.getAttribute('src'));
+          });
+          tag.classList.add('picture-zoom-ready');
+        }
+      },
       postRenderProcessing() {
         this.$nextTick(() => {
           if (this.breakpointReact) {
             this.replaceBreakpoints();
+          }
+          if (this.pictureZoom) {
+            this.processPictureZoom();
           }
         });
       },

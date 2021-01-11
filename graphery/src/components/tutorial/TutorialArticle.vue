@@ -63,6 +63,7 @@
             <MarkdownSection
               :input-html="htmlContent"
               :breakpoint-react="true"
+              :picture-zoom="true"
               :highlight="true"
               @breakpointClicked="
                 (position) => {
