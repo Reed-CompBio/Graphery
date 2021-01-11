@@ -3,7 +3,7 @@
     <div v-if="isContainer" id="container-abbr">
       ...
     </div>
-    <div v-else id="singular-display">
+    <div v-else id="singular-display" style="text-wrap: normal">
       {{ displayObjectContent }}
     </div>
     <!--  TODO cursor type change   -->
@@ -35,3 +35,7 @@
     },
   };
 </script>
+
+<style lang="sass" scoped>
+  #display-element-wrapper
+</style>

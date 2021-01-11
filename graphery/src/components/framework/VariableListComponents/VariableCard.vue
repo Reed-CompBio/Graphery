@@ -7,6 +7,7 @@
       @popVariableStack="handlePopVariableStack"
       @toggleAction="handleToggleAction"
     ></VariableCardHeader>
+    <q-separator />
     <VariableCardDisplay
       ref="variableCardDisplay"
       :init-element.sync="currentVariableObject"
@@ -14,6 +15,7 @@
       @highlight="emitHighlight"
       @toggle="emitToggleHighlight"
       @pushVariableStack="handlePushVariableStack"
+      class="q-my-sm"
     ></VariableCardDisplay>
   </q-card>
 </template>
