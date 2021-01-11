@@ -53,6 +53,9 @@
               :editorLoadingOverride="execLoading"
               @editorContentChanged="onEditorContentChanged"
               @editorInstanceLoaded.once="onEditorInstanceLoaded"
+              @clearHighlightFromVarList="clearHighlightsElementsFromVarList"
+              @highlightFromVarList="highlightElementsFromVarList"
+              @toggleHighlightFromVarList="toggleHighlightsFromVarList"
             ></EditorWrapper>
             <GraphInfo v-show="currentTab === 'graph-info'"></GraphInfo>
             <HowToHelper v-show="currentTab === 'how-to'"></HowToHelper>

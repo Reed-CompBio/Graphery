@@ -70,6 +70,9 @@
             :editorLoadingOverride="execLoading"
             @editorContentChanged="onEditorContentChanged"
             @editorInstanceLoaded.once="onEditorInstanceLoaded"
+            @clearHighlightFromVarList="clearHighlightsElementsFromVarList"
+            @highlightFromVarList="highlightElementsFromVarList"
+            @toggleHighlightFromVarList="toggleHighlightsFromVarList"
           ></EditorWrapper>
         </div>
       </template>

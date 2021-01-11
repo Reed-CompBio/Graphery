@@ -15,21 +15,28 @@
     },
     methods: {
       genClassQueryName(className) {
-        return `.${className}`;
+        if (!className.startsWith('.')) {
+          return `.${className}`;
+        }
+        return className;
       },
       generateColoredClass(className, color) {
-        const colorClassStyle = [
-          {
-            selector: `.${className}`,
-            style: {
-              'overlay-color': color,
-              'overlay-opacity': 0.5,
-              'overlay-padding': 5,
+        const queryClassName = this.genClassQueryName(className);
+
+        if (!(className in this.storedClassNames)) {
+          const colorClassStyle = [
+            {
+              selector: queryClassName,
+              style: {
+                'overlay-color': color,
+                'overlay-opacity': 0.5,
+                'overlay-padding': 5,
+              },
             },
-          },
-        ];
-        this.addStyle(colorClassStyle);
-        this.storedClassNames.push(className);
+          ];
+          this.addStyle(colorClassStyle);
+          this.storedClassNames.push(className);
+        }
       },
       clearStoredClassNames() {
         this.storedClassNames_ = [];
@@ -50,6 +57,9 @@
         this.cytoscape_
           .$(this.genClassQueryName(className))
           .removeClass(className);
+      },
+      addClassNameByIds(ids, className) {
+        this.cytoscape_.$(ids).addClass(className);
       },
       addClassNameById(id, className) {
         const idName = `#${id}`;
