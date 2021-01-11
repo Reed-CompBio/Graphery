@@ -135,16 +135,13 @@
           // update accessed variables
           const accessedVariables = element['accesses'];
           this.updateAccessedVariables(accessedVariables);
-          this.highlightAccessedVariablesOnCytoscapeView(accessedVariables);
         } else {
           // clear accessed variables
           this.clearAccessedVariables();
-          this.unhighlightAccessedVariablesOnCytoscapeView();
         }
 
         const variables = element['variables'];
         this.updateVariableList(variables);
-        // this.highlightVariablesOnCytoscapeView(variables);
       },
       stepper(newPosition, steps) {
         this.updateResultJsonPosition(this.currentPositionId, newPosition);
