@@ -26,7 +26,10 @@
     _LABEL_HEADER,
     _PYTHON_ID_HEADER,
   } from '@/components/framework/VariableListComponents/variableListConstants';
-  import { revertNameCombo } from '@/components/framework/GraphEditorControls/ElementsUtils';
+  import {
+    isInitElement,
+    revertNameCombo,
+  } from '@/components/framework/GraphEditorControls/ElementsUtils';
   export default {
     props: {
       initVariableObject: {
@@ -39,6 +42,7 @@
       return {
         variableNameStack_: [],
         variableStack_: [],
+        initVarColor_: null,
       };
     },
     computed: {
@@ -65,6 +69,9 @@
       },
       rootVariableColor() {
         return this.rootVariable[_COLOR_HEADER];
+      },
+      initVarColor() {
+        return this.initVarColor_;
       },
     },
     methods: {
@@ -108,7 +115,7 @@
           'highlightFromVarList',
           bareClassName,
           graphIds,
-          this.rootVariableColor
+          this.initVarColor
         );
       },
       emitToggleHighlight(elements, flag) {
@@ -121,8 +128,11 @@
       },
     },
     watch: {
-      rootVariable: function() {
+      rootVariable: function(newValue) {
         this.resetVariableStacks();
+        if (this.initVarColor_ && isInitElement(newValue)) {
+          this.initVarColor_ = newValue[_COLOR_HEADER];
+        }
       },
     },
   };
