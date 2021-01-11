@@ -1,5 +1,5 @@
 <template>
-  <div id="card wrapper">
+  <div id="card-wrapper">
     <div id="singular-element" v-if="isSingularEle || isInitEle">
       <SingularElementLayout :init-element="element" />
     </div>
@@ -193,3 +193,8 @@
     },
   };
 </script>
+
+<style lang="sass" scoped>
+  #card-wrapper
+    padding: 0 5px
+</style>
