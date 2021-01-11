@@ -2,15 +2,15 @@
   <q-card>
     <VariableCardHeader
       :has-previous="!isStackEmpty"
-      :init-element-name.sync="currentVariableName"
-      :init-element.sync="currentVariableObject"
+      :init-element-name="currentVariableName"
+      :init-element="currentVariableObject"
       @popVariableStack="handlePopVariableStack"
       @toggleAction="handleToggleAction"
     ></VariableCardHeader>
     <q-separator />
     <VariableCardDisplay
       ref="variableCardDisplay"
-      :init-element.sync="currentVariableObject"
+      :init-element="currentVariableObject"
       @clearHighlight="emitClearHighlight"
       @highlight="emitHighlight"
       @toggle="emitToggleHighlight"
