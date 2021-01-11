@@ -8,8 +8,6 @@
       id="variable-list-scroll-area"
       :visible="false"
     >
-      <!-- JB: remove class q-px-md q-py-sm -->
-      <!-- JB: add class variablerst-card -->
       <VariableCard
         :key="index"
         v-for="(item, index) in variableDisplayList"
