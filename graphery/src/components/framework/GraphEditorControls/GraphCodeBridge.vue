@@ -81,23 +81,6 @@
       multipleSteps(noneEmptyElement, updateAccessed) {
         this.viewUpdater(noneEmptyElement, updateAccessed);
       },
-      highlightVariablesOnCytoscapeView(variables) {
-        if (this.$refs.cytoscapeWrapper) {
-          this.$refs.cytoscapeWrapper.highlightVarObj(variables);
-        }
-      },
-      highlightAccessedVariablesOnCytoscapeView(accessedVariables) {
-        if (this.$refs.cytoscapeWrapper) {
-          this.$refs.cytoscapeWrapper.highlightAccessedVariables(
-            accessedVariables
-          );
-        }
-      },
-      unhighlightAccessedVariablesOnCytoscapeView() {
-        if (this.$refs.cytoscapeWrapper) {
-          this.$refs.cytoscapeWrapper.unhighlightAccessedVariables();
-        }
-      },
       updateVariableList(variables) {
         this.$store.commit('variables/LOAD_CURRENT_VARIABLES', variables);
       },

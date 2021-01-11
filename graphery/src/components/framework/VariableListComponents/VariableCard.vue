@@ -119,7 +119,6 @@
         );
       },
       emitToggleHighlight(elements, flag) {
-        // TODO process states here
         /**
          * if it's singular or linear container, just on and off
          * if it's pair container, key on, value on, off
@@ -130,7 +129,7 @@
     watch: {
       rootVariable: function(newValue) {
         this.resetVariableStacks();
-        if (this.initVarColor_ && isInitElement(newValue)) {
+        if (!this.initVarColor_ && isInitElement(newValue)) {
           this.initVarColor_ = newValue[_COLOR_HEADER];
         }
       },
