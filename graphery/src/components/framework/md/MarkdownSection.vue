@@ -121,10 +121,6 @@
             this.renderHtml();
           }
         );
-        // Markdown css
-        this.loadLink(
-          'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css'
-        );
 
         // Katex css
         this.loadLink(
@@ -189,5 +185,6 @@
 
 <style lang="sass">
   @import "~highlight.js/styles/github.css"
+  @import "~@/styles/github-markdown.min.css"
   @import "~@/styles/markdown.sass"
 </style>
