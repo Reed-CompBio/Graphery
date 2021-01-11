@@ -4,24 +4,24 @@
     <div style="text-transform: uppercase;">Editor</div>
     <q-space />
     <!-- try-out of floating slider -->
-    <div>
-      <!-- <div class="gf"> -->
-      <q-slider
-        id="stepper-slider"
-        v-model="modelSliderPos"
-        :min="1"
-        label
-        :label-value="`${getSliderPosition}/${sliderLength}`"
-        :max="sliderLength"
-        :step="1"
-        snap
-        dense
-        style="width: 40%;"
-        :label-always="sliderLabelAlways"
-        :disable="disableStepSlider"
-      ></q-slider>
-    </div>
-    abcde FIXME
+
+    <!-- <div class="gf"> -->
+    <q-slider
+      id="stepper-slider"
+      v-model="modelSliderPos"
+      :min="1"
+      label
+      :label-value="`${getSliderPosition}/${sliderLength}`"
+      :max="sliderLength"
+      :step="1"
+      snap
+      dense
+      style="width: 40%;"
+      :label-always="sliderLabelAlways"
+      :disable="disableStepSlider"
+    ></q-slider>
+    <!-- </div>-->
+    <!--    abcde FIXME-->
     <!-- FIXME: pop-up slider, style -->
     <!-- FIXME: middle, calc the width of editor -->
     <!-- stepper button group -->
