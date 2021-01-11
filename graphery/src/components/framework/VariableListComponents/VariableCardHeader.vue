@@ -1,16 +1,26 @@
 <template>
   <div>
-    <div class="q-pa-sm">
-      <div id="back-button" v-if="showPreviousButton">
-        <q-btn @click="emitBackAction"> </q-btn>
-      </div>
-      <q-space />
-      <div id="name-section" @click="emitToggleAction">
-        {{ elementName }}
-      </div>
-      <q-space />
-      <div id="icon-section">
-        <q-icon :name="elementIcon" />
+    <div class="header">
+      <!-- JB: rm class q-pa-sm, add class header -->
+      <div id="header-wrapper" class="row">
+        <div id="back-button" style="display: inline;">
+          <q-btn
+            flat
+            dense
+            size="sm"
+            :disable="!showPreviousButton"
+            icon="mdi-backburger"
+            @click="emitBackAction"
+          />
+        </div>
+        <q-space />
+        <div id="name-section" @click="emitToggleAction">
+          {{ elementName }}
+        </div>
+        <q-space />
+        <div id="icon-section">
+          <q-btn flat dense size="sm" disable :icon="elementIcon" />
+        </div>
       </div>
     </div>
   </div>
@@ -65,3 +75,14 @@
     },
   };
 </script>
+
+<style scoped lang="sass">
+  #name-section
+    display: flex
+    align-self: center
+    font-size: 15px
+    // JB: change font-size 18 -> 15
+  .header
+    padding: 0px 8px
+    // JB: change the header padding
+</style>

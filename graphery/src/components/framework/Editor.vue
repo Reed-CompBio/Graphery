@@ -36,6 +36,10 @@
         type: String,
         default: null,
       },
+      editOverride: {
+        type: Boolean,
+        default: false,
+      },
     },
     data() {
       return {
@@ -54,6 +58,9 @@
         'fontSize',
         'wrap',
       ]),
+      isReadOnly() {
+        return !(this.enableEditing || this.editOverride);
+      },
       editorAndContentLoading() {
         return this.editor === null || this.loadingOverride;
       },
@@ -74,7 +81,7 @@
                 automaticLayout: true, // auto resize
                 overviewRulerBorder: false, // scroll bar no boarder
                 scrollBeyondLastLine: false, // remove blank space at the end of the editor
-                readOnly: !this.enableEditing,
+                readOnly: this.isReadOnly,
                 theme: this.dark ? 'vs-dark' : 'vs',
                 language: this.lang,
                 wordWrap: this.wrap || this.wrapLine ? 'on' : 'off',
@@ -95,7 +102,7 @@
 
             this.editor.onKeyUp(
               throttle((__) => {
-                if (!this.enableEditing) {
+                if (this.isReadOnly) {
                   errorDialog(
                     {
                       message: this.$t(
@@ -182,8 +189,8 @@
       },
     },
     watch: {
-      enableEditing: function(newValue) {
-        this.editor.updateOptions({ readOnly: !newValue });
+      enableEditing: function() {
+        this.editor.updateOptions({ readOnly: this.isReadOnly });
       },
     },
     mounted() {

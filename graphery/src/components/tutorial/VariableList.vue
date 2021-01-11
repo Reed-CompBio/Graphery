@@ -8,19 +8,21 @@
       id="variable-list-scroll-area"
       :visible="false"
     >
+      <!-- JB: remove class q-px-md q-py-sm -->
+      <!-- JB: add class variablerst-card -->
       <VariableCard
         :key="index"
         v-for="(item, index) in variableDisplayList"
         :init-variable-object.sync="item"
         v-on="$listeners"
-        class="q-my-md, q-py-sm q-px-md text-center"
+        class="q-my-md text-center variable-card"
       ></VariableCard>
       <VariableCard
         v-for="(item, index) in accessedVariableDisplayList"
         :key="index"
         :init-variable-object.sync="item"
         v-on="$listeners"
-        class="q-my-md q-py-sm q-px-md text-center"
+        class="q-my-md text-center variable-card"
       ></VariableCard>
     </q-scroll-area>
   </div>
@@ -106,4 +108,8 @@
     line-height: 2rem
     letter-spacing: 0.0125em
     text-wrap: normal
+  .variable-card
+    margin-top: 10px
+    padding-top: 4px
+    padding-bottom: 4px
 </style>

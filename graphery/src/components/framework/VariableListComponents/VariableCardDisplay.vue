@@ -1,5 +1,15 @@
 <template>
-  <div>{{ initElement }}</div>
+  <div id="card wrapper">
+    <div id="singular-element" v-if="isSingularEle || isInitEle">
+      <SingularElementLayout :init-element="element" />
+    </div>
+    <div id="linear-container-element" v-if="isLinearContainerEle">
+      <LinearContainerElementLayout :init-element="element" />
+    </div>
+    <div id="pair-container-element" v-if="isPairContainerEle">
+      <PairContainerElementLayout :init-element="element" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -21,8 +31,16 @@
     makeIdFromObject,
     nameComboToClassName,
   } from '@/components/framework/GraphEditorControls/ElementsUtils';
+  import SingularElementLayout from '@/components/framework/VariableListComponents/layouts/SingularElementLayout';
+  import LinearContainerElementLayout from '@/components/framework/VariableListComponents/layouts/LinearContainerElementLayout';
+  import PairContainerElementLayout from '@/components/framework/VariableListComponents/layouts/PairContainerElementLayout';
 
   export default {
+    components: {
+      PairContainerElementLayout,
+      LinearContainerElementLayout,
+      SingularElementLayout,
+    },
     props: {
       initElement: {
         type: Object,

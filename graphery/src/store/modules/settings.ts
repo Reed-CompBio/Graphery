@@ -26,6 +26,7 @@ const state: SettingState = {
   pageDisplayNum: 5,
   language: 'en-us',
   tooltips: true,
+  graphAbstractPopupShow: true,
 };
 
 const mutations: MutationTree<SettingState> = {
@@ -76,6 +77,9 @@ const mutations: MutationTree<SettingState> = {
   },
   CHANGE_TOOLTIPS(state, value: boolean) {
     state.tooltips = value;
+  },
+  CHANGE_GRAPH_ABSTRACT_POPUP_SHOW(state, value: boolean) {
+    state.graphAbstractPopupShow = value;
   },
 };
 
@@ -128,43 +132,8 @@ const actions: ActionTree<SettingState, RootState> = {
   changeTooltips({ commit }, value: boolean) {
     commit('CHANGE_TOOLTIPS', value);
   },
-  storeSettings(
-    { dispatch },
-    {
-      // color
-      dark,
-      graphDark,
-      // graph render
-      hideEdgeWhenRendering,
-      renderViewportOnly,
-      motionBlurEnabled,
-      motionSensitivityLevel,
-      graphSplitPos,
-      // editor settings
-      tabNum,
-      softTab,
-      fontSize,
-      codeWrap,
-      // display
-      pageDisplayNum,
-      language,
-      tooltips,
-    }: SettingInfos
-  ) {
-    dispatch('changeDark', dark);
-    dispatch('changeGraphDark', graphDark);
-    dispatch('changeHideEdgeWhenRendering', hideEdgeWhenRendering);
-    dispatch('changeRenderViewportOnly', renderViewportOnly);
-    dispatch('changeMotionBlurEnabled', motionBlurEnabled);
-    dispatch('changeMotionSensitivityLevel', motionSensitivityLevel);
-    dispatch('changeGraphSplitPos', graphSplitPos);
-    dispatch('changeTabNum', tabNum);
-    dispatch('changeSoftTab', softTab);
-    dispatch('changeFontSize', fontSize);
-    dispatch('changeCodeWrap', codeWrap);
-    dispatch('changePageDisplayNum', pageDisplayNum);
-    dispatch('changeLanguage', language);
-    dispatch('changeTooltips', tooltips);
+  changeGraphAbstractPopupShow({ commit }, value: boolean) {
+    commit('CHANGE_GRAPH_ABSTRACT_POPUP_SHOW', value);
   },
 };
 
@@ -177,6 +146,9 @@ const getters: GetterTree<SettingState, RootState> = {
   },
   getFontSizeCss(state) {
     return `${state.fontSize}px`;
+  },
+  graphAbstractPopupShow(state) {
+    return state.graphAbstractPopupShow;
   },
   getSettings(state) {
     return {

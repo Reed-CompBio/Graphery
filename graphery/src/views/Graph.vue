@@ -22,7 +22,7 @@
         <SplitterSeparator :horizontal="verticalSplitter" />
       </template>
       <template v-slot:after>
-        <div>
+        <div id="editor-section">
           <q-bar class="graph-menu-bar">
             <div class="graph-menu-wrapper">
               <q-select
@@ -78,6 +78,15 @@
       </template>
     </q-splitter>
     <MobileViewWarningPopup v-if="onXsScreen" />
+    <GraphInfoPopup
+      :dialog-model="graphInfoPopupShow"
+      @dialogModelChange="
+        (val) => {
+          this.graphInfoPopupShow = val;
+        }
+      "
+      :graph-abstract-markdown="graphInfoMarkdown"
+    />
   </div>
 </template>
 
@@ -95,6 +104,7 @@
   import EditorWrapper from '@/components/tutorial/EditorWrapper';
   import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper';
   import SplitterSeparator from '@/components/framework/SplitterSeparator';
+  import GraphInfoPopup from '@/components/framework/GraphInfoPopup';
 
   const defaultCodeOption = [
     {
@@ -119,6 +129,7 @@
       return { title: graphTitle };
     },
     components: {
+      GraphInfoPopup,
       EditorWrapper,
       CytoscapeWrapper,
       SplitterSeparator,
@@ -130,6 +141,7 @@
     data() {
       return {
         codeOptions: defaultCodeOption,
+        graphInfoPopupShow_: false,
       };
     },
     computed: {
@@ -140,6 +152,19 @@
         'getCurrentCodeId',
         'codeObjectListEmpty',
       ]),
+      graphInfoPopupShow: {
+        set(d) {
+          this.graphInfoPopupShow_ = d;
+        },
+        get() {
+          return this.graphInfoPopupShow_;
+        },
+      },
+      graphInfoMarkdown() {
+        return this.currentGraphObject
+          ? this.currentGraphObject['content']['abstract']
+          : '';
+      },
       headerTitle() {
         return this.getCurrentGraphObjectTitle
           ? this.getCurrentGraphObjectTitle
@@ -179,6 +204,9 @@
       },
     },
     methods: {
+      flipGraphInfoDialog() {
+        this.graphInfoPopupShow = !this.graphInfoPopupShow;
+      },
       generateDefaultJsonResults(graphId) {
         return [
           {
@@ -255,6 +283,10 @@
                 codeId: obj.codeId,
               }))
             );
+
+            if (this.$store.getters['settings/graphAbstractPopupShow']) {
+              this.flipGraphInfoDialog();
+            }
           })
           .catch((err) => {
             errorDialog({
