@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="header">
-      <!-- JB: rm class q-pa-sm, add class header -->
       <div id="header-wrapper" class="row">
         <div id="back-button" style="display: inline;">
           <q-btn
@@ -81,8 +80,6 @@
     display: flex
     align-self: center
     font-size: 15px
-    // JB: change font-size 18 -> 15
   .header
     padding: 0px 8px
-    // JB: change the header padding
 </style>
