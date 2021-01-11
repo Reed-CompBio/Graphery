@@ -25,7 +25,7 @@
           <SplitterSeparator :horizontal="variableListHorizontal" />
         </template>
         <template v-slot:after>
-          <VariableList></VariableList>
+          <VariableList v-on="$listeners"></VariableList>
         </template>
       </q-splitter>
     </div>

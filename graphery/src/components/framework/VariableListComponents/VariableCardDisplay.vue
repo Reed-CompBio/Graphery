@@ -121,7 +121,6 @@
         return `#${obj['id']}`;
       },
       generateHighlightIds(element) {
-        console.log('gen highlight ids', element);
         if (this.isGraphElement(element) && this.isSingularElement(element)) {
           return this._makeIdFromObj(element);
         } else if (this.isLinearContainerElement(element)) {
