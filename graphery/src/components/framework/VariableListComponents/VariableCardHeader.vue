@@ -11,6 +11,14 @@
             icon="mdi-backburger"
             @click="emitBackAction"
           />
+          <q-tooltip
+            v-if="!showPreviousButton"
+            anchor="top middle"
+            content-style="font-size: 13px"
+            :offset="[10, 35]"
+          >
+            It's now at the <strong>root</strong>!
+          </q-tooltip>
         </div>
         <q-space />
         <div id="name-section" @click="emitToggleAction">
