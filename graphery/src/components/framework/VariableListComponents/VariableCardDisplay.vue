@@ -151,7 +151,15 @@
     watch: {
       element: function(newElements) {
         this.resetToggleState();
-        this.$emit('clearHighlight');
+        const elementClassName = nameComboToClassName(
+          newElements[_LABEL_HEADER]
+        );
+        const elementClassKeyName = `${elementClassName}_${_PAIR_KEY_HEADER}`;
+        const elementClassValueName = `${elementClassName}_${_PAIR_VALUE_HEADER}`;
+
+        this.$emit('clearHighlight', elementClassName);
+        this.$emit('clearHighlight', elementClassKeyName);
+        this.$emit('clearHighlight', elementClassValueName);
 
         const graphIds = this.generateHighlightIds(newElements);
 
@@ -159,26 +167,14 @@
           return;
         }
 
-        const elementClassName = nameComboToClassName(
-          newElements[_LABEL_HEADER]
-        );
-
         if (typeof graphIds === 'string' || graphIds instanceof String) {
           this.$emit('highlight', elementClassName, graphIds);
         } else if (Array.isArray(graphIds) && graphIds.length === 2) {
           if (graphIds[1] === null) {
             this.$emit('highlight', elementClassName, graphIds[0]);
           } else if (graphIds[1] !== null) {
-            this.$emit(
-              'highlight',
-              `${elementClassName}_${_PAIR_KEY_HEADER}`,
-              graphIds[0]
-            );
-            this.$emit(
-              'highlight',
-              `${elementClassName}_${_PAIR_VALUE_HEADER}`,
-              graphIds[1]
-            );
+            this.$emit('highlight', elementClassKeyName, graphIds[0]);
+            this.$emit('highlight', elementClassValueName, graphIds[1]);
           }
         }
       },

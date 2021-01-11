@@ -93,8 +93,8 @@
       handleToggleAction() {
         this.$refs.variableCardDisplay.toggleVar();
       },
-      emitClearHighlight() {
-        this.$emit('clearHighlightFromVarList', this.rootVariableName);
+      emitClearHighlight(bareClassName) {
+        this.$emit('clearHighlightFromVarList', bareClassName);
       },
       emitHighlight(bareClassName, graphIds) {
         /**
@@ -106,7 +106,7 @@
          */
         this.$emit(
           'highlightFromVarList',
-          this.rootVariableName,
+          bareClassName,
           graphIds,
           this.rootVariableColor
         );
