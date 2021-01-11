@@ -11,7 +11,7 @@
 <script>
   import { mapState } from 'vuex';
   import { errorDialog } from '@/services/helpers';
-  import { debounce } from 'quasar';
+  import { debounce, throttle } from 'quasar';
   let monacoEditor;
 
   export default {
@@ -84,6 +84,7 @@
                 glyphMargin: true,
               }
             );
+
             this.editor.getModel().onDidChangeContent(
               debounce((_) => {
                 const codeContent = this.editor.getValue();
@@ -92,6 +93,20 @@
               }, 100)
             );
 
+            this.editor.onKeyUp(
+              throttle((__) => {
+                if (!this.enableEditing) {
+                  errorDialog(
+                    {
+                      message: this.$t(
+                        'notify.Please click the lock on the top right of the editor to enable editing'
+                      ),
+                    },
+                    3000
+                  );
+                }
+              }, 1000)
+            );
             this.editor.onDidScrollChange(
               debounce((event) => {
                 this.$emit(
@@ -100,7 +115,7 @@
                     (this.editor.getScrollHeight() -
                       this.editor.getLayoutInfo().height)
                 );
-              }, 100)
+              }, 20)
             );
 
             this.editor.layout();
@@ -164,6 +179,11 @@
         if (this.editor) {
           this.editor.setValue(content);
         }
+      },
+    },
+    watch: {
+      enableEditing: function(newValue) {
+        this.editor.updateOptions({ readOnly: !newValue });
       },
     },
     mounted() {

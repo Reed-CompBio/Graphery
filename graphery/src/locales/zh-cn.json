@@ -17,7 +17,7 @@
     "editor": "编辑器",
     "howTo": "使用帮助",
     "notAvailableCurrently": "暂时无法使用",
-    "goToSettingsToChangeEditingPermission": "请前往设置开关编辑权限",
+    "goToSettingsToChangeEditingPermission": "请点击这个锁以开关编辑权限",
     "changeVariableListOrientation": "改变变量表朝向",
     "openWorkSpace": "打开工作区"
   },
@@ -60,7 +60,8 @@
     "enableEditing": "开启编辑"
   },
   "notify": {
-    "editorEntry": "按下 {...} 按钮打开编辑器"
+    "editorEntry": "按下 {...} 按钮打开编辑器",
+    "Please click the lock on the top right of the editor to enable editing": "请点击编辑器右上角的锁以开始编辑"
   },
   "license": {
     "licenseInfo1": "所有文章在没有特殊说明的情况下都遵循",
