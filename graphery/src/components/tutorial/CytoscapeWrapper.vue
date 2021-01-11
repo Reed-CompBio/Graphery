@@ -80,8 +80,6 @@
 </template>
 
 <script>
-  import { isGraphElement } from '@/components/framework/GraphEditorControls/ElementsUtils';
-
   let cytoscape;
   let panzoom;
   let dagre;
@@ -320,16 +318,6 @@
         }
       },
       // highlight helper function
-      highlightElement(varObj) {
-        if (!this.cyInstance) {
-          return;
-        }
-        this.cyInstance.getElementById(varObj.id).style({
-          'overlay-color': varObj.color,
-          'overlay-opacity': 0.5,
-          'overlay-padding': 5,
-        });
-      },
       highlightElementByClass(varName, varObj) {
         if (!this.cyInstance) {
           return;
@@ -341,18 +329,6 @@
           this.generateColoredClass(className, elementColor);
         }
         this.addClassNameById(elementId, className);
-      },
-      unhighlightElement(varObject) {
-        if (!this.cyInstance) {
-          return;
-        }
-        this.cyInstance
-          .getElementById(varObject.id)
-          .removeStyle('overlay-opacity');
-      },
-      unhighlightAndStore(varName, varObject) {
-        this.unhighlightElement(this.lastVarObjectStore[varName]);
-        this.lastVarObjectStore[varName] = varObject;
       },
       // clear highlight interface
       clearHighLightByClass(bareClassName) {
@@ -367,46 +343,6 @@
         if (elementIds && color) {
           this.generateColoredClass(className, color);
           this.addClassNameByIds(className, elementIds);
-        }
-      },
-      highlightVarObj(varObjList) {
-        if (varObjList) {
-          for (const [varName, varObj] of Object.entries(varObjList)) {
-            // TODO something may go wrong here
-            // TODO make this simple
-            const lastVarObject = this.lastVarObjectStore[varName];
-            if (isGraphElement(varObj)) {
-              if (isGraphElement(lastVarObject)) {
-                this.unhighlightAndStore(varName, varObj);
-              } else {
-                this.lastVarObjectStore[varName] = varObj;
-              }
-
-              this.highlightElement(varObj);
-            } else {
-              if (isGraphElement(lastVarObject)) {
-                this.unhighlightAndStore(varName, varObj);
-              }
-            }
-          }
-        }
-      },
-      highlightAccessedVariables(accessedVariables) {
-        this.unhighlightAccessedVariables();
-        if (accessedVariables) {
-          for (const varObj of accessedVariables) {
-            if (isGraphElement(varObj)) {
-              this.accessedVarObjectStore.push(varObj);
-              this.highlightElement(varObj);
-            }
-          }
-        }
-      },
-      unhighlightAccessedVariables() {
-        if (this.accessedVarObjectStore.length > 0) {
-          for (const varObj of this.accessedVarObjectStore) {
-            this.unhighlightElement(varObj);
-          }
         }
       },
       currentGraphLayoutOption() {

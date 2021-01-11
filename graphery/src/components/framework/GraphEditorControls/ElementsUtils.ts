@@ -1,59 +1,39 @@
-export interface TypedVariableObject {
+import {
+  _GRAPH_OBJECT_TYPES,
+  _INIT_TYPE_STRING,
+  _LINEAR_CONTAINER_TYPES,
+  _PAIR_CONTAINER_TYPES,
+  _REFERENCE_TYPE_STRING,
+  _SINGULAR_TYPES,
+  _TYPE_HEADER,
+} from '@/components/framework/VariableListComponents/variableListConstants';
+
+export interface GraphElementType {
+  id: string;
   type: string;
 }
 
-const _GRAPH_TYPE_STRINGS = ['Node', 'Edge'];
-
-export function isGraphElement(value: TypedVariableObject | null) {
-  return (
-    value &&
-    _GRAPH_TYPE_STRINGS.filter(function(item) {
-      return item === value.type;
-    }).length > 0
-  );
+export function makeIdFromObject(element: GraphElementType) {
+  return `#${element['id']}`;
 }
 
-const _CONTAINER_TYPE_STRINGS = [
-  'List',
-  'Deque',
-  'Tuple',
-  'Counter',
-  'Set',
-  'Mapping',
-  'Sequence',
-];
-
-export function isContainerElement(value: TypedVariableObject | null) {
-  return (
-    value &&
-    _CONTAINER_TYPE_STRINGS.filter(function(item) {
-      return item === value.type;
-    }).length > 0
-  );
+export function isGraphElement(element: GraphElementType) {
+  return _GRAPH_OBJECT_TYPES.includes(element[_TYPE_HEADER]);
 }
-
-const _SINGULAR_TYPE_STRINGS = [
-  'Number',
-  'String',
-  'Node',
-  'Edge',
-  'None',
-  'Object',
-];
-
-export function isSingularElement(value: TypedVariableObject | null) {
-  return (
-    value &&
-    _SINGULAR_TYPE_STRINGS.filter(function(item) {
-      return item === value.type;
-    }).length > 0
-  );
+export function isSingularElement(element: GraphElementType) {
+  return _SINGULAR_TYPES.includes(element[_TYPE_HEADER]);
 }
-
-const _INIT_TYPE_STRING = 'init';
-
-export function isInitElement(value: TypedVariableObject | null) {
-  return value && value.type === _INIT_TYPE_STRING;
+export function isLinearContainerElement(element: GraphElementType) {
+  return _LINEAR_CONTAINER_TYPES.includes(element[_TYPE_HEADER]);
+}
+export function isPairContainerElement(element: GraphElementType) {
+  return _PAIR_CONTAINER_TYPES.includes(element[_TYPE_HEADER]);
+}
+export function isInitElement(element: GraphElementType) {
+  return element[_TYPE_HEADER] === _INIT_TYPE_STRING;
+}
+export function isReferenceElement(element: GraphElementType) {
+  return element[_TYPE_HEADER] === _REFERENCE_TYPE_STRING;
 }
 
 const _IDENTITY_STRING_SEPARATOR = '\u200b@';
