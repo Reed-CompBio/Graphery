@@ -103,40 +103,50 @@
         }
       },
       isGraphElement(element) {
-        return element in _GRAPH_OBJECT_TYPES;
+        return _GRAPH_OBJECT_TYPES.includes(element[_TYPE_HEADER]);
       },
       isSingularElement(element) {
-        return element in _SINGULAR_TYPES;
+        return _SINGULAR_TYPES.includes(element[_TYPE_HEADER]);
       },
       isLinearContainerElement(element) {
-        return element in _LINEAR_CONTAINER_TYPES;
+        return _LINEAR_CONTAINER_TYPES.includes(element[_TYPE_HEADER]);
       },
       isPairContainerElement(element) {
-        return element in _PAIR_CONTAINER_TYPES;
+        return _PAIR_CONTAINER_TYPES.includes(element[_TYPE_HEADER]);
       },
       isInitElement(element) {
-        return element === _INIT_TYPE_STRING;
+        return element[_TYPE_HEADER] === _INIT_TYPE_STRING;
       },
       _makeIdFromObj(obj) {
         return `#${obj['id']}`;
       },
       generateHighlightIds(element) {
+        console.log('gen highlight ids', element);
         if (this.isGraphElement(element) && this.isSingularElement(element)) {
           return this._makeIdFromObj(element);
         } else if (this.isLinearContainerElement(element)) {
-          return [
-            element
-              .map((v) => this._makeIdFromObj(v))
-              .join(_GRAPH_ELEMENT_SEPARATOR),
-            null,
-          ];
+          const temp = [];
+          const elementReprObj = element[_REPR_HEADER];
+          for (let i = 0; i < elementReprObj.length; i++) {
+            const elementObject = elementReprObj[i];
+            if (this.isGraphElement(elementObject)) {
+              temp.push(this._makeIdFromObj(elementObject));
+            }
+          }
+          return [temp.join(_GRAPH_ELEMENT_SEPARATOR), null];
         } else if (this.isPairContainerElement(element)) {
           const keys = [];
           const values = [];
 
-          element.forEach((v) => {
-            keys.push(v[_PAIR_KEY_HEADER]);
-            values.push(v[_PAIR_VALUE_HEADER]);
+          element[_REPR_HEADER].forEach((v) => {
+            const keyElement = v[_PAIR_KEY_HEADER];
+            if (this.isGraphElement(keyElement)) {
+              keys.push(this._makeIdFromObj(keyElement));
+            }
+            const valueElement = v[_PAIR_VALUE_HEADER];
+            if (this.isGraphElement(valueElement)) {
+              values.push(this._makeIdFromObj(valueElement));
+            }
           });
 
           return [
