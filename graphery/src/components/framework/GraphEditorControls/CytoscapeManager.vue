@@ -23,7 +23,7 @@
       generateColoredClass(className, color) {
         const queryClassName = this.genClassQueryName(className);
 
-        if (!(className in this.storedClassNames)) {
+        if (!this.storedClassNames.includes(className)) {
           const colorClassStyle = [
             {
               selector: queryClassName,
@@ -45,20 +45,23 @@
         if (!Array.isArray(styleJsonObject)) {
           styleJsonObject = [styleJsonObject];
         }
-        const temp = [...this.cytoscape_.style().json(), ...styleJsonObject];
-        this.cytoscape_.style(temp);
+
+        this.cytoscape_.style([
+          ...this.cytoscape_.style().json(),
+          ...styleJsonObject,
+        ]);
       },
       toggleElementsClassName(className, flag) {
         this.cytoscape_
-          .$(this.genClassQueryName(className))
+          ?.$(this.genClassQueryName(className))
           .toggleClass(className, flag);
       },
       removeElementsClassName(className) {
         this.cytoscape_
-          .$(this.genClassQueryName(className))
+          ?.$(this.genClassQueryName(className))
           .removeClass(className);
       },
-      addClassNameByIds(ids, className) {
+      addClassNameByIds(className, ids) {
         this.cytoscape_.$(ids).addClass(className);
       },
       addClassNameById(id, className) {

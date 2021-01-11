@@ -172,7 +172,7 @@
 
         const graphIds = this.generateHighlightIds(newElements);
 
-        if (graphIds === null) {
+        if (!graphIds) {
           return;
         }
 

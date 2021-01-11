@@ -337,7 +337,7 @@
         const className = varName;
         const elementId = varObj.id;
         const elementColor = varObj.color;
-        if (!(className in this.storedClassNames)) {
+        if (!this.storedClassNames.includes(className)) {
           this.generateColoredClass(className, elementColor);
         }
         this.addClassNameById(elementId, className);
@@ -355,7 +355,7 @@
         this.lastVarObjectStore[varName] = varObject;
       },
       // clear highlight interface
-      clearAllHighLight(bareClassName) {
+      clearHighLightByClass(bareClassName) {
         this.removeElementsClassName(bareClassName);
       },
       // toggle highlight interface
@@ -364,8 +364,10 @@
       },
       // highlight interface
       highlightByClassAndIds(className, elementIds, color) {
-        this.generateColoredClass(className, color);
-        this.addClassNameByIds(className, elementIds);
+        if (elementIds && color) {
+          this.generateColoredClass(className, color);
+          this.addClassNameByIds(className, elementIds);
+        }
       },
       highlightVarObj(varObjList) {
         if (varObjList) {

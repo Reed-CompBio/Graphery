@@ -111,17 +111,23 @@
         this.$store.commit('variables/CLEAR_CURRENT_ACCESSES');
       },
       clearHighlightsElementsFromVarList(bareClassName) {
-        this.$refs.cytoscapeWrapper?.clearAllHighLight(bareClassName);
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper?.clearHighLightByClass(bareClassName);
+        }
       },
       highlightElementsFromVarList(bareClassName, graphElementIds, color) {
-        this.$refs.cytoscapeWrapper?.highlightByClassAndIds(
-          bareClassName,
-          graphElementIds,
-          color
-        );
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper.highlightByClassAndIds(
+            bareClassName,
+            graphElementIds,
+            color
+          );
+        }
       },
       toggleHighlightsFromVarList(bareClass, flag) {
-        this.$refs.cytoscapeWrapper?.toggleHighlight(bareClass, flag);
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper?.toggleHighlight(bareClass, flag);
+        }
       },
       viewUpdater(element, updateAccessed) {
         // elements: non null
