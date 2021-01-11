@@ -42,6 +42,15 @@
                 unchecked-icon="mdi-comment-remove"
               />
             </SettingUnit>
+            <SettingUnit :name="$t('settings.Show Graph Abstract')">
+              <q-toggle
+                left-label
+                size="xl"
+                v-model="setGraphAbstractPopupShow"
+                checked-icon="mdi-layers"
+                unchecked-icon="mdi-layers-off"
+              />
+            </SettingUnit>
           </template>
           <template v-slot:sliders>
             <SettingUnit :name="$t('settings.cardsDisplayedNum')">
@@ -221,6 +230,7 @@
         'codeWrap',
         'pageDisplayNum',
         'tooltips',
+        'graphAbstractPopupShow',
       ]),
       setDarkMode: {
         set(d) {
@@ -334,6 +344,14 @@
           return this.tooltips;
         },
       },
+      setGraphAbstractPopupShow: {
+        set(d) {
+          this.changeGraphAbstractPopupShow(d);
+        },
+        get() {
+          return this.graphAbstractPopupShow;
+        },
+      },
     },
     methods: {
       ...mapActions('settings', [
@@ -351,6 +369,7 @@
         'changeCodeWrap',
         'changePageDisplayNum',
         'changeTooltips',
+        'changeGraphAbstractPopupShow',
       ]),
     },
   };

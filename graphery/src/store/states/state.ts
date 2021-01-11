@@ -106,6 +106,7 @@ export interface SettingInfos {
   pageDisplayNum: number;
   language: string;
   tooltips: boolean;
+  graphAbstractPopupShow: boolean;
 }
 
 export interface SettingState extends SettingInfos {

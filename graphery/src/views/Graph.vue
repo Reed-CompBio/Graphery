@@ -79,7 +79,12 @@
     </q-splitter>
     <MobileViewWarningPopup v-if="onXsScreen" />
     <GraphInfoPopup
-      v-model="graphInfoPopupShow"
+      :dialog-model="graphInfoPopupShow"
+      @dialogModelChange="
+        (val) => {
+          this.graphInfoPopupShow = val;
+        }
+      "
       :graph-abstract-markdown="graphInfoMarkdown"
     />
   </div>
@@ -279,7 +284,9 @@
               }))
             );
 
-            this.flipGraphInfoDialog();
+            if (this.$store.getters['settings/graphAbstractPopupShow']) {
+              this.flipGraphInfoDialog();
+            }
           })
           .catch((err) => {
             errorDialog({
