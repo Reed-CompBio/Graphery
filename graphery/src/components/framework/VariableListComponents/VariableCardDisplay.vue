@@ -13,6 +13,7 @@
     _PAIR_CONTAINER_TYPES,
     _PAIR_KEY_HEADER,
     _PAIR_VALUE_HEADER,
+    _REFERENCE_TYPE_STRING,
     _REPR_HEADER,
     _SINGULAR_TYPES,
     _TYPE_HEADER,
@@ -116,6 +117,9 @@
       },
       isInitElement(element) {
         return element[_TYPE_HEADER] === _INIT_TYPE_STRING;
+      },
+      isReferenceElement(element) {
+        return element[_TYPE_HEADER] === _REFERENCE_TYPE_STRING;
       },
       _makeIdFromObj(obj) {
         return `#${obj['id']}`;
