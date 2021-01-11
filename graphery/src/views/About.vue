@@ -40,6 +40,7 @@
       </section>
       <section>
         <h4>Project Team</h4>
+        <h5>Project Lead</h5>
         <p>
           <a href="https://www.reed.edu/biology/ritz/" target="_blank">
             Anna Ritz
@@ -51,28 +52,36 @@
           algorithms to analyze signaling pathways in large protein-protein
           interaction networks.
         </p>
+        <h5>
+          Contributors
+        </h5>
+        <ul class="uo-list">
+          <li>
+            Heyuan Zeng, Computer Science Department, Reed College
+          </li>
+          <li>
+            Jinbiao Zhang, Computer Science Department, Xiamen University
+            Malaysia
+          </li>
+          <li>Gabriel Preising, Biology Department, Reed College</li>
+          <li>
+            Tobias Rubel, Biology and Philosophy Departments, Reed College
+          </li>
+          <li>Pramesh Singh, Biology Department, Reed College</li>
+        </ul>
       </section>
       <section>
         <h4>
           Funding
         </h4>
         <p>
-          This project is supported by an NSF CAREER Award (DBI-1750981) to Anna
-          Ritz.
+          This project is supported by an NSF CAREER Award (<a
+            href="https://nsf.gov/awardsearch/showAward?AWD_ID=1750981"
+            target="_blank"
+          >
+            DBI-1750981</a
+          >) to Anna Ritz.
         </p>
-      </section>
-      <section>
-        <h4>
-          Contributors
-        </h4>
-        <ul class="uo-list">
-          <li>
-            Heyuan Zeng
-          </li>
-          <li>
-            Jinbiao Zhang
-          </li>
-        </ul>
       </section>
       <section>
         <h4>
@@ -142,6 +151,9 @@
           </li>
           <li>
             <NewTabA link="https://www.postgresql.org/"> PostgreSQL </NewTabA>
+          </li>
+          <li>
+            <NewTabA link="https://redis.io/">Redis</NewTabA>
           </li>
         </ul>
       </section>

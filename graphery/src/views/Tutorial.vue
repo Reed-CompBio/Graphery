@@ -54,6 +54,9 @@
               :editorLoadingOverride="execLoading"
               @editorContentChanged="onEditorContentChanged"
               @editorInstanceLoaded.once="onEditorInstanceLoaded"
+              @clearHighlightFromVarList="clearHighlightsElementsFromVarList"
+              @highlightFromVarList="highlightElementsFromVarList"
+              @toggleHighlightFromVarList="toggleHighlightsFromVarList"
             ></EditorWrapper>
             <GraphInfo v-show="currentTab === 'graph-info'"></GraphInfo>
             <HowToHelper v-show="currentTab === 'how-to'"></HowToHelper>
@@ -96,6 +99,7 @@
   import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper';
   import EditorWrapper from '@/components/tutorial/EditorWrapper';
   import SplitterSeparator from '@/components/framework/SplitterSeparator';
+  import EditorControlUnit from '@/components/framework/EditorControlUnit';
 
   export default {
     mixins: [GraphCodeBridge, TabSwitchMixin, OnXsScreenMixin],
@@ -105,8 +109,7 @@
       CytoscapeWrapper,
       TutorialArticle,
       EditorWrapper,
-      EditorControlUnit: () =>
-        import('@/components/framework/EditorControlUnit'),
+      EditorControlUnit,
       MobileViewWarningPopup: () =>
         import('@/components/framework/MobileViewWarningPopup'),
       EditorSectionPanelSwitchSticky: () =>

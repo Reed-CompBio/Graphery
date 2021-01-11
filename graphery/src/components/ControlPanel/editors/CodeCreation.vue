@@ -15,6 +15,19 @@
           </q-card>
         </template>
         <template v-slot:right>
+          <div id="code-name">
+            <InfoCard>
+              <template v-slot:title>
+                Name
+              </template>
+              <q-input
+                type="text"
+                :rules="[(val) => !!val || $t('account.notEmpty')]"
+                :lazy-rules="true"
+                v-model="codeObject.name"
+              />
+            </InfoCard>
+          </div>
           <!-- TODO make this section follow the scrolling -->
           <div id="tutorial-selection">
             <NoCodeTutorialSelection
@@ -24,7 +37,6 @@
           </div>
 
           <div id="submit-section">
-            <!-- TODO button action -->
             <SubmitButton class="full-width" :action="postCode" />
           </div>
         </template>
@@ -48,11 +60,13 @@
   import { errorDialog, successDialog } from '@/services/helpers';
   import JsonCreation from './JsonCreation';
   import NoCodeTutorialSelection from '../parts/selectors/NoCodeTutorialSelection';
+  import InfoCard from '@/components/ControlPanel/parts/cards/InfoCard';
 
   export default {
     mixins: [loadingMixin, pushToMixin, leaveConfirmMixin],
     props: ['id'],
     components: {
+      InfoCard,
       NoCodeTutorialSelection,
       JsonCreation,
       IDCard: () => import('../parts/cards/IDCard'),
@@ -65,6 +79,7 @@
       return {
         editor: null,
         codeObject: {
+          name: '',
           id: this.id,
           code: '',
           tutorial: '',
@@ -114,6 +129,7 @@
 
               this.codeObject = {
                 id: this.codeObject.id,
+                name: data.code.name,
                 code: data.code.code,
                 tutorial: data.code.tutorial.id,
               };

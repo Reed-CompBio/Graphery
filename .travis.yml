@@ -1,35 +1,32 @@
-language: python
+matrix:
+  include:
+    - language: python
+      python:
+        - "3.9"
+        - "3.8"
+      cache: pip
+      services:
+        - postgresql
+      env:
+        - GRAPHERY_NORMAL_LOG_PATH=graphery_normal.log GRAPHERY_EXECUTION_LOG_PATH=graphery_execution.log GRAPHERY_API_LOG_PATH=graphery_api.log PIPENV_IGNORE_VIRTUALENVS=1 
+      install:
+        - sudo pip install pipenv
+      before_script:
+        - psql -c 'create database graphery;' -U postgres
+        - psql -c "create user graphery with encrypted password 'graphery';" -U postgres
+        - psql -c 'ALTER USER graphery WITH SUPERUSER;' -U postgres
+        - psql -c 'grant all privileges on database graphery to graphery;' -U postgres
+      script:
+        - cd backend && sudo pipenv install -d && sudo pipenv sync && sudo pipenv graph
+        - cd ./bundle && sudo pipenv run pytest -vv -ra -s
+        - cd ../server && sudo pipenv run pytest -vv -ra -s
 
-node_js:
-  - node
-
-cache:
-  - npm
-  - pip
-
-python:
-  - "3.9"
-
-services:
-  - postgresql
-
-env:
-  - GRAPHERY_NORMAL_LOG_PATH=graphery_normal.log GRAPHERY_EXECUTION_LOG_PATH=graphery_execution.log GRAPHERY_API_LOG_PATH=graphery_api.log PIPENV_IGNORE_VIRTUALENVS=1 
-
-install:
-  - sudo pip install pipenv
-  - cd graphery
-  - npm install -g npm@latest
-  - npm install
-
-before_script:
-  - psql -c 'create database graphery;' -U postgres
-  - psql -c "create user graphery with encrypted password 'graphery';" -U postgres
-  - psql -c 'ALTER USER graphery WITH SUPERUSER;' -U postgres
-  - psql -c 'grant all privileges on database graphery to graphery;' -U postgres
-
-script:
-  - npm run build
-  - cd ../backend && sudo pipenv install -d && sudo pipenv sync && sudo pipenv graph
-  - cd ./bundle && sudo pipenv run pytest -vv -ra -s
-  - cd ../server && sudo pipenv run pytest -vv -ra -s
+    - language: node_js
+      node_js: node
+      cache: npm
+      install:
+        - cd graphery
+        - npm install -g yarn
+        - yarn install
+      script:
+        - yarn run build

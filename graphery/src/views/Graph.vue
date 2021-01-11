@@ -70,6 +70,9 @@
             :editorLoadingOverride="execLoading"
             @editorContentChanged="onEditorContentChanged"
             @editorInstanceLoaded.once="onEditorInstanceLoaded"
+            @clearHighlightFromVarList="clearHighlightsElementsFromVarList"
+            @highlightFromVarList="highlightElementsFromVarList"
+            @toggleHighlightFromVarList="toggleHighlightsFromVarList"
           ></EditorWrapper>
         </div>
       </template>
@@ -102,6 +105,7 @@
 
   const defaultCodeSnippetList = [
     {
+      name: '',
       id: newModelUUID,
       code: emptyCodeTemplate,
     },
@@ -203,7 +207,7 @@
             if (graphObj.execresultjsonSet.length > 0) {
               graphObj.execresultjsonSet.forEach((obj) => {
                 this.codeOptions.unshift({
-                  label: obj.code.id,
+                  label: obj.code.name,
                   value: obj.code.id,
                 });
 
@@ -214,6 +218,7 @@
                 });
 
                 codeObjectList.unshift({
+                  name: obj.code.name,
                   id: obj.code.id,
                   code: obj.code.code,
                 });

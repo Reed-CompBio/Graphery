@@ -11,6 +11,8 @@ query ($translation: String, $filterContent: FilterContentType) {
       title
       authors {
         username
+        firstName
+        lastName
       }
       abstract
       isPublished
@@ -30,6 +32,8 @@ query ($translation: String, $default: String, $filterContent: FilterContentType
     url
     authors {
       username
+      firstName
+      lastName
     }
     categories {
       id
@@ -61,6 +65,8 @@ query ($url: String, $translation: String) {
       title
       authors {
         username
+        firstName
+        lastName
       }
       contentHtml
       isPublished
@@ -120,6 +126,7 @@ query ($url: String, $translation: String, $default: String = "en-us") {
     }
     execresultjsonSet {
       code {
+        name
         id 
         code
       }
@@ -196,6 +203,8 @@ query {
     }
     authors {
       username
+      firstName
+      lastName
     }
     url
     id
@@ -223,6 +232,8 @@ query ($translation: String, $default: String = "") {
       abstract
       authors {
         username
+        firstName
+        lastName
       }
       contentMd
       contentHtml
@@ -256,6 +267,7 @@ export const codeListQuery = `query {
       name
       url
     }
+    name
     code
     id
   }
@@ -345,6 +357,8 @@ query {
   allAuthors {
     id
     username
+    firstName
+    lastName
   }
 }`;
 
@@ -361,6 +375,7 @@ mutation ($id: UUID!, $url: String!, $name: String!, $cyjs: JSONString!, $isPubl
 export const codeQuery = `
 query ($id: UUID!) {
   code(id: $id) {
+    name
     code
     tutorial {
       id
@@ -377,8 +392,8 @@ query ($code: UUID) {
 }`;
 
 export const updateCodeMutation = `
-mutation ($id: UUID!, $code: String!, $tutorial: UUID!){
-  updateCode (id:$id, code:$code, tutorial: $tutorial) {
+mutation ($id: UUID!, $name: String!, $code: String!, $tutorial: UUID!){
+  updateCode (id:$id, name: $name, code:$code, tutorial: $tutorial) {
     success
     model {
       id
@@ -521,5 +536,19 @@ query {
   allGraphInfo {
     id
     name
+  }
+}`;
+
+export const changePasswordMutation = `
+mutation ($oldPassword: String!, $newPassword: String!) {
+  changePassword(oldPassword: $oldPassword, newPassword: $newPassword) {
+    success
+    user {
+      username
+      firstName
+      lastName
+      email
+      role
+    }
   }
 }`;

@@ -12,7 +12,7 @@ from backend.graphql.mutation_base import SuccessMutationBase
 from backend.graphql.utils import process_model_wrapper
 from backend.intel_wrappers.intel_wrapper import UserWrapper
 from backend.intel_wrappers.validators import password_validator
-from backend.model.MetaModel import InvitationCode
+from backend.model.MetaModel import InvitationCodeModel
 from backend.graphql.decorators import login_required
 from backend.graphql.types import UserType
 from backend.model.UserModel import User
@@ -52,13 +52,14 @@ class Register(SuccessMutationBase):
         if not invitation_code:
             raise GraphQLError("You have to enter an invitation code!")
 
-        role_string: Optional[str] = next((label for label, value in InvitationCode.code_collection.items()
-                                          if value == invitation_code), None)
+        invitation_model: Optional[InvitationCodeModel] = InvitationCodeModel.objects.get(
+            invitation_code=invitation_code
+        )
 
-        if role_string is None:
+        if invitation_model is None or not invitation_model.usable:
             raise GraphQLError("Invitation code %s is not valid." % invitation_code)
 
-        role: int = InvitationCode.role_mapping[role_string]
+        role: int = invitation_model.role
 
         try:
             password_validator(password)

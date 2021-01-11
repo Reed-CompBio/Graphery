@@ -1,6 +1,6 @@
 {
   "name": "graphery",
-  "version": "0.21.0",
+  "version": "0.23.0",
   "private": true,
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.9.12",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "core-js": "^3.8.1",
     "cytoscape": "^3.17.1",
     "cytoscape-dagre": "^2.3.2",

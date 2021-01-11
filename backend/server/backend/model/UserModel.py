@@ -44,9 +44,6 @@ class UserManager(BaseUserManager):
         if the_role == ROLES.ADMINISTRATOR:
             is_staff = True
             is_superuser = True
-        elif the_role == ROLES.AUTHOR or the_role == ROLES.VISITOR:
-            is_staff = True
-            is_superuser = False
         else:
             is_staff = kwargs.pop('is_staff', False)
             is_superuser = kwargs.pop('is_superuser', False)

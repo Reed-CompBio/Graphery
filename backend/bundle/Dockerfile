@@ -1,5 +1,5 @@
-# use python 3.8 base image
-FROM python:3.8
+# use python 3.9 base image
+FROM python:3.9
 
 # specify working directory
 WORKDIR /code

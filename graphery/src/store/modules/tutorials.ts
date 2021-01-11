@@ -49,7 +49,7 @@ const actions: ActionTree<TutorialState, RootState> = {
       isAnchorPublished: tutorialObj.isPublished,
       isTransPublished: tutorialObj.content.isPublished,
       rank: tutorialObj.rank,
-      authors: tutorialObj.content.authors.map((obj) => obj.username),
+      authors: tutorialObj.content.authors,
       categories: tutorialObj.categories.map((obj) => obj.category),
       modifiedTime: tutorialObj.content.modifiedTime,
     });

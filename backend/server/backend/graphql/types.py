@@ -13,7 +13,6 @@ from ..model.UserModel import ROLES
 from ..model.filters import show_published_only
 from ..model.mixins import field_adder, time_date_mixin_field, published_mixin_field, uuid_mixin_field
 from ..model.translation_collection import add_trans_type
-from ..model.MetaModel import InvitationCode
 from ..models import User
 from ..models import Category, Tutorial, Graph, Code, ExecResultJson
 from ..models import ENUS, ZHCN, ENUSGraphContent, ZHCNGraphContent
@@ -22,8 +21,6 @@ from graphene_django.types import DjangoObjectType
 import graphene
 
 from copy import copy
-
-InvitationCode.refresh_all_code()
 
 
 class PublishedFilterBase(DjangoObjectType):
@@ -230,7 +227,7 @@ class CodeType(PublishedFilterBase, DjangoObjectType):
     @field_adder(time_date_mixin_field, published_mixin_field, uuid_mixin_field)
     class Meta:
         model = Code
-        fields = ('tutorial', 'code', 'execresultjson_set')
+        fields = ('name', 'tutorial', 'code', 'execresultjson_set')
         description = 'The code content of a tutorial. '
 
 

@@ -14,7 +14,7 @@
             isAnchorPublished: ele.isPublished,
             rank: ele.rank,
             title: ele.content.title,
-            authors: ele.content.authors.map((obj) => obj.username),
+            authors: ele.content.authors,
             modifiedTime: ele.content.modifiedTime,
             abstract: ele.content.abstract,
             isTransPublished: ele.content.isPublished,

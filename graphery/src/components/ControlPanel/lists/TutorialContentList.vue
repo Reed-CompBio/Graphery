@@ -77,13 +77,7 @@
 
             <!-- authors -->
             <q-td key="authors" :props="props">
-              <q-select
-                multiple
-                use-chips
-                readonly
-                :option="props.row.authors"
-                v-model="props.row.authors"
-              ></q-select>
+              <ReadOnlyListAuthorSelector :init-authors="props.row.authors" />
             </q-td>
 
             <!-- markdown content -->
@@ -127,10 +121,12 @@
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import tableLangMixin from '../mixins/TableLangMixin.vue';
   import AllTableHeader from '@/components/ControlPanel/parts/table/AllTableHeader';
+  import ReadOnlyListAuthorSelector from '@/components/ControlPanel/parts/selectors/ReadOnlyListAuthorSelector';
 
   export default {
     mixins: [loadingMixin, tableLangMixin],
     components: {
+      ReadOnlyListAuthorSelector,
       RankDisplay: () => import('@/components/framework/RankDisplay.vue'),
       DeleteTableCell: () =>
         import('@/components/ControlPanel/parts/table/DeleteTableCell'),
@@ -261,9 +257,6 @@
             }
 
             this.tableContent = data['allTutorialInfo'].map((obj) => {
-              obj.content.authors = obj.content.authors.map(
-                (obj) => obj.username
-              );
               obj.content.tutorialId = obj.id;
               obj.content.tutorialName = obj.name;
               obj.content.tutorialUrl = obj.url;

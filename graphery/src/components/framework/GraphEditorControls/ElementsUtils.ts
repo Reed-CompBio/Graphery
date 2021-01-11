@@ -62,3 +62,7 @@ export function revertNameCombo(nameCombo: string) {
   const components = nameCombo.split(_IDENTITY_STRING_SEPARATOR);
   return components[components.length - 1];
 }
+
+export function nameComboToClassName(nameCombo: string) {
+  return nameCombo.split(_IDENTITY_STRING_SEPARATOR).join('_');
+}

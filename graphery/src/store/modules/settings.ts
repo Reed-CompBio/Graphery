@@ -172,6 +172,9 @@ const getters: GetterTree<SettingState, RootState> = {
   graphBackgroundColor(state) {
     return state.graphDark ? '#1D1D1D' : '#ffffff';
   },
+  getEnableEditing(state) {
+    return state.enableEditing;
+  },
   getFontSizeCss(state) {
     return `${state.fontSize}px`;
   },

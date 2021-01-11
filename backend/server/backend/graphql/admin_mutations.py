@@ -18,7 +18,6 @@ from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper, \
     GraphTranslationContentWrapper, ExecResultJsonWrapper, UploadsWrapper
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
-from backend.model.MetaModel import InvitationCode
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import GraphPriority, Graph
 from backend.model.translation_collection import get_translation_table, get_graph_info_trans_table
@@ -111,17 +110,18 @@ class UpdateGraph(SuccessMutationBase):
 class UpdateCode(SuccessMutationBase):
     class Arguments:
         id = graphene.UUID(required=True)
+        name = graphene.String(required=True)
         code = graphene.String(required=True)
         tutorial = graphene.UUID(required=True)
 
     model = graphene.Field(CodeType, required=True)
 
     @write_required
-    def mutate(self, _, id: str, code: str, tutorial: str):
+    def mutate(self, _, id: str, name: str, code: str, tutorial: str):
         tutorial_wrapper = get_wrapper_by_id(TutorialAnchorWrapper, tutorial)
 
         code_wrapper = process_model_wrapper(CodeWrapper,
-                                             id=id, code=code, tutorial=tutorial_wrapper)
+                                             id=id, name=name, code=code, tutorial=tutorial_wrapper)
 
         return UpdateCode(success=True, model=code_wrapper.model)
 
@@ -254,6 +254,4 @@ class RefreshInvitationCode(SuccessMutationBase):
     @admin_required
     @graphene.resolve_only_args
     def mutate(self):
-        InvitationCode.refresh_all_code()
-        return RefreshInvitationCode(success=True, invitation_codes=InvitationCode.code_collection)
-
+        raise DeprecationWarning('This API is deprecated.')

@@ -110,22 +110,38 @@
       clearAccessedVariables() {
         this.$store.commit('variables/CLEAR_CURRENT_ACCESSES');
       },
+      clearHighlightsElementsFromVarList(bareClassName) {
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper?.clearHighLightByClass(bareClassName);
+        }
+      },
+      highlightElementsFromVarList(bareClassName, graphElementIds, color) {
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper.highlightByClassAndIds(
+            bareClassName,
+            graphElementIds,
+            color
+          );
+        }
+      },
+      toggleHighlightsFromVarList(bareClass, flag) {
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper?.toggleHighlight(bareClass, flag);
+        }
+      },
       viewUpdater(element, updateAccessed) {
         // elements: non null
         if (updateAccessed) {
           // update accessed variables
           const accessedVariables = element['accesses'];
           this.updateAccessedVariables(accessedVariables);
-          this.highlightAccessedVariablesOnCytoscapeView(accessedVariables);
         } else {
           // clear accessed variables
           this.clearAccessedVariables();
-          this.unhighlightAccessedVariablesOnCytoscapeView();
         }
 
         const variables = element['variables'];
         this.updateVariableList(variables);
-        this.highlightVariablesOnCytoscapeView(variables);
       },
       stepper(newPosition, steps) {
         this.updateResultJsonPosition(this.currentPositionId, newPosition);

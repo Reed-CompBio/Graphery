@@ -128,10 +128,11 @@ def tutorial_anchor_wrapper_factory(url_template: str, name_template: str,
 
 
 def code_wrapper_factory(code_content: str,
+                         code_name: str,
                          tutorial_url_template: str, tutorial_name_template: str,
                          level: int = 500) -> WrapperFactoryType:
     return _general_wrapper_factory(
-        CodeWrapper, {'code': code_content}, secondary_models_info={
+        CodeWrapper, {'name': code_name, 'code': code_content}, secondary_models_info={
             'tutorial': (TutorialAnchorWrapper, {
                 'url': tutorial_url_template,
                 'name': tutorial_name_template,

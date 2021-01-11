@@ -10,7 +10,6 @@ from backend.model.TutorialRelatedModel import FAKE_UUID
 from graphery.schema import schema
 import pytest
 
-from backend.model.MetaModel import InvitationCode
 from backend.models import *
 from tests.utils import camel_to_snake, EmptyValue, AnyNoneEmptyValue, AnyValue
 
@@ -47,6 +46,20 @@ def graphql_client():
     return Client(schema)
 
 
+_INVITATION_CODE = 'invitation code'
+
+
+@pytest.fixture(scope='session')
+def make_invitation_code(django_db_setup, django_db_blocker):
+    with django_db_blocker.unblock():
+        i = InvitationCodeModel.objects.create(
+            invitation_code=_INVITATION_CODE,
+            expiration_times=10,
+            role=ROLES.VISITOR
+        )
+    return i
+
+
 def assert_no_error(result: Mapping) -> Mapping:
     assert 'errors' not in result
     assert 'data' in result
@@ -79,7 +92,7 @@ def assert_model_equal(model_instance: models.Model, variable_mapping: Mapping,
                 'email': 'test_new_register@email.com',
                 'username': 'test_user_name',
                 'password': 'Password!1',
-                'invitationCode': InvitationCode.code_collection['Visitor'],
+                'invitationCode': _INVITATION_CODE,
                 'firstName': 'first name',
                 'lastName': 'last name'
             },
@@ -98,14 +111,14 @@ def assert_model_equal(model_instance: models.Model, variable_mapping: Mapping,
                 'email': 'test_new_register@email.com',
                 'username': 'test_user_name',
                 'password': 'Password!1',
-                'invitationCode': InvitationCode.code_collection['Visitor'],
+                'invitationCode': _INVITATION_CODE,
             },
             ('register', 'user', 'id'),
             User
         )
     ]
 )
-def test_register_mutation(graphql_client, rq_anonymous,
+def test_register_mutation(graphql_client, rq_anonymous, make_invitation_code,
                            mutation_query: str, variables: Mapping, result_chain: Sequence, model: models.Model):
     result = graphql_client.execute(mutation_query, variable_values=variables, context_value=rq_anonymous)
 

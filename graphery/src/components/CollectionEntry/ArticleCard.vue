@@ -35,11 +35,11 @@
             </q-chip>
             <q-chip
               v-for="author in info.authors"
-              :key="author"
+              :key="author.username"
               icon="mdi-card-account-details"
               @click="$emit('author-filter', author)"
             >
-              {{ author }}
+              {{ author.firstName }} {{ author.lastName }}
             </q-chip>
             <q-chip
               clickable

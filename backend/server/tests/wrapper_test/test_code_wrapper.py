@@ -33,10 +33,19 @@ TestCodeWrapper = gen_wrapper_test_class(wrapper_class=CodeWrapper, test_params=
                 url_template='code-tutorial-url',
                 name_template='code tutorial name'
             )
+        }),
+        pytest.param({
+            'name': 'test set var',
+            'code': 'code',
+            'tutorial': tutorial_anchor_wrapper_factory(
+                url_template='code-tutorial-url',
+                name_template='code tutorial name'
+            )
         })
     ],
     'test_making_new_model': [
         {
+            'name': 'test make new model',
             'tutorial': tutorial_anchor_wrapper_factory(
                 url_template='make new model',
                 name_template='make new model'
@@ -49,11 +58,14 @@ TestCodeWrapper = gen_wrapper_test_class(wrapper_class=CodeWrapper, test_params=
     ],
     'test_overwrite': [
         pytest.param('one_time_mock_code', {
+            'name': 'test overwrite'
+        }),
+        pytest.param('one_time_mock_code', {
             'tutorial': tutorial_anchor_wrapper_factory(
                 url_template='overwrite-tutorial-url',
                 name_template='overwrite tutorial'
-            )},
-                     ),
+            )
+        }),
         pytest.param('one_time_mock_code', {
             'tutorial': tutorial_anchor_wrapper_factory(
                 url_template='overwrite-tutorial-url',
@@ -63,16 +75,19 @@ TestCodeWrapper = gen_wrapper_test_class(wrapper_class=CodeWrapper, test_params=
         }),
     ],
     'test_validation': [
-        pytest.param({'tutorial': None}, AttributeError, None,
+        pytest.param({'name': None}, ValidationError, None),
+        pytest.param({'name': 'name', 'tutorial': None}, AttributeError, None,
                      id='invalid tutorial'),
-        pytest.param({'tutorial': tutorial_anchor_wrapper_factory(
-            url_template='test-validation',
-            name_template='test validation'
-        ), 'code': None}, ValidationError, None,
-            id='invalid code')
+        pytest.param({'name': 'name',
+                      'tutorial': tutorial_anchor_wrapper_factory(
+                          url_template='test-validation',
+                          name_template='test validation'
+                      ), 'code': None}, ValidationError, None,
+                     id='invalid code')
     ],
     'test_get_model': [
         pytest.param(None, {
+            'name': 'test get model',
             'tutorial': tutorial_anchor_wrapper_factory(
                 url_template='test-get-model-url',
                 name_template='test get model'
@@ -81,6 +96,7 @@ TestCodeWrapper = gen_wrapper_test_class(wrapper_class=CodeWrapper, test_params=
         }, False, False, AssertionError, 'Cannot make new model without validations!',
                      id='no_validate_no_model_assertion_err'),
         pytest.param(None, {
+            'name': 'test get new model',
             'tutorial': tutorial_anchor_wrapper_factory(
                 url_template='test-get-model-url',
                 name_template='test get model'
@@ -88,6 +104,7 @@ TestCodeWrapper = gen_wrapper_test_class(wrapper_class=CodeWrapper, test_params=
             'code': 'test get model'
         }, True, True, None, None, id='make_new_model'),
         pytest.param('one_time_mock_code', {
+            'name': 'test get old model',
             'id': UUID('8ceb0d01-cd29-4fe9-a37b-758b8e6d943c'),
             'tutorial': tutorial_anchor_wrapper_factory(
                 url_template='test-get-model-url',
@@ -98,6 +115,7 @@ TestCodeWrapper = gen_wrapper_test_class(wrapper_class=CodeWrapper, test_params=
     ],
     'test_finalize': [
         pytest.param('one_time_mock_code', {
+            'name': 'test finalize model',
             'tutorial': tutorial_anchor_wrapper_factory(
                 url_template='test-finalize-model-url',
                 name_template='test finalize model'
@@ -105,6 +123,7 @@ TestCodeWrapper = gen_wrapper_test_class(wrapper_class=CodeWrapper, test_params=
             'code': 'test finalize model'
         }, True, True, None, None),
         pytest.param('one_time_mock_code', {
+            'name': 'test finalize model no overwrite',
             'tutorial': tutorial_anchor_wrapper_factory(
                 url_template='test-finalize-model-url',
                 name_template='test finalize model'
@@ -121,6 +140,7 @@ TestCodeWrapper = gen_wrapper_test_class(wrapper_class=CodeWrapper, test_params=
             'code': 1
         }, True, True, ValidationError, None),
         pytest.param(None, {
+            'name': 'test finalize new model',
             'tutorial': tutorial_anchor_wrapper_factory(
                 url_template='test-finalize-model-url',
                 name_template='test finalize model'
@@ -128,6 +148,7 @@ TestCodeWrapper = gen_wrapper_test_class(wrapper_class=CodeWrapper, test_params=
             'code': 'test finalize model'
         }, True, True, None, None),
         pytest.param(None, {
+            'name': 'test finalize new model',
             'tutorial': tutorial_anchor_wrapper_factory(
                 url_template='test-finalize-model-url',
                 name_template='test finalize model'
@@ -135,6 +156,7 @@ TestCodeWrapper = gen_wrapper_test_class(wrapper_class=CodeWrapper, test_params=
             'code': 'test finalize model'
         }, False, True, AssertionError, None),
         pytest.param(None, {
+            'name': 'test finalize new model',
             'tutorial': tutorial_anchor_wrapper_factory(
                 url_template='test-finalize-model-url',
                 name_template='test finalize model'

@@ -17,7 +17,7 @@
     "editor": "Editor",
     "howTo": "How To",
     "notAvailableCurrently": "Not Available Currently",
-    "goToSettingsToChangeEditingPermission": "Please Go To Settings To Change Editing Permission",
+    "goToSettingsToChangeEditingPermission": "Please Click This To Change Editing Permission",
     "changeVariableListOrientation": "Change Variable List Orientation",
     "openWorkSpace": "Open Work Space"
   },
@@ -60,7 +60,8 @@
     "enableEditing": "Enable Editing"
   },
   "notify": {
-    "editorEntry": "Open code editor using {...} button"
+    "editorEntry": "Open code editor using {...} button",
+    "Please click the lock on the top right of the editor to enable editing": "Please click the lock on the top right of the editor to enable editing"
   },
   "license": {
     "licenseInfo1": "All the articles without special specification are licensed under a",
@@ -82,7 +83,11 @@
     "ConfirmPassword": "Confirm Password",
     "InvitationCode": "Invitation Code",
     "firstName": "First Name",
-    "lastName": "Last Name"
+    "lastName": "Last Name",
+    "Old Password": "Old Password",
+    "New Password": "New Password",
+    "Confirm New Password": "Confirm New Password",
+    "Update Password": "Update Password"
   },
   "dialog": {
     "ok": "OK!",

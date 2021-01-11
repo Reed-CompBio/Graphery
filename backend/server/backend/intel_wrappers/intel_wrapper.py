@@ -197,24 +197,30 @@ class CodeWrapper(AbstractWrapper[Code]):
     model_class: Type[Code] = Code
 
     def __init__(self):
+        self.name: Optional[str] = None
         self.tutorial: Optional[TutorialAnchorWrapper] = None
         self.code: Optional[str] = None
 
         AbstractWrapper.__init__(self, {
+            'name': non_empty_text_validator,
             'tutorial': wrapper_validator,
             'code': code_validator
         })
 
     def load_model_var(self, loaded_model: Code) -> None:
         super().load_model_var(loaded_model)
+        self.name = loaded_model.name
         self.tutorial = TutorialAnchorWrapper().load_model(loaded_model.tutorial)
         self.code = loaded_model.code
 
     def make_new_model(self) -> None:
-        self.model: Code = self.model_class(tutorial=self.tutorial.model, code=self.code)
+        self.model: Code = self.model_class(name=self.name,
+                                            tutorial=self.tutorial.model,
+                                            code=self.code)
 
     def __str__(self):
         return f'<CodeWrapper\n' \
+               f'name={self.name}\n' \
                f'tutorial={self.tutorial}\n' \
                f'code={self.code}>'
 
@@ -339,7 +345,7 @@ class TutorialTranslationContentWrapper(VariedContentWrapper[_T], Generic[_T]):
         self.model_class = model_class
         return self
 
-    def set_variables(self, **kwargs) -> TutorialTranslationContentWrapper:
+    def set_variables(self, **kwargs) -> TutorialTranslationContentWrapper[_T]:
         the_model_class = kwargs.pop('model_class', None)
         if the_model_class is not None and issubclass(the_model_class, TranslationBase):
             self.set_model_class(the_model_class)
@@ -383,11 +389,11 @@ class ZHCNTutorialContentWrapper(TutorialTranslationContentWrapper[ZHCN]):
     model_class = ZHCN
 
 
-_S = TypeVar('_S', bound=Model)
-
-
-class ESTutorialContentWrapper(TutorialTranslationContentWrapper):
+class ESTutorialContentWrapper(TutorialTranslationContentWrapper[ES]):
     model_class = ES
+
+
+_S = TypeVar('_S', bound=Model)
 
 
 class GraphTranslationContentWrapper(VariedContentWrapper[_S], Generic[_S]):
@@ -417,7 +423,7 @@ class GraphTranslationContentWrapper(VariedContentWrapper[_S], Generic[_S]):
         self.model_class = model_class
         return self
 
-    def set_variables(self, **kwargs) -> GraphTranslationContentWrapper:
+    def set_variables(self, **kwargs) -> GraphTranslationContentWrapper[_S]:
         the_model_class = kwargs.pop('model_class', None)
         if the_model_class is not None and issubclass(the_model_class, GraphTranslationBase):
             self.set_model_class(the_model_class)
@@ -456,7 +462,7 @@ class ZHCNGraphContentWrapper(GraphTranslationContentWrapper[ZHCNGraphContent]):
     model_class = ZHCNGraphContent
 
 
-class ESGraphContentWrapper(GraphTranslationContentWrapper):
+class ESGraphContentWrapper(GraphTranslationContentWrapper[ESGraphContent]):
     model_class = ESGraphContent
 
 
