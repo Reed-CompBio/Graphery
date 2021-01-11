@@ -12,11 +12,13 @@
         class="q-px-lg q-pb-xl full-height"
       >
         <div id="tutorial-wrapper" class="q-mt-xl full-height">
-          <div id="tutorial-title" class="text-h3 q-mb-lg">
-            {{ title }}
+          <div id="tutorial-title-wrapper">
+            <h1 id="tutorial-title" class="q-mb-lg">
+              {{ title }}
+            </h1>
           </div>
-          <div id="tutorial-info" class="q-mb-lg">
-            <div>
+          <div id="tutorial-info-wrapper" class="q-mb-lg">
+            <div id="publish-group">
               <q-chip clickable v-if="!isAnchorPublished" icon="mdi-book-lock">
                 Tutorial Not Published
               </q-chip>
@@ -36,15 +38,6 @@
               <!-- may be I don't need the author filter -->
               {{ author.firstName }} {{ author.lastName }}
             </q-chip>
-            <q-chip
-              clickable
-              v-for="category in categories"
-              :key="category"
-              icon="category"
-              @click="$emit('category-filter', category)"
-            >
-              {{ category }}
-            </q-chip>
             <q-chip icon="mdi-calendar-month">
               {{ toLocalDateString($i18n.locale, articleModTime) }}</q-chip
             >
@@ -52,10 +45,21 @@
               <SwitchTooltip :text="$t('tooltips.Share')"></SwitchTooltip>
               <q-icon name="mdi-share-variant"></q-icon>
             </q-btn>
+            <div id="category-group">
+              <q-chip
+                clickable
+                v-for="category in categories"
+                :key="category"
+                icon="category"
+                @click="$emit('category-filter', category)"
+              >
+                {{ category }}
+              </q-chip>
+            </div>
           </div>
 
           <!-- actual contents goes into here -->
-          <div id="tutorial-content">
+          <div id="tutorial-content-wrapper">
             <MarkdownSection
               :input-html="htmlContent"
               :breakpoint-react="true"
@@ -181,11 +185,8 @@
 <style lang="sass">
   @import '~@quasar/extras/animate/zoomIn.css'
   @import '~@quasar/extras/animate/zoomOut.css'
+  @import "~@/styles/article.sass"
 
   #scroll-up-icon:hover
     cursor: pointer
-  #tutorial-content h2
-    font-size: 28px
-    margin: 8px 0
-    font-style: oblique
 </style>
