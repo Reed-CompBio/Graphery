@@ -95,5 +95,9 @@
   },
   "metaInfo": {
     "Tutorial": "Tutorial"
+  },
+  "graph": {
+    "Close": "Close",
+    "Never Show Again": "Never Show Again"
   }
 }
