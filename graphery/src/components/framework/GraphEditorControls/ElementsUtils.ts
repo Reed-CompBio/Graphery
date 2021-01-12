@@ -44,5 +44,6 @@ export function revertNameCombo(nameCombo: string) {
 }
 
 export function nameComboToClassName(nameCombo: string) {
+  console.log(nameCombo);
   return nameCombo.split(_IDENTITY_STRING_SEPARATOR).join('_');
 }

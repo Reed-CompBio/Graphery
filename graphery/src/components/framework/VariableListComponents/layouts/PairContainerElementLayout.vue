@@ -16,6 +16,7 @@
           >
             <div id="row-key-container" class="col-5 q-mx-xs">
               <VariableDisplayElementWrapper
+                v-on="$listeners"
                 :init-object="pairElement['key']"
                 :index="index"
               />
@@ -33,6 +34,7 @@
             </div>
             <div id="row-value-container" class="col-5 q-mx-xs">
               <VariableDisplayElementWrapper
+                v-on="$listeners"
                 :init-object="pairElement['value']"
                 :index="index"
               />

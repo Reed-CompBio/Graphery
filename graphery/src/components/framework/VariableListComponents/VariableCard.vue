@@ -4,6 +4,8 @@
       :has-previous="!isStackEmpty"
       :init-element-name="currentVariableName"
       :init-element="currentVariableObject"
+      :init-element-color="rootVariableColor"
+      :init-toggle-state="toggleState"
       @popVariableStack="handlePopVariableStack"
       @toggleAction="handleToggleAction"
     ></VariableCardHeader>
@@ -11,10 +13,12 @@
     <VariableCardDisplay
       ref="variableCardDisplay"
       :init-element="currentVariableObject"
+      :init-root-element-name="rootVariableName"
       @clearHighlight="emitClearHighlight"
       @highlight="emitHighlight"
       @toggle="emitToggleHighlight"
       @pushVariableStack="handlePushVariableStack"
+      @toggleStateChange="handleToggleStateChange"
       class="q-my-sm"
     ></VariableCardDisplay>
   </q-card>
@@ -28,10 +32,7 @@
     _LABEL_HEADER,
     _PYTHON_ID_HEADER,
   } from '@/components/framework/VariableListComponents/variableListConstants';
-  import {
-    isInitElement,
-    revertNameCombo,
-  } from '@/components/framework/GraphEditorControls/ElementsUtils';
+  import { revertNameCombo } from '@/components/framework/GraphEditorControls/ElementsUtils';
   export default {
     props: {
       initVariableObject: {
@@ -45,6 +46,7 @@
         variableNameStack_: [],
         variableStack_: [],
         initVarColor_: null,
+        toggleState_: 1,
       };
     },
     computed: {
@@ -72,6 +74,9 @@
       rootVariableColor() {
         return this.rootVariable[_COLOR_HEADER];
       },
+      toggleState() {
+        return this.toggleState_;
+      },
     },
     methods: {
       resetVariableStacks() {
@@ -97,7 +102,13 @@
         this.variableNameStack_.push(name);
       },
       handleToggleAction() {
-        this.$refs.variableCardDisplay.toggleVar();
+        this.$refs.variableCardDisplay.toggleVar(this.toggleState);
+      },
+      handleToggleStateChange(toggleStateChange) {
+        this.toggleState_ = toggleStateChange;
+      },
+      resetToggleState() {
+        this.toggleState_ = 1;
       },
       emitClearHighlight(bareClassName) {
         this.$emit('clearHighlightFromVarList', bareClassName);
@@ -117,16 +128,16 @@
           this.rootVariableColor
         );
       },
-      emitToggleHighlight(elements, flag) {
+      emitToggleHighlight(ids, className, flag) {
         /**
          * if it's singular or linear container, just on and off
          * if it's pair container, key on, value on, off
          */
-        this.$emit('toggleHighlightFromVarList', elements, flag);
+        this.$emit('toggleHighlightFromVarList', ids, className, Boolean(flag));
       },
     },
     watch: {
-      rootVariable: function(newValue) {
+      rootVariable: function() {
         this.resetVariableStacks();
       },
     },

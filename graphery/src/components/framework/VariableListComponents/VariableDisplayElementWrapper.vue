@@ -1,7 +1,7 @@
 <template>
-  <q-card flat id="display-element-wrapper" @click="handleClick">
+  <q-card flat id="display-element-wrapper">
     <div v-if="isContainer" id="container-abbr">
-      ...
+      <q-btn dense flat :label="containerAbbr" @click="handleContainerClick" />
     </div>
     <div v-else id="singular-display" style="text-wrap: normal">
       {{ displayObjectContent }}
@@ -26,11 +26,14 @@
         return Array.isArray(this.displayObjectContent);
       },
     },
+    data() {
+      return {
+        containerAbbr: '...',
+      };
+    },
     methods: {
-      handleClick() {
-        if (this.isContainer) {
-          this.$emit('forward', this.index);
-        }
+      handleContainerClick() {
+        this.$emit('pushVariableStack', this.index, this.displayObject);
       },
     },
   };

@@ -23,15 +23,11 @@
             </q-tooltip>
           </div>
         </div>
-
-        <div class="col">
-          <div
-            @click="emitToggleAction"
-            class="row no-wrap justify-center"
-            style="padding-top: 5px"
-          >
+        <div class="col no-wrap">
+          <div class="row justify-center">
             <div
               id="name-section"
+              :class="toggleStateClass"
               :style="{ 'background-color': elementColor }"
             >
               <code>
@@ -42,18 +38,7 @@
         </div>
 
         <div id="right-section" class="col" style="flex-grow: 1;">
-          <div class="row justify-end" style="flex-wrap: nowrap;">
-            <div id="toggle-section">
-              <q-btn
-                flat
-                dense
-                :size="btnSize"
-                icon="mdi-lightbulb-multiple"
-                disable
-              >
-                <q-menu> </q-menu>
-              </q-btn>
-            </div>
+          <div class="row justify-end no-wrap"></div>
             <div id="icon-section">
               <div>
                 <q-btn
@@ -85,6 +70,12 @@
   } from '@/components/framework/VariableListComponents/variableListConstants';
   import SwitchTooltip from '@/components/framework/SwitchTooltip';
   import { successDialog } from '@/services/helpers';
+  import {
+    isInitElement,
+    isLinearContainerElement,
+    isPairContainerElement,
+    isSingularElement,
+  } from '@/components/framework/GraphEditorControls/ElementsUtils';
 
   export default {
     components: { SwitchTooltip },
@@ -103,6 +94,9 @@
       },
       initElementColor: {
         type: String,
+      },
+      initToggleState: {
+        type: Number,
       },
     },
     data() {
@@ -136,13 +130,35 @@
       elementIcon() {
         return _TYPE_ICON_ENUM[this.elementType] || _INIT_ICON;
       },
+      toggleState() {
+        return this.initToggleState;
+      },
+      isInitEle() {
+        return isInitElement(this.element);
+      },
+      toggleStateClass() {
+        if (
+          isSingularElement(this.element) ||
+          isLinearContainerElement(this.element)
+        ) {
+          return {
+            'toggle-on': Boolean(this.toggleState),
+            'toggle-off': Boolean(!this.toggleState),
+          };
+        } else if (isPairContainerElement(this.element)) {
+          return {
+            'toggle-key-on': this.toggleState === 1,
+            'toggle-value-on': this.toggleState === 2,
+            'toggle-off': this.toggleState === 3,
+          };
+        } else {
+          return ['toggle-off'];
+        }
+      },
     },
     methods: {
       emitBackAction() {
         this.$emit('popVariableStack');
-      },
-      emitToggleAction() {
-        this.$emit('toggleAction');
       },
       typeButtonClickHandler() {
         successDialog(
@@ -166,7 +182,8 @@
     opacity: .8
     text-overflow: ellipsis
     overflow: hidden
-
+    &.toggle-off
+      opacity: .2
     code
       //text-wrap: normal
       transform: scaleX(0.9)

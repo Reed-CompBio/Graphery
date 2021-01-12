@@ -98,6 +98,8 @@ class Recorder:
         Mapping: 'Mapping',  # which includes mappingproxy (not sure what that is), MutableMapping, dict
     }
 
+    _OBJECT_TYPE_STRING = 'Object'
+
     _TYPE_MAPPING = {
         # simple individuals
         **_SINGULAR_MAPPING,
@@ -106,7 +108,7 @@ class Recorder:
         # simple pair containers
         **_PAIR_CONTAINER_MAPPING,
         # wildcard
-        object: 'Object',
+        object: _OBJECT_TYPE_STRING,
     }
     _INIT_TYPE_STRING = 'init'
     _REFERENCE_TYPE_STRING = 'reference'
@@ -262,7 +264,7 @@ class Recorder:
     def custom_repr(self, variable_state: Any, variable_type: str, memory_trace: Set) -> Any:
         if variable_type == self._REFERENCE_TYPE_STRING:
             repr_result = None
-        elif variable_type in self._SINGULAR_TYPES:
+        elif variable_type in self._SINGULAR_TYPES or variable_type == self._OBJECT_TYPE_STRING:
             repr_result = self._generate_singular_repr(variable_state)
         elif variable_type in self._LINEAR_CONTAINER_TYPES:
             repr_result = self._generate_linear_container_repr(variable_state, memory_trace)

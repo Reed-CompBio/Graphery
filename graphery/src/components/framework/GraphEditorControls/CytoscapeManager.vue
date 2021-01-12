@@ -1,4 +1,6 @@
 <script>
+  const TOGGLE_CLASS_NAME = 'toggleClass';
+  const TOGGLE_CLASS_QUERY_NAME = '.' + TOGGLE_CLASS_NAME;
   export default {
     data() {
       return {
@@ -38,6 +40,14 @@
           this.storedClassNames.push(className);
         }
       },
+      addToggleClass() {
+        this.addStyle({
+          selector: TOGGLE_CLASS_QUERY_NAME,
+          style: {
+            'overlay-opacity': 0.1,
+          },
+        });
+      },
       clearStoredClassNames() {
         this.storedClassNames_ = [];
       },
@@ -51,10 +61,13 @@
           ...styleJsonObject,
         ]);
       },
+      toggleElementsByIds(ids, className, flag) {
+        this.cytoscape_.$(ids).toggleClass(className, flag);
+      },
       toggleElementsClassName(className, flag) {
         this.cytoscape_
           ?.$(this.genClassQueryName(className))
-          .toggleClass(className, flag);
+          .toggleClass(TOGGLE_CLASS_NAME, !flag);
       },
       removeElementsClassName(className) {
         this.cytoscape_

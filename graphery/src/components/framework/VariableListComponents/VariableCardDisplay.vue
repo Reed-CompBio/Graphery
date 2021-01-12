@@ -1,13 +1,13 @@
 <template>
   <div id="display-wrapper">
     <div id="singular-element" v-if="isSingularEle || isInitEle">
-      <SingularElementLayout :init-element="element" />
+      <SingularElementLayout :init-element="element" v-on="$listeners" />
     </div>
     <div id="linear-container-element" v-if="isLinearContainerEle">
-      <LinearContainerElementLayout :init-element="element" />
+      <LinearContainerElementLayout :init-element="element" v-on="$listeners" />
     </div>
     <div id="pair-container-element" v-if="isPairContainerEle">
-      <PairContainerElementLayout :init-element="element" />
+      <PairContainerElementLayout :init-element="element" v-on="$listeners" />
     </div>
   </div>
 </template>
@@ -45,11 +45,9 @@
       initElement: {
         type: Object,
       },
-    },
-    data() {
-      return {
-        toggleState_: 1,
-      };
+      initRootElementName: {
+        type: String,
+      },
     },
     computed: {
       element() {
@@ -86,7 +84,7 @@
         return this.generateHighlightIds(this.element);
       },
       elementClassName() {
-        return nameComboToClassName(this.variableLabel);
+        return nameComboToClassName(this.initRootElementName);
       },
       elementKeyClassName() {
         return `${this.elementClassName}_${_PAIR_KEY_HEADER}`;
@@ -99,28 +97,40 @@
       emitForwardAction(name, element) {
         this.$emit('pushVariableStack', name, element);
       },
-      resetToggleState() {
-        this.toggleState_ = 1;
-      },
-      toggleVar() {
-        this.toggleState_ += 1;
+      toggleVar(toggleState) {
+        toggleState += 1;
         if (this.isGraphEle && this.isSingularEle) {
-          this.$emit('toggle', this.elementClassName, this.toggleState_);
-          this.toggleState_ %= 2;
+          this.$emit(
+            'toggle',
+            this.graphElementIds,
+            this.elementClassName,
+            toggleState % 2
+          );
+          this.$emit('toggleStateChange', toggleState % 2);
         } else if (this.isLinearContainerEle) {
-          this.$emit('toggle', this.elementClassName, this.toggleState_);
-          this.toggleState_ %= 2;
+          this.$emit(
+            'toggle',
+            this.graphElementIds[0],
+            this.elementClassName,
+            toggleState % 2
+          );
+          this.$emit('toggleStateChange', toggleState % 2);
         } else if (this.isPairContainerEle) {
           this.$emit(
             'toggle',
+            this.graphElementIds[0],
             this.elementKeyClassName,
-            !((this.toggleState_ + 1) % 3)
+            !((toggleState + 1) % 3)
           );
           this.$emit(
             'toggle',
+            this.graphElementIds[1],
             this.elementValueClassName,
-            !((this.toggleState_ - 1) % 3)
+            !((toggleState - 1) % 3)
           );
+          this.$emit('toggleStateChange', toggleState % 3);
+        } else {
+          this.$emit('toggleStateChange', toggleState % 2);
         }
       },
       generateHighlightIds(element) {
@@ -162,10 +172,7 @@
     },
     watch: {
       element: function(newElements) {
-        this.resetToggleState();
-        const elementClassName = nameComboToClassName(
-          newElements[_LABEL_HEADER]
-        );
+        const elementClassName = this.elementClassName;
         const elementClassKeyName = `${elementClassName}_${_PAIR_KEY_HEADER}`;
         const elementClassValueName = `${elementClassName}_${_PAIR_VALUE_HEADER}`;
 
