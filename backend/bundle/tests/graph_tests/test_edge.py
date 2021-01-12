@@ -28,6 +28,19 @@ def test_multiple_edges(multiple_edges, expected):
         assert gen_edge(test_set[0], 'n%s' % test_set[1], 'n%s' % test_set[2]) in edge_set
 
 
+def test_cy_id():
+    edge_list = [
+        Edge(
+            str(i),
+            (
+                Node(str(i ** i)), Node(str((i+1) * (i-1)))
+            )
+        )
+        for i in range(10)
+    ]
+    assert all(edge_list[i].cy_id == f'{Edge._PREFIX}_{i + 1}' for i in range(10))
+
+
 @pytest.fixture
 def mutable_edge_set():
     return MutableEdgeSet()

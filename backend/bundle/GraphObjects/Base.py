@@ -15,8 +15,8 @@ class Comparable(metaclass=ABCMeta):
     _comparable_counter = 0
 
     def _get_id_string(self) -> str:
-        self._comparable_counter += 1
-        return f'{self._PREFIX}_{self._comparable_counter}'
+        type(self)._comparable_counter += 1
+        return f'{self._PREFIX}_{type(self)._comparable_counter}'
 
     @staticmethod
     def identity_validator(identity: Union[str, int]) -> bool:

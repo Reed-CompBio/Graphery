@@ -42,6 +42,14 @@ def test_none_node_set():
         NodeSet.generate_node_set(None)
 
 
+def test_cy_id():
+    node_list = [
+        Node(str(i))
+        for i in range(10)
+    ]
+    assert all(node_list[i].cy_id == f'{Node._PREFIX}_{i + 1}'for i in range(10))
+
+
 def test_single_node(single_node):
     node_set = Node(single_node[0]['data']['id'])
     assert str(node_set) == 'Node(n1)'
