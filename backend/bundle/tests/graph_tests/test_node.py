@@ -44,12 +44,12 @@ def test_none_node_set():
 
 def test_single_node(single_node):
     node_set = Node(single_node[0]['data']['id'])
-    assert str(node_set) == 'Node(id: n1)'
+    assert str(node_set) == 'Node(n1)'
 
 
 def test_single_node_set(single_node):
     node_set = NodeSet.generate_node_set(single_node)
-    assert str(node_set) == '{Node(id: n1)}'
+    assert str(node_set) == '{Node(n1)}'
 
 
 def test_multiple_node_set(multiple_nodes):

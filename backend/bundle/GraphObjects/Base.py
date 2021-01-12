@@ -51,6 +51,20 @@ class Comparable(metaclass=ABCMeta):
             self.hash_cache = hash((type(self), self.identity))
         return self.hash_cache
 
+    def __gt__(self, other: Comparable):
+        if not isinstance(other, Comparable):
+            raise ValueError('Cannot compare %s with %s' % (self, other))
+        return self.identity > other.identity
+
+    def __lt__(self, other: Comparable):
+        return not self.__gt__(other)
+
+    def __ge__(self, other: Comparable):
+        return self.__gt__(other) or self.__eq__(other)
+
+    def __le__(self, other: Comparable):
+        return self.__lt__(other) or self.__eq__(other)
+
 
 class HasProperty(metaclass=ABCMeta):
     """
