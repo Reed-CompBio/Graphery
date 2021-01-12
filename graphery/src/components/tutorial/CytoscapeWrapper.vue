@@ -336,7 +336,9 @@
       },
       // toggle highlight interface
       toggleHighlight(ids, bareClassName, flag) {
-        this.toggleElementsByIds(ids, bareClassName, flag);
+        if (ids && bareClassName) {
+          this.toggleElementsByIds(ids, bareClassName, flag);
+        }
       },
       // highlight interface
       highlightByClassAndIds(className, elementIds, color) {

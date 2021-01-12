@@ -12,6 +12,7 @@
     <q-separator />
     <VariableCardDisplay
       ref="variableCardDisplay"
+      :init-variable-state="toggleState"
       :init-element.sync="currentVariableObject"
       :init-root-element-name="rootVariableName"
       @clearHighlight="emitClearHighlight"
@@ -74,8 +75,13 @@
       rootVariableColor() {
         return this.rootVariable[_COLOR_HEADER];
       },
-      toggleState() {
-        return this.toggleState_;
+      toggleState: {
+        set(d) {
+          this.toggleState_ = d;
+        },
+        get() {
+          return this.toggleState_;
+        },
       },
     },
     methods: {
@@ -105,10 +111,7 @@
         this.$refs.variableCardDisplay.toggleVar(this.toggleState);
       },
       handleToggleStateChange(toggleStateChange) {
-        this.toggleState_ = toggleStateChange;
-      },
-      resetToggleState() {
-        this.toggleState_ = 1;
+        this.toggleState = toggleStateChange;
       },
       emitClearHighlight(bareClassName) {
         this.$emit('clearHighlightFromVarList', bareClassName);

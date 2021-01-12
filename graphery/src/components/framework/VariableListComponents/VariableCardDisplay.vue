@@ -48,6 +48,9 @@
       initRootElementName: {
         type: String,
       },
+      initVariableState: {
+        type: Number,
+      },
     },
     computed: {
       element() {
@@ -58,6 +61,23 @@
       },
       variableLabel() {
         return this.element[_LABEL_HEADER];
+      },
+      toggleState() {
+        return this.initVariableState;
+      },
+      toggleOn() {
+        return (
+          (this.isSingularEle || this.isLinearContainerEle) && this.toggleState
+        );
+      },
+      toggleOff() {
+        return !this.toggleState;
+      },
+      toggleKeyOn() {
+        return this.isPairContainerEle && this.toggleState === 1;
+      },
+      toggleValueOn() {
+        return this.isPairContainerEle && this.toggleState === 1;
       },
       isGraphEle() {
         return isGraphElement(this.element);
@@ -145,7 +165,10 @@
               temp.push(makeIdFromObject(elementObject));
             }
           }
-          return [temp.join(_GRAPH_ELEMENT_SEPARATOR), null];
+          return [
+            temp.length === 0 ? null : temp.join(_GRAPH_ELEMENT_SEPARATOR),
+            undefined,
+          ];
         } else if (isPairContainerElement(element)) {
           const keys = [];
           const values = [];
@@ -162,8 +185,8 @@
           });
 
           return [
-            keys.join(_GRAPH_ELEMENT_SEPARATOR),
-            values.join(_GRAPH_ELEMENT_SEPARATOR),
+            keys.length === 0 ? null : keys.join(_GRAPH_ELEMENT_SEPARATOR),
+            values.length === 0 ? null : values.join(_GRAPH_ELEMENT_SEPARATOR),
           ];
         } else {
           return null;
@@ -187,13 +210,21 @@
         }
 
         if (typeof graphIds === 'string' || graphIds instanceof String) {
-          this.$emit('highlight', elementClassName, graphIds);
+          if (this.toggleOn) {
+            this.$emit('highlight', elementClassName, graphIds);
+          }
         } else if (Array.isArray(graphIds) && graphIds.length === 2) {
-          if (graphIds[1] === null) {
-            this.$emit('highlight', elementClassName, graphIds[0]);
-          } else if (graphIds[1] !== null) {
-            this.$emit('highlight', elementClassKeyName, graphIds[0]);
-            this.$emit('highlight', elementClassValueName, graphIds[1]);
+          if (graphIds[1] === undefined) {
+            if (this.toggleOn) {
+              this.$emit('highlight', elementClassName, graphIds[0]);
+            }
+          } else if (graphIds[1] !== undefined) {
+            if (this.toggleKeyOn) {
+              this.$emit('highlight', elementClassKeyName, graphIds[0]);
+            }
+            if (this.toggleValueOn) {
+              this.$emit('highlight', elementClassValueName, graphIds[1]);
+            }
           }
         }
       },
