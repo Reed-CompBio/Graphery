@@ -29,6 +29,7 @@ def test_multiple_edges(multiple_edges, expected):
 
 
 def test_cy_id():
+    start_cy_id = Edge._comparable_counter + 1
     edge_list = [
         Edge(
             str(i),
@@ -38,7 +39,7 @@ def test_cy_id():
         )
         for i in range(10)
     ]
-    assert all(edge_list[i].cy_id == f'{Edge._PREFIX}_{i + 1}' for i in range(10))
+    assert all(edge_list[i].cy_id == f'{Edge._PREFIX}_{start_cy_id + i }' for i in range(10))
 
 
 @pytest.fixture

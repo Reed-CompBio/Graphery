@@ -43,11 +43,12 @@ def test_none_node_set():
 
 
 def test_cy_id():
+    start_cy_id = Node._comparable_counter + 1
     node_list = [
         Node(str(i))
         for i in range(10)
     ]
-    assert all(node_list[i].cy_id == f'{Node._PREFIX}_{i + 1}'for i in range(10))
+    assert all(node_list[i].cy_id == f'{Node._PREFIX}_{start_cy_id + i}'for i in range(10))
 
 
 def test_single_node(single_node):
