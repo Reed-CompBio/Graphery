@@ -12,6 +12,11 @@ class Comparable(metaclass=ABCMeta):
     Comparable interface allows you compare objects with their identity.
     """
     _PREFIX = ''
+    _comparable_counter = 0
+
+    def _get_id_string(self) -> str:
+        self._comparable_counter += 1
+        return f'{self._PREFIX}_{self._comparable_counter}'
 
     @staticmethod
     def identity_validator(identity: Union[str, int]) -> bool:
@@ -30,6 +35,7 @@ class Comparable(metaclass=ABCMeta):
             raise InvalidIdentityError
         self.identity = identity
         self.name = name if name else self._PREFIX + str(identity)
+        self.cy_id = self._get_id_string()
         self.hash_cache = None
 
     def __eq__(self, other):
@@ -44,20 +50,6 @@ class Comparable(metaclass=ABCMeta):
         if self.hash_cache is None:
             self.hash_cache = hash((type(self), self.identity))
         return self.hash_cache
-
-    def __gt__(self, other: Comparable):
-        if not isinstance(other, Comparable):
-            raise ValueError('Cannot compare %s with %s' % (self, other))
-        return self.identity > other.identity
-
-    def __lt__(self, other: Comparable):
-        return not self.__gt__(other)
-
-    def __ge__(self, other: Comparable):
-        return self.__gt__(other) or self.__eq__(other)
-
-    def __le__(self, other: Comparable):
-        return self.__lt__(other) or self.__eq__(other)
 
 
 class HasProperty(metaclass=ABCMeta):

@@ -26,7 +26,7 @@ class Graph(Stylable, Generic[Node_C, Edge_C]):
     default_styles = [{
         "selector": "node",
         "style": {
-            "label": "data(id)",
+            "label": "data(name)",
             "text-valign": "center",
             "text-halign": "center",
             "text-outline-color": "white",

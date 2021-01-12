@@ -26,13 +26,13 @@ class Node(Comparable, HasProperty, Stylable):
         )
 
     def __str__(self):
-        return 'Node(id: %s)' % self.identity
+        return 'Node(%s)' % self.identity
 
     def __repr__(self):
         return self.__str__()
 
     @staticmethod
-    def return_node(identity: Union[str, 'Node'], styles: Iterable[Mapping] = (), classes: Iterable[str] = ()):
+    def return_node(identity: Union[str, Node], styles: Iterable[Mapping] = (), classes: Iterable[str] = ()):
         if isinstance(identity, str):
             return Node(identity=identity, styles=styles, classes=classes)
         elif isinstance(identity, Node):
@@ -50,7 +50,7 @@ class NodeSet(ElementSet):
         super(NodeSet, self).__init__(nodes, Node)
 
     @staticmethod
-    def generate_node_set(nodes: Iterable[Mapping]) -> 'NodeSet':
+    def generate_node_set(nodes: Iterable[Mapping]) -> NodeSet:
         stored_nodes = []
         for node in nodes:
             if not (isinstance(node, Mapping) and 'data' in node):
