@@ -314,7 +314,7 @@ class Recorder:
                 memory_trace,
             )
 
-            state_mapping[self._ID_HEADER] = variable_state.identity
+            state_mapping[self._ID_HEADER] = variable_state.cy_id
 
         return state_mapping
 
