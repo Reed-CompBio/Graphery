@@ -297,6 +297,7 @@ class Recorder:
         state_mapping: MutableMapping = {
             self._TYPE_HEADER: variable_type,
             self._PYTHON_ID_HEADER: var_id,
+            self._COLOR_HEADER: self._color_mapping[identifier_string]
         }
 
         state_mapping[self._REPR_HEADER] = self.custom_repr(
@@ -308,13 +309,12 @@ class Recorder:
         if state_mapping[self._TYPE_HEADER] in self._GRAPH_OBJECT_TYPES:
             variable_state: Union[Node, Edge]
             state_mapping[self._PROPERTY_HEADER] = self.process_variable_state(
+                self._INNER_IDENTIFIER_STRING,
                 variable_state.properties,
-                self._TYPE_MAPPING[Mapping],
                 memory_trace,
             )
-            state_mapping[self._COLOR_HEADER] = self._color_mapping.get(identifier_string, None)
 
-            state_mapping[self._ID_HEADER] = variable_state.identity
+            state_mapping[self._ID_HEADER] = variable_state.cy_id
 
         return state_mapping
 

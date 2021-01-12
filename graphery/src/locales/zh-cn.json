@@ -95,5 +95,9 @@
   },
   "metaInfo": {
     "Tutorial": "教程"
+  },
+  "graph": {
+    "Close": "关闭",
+    "Never Show Again": "不再显示"
   }
 }

@@ -13,9 +13,9 @@ class DefaultTestComparable(Comparable):
 
 def test_hash():
     instance = DefaultTestComparable('a')
-    assert instance.hash_cache is None
+    assert instance._hash_cache is None
     hash_value = hash(instance)
-    assert hash_value == instance.hash_cache
+    assert hash_value == instance._hash_cache
 
 
 @pytest.mark.parametrize('left, right, operator, result', [

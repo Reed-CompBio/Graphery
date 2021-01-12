@@ -70,7 +70,6 @@ def time_out_execute(*args, **kwargs) -> Mapping:
         except TimeoutError:
             response_dict = create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS}s.')
         except ExecutionException as e:
-            # TODO try to give detailed exception location feedback
             response_dict = create_error_response(f'Exception: {e}.')
         except Exception as e:
             response_dict = create_error_response(f'Unknown Exception: {e}.')

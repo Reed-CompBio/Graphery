@@ -104,7 +104,7 @@
   import EditorWrapper from '@/components/tutorial/EditorWrapper';
   import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper';
   import SplitterSeparator from '@/components/framework/SplitterSeparator';
-  import GraphInfoPopup from '@/components/framework/GraphInfoPopup';
+  import EditorControlUnit from '@/components/framework/EditorControlUnit';
 
   const defaultCodeOption = [
     {
@@ -129,14 +129,13 @@
       return { title: graphTitle };
     },
     components: {
-      GraphInfoPopup,
+      GraphInfoPopup: () => import('@/components/framework/GraphInfoPopup'),
       EditorWrapper,
       CytoscapeWrapper,
       SplitterSeparator,
       MobileViewWarningPopup: () =>
         import('@/components/framework/MobileViewWarningPopup'),
-      EditorControlUnit: () =>
-        import('@/components/framework/EditorControlUnit'),
+      EditorControlUnit,
     },
     data() {
       return {

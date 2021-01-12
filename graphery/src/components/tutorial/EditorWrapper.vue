@@ -59,7 +59,7 @@
     data() {
       return {
         sliderPos: 1,
-        codeValueListSplitPos: (5 / 6) * 100,
+        codeValueListSplitPos: 70,
       };
     },
     computed: {

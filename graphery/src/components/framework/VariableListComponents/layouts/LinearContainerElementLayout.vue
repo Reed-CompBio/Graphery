@@ -1,13 +1,20 @@
 <template>
   <div id="linear-layout-wrapper">
     <div id="linear-layout-style-wrapper">
-      <div id="linear-list-container">
+      <div id="empty-row-container" v-if="isEmpty">
         <VariableDisplayElementWrapper
-          :init-object="arrayElement"
-          :index="index"
-          :key="index"
-          v-for="(arrayElement, index) in arrayElements"
+          :init-object="{ repr: 'Empty Sequence' }"
         />
+      </div>
+      <div id="content-row-container" v-else>
+        <div id="linear-list-container">
+          <VariableDisplayElementWrapper
+            :init-object="arrayElement"
+            :index="index"
+            :key="index"
+            v-for="(arrayElement, index) in arrayElements"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -26,6 +33,9 @@
     computed: {
       arrayElements() {
         return this.initElement[_REPR_HEADER];
+      },
+      isEmpty() {
+        return this.arrayElements.length === 0;
       },
     },
   };

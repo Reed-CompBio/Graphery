@@ -18,10 +18,17 @@ type ArrayOfFixedLength<T extends any, N extends number> = readonly T[] & {
 };
 
 export const _INIT_TYPE_STRING = 'init';
+export const _INIT_ICON = 'mdi-help-circle-outline';
 export const _REFERENCE_TYPE_STRING = 'reference';
 
 export const _SINGULAR_TYPES = ['Number', 'String', 'Node', 'Edge', 'None'];
-export const _SINGULAR_TYPE_ICON = ['', '', '', '', ''];
+export const _SINGULAR_TYPE_ICON = [
+  'mdi-numeric',
+  'mdi-alphabetical',
+  'mdi-ray-vertex',
+  'mdi-vector-line',
+  'mdi-circle-off-outline',
+];
 
 export const _LINEAR_CONTAINER_TYPES = [
   'List',
@@ -30,12 +37,20 @@ export const _LINEAR_CONTAINER_TYPES = [
   'Set',
   'Sequence',
 ];
-export const _LINEAR_CONTAINER_TYPE_ICON = ['', '', '', '', ''];
+export const _LINEAR_CONTAINER_TYPE_ICON = [
+  'mdi-code-brackets',
+  'mdi-code-parentheses',
+  'mdi-arrow-collapse-vertical',
+  'mdi-set-center',
+  'mdi-playlist-minus',
+];
 
 export const _PAIR_CONTAINER_TYPES = ['Counter', 'Mapping'];
-export const _PAIR_CONTAINER_TYPE_ICON = ['', ''];
+export const _PAIR_CONTAINER_TYPE_ICON = ['mdi-counter', 'mdi-code-braces'];
 
-export const _GRAPH_OBJECT_TYPES = ['Node', 'Edge'];
+export const _GRAPH_NODE_TYPE = 'Node';
+export const _GRAPH_EDGE_TYPE = 'Edge';
+export const _GRAPH_OBJECT_TYPES = [_GRAPH_NODE_TYPE, _GRAPH_EDGE_TYPE];
 
 function zipArraysToObject<N extends number>(
   keyMap: ArrayOfFixedLength<string, N>,

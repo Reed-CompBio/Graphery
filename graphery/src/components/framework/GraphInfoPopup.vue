@@ -1,7 +1,8 @@
 <template>
   <q-dialog
     v-model="popupModel"
-    :auto-close="false"
+    persistent
+    auto-close
     transition-show="flip-down"
     transition-hide="flip-up"
   >
@@ -9,8 +10,13 @@
       <q-bar>
         Graph Abstract
         <q-space />
-        <q-toggle v-model="showAbstractToggle" />
-        <q-btn flat dense icon="close" @click="closePopup" />
+        <div>
+          {{ $t('graph.Never Show Again') }}
+        </div>
+        <div class="q-mr-md">
+          <q-toggle v-model="showAbstractToggle" />
+        </div>
+        <q-btn flat dense icon="close" color="primary" />
       </q-bar>
       <q-card-section style="max-height: 60vh" class="scroll">
         <MarkdownSection
@@ -20,7 +26,7 @@
       </q-card-section>
       <q-separator />
       <q-card-actions align="center" class="q-my-sm">
-        <q-btn type="" :label="$t('Close')" @click="closePopup" />
+        <q-btn type="" :label="$t('graph.Close')" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -34,7 +40,6 @@
     props: {
       graphAbstractMarkdown: {
         type: String,
-        default: '',
       },
       dialogModel: {
         type: Boolean,
@@ -67,11 +72,6 @@
         get() {
           return this.$store.getters['settings/graphAbstractPopupShow'];
         },
-      },
-    },
-    methods: {
-      closePopup() {
-        this.popupModel = false;
       },
     },
   };

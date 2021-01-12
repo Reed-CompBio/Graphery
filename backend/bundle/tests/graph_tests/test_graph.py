@@ -1,5 +1,5 @@
 import pytest
-from bundle.GraphObjects.Graph import Graph, MutableGraph
+from bundle.GraphObjects.Graph import Graph, MutableGraph, GraphLayout
 from bundle.GraphObjects.Node import Node
 from bundle.GraphObjects.Edge import Edge
 from .utils import path_join, TEST_PATH
@@ -32,6 +32,8 @@ def test_simple_graph_parsing(simple_graph_js):
     assert Edge(13, (Node('n12'), Node('n13'))) in simple_graph
     assert Edge(14, (Node('n13'), Node('n14'))) in simple_graph
     assert Edge(15, (Node('n13'), Node('n15'))) in simple_graph
+
+    assert GraphLayout.fcose.value == simple_graph.layout
 
     assert len(simple_graph.nodes) == 17
 
