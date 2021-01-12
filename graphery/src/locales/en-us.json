@@ -98,6 +98,7 @@
   },
   "graph": {
     "Close": "Close",
-    "Always Show": "Always Show"
+    "Always Show": "Always Show",
+    "No Result": "No Result"
   }
 }

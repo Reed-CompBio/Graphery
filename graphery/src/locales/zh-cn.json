@@ -98,6 +98,7 @@
   },
   "graph": {
     "Close": "关闭",
-    "Always Show": "永远显示"
+    "Always Show": "永远显示",
+    "No Result": "无结果"
   }
 }
