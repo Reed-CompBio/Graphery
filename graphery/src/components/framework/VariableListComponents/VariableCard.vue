@@ -4,7 +4,7 @@
       :has-previous="!isStackEmpty"
       :init-element-name.sync="currentVariableName"
       :init-element.sync="currentVariableObject"
-      :init-element-color="initVarColor"
+      :init-element-color="rootVariableColor"
       @popVariableStack="handlePopVariableStack"
       @toggleAction="handleToggleAction"
     ></VariableCardHeader>
@@ -73,9 +73,6 @@
       rootVariableColor() {
         return this.rootVariable[_COLOR_HEADER];
       },
-      initVarColor() {
-        return this.initVarColor_;
-      },
     },
     methods: {
       resetVariableStacks() {
@@ -118,7 +115,7 @@
           'highlightFromVarList',
           bareClassName,
           graphIds,
-          this.initVarColor
+          this.rootVariableColor
         );
       },
       emitToggleHighlight(elements, flag) {
@@ -132,9 +129,6 @@
     watch: {
       rootVariable: function(newValue) {
         this.resetVariableStacks();
-        if (!this.initVarColor_ && isInitElement(newValue)) {
-          this.initVarColor_ = newValue[_COLOR_HEADER];
-        }
       },
     },
   };
