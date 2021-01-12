@@ -26,8 +26,8 @@ export const _SINGULAR_TYPE_ICON = [
   'mdi-numeric',
   'mdi-alphabetical',
   'mdi-ray-vertex',
-  'mdi-vector-line',
-  'mdi-circle-off-outline',
+  'mdi-ray-start-end',
+  'mdi-selection-ellipse',
 ];
 
 export const _LINEAR_CONTAINER_TYPES = [
