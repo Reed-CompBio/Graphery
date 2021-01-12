@@ -33,10 +33,10 @@ class Comparable(metaclass=ABCMeta):
         # TODO think of an naming convention for id
         if not self.identity_validator(identity):
             raise InvalidIdentityError
-        self.identity = identity
-        self.name = name if name else self._PREFIX + str(identity)
-        self.cy_id = self._get_id_string()
-        self.hash_cache = None
+        self.identity: str = identity
+        self.name: str = name if name else self._PREFIX + str(identity)
+        self.cy_id: str = self._get_id_string()
+        self._hash_cache = None
 
     def __eq__(self, other):
         if isinstance(other, type(self)):
@@ -47,9 +47,9 @@ class Comparable(metaclass=ABCMeta):
         return not self.__eq__(other)
 
     def __hash__(self):
-        if self.hash_cache is None:
-            self.hash_cache = hash((type(self), self.identity))
-        return self.hash_cache
+        if self._hash_cache is None:
+            self._hash_cache = hash((type(self), self.identity))
+        return self._hash_cache
 
     def __gt__(self, other: Comparable):
         if not isinstance(other, Comparable):
@@ -75,7 +75,7 @@ class HasProperty(metaclass=ABCMeta):
         """
         create a property interface
         """
-        self.properties = {}
+        self.properties: MutableMapping = {}
 
     def update_properties(self, properties: Mapping):
         self.properties.update(properties)

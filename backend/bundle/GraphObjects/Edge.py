@@ -154,7 +154,7 @@ class EdgeSet(ElementSet):
         stored_edges = []
 
         all_has_id = all('id' in edge['data'] for edge in edges)
-        all_has_name = all('id' in edge['data'] for edge in edges)
+        all_has_name = all('name' in edge['data'] for edge in edges)
 
         if not (all_has_id or all_has_name) or (all_has_name and not all_has_id):
             raise GraphJsonFormatError('All Edge entry must contain `name` and `id` fields or only `id` fields.')
