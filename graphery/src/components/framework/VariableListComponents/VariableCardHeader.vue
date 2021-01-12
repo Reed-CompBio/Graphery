@@ -35,7 +35,7 @@
                 dense
                 :disable="isInitEle"
                 :size="btnSize"
-                icon="mdi-lightbulb-multiple"
+                :icon="hightlightButtonIcon"
                 @click="emitToggleAction"
               >
               </q-btn>
@@ -137,6 +137,29 @@
       isInitEle() {
         return isInitElement(this.element);
       },
+      hightlightButtonIcon() {
+        if (
+          isSingularElement(this.element) ||
+          isLinearContainerElement(this.element)
+        ) {
+          if (this.toggleState) {
+            return 'mdi-lightbulb';
+          } else {
+            return 'mdi-lightbulb-off-outline';
+          }
+        } else if (isPairContainerElement(this.element)) {
+          switch (this.toggleState) {
+            case 1:
+              return 'mdi-alpha-k';
+            case 2:
+              return 'mdi-alpha-v';
+            case 0:
+              return 'mdi-lightbulb-off-outline';
+          }
+        }
+        // which should never happen
+        return 'mdi-close-circle-outline';
+      },
       toggleStateClass() {
         if (
           isSingularElement(this.element) ||
@@ -150,7 +173,7 @@
           return {
             'toggle-key-on': this.toggleState === 1,
             'toggle-value-on': this.toggleState === 2,
-            'toggle-off': this.toggleState === 3,
+            'toggle-off': this.toggleState === 0,
           };
         } else {
           return ['toggle-off'];
