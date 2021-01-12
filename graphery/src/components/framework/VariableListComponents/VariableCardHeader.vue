@@ -2,7 +2,7 @@
   <div>
     <div class="header">
       <div id="header-wrapper" class="row q-my-xs justify-center">
-        <div id="back-button" class="col" style="flex-shrink: 3;">
+        <div id="back-button" class="col" style="flex-grow: 1;">
           <div class="row" style="flex-wrap: nowrap; justify-content: left;">
             <q-btn
               flat
@@ -14,7 +14,7 @@
             />
           </div>
         </div>
-        <div class="col" style="flex-wrap: nowrap; ">
+        <div class="col" style="flex-wrap: nowrap;">
           <div @click="emitToggleAction" class="row justify-center">
             <div
               id="name-section"
@@ -26,7 +26,7 @@
             </div>
           </div>
         </div>
-        <div id="right-section" class="col" style="flex-shrink: 3;">
+        <div id="right-section" class="col" style="flex-grow: 1;">
           <div class="row justify-end" style="flex-wrap: nowrap;">
             <div id="toggle-section">
               <q-btn flat dense :size="btnSize" icon="mdi-lightbulb-multiple">
