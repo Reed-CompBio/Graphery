@@ -4,6 +4,7 @@ import argparse
 import json
 import sys
 import pathlib
+import traceback
 from importlib import import_module
 from inspect import getsource
 from typing import Mapping, Any, Callable, Union, List, Tuple
@@ -17,7 +18,9 @@ from ..controller import controller
 
 
 class ExecutionException(Exception):
-    pass
+    def __init__(self, message, traceback_info: str = None):
+        super(ExecutionException, self).__init__(message)
+        self.traceback = traceback_info
 
 
 def arg_parser() -> Mapping[str, Union[int, str]]:
@@ -101,7 +104,8 @@ def execute(code: str, graph_json: Union[str, Mapping], auto_delete_cache: bool 
             controller.purge_records()
             main_function()
         except Exception as e:
-            raise ExecutionException(e)
+            traceback.print_exc()
+            raise ExecutionException(e, traceback_info=traceback.format_exc())
         finally:
             del sys.modules[ENTRY_PY_MODULE_NAME]
             del imported_module
