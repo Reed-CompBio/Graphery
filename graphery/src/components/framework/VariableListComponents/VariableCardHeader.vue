@@ -1,46 +1,53 @@
 <template>
   <div>
     <div class="header">
-      <div id="header-wrapper" class="row q-my-xs">
-        <div id="back-button" style="display: inline;">
-          <q-btn
-            flat
-            dense
-            :size="btnSize"
-            :disable="!showPreviousButton"
-            icon="mdi-backburger"
-            @click="emitBackAction"
-          />
+      <div id="header-wrapper" class="row q-my-xs justify-center">
+        <div id="back-button" class="col" style="flex-shrink: 3;">
+          <div class="row" style="flex-wrap: nowrap; justify-content: left;">
+            <q-btn
+              flat
+              dense
+              :size="btnSize"
+              :disable="!showPreviousButton"
+              icon="mdi-backburger"
+              @click="emitBackAction"
+            />
+          </div>
         </div>
-        <q-space />
-        <div
-          id="name-section"
-          @click="emitToggleAction"
-          :style="{ 'background-color': elementColor }"
-        >
-          <code>
-            {{ elementName }}
-          </code>
+        <div class="col" style="flex-wrap: nowrap; ">
+          <div @click="emitToggleAction" class="row justify-center">
+            <div
+              id="name-section"
+              :style="{ 'background-color': elementColor }"
+            >
+              <code>
+                {{ elementName }}
+              </code>
+            </div>
+          </div>
         </div>
-        <q-space />
-        <div id="toggle-section">
-          <q-btn flat dense :size="btnSize" icon="mdi-lightbulb-multiple">
-            <q-menu>
-              <q-list dense>
-                <q-item>
-                  <q-btn
-                    dense
-                    flat
-                    :size="btnSize"
-                    icon="mdi-lightbulb-multiple"
-                  />
-                </q-item>
-              </q-list>
-            </q-menu>
-          </q-btn>
-        </div>
-        <div id="icon-section">
-          <q-btn flat dense :size="btnSize" disable :icon="elementIcon" />
+        <div id="right-section" class="col" style="flex-shrink: 3;">
+          <div class="row justify-end" style="flex-wrap: nowrap;">
+            <div id="toggle-section">
+              <q-btn flat dense :size="btnSize" icon="mdi-lightbulb-multiple">
+                <q-menu>
+                  <q-list dense>
+                    <q-item>
+                      <q-btn
+                        dense
+                        flat
+                        :size="btnSize"
+                        icon="mdi-lightbulb-multiple"
+                      />
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-btn>
+            </div>
+            <div id="icon-section">
+              <q-btn flat dense :size="btnSize" disable :icon="elementIcon" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -111,12 +118,13 @@
 
 <style scoped lang="sass">
   #name-section
-    display: flex
-    align-self: center
     font-size: 17px
     padding: .01rem .3rem
     border-radius: 2rem
     opacity: .8
+    text-overflow: ellipsis
+    overflow: hidden
+
     code
       text-wrap: normal
       transform: scaleX(0.9)

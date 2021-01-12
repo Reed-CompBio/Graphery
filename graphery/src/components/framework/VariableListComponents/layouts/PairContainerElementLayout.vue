@@ -7,11 +7,11 @@
             :init-object="{ repr: 'Empty Mapping' }"
           />
         </div>
-        <div id="content-row-container" v-else>
+        <div id="content-row-container" class="column" v-else>
           <div
             id="row-container"
             :key="index"
-            class="row content-center flex-center"
+            class="row justify-center content-center"
             v-for="(pairElement, index) in pairElementArray"
           >
             <div id="row-key-container" class="col-5 q-mx-xs">
@@ -20,8 +20,16 @@
                 :index="index"
               />
             </div>
-            <div id="row-separator">
-              :
+            <div
+              id="row-separator-wrapper"
+              class="col justify-center flex-center"
+            >
+              <div
+                id="row-separator"
+                style="max-width: 15px; display: inline-block;"
+              >
+                :
+              </div>
             </div>
             <div id="row-value-container" class="col-5 q-mx-xs">
               <VariableDisplayElementWrapper
