@@ -11,7 +11,7 @@
         Graph Abstract
         <q-space />
         <div>
-          {{ $t('graph.Never Show Again') }}
+          {{ $t('graph.Always Show') }}
         </div>
         <div class="q-mr-md">
           <q-toggle v-model="showAbstractToggle" />
