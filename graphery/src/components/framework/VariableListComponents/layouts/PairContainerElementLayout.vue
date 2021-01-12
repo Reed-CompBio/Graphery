@@ -1,7 +1,7 @@
 <template>
   <div id="pair-layout-wrapper">
     <div id="pair-layout-style-wrapper" class="fit">
-      <div id="pair-container" class="column ">
+      <div id="pair-container">
         <div id="empty-row-container" v-if="isEmpty">
           <VariableDisplayElementWrapper
             :init-object="{ repr: 'Empty Mapping' }"
@@ -11,7 +11,7 @@
           <div
             id="row-container"
             :key="index"
-            class="row justify-center content-center"
+            class="row content-center"
             v-for="(pairElement, index) in pairElementArray"
           >
             <div id="row-key-container" class="col-5 q-mx-xs">
@@ -25,10 +25,7 @@
               id="row-separator-wrapper"
               class="col justify-center flex-center"
             >
-              <div
-                id="row-separator"
-                style="max-width: 15px; display: inline-block;"
-              >
+              <div id="row-separator">
                 :
               </div>
             </div>
@@ -72,6 +69,8 @@
   #row-separator
     padding: .2em .4em
     margin: 0
-    background-color: #828282
+    background-color: rgba(130, 130, 130, 0.75)
     border-radius: 6px
+    max-width: 15px
+    display: inline-block
 </style>
