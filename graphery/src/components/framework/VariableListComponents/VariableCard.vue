@@ -4,6 +4,7 @@
       :has-previous="!isStackEmpty"
       :init-element-name.sync="currentVariableName"
       :init-element.sync="currentVariableObject"
+      :init-element-color="initVarColor"
       @popVariableStack="handlePopVariableStack"
       @toggleAction="handleToggleAction"
     ></VariableCardHeader>

@@ -1,24 +1,46 @@
 <template>
   <div>
     <div class="header">
-      <div id="header-wrapper" class="row">
+      <div id="header-wrapper" class="row q-my-xs">
         <div id="back-button" style="display: inline;">
           <q-btn
             flat
             dense
-            size="sm"
+            :size="btnSize"
             :disable="!showPreviousButton"
             icon="mdi-backburger"
             @click="emitBackAction"
           />
         </div>
         <q-space />
-        <div id="name-section" @click="emitToggleAction">
-          {{ elementName }}
+        <div
+          id="name-section"
+          @click="emitToggleAction"
+          :style="{ 'background-color': elementColor }"
+        >
+          <code>
+            {{ elementName }}
+          </code>
         </div>
         <q-space />
+        <div id="toggle-section">
+          <q-btn flat dense :size="btnSize" icon="mdi-lightbulb-multiple">
+            <q-menu>
+              <q-list dense>
+                <q-item>
+                  <q-btn
+                    dense
+                    flat
+                    :size="btnSize"
+                    icon="mdi-lightbulb-multiple"
+                  />
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </div>
         <div id="icon-section">
-          <q-btn flat dense size="sm" disable :icon="elementIcon" />
+          <q-btn flat dense :size="btnSize" disable :icon="elementIcon" />
         </div>
       </div>
     </div>
@@ -46,6 +68,15 @@
         type: Object,
         default: null,
       },
+      initElementColor: {
+        type: String,
+      },
+    },
+    data() {
+      return {
+        dropdownModel: false,
+        btnSize: 'md',
+      };
     },
     computed: {
       element() {
@@ -59,6 +90,9 @@
       },
       elementName() {
         return this.initElementName;
+      },
+      elementColor() {
+        return this.initElementColor;
       },
       elementIcon() {
         return _TYPE_ICON_ENUM[this.elementType] || 'mdi-comment-question';
@@ -79,7 +113,13 @@
   #name-section
     display: flex
     align-self: center
-    font-size: 15px
+    font-size: 17px
+    padding: .01rem .3rem
+    border-radius: 2rem
+    opacity: .8
+    code
+      text-wrap: normal
+      transform: scaleX(0.9)
   .header
-    padding: 0px 8px
+    padding: 0 8px
 </style>

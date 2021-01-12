@@ -7,27 +7,28 @@
             :init-object="{ repr: 'Empty Mapping' }"
           />
         </div>
-        <div
-          id="row-container"
-          v-else
-          :key="index"
-          class="row content-center flex-center"
-          v-for="(pairElement, index) in pairElementArray"
-        >
-          <div id="row-key-container" class="col-5 q-mx-xs">
-            <VariableDisplayElementWrapper
-              :init-object="pairElement['key']"
-              :index="index"
-            />
-          </div>
-          <div id="row-separator">
-            :
-          </div>
-          <div id="row-value-container" class="col-5 q-mx-xs">
-            <VariableDisplayElementWrapper
-              :init-object="pairElement['value']"
-              :index="index"
-            />
+        <div id="content-row-container" v-else>
+          <div
+            id="row-container"
+            :key="index"
+            class="row content-center flex-center"
+            v-for="(pairElement, index) in pairElementArray"
+          >
+            <div id="row-key-container" class="col-5 q-mx-xs">
+              <VariableDisplayElementWrapper
+                :init-object="pairElement['key']"
+                :index="index"
+              />
+            </div>
+            <div id="row-separator">
+              :
+            </div>
+            <div id="row-value-container" class="col-5 q-mx-xs">
+              <VariableDisplayElementWrapper
+                :init-object="pairElement['value']"
+                :index="index"
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -29,8 +29,8 @@
               selector: queryClassName,
               style: {
                 'overlay-color': color,
-                'overlay-opacity': 0.5,
-                'overlay-padding': 5,
+                'overlay-opacity': 0.4,
+                'overlay-padding': 4,
               },
             },
           ];

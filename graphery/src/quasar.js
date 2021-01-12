@@ -55,6 +55,8 @@ import {
   QCheckbox,
   QFile,
   QScrollArea,
+  // QBtnToggle,
+  QMenu,
   // My plugins
   Dialog,
   Notify,
@@ -119,6 +121,8 @@ Vue.use(Quasar, {
     QCheckbox,
     QFile,
     QScrollArea,
+    QMenu,
+    // QBtnToggle,
   },
   directives: { ClosePopup },
   plugins: { Dialog, Notify },
