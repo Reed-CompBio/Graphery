@@ -41,9 +41,16 @@
             </div>
             <div id="icon-section">
               <div>
-                <q-icon size="sm" :name="elementIcon">
-                  <SwitchTooltip :text="`Type: ${elementType}`" />
-                </q-icon>
+                <q-btn
+                  flat
+                  dense
+                  round
+                  :size="btnSize"
+                  :icon="elementIcon"
+                  @click="typeButtonClickHandler"
+                >
+                  <SwitchTooltip :text="`Type: ${displayedElementType}`" />
+                </q-btn>
               </div>
             </div>
           </div>
@@ -57,10 +64,12 @@
   import {
     _EMPTY_VALUE_STRING,
     _INIT_ICON,
+    _INIT_TYPE_STRING,
     _TYPE_HEADER,
     _TYPE_ICON_ENUM,
   } from '@/components/framework/VariableListComponents/variableListConstants';
   import SwitchTooltip from '@/components/framework/SwitchTooltip';
+  import { successDialog } from '@/services/helpers';
 
   export default {
     components: { SwitchTooltip },
@@ -97,6 +106,12 @@
       elementType() {
         return this.element[_TYPE_HEADER];
       },
+      displayedElementType() {
+        if (this.elementType === _INIT_TYPE_STRING) {
+          return 'Unknown';
+        }
+        return this.elementType;
+      },
       elementName() {
         return this.initElementName;
       },
@@ -113,6 +128,14 @@
       },
       emitToggleAction() {
         this.$emit('toggleAction');
+      },
+      typeButtonClickHandler() {
+        successDialog(
+          {
+            message: `The element '${this.elementName}' has type ${this.displayedElementType}`,
+          },
+          2000
+        );
       },
     },
   };
