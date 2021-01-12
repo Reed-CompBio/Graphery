@@ -28,7 +28,7 @@
     components: { VariableDisplayElementWrapper },
     props: {
       initElement: {
-        type: Array,
+        type: Object,
       },
     },
     computed: {
