@@ -29,17 +29,6 @@
         </div>
         <div id="right-section" class="col" style="flex-grow: 1;">
           <div class="row justify-end" style="flex-wrap: nowrap;">
-            <div id="toggle-section">
-              <q-btn
-                flat
-                dense
-                :disable="isInitEle"
-                :size="btnSize"
-                icon="mdi-lightbulb-multiple"
-                @click="emitToggleAction"
-              >
-              </q-btn>
-            </div>
             <div id="icon-section">
               <div>
                 <q-btn
@@ -160,9 +149,6 @@
     methods: {
       emitBackAction() {
         this.$emit('popVariableStack');
-      },
-      emitToggleAction() {
-        this.$emit('toggleAction');
       },
       typeButtonClickHandler() {
         successDialog(
