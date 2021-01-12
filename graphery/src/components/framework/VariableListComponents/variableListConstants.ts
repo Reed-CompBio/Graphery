@@ -34,8 +34,9 @@ export const _LINEAR_CONTAINER_TYPE_ICON = ['', '', '', '', ''];
 
 export const _PAIR_CONTAINER_TYPES = ['Counter', 'Mapping'];
 export const _PAIR_CONTAINER_TYPE_ICON = ['', ''];
-
-export const _GRAPH_OBJECT_TYPES = ['Node', 'Edge'];
+export const _GRAPH_NODE_TYPE = 'Node';
+export const _GRAPH_EDGE_TYPE = 'Edge';
+export const _GRAPH_OBJECT_TYPES = [_GRAPH_NODE_TYPE, _GRAPH_EDGE_TYPE];
 
 function zipArraysToObject<N extends number>(
   keyMap: ArrayOfFixedLength<string, N>,
