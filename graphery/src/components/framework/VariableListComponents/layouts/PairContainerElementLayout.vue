@@ -60,7 +60,7 @@
         return this.initElement[_REPR_HEADER];
       },
       isEmpty() {
-        return this.pairElementArray[_REPR_HEADER].length === 0;
+        return this.pairElementArray.length === 0;
       },
     },
   };

@@ -35,7 +35,7 @@
         return this.initElement[_REPR_HEADER];
       },
       isEmpty() {
-        return this.arrayElements[_REPR_HEADER].length === 0;
+        return this.arrayElements.length === 0;
       },
     },
   };
