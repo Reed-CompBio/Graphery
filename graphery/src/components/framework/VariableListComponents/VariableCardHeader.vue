@@ -29,23 +29,22 @@
         <div id="right-section" class="col" style="flex-grow: 1;">
           <div class="row justify-end" style="flex-wrap: nowrap;">
             <div id="toggle-section">
-              <q-btn flat dense :size="btnSize" icon="mdi-lightbulb-multiple">
-                <q-menu>
-                  <q-list dense>
-                    <q-item>
-                      <q-btn
-                        dense
-                        flat
-                        :size="btnSize"
-                        icon="mdi-lightbulb-multiple"
-                      />
-                    </q-item>
-                  </q-list>
-                </q-menu>
+              <q-btn
+                flat
+                dense
+                :size="btnSize"
+                icon="mdi-lightbulb-multiple"
+                disable
+              >
+                <q-menu> </q-menu>
               </q-btn>
             </div>
             <div id="icon-section">
-              <q-btn flat dense :size="btnSize" disable :icon="elementIcon" />
+              <div>
+                <q-icon size="sm" :name="elementIcon">
+                  <SwitchTooltip :text="`Type: ${elementType}`" />
+                </q-icon>
+              </div>
             </div>
           </div>
         </div>
@@ -57,11 +56,14 @@
 <script>
   import {
     _EMPTY_VALUE_STRING,
+    _INIT_ICON,
     _TYPE_HEADER,
     _TYPE_ICON_ENUM,
   } from '@/components/framework/VariableListComponents/variableListConstants';
+  import SwitchTooltip from '@/components/framework/SwitchTooltip';
 
   export default {
+    components: { SwitchTooltip },
     props: {
       hasPrevious: {
         type: Boolean,
@@ -102,7 +104,7 @@
         return this.initElementColor;
       },
       elementIcon() {
-        return _TYPE_ICON_ENUM[this.elementType] || 'mdi-comment-question';
+        return _TYPE_ICON_ENUM[this.elementType] || _INIT_ICON;
       },
     },
     methods: {

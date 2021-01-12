@@ -18,6 +18,7 @@ type ArrayOfFixedLength<T extends any, N extends number> = readonly T[] & {
 };
 
 export const _INIT_TYPE_STRING = 'init';
+export const _INIT_ICON = 'mdi-help-circle-outline';
 export const _REFERENCE_TYPE_STRING = 'reference';
 
 export const _SINGULAR_TYPES = ['Number', 'String', 'Node', 'Edge', 'None'];
