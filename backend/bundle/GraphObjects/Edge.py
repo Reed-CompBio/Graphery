@@ -108,7 +108,7 @@ class Edge(Comparable, HasProperty, Stylable):
         return 2
 
     def __str__(self):
-        return 'Edge({}, {}}'.format(*self.node_pair)
+        return 'Edge({}, {})'.format(*self.node_pair)
 
     def __repr__(self):
         return self.__str__()
