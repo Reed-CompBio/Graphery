@@ -13,6 +13,7 @@
     <VariableCardDisplay
       ref="variableCardDisplay"
       :init-element.sync="currentVariableObject"
+      :init-root-element-name="rootVariableName"
       @clearHighlight="emitClearHighlight"
       @highlight="emitHighlight"
       @toggle="emitToggleHighlight"
@@ -31,10 +32,7 @@
     _LABEL_HEADER,
     _PYTHON_ID_HEADER,
   } from '@/components/framework/VariableListComponents/variableListConstants';
-  import {
-    isInitElement,
-    revertNameCombo,
-  } from '@/components/framework/GraphEditorControls/ElementsUtils';
+  import { revertNameCombo } from '@/components/framework/GraphEditorControls/ElementsUtils';
   export default {
     props: {
       initVariableObject: {

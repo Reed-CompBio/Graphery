@@ -21,13 +21,21 @@ export const _INIT_TYPE_STRING = 'init';
 export const _INIT_ICON = 'mdi-help-circle-outline';
 export const _REFERENCE_TYPE_STRING = 'reference';
 
-export const _SINGULAR_TYPES = ['Number', 'String', 'Node', 'Edge', 'None'];
+export const _SINGULAR_TYPES = [
+  'Number',
+  'String',
+  'Node',
+  'Edge',
+  'None',
+  'Object',
+];
 export const _SINGULAR_TYPE_ICON = [
   'mdi-numeric',
   'mdi-alphabetical',
   'mdi-ray-vertex',
   'mdi-ray-start-end',
   'mdi-selection-ellipse',
+  'mdi-iframe-variable-outline',
 ];
 
 export const _LINEAR_CONTAINER_TYPES = [
@@ -66,10 +74,10 @@ function zipArraysToObject<N extends number>(
 
 export const _TYPE_ICON_ENUM = Object.freeze({
   ...Object.assign(
-    zipArraysToObject<5>(
-      _SINGULAR_TYPES as ArrayOfFixedLength<string, 5>,
-      _SINGULAR_TYPE_ICON as ArrayOfFixedLength<string, 5>,
-      5
+    zipArraysToObject<6>(
+      _SINGULAR_TYPES as ArrayOfFixedLength<string, 6>,
+      _SINGULAR_TYPE_ICON as ArrayOfFixedLength<string, 6>,
+      6
     )
   ),
   ...Object.assign(

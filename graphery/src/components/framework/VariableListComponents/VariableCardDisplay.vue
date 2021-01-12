@@ -45,6 +45,9 @@
       initElement: {
         type: Object,
       },
+      initRootElementName: {
+        type: String,
+      },
     },
     computed: {
       element() {
@@ -81,7 +84,7 @@
         return this.generateHighlightIds(this.element);
       },
       elementClassName() {
-        return nameComboToClassName(this.variableLabel);
+        return nameComboToClassName(this.initRootElementName);
       },
       elementKeyClassName() {
         return `${this.elementClassName}_${_PAIR_KEY_HEADER}`;
@@ -169,9 +172,7 @@
     },
     watch: {
       element: function(newElements) {
-        const elementClassName = nameComboToClassName(
-          newElements[_LABEL_HEADER]
-        );
+        const elementClassName = this.elementClassName;
         const elementClassKeyName = `${elementClassName}_${_PAIR_KEY_HEADER}`;
         const elementClassValueName = `${elementClassName}_${_PAIR_VALUE_HEADER}`;
 
