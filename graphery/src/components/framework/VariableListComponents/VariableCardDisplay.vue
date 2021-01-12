@@ -140,13 +140,13 @@
             'toggle',
             this.graphElementIds[0],
             this.elementKeyClassName,
-            !((toggleState + 1) % 3)
+            !((toggleState - 1) % 3)
           );
           this.$emit(
             'toggle',
             this.graphElementIds[1],
             this.elementValueClassName,
-            !((toggleState - 1) % 3)
+            !((toggleState + 1) % 3)
           );
           this.$emit('toggleStateChange', toggleState % 3);
         } else {
