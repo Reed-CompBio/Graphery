@@ -142,27 +142,47 @@ class EdgeSet(ElementSet):
         super(EdgeSet, self).__init__(edges, Edge)
 
     @staticmethod
-    def generate_edge_set(edges: Iterable[Mapping], nodes: NodeSet) -> 'EdgeSet':
+    def generate_edge_set(edges: Iterable[Mapping],
+                          ids_node_instance_mapping: Mapping[str, Node]) -> 'EdgeSet':
         """
         generate an edge set by a given mapping (from cyjs) and the corresponding nodes
         @param edges:
-        @param nodes:
+        @param ids_node_instance_mapping:
         @return: created edge set
         @raise ValueError: if the data is invalid
         """
         stored_edges = []
+
+        all_has_id = all('id' in edge['data'] for edge in edges)
+        all_has_name = all('id' in edge['data'] for edge in edges)
+
+        if not (all_has_id or all_has_name) or (all_has_name and not all_has_id):
+            raise GraphJsonFormatError('All Edge entry must contain `name` and `id` fields or only `id` fields.')
+
         for edge in edges:
             if not (isinstance(edge, Mapping) and 'data' in edge):
                 raise GraphJsonFormatError(f'invalid format for Edge {edge}')
 
             data_field = edge['data']
 
-            if not ('id' in data_field and 'source' in data_field and 'target' in data_field):
-                raise GraphJsonFormatError(f'The edge {edge} entry must contain `id`, `source` and `target` fields')
+            if all_has_name:
+                name = data_field['name']
+            else:
+                name = data_field['id']
 
-            stored_edge = Edge(data_field['id'], NodeTuple(nodes[data_field['source']], nodes[data_field['target']]))
+            if not ('source' in data_field and 'target' in data_field):
+                raise GraphJsonFormatError(f'The edge {edge} entry must contain `source` and `target` fields')
+
+            source_node = ids_node_instance_mapping[data_field['source']]
+            target_node = ids_node_instance_mapping[data_field['target']]
+            stored_edge = Edge(name,
+                               NodeTuple(
+                                   source_node,
+                                   target_node
+                               ))
             if 'displayed' in data_field:
                 stored_edge.update_properties(data_field['displayed'])
+
             stored_edges.append(stored_edge)
 
         return EdgeSet(stored_edges)
