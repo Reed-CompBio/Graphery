@@ -15,8 +15,8 @@ class Edge(Comparable, HasProperty, Stylable):
 
     default_directed_styles = []
 
-    def __init__(self, identity, node_pair: NodeTuple, name=None,
-                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = (), directed=False,
+    def __init__(self, identity, node_pair: NodeTuple, name=None, directed=False,
+                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = (),
                  add_default_styles=False, add_default_classes=False):
         """
         create an edge with an identity and a pair of nodes
@@ -83,6 +83,9 @@ class Edge(Comparable, HasProperty, Stylable):
         @param node:
         @return:
         """
+        # TODO change this so that if the element is a Node object,
+        #   it returns node in node_pair
+        #   otherwise, return if the property is in the property dict
         if isinstance(node, Node):
             return node in self.node_pair
         return False
