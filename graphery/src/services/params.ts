@@ -3,7 +3,7 @@ export const emptyTutorialContentTag = '<None>';
 export const newModelUUID = '00000000-0000-0000-0000-000000000000';
 
 // TODO pull data from i18n
-export const langList = ['en-us', 'zh-cn'];
+export const langList = ['en-us', 'zh-cn', 'es'];
 
 export const emptyCodeTemplate = `# python >= 3.8 Empty Code Template
 from bundle.seeker import tracer
