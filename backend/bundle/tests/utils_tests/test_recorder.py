@@ -1,7 +1,7 @@
 import json
 from collections import deque
 from numbers import Number
-from typing import List, Tuple, Deque, Sequence
+from typing import List, Tuple, Deque, Sequence, Any
 from collections import Counter
 from collections.abc import Mapping, Set
 
@@ -145,11 +145,19 @@ def test_generating_changes(empty_recorder):
 
 
 class _Any:
+    def __init__(self, v: Any = object):
+        self.value = v
+
     def __eq__(self, other):
-        return True
+        if self.value == object:
+            return True
+        elif isinstance(other, _Any):
+            return self.value == other.value
+        else:
+            return self.value == other
 
     def __ne__(self, other):
-        return False
+        return not self.__eq__(other)
 
 
 _anything = _Any()
@@ -171,80 +179,100 @@ def test_json_dump(empty_recorder):
                                                          'repr': None,
                                                          'type': 'init'}}},
                      {'accesses': [{'color': '#B15928',
-                                    'id': '1',
-                                    'properties': {'python_id': _anything,
-                                                   'repr': "'Mapping'",
-                                                   'type': 'String'},
+                                    'id': _anything,
+                                    'properties': {'color': '#828282',
+                                                   'python_id': _anything,
+                                                   'repr': [],
+                                                   'type': 'Mapping'},
                                     'python_id': _anything,
                                     'repr': 'Node(1)',
                                     'type': 'Node'}],
                       'line': 1,
-                      'variables': {'main\u200b@var_1': {'python_id': _anything,
+                      'variables': {'main\u200b@var_1': {'color': '#A6CEE3',
+                                                         'python_id': _anything,
                                                          'repr': '1',
                                                          'type': 'Number'},
                                     'main\u200b@var_2': {'color': '#1F78B4',
-                                                         'id': '1',
-                                                         'properties': {'python_id': _anything,
-                                                                        'repr': "'Mapping'",
-                                                                        'type': 'String'},
+                                                         'id': _anything,
+                                                         'properties': {'color': '#828282',
+                                                                        'python_id': _anything,
+                                                                        'repr': [],
+                                                                        'type': 'Mapping'},
                                                          'python_id': _anything,
                                                          'repr': 'Node(1)',
                                                          'type': 'Node'},
                                     'main\u200b@var_3': {'color': '#B2DF8A',
                                                          'repr': None,
                                                          'type': 'init'},
-                                    'main\u200b@var_4': {'python_id': _anything,
+                                    'main\u200b@var_4': {'color': '#33A02C',
+                                                         'python_id': _anything,
                                                          'repr': 'None',
                                                          'type': 'None'}}},
-                     {'accesses': [{'python_id': _anything,
-                                    'repr': [{'key': {'python_id': _anything,
+                     {'accesses': [{'color': '#B15928',
+                                    'python_id': _anything,
+                                    'repr': [{'key': {'color': '#828282',
+                                                      'python_id': _anything,
                                                       'repr': '1',
                                                       'type': 'Number'},
-                                              'value': {'python_id': _anything,
-                                                        'repr': [{'key': {'python_id': _anything,
+                                              'value': {'color': '#828282',
+                                                        'python_id': _anything,
+                                                        'repr': [{'key': {'color': '#828282',
+                                                                          'python_id': _anything,
                                                                           'repr': '2',
                                                                           'type': 'Number'},
-                                                                  'value': {'python_id': _anything,
+                                                                  'value': {'color': '#828282',
+                                                                            'python_id': _anything,
                                                                             'repr': '3',
                                                                             'type': 'Number'}},
-                                                                 {'key': {'python_id': _anything,
+                                                                 {'key': {'color': '#828282',
+                                                                          'python_id': _anything,
                                                                           'repr': '4',
                                                                           'type': 'Number'},
-                                                                  'value': {'python_id': _anything,
+                                                                  'value': {'color': '#828282',
+                                                                            'python_id': _anything,
                                                                             'repr': '5',
                                                                             'type': 'Number'}}],
                                                         'type': 'Mapping'}},
-                                             {'key': {'python_id': _anything,
-                                                      'repr': [{'python_id': _anything,
+                                             {'key': {'color': '#828282',
+                                                      'python_id': _anything,
+                                                      'repr': [{'color': '#828282',
+                                                                'python_id': _anything,
                                                                 'repr': '6',
                                                                 'type': 'Number'},
-                                                               {'python_id': _anything,
+                                                               {'color': '#828282',
+                                                                'python_id': _anything,
                                                                 'repr': '7',
                                                                 'type': 'Number'},
-                                                               {'python_id': _anything,
+                                                               {'color': '#828282',
+                                                                'python_id': _anything,
                                                                 'repr': '8',
                                                                 'type': 'Number'}],
                                                       'type': 'Tuple'},
-                                              'value': {'python_id': _anything,
+                                              'value': {'color': '#828282',
+                                                        'python_id': _anything,
                                                         'repr': '9',
                                                         'type': 'Number'}}],
                                     'type': 'Mapping'}],
                       'line': 2,
-                      'variables': {'main\u200b@var_1': {'python_id': _anything,
+                      'variables': {'main\u200b@var_1': {'color': '#A6CEE3',
+                                                         'python_id': _anything,
                                                          'repr': '1',
                                                          'type': 'Number'},
                                     'main\u200b@var_2': {'color': '#1F78B4',
-                                                         'id': '1',
-                                                         'properties': {'python_id': _anything,
-                                                                        'repr': "'Mapping'",
-                                                                        'type': 'String'},
+                                                         'id': _anything,
+                                                         'properties': {'color': '#828282',
+                                                                        'python_id': _anything,
+                                                                        'repr': [],
+                                                                        'type': 'Mapping'},
                                                          'python_id': _anything,
                                                          'repr': 'Node(1)',
                                                          'type': 'Node'},
-                                    'main\u200b@var_3': {'python_id': _anything,
+                                    'main\u200b@var_3': {'color': '#B2DF8A',
+                                                         'python_id': _anything,
                                                          'repr': "'ab'",
                                                          'type': 'String'},
-                                    'main\u200b@var_4': {'python_id': _anything,
+                                    'main\u200b@var_4': {'color': '#33A02C',
+                                                         'python_id': _anything,
                                                          'repr': 'None',
                                                          'type': 'None'}}},
                      {'accesses': None, 'line': 20, 'variables': None}]

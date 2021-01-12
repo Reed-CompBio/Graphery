@@ -32,8 +32,9 @@ def complex_nodes(node_json_obj):
 
 
 def test_empty_iter_node_set():
-    node_set = NodeSet.generate_node_set([])
+    node_set, id_node_mapping = NodeSet.generate_node_set([])
     assert str(node_set) == 'set()'
+    assert id_node_mapping == {}
 
 
 def test_none_node_set():
@@ -57,12 +58,12 @@ def test_single_node(single_node):
 
 
 def test_single_node_set(single_node):
-    node_set = NodeSet.generate_node_set(single_node)
+    node_set, _ = NodeSet.generate_node_set(single_node)
     assert str(node_set) == '{Node(n1)}'
 
 
 def test_multiple_node_set(multiple_nodes):
-    node_set = NodeSet.generate_node_set(multiple_nodes)
+    node_set, _ = NodeSet.generate_node_set(multiple_nodes)
     assert len(node_set) == 3
     assert Node('n1') in node_set
     assert Node('n2') in node_set
@@ -70,7 +71,7 @@ def test_multiple_node_set(multiple_nodes):
 
 
 def test_complex_node_set(complex_node):
-    node_set = NodeSet.generate_node_set(complex_node)
+    node_set, _ = NodeSet.generate_node_set(complex_node)
     assert node_set.elements.pop().properties == {"degree": 0, "clustering_coefficient": 0}
 
 
