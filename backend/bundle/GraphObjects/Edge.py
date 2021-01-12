@@ -77,18 +77,20 @@ class Edge(Comparable, HasProperty, Stylable):
         if self.is_directed():
             self.node_pair = self.node_pair[::-1]
 
-    def __contains__(self, node):
+    def __contains__(self, item: Union[Node, str]):
         """
         returns true if a node is part of this edge
-        @param node:
+        @param item:
         @return:
         """
         # TODO change this so that if the element is a Node object,
         #   it returns node in node_pair
         #   otherwise, return if the property is in the property dict
-        if isinstance(node, Node):
-            return node in self.node_pair
-        return False
+        if isinstance(item, Node):
+            return item in self.node_pair
+        elif isinstance(item, str):
+            return super(Edge, self).__contains__(item)
+        raise KeyError('You can only query for Node or string properties.')
 
     def __iter__(self):
         """
