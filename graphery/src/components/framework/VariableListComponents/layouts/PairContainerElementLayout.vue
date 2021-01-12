@@ -7,7 +7,7 @@
             :init-object="{ repr: 'Empty Mapping' }"
           />
         </div>
-        <div id="content-row-container" class="column" v-else>
+        <div id="content-row-container" class="col" v-else>
           <div
             id="row-container"
             :key="index"
@@ -60,7 +60,7 @@
         return this.initElement[_REPR_HEADER];
       },
       isEmpty() {
-        return this.initElement[_REPR_HEADER].length === 0;
+        return this.pairElementArray[_REPR_HEADER].length === 0;
       },
     },
   };
