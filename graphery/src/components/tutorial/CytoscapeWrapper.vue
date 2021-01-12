@@ -335,8 +335,8 @@
         this.removeElementsClassName(bareClassName);
       },
       // toggle highlight interface
-      toggleHighlight(bareClassName, flag) {
-        this.toggleElementsClassName(bareClassName, flag);
+      toggleHighlight(ids, bareClassName, flag) {
+        this.toggleElementsByIds(ids, bareClassName, flag);
       },
       // highlight interface
       highlightByClassAndIds(className, elementIds, color) {

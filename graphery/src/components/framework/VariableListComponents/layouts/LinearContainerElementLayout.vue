@@ -12,6 +12,7 @@
             :init-object="arrayElement"
             :index="index"
             :key="index"
+            v-on="$listeners"
             v-for="(arrayElement, index) in arrayElements"
           />
         </div>

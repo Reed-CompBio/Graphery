@@ -107,9 +107,9 @@
           );
         }
       },
-      toggleHighlightsFromVarList(bareClass, flag) {
+      toggleHighlightsFromVarList(ids, bareClass, flag) {
         if (this.$refs.cytoscapeWrapper) {
-          this.$refs.cytoscapeWrapper?.toggleHighlight(bareClass, flag);
+          this.$refs.cytoscapeWrapper?.toggleHighlight(ids, bareClass, flag);
         }
       },
       viewUpdater(element, updateAccessed) {

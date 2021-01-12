@@ -15,9 +15,10 @@
           </div>
         </div>
         <div class="col" style="flex-wrap: nowrap;">
-          <div @click="emitToggleAction" class="row justify-center">
+          <div class="row justify-center">
             <div
               id="name-section"
+              :class="toggleStateClass"
               :style="{ 'background-color': elementColor }"
             >
               <code>
@@ -32,11 +33,11 @@
               <q-btn
                 flat
                 dense
+                :disable="isInitEle"
                 :size="btnSize"
                 icon="mdi-lightbulb-multiple"
-                disable
+                @click="emitToggleAction"
               >
-                <q-menu> </q-menu>
               </q-btn>
             </div>
             <div id="icon-section">
@@ -70,6 +71,12 @@
   } from '@/components/framework/VariableListComponents/variableListConstants';
   import SwitchTooltip from '@/components/framework/SwitchTooltip';
   import { successDialog } from '@/services/helpers';
+  import {
+    isInitElement,
+    isLinearContainerElement,
+    isPairContainerElement,
+    isSingularElement,
+  } from '@/components/framework/GraphEditorControls/ElementsUtils';
 
   export default {
     components: { SwitchTooltip },
@@ -88,6 +95,9 @@
       },
       initElementColor: {
         type: String,
+      },
+      initToggleState: {
+        type: Number,
       },
     },
     data() {
@@ -121,6 +131,31 @@
       elementIcon() {
         return _TYPE_ICON_ENUM[this.elementType] || _INIT_ICON;
       },
+      toggleState() {
+        return this.initToggleState;
+      },
+      isInitEle() {
+        return isInitElement(this.element);
+      },
+      toggleStateClass() {
+        if (
+          isSingularElement(this.element) ||
+          isLinearContainerElement(this.element)
+        ) {
+          return {
+            'toggle-on': Boolean(this.toggleState),
+            'toggle-off': Boolean(!this.toggleState),
+          };
+        } else if (isPairContainerElement(this.element)) {
+          return {
+            'toggle-key-on': this.toggleState === 1,
+            'toggle-value-on': this.toggleState === 2,
+            'toggle-off': this.toggleState === 3,
+          };
+        } else {
+          return ['toggle-off'];
+        }
+      },
     },
     methods: {
       emitBackAction() {
@@ -149,7 +184,8 @@
     opacity: .8
     text-overflow: ellipsis
     overflow: hidden
-
+    &.toggle-off
+      opacity: .2
     code
       text-wrap: normal
       transform: scaleX(0.9)

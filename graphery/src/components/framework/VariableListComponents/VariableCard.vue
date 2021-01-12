@@ -5,6 +5,7 @@
       :init-element-name.sync="currentVariableName"
       :init-element.sync="currentVariableObject"
       :init-element-color="rootVariableColor"
+      :init-toggle-state="toggleState"
       @popVariableStack="handlePopVariableStack"
       @toggleAction="handleToggleAction"
     ></VariableCardHeader>
@@ -16,6 +17,7 @@
       @highlight="emitHighlight"
       @toggle="emitToggleHighlight"
       @pushVariableStack="handlePushVariableStack"
+      @toggleStateChange="handleToggleStateChange"
       class="q-my-sm"
     ></VariableCardDisplay>
   </q-card>
@@ -46,6 +48,7 @@
         variableNameStack_: [],
         variableStack_: [],
         initVarColor_: null,
+        toggleState_: 1,
       };
     },
     computed: {
@@ -73,6 +76,9 @@
       rootVariableColor() {
         return this.rootVariable[_COLOR_HEADER];
       },
+      toggleState() {
+        return this.toggleState_;
+      },
     },
     methods: {
       resetVariableStacks() {
@@ -98,7 +104,13 @@
         this.variableNameStack_.push(name);
       },
       handleToggleAction() {
-        this.$refs.variableCardDisplay.toggleVar();
+        this.$refs.variableCardDisplay.toggleVar(this.toggleState);
+      },
+      handleToggleStateChange(toggleStateChange) {
+        this.toggleState_ = toggleStateChange;
+      },
+      resetToggleState() {
+        this.toggleState_ = 1;
       },
       emitClearHighlight(bareClassName) {
         this.$emit('clearHighlightFromVarList', bareClassName);
@@ -118,16 +130,16 @@
           this.rootVariableColor
         );
       },
-      emitToggleHighlight(elements, flag) {
+      emitToggleHighlight(ids, className, flag) {
         /**
          * if it's singular or linear container, just on and off
          * if it's pair container, key on, value on, off
          */
-        this.$emit('toggleHighlightFromVarList', elements, flag);
+        this.$emit('toggleHighlightFromVarList', ids, className, Boolean(flag));
       },
     },
     watch: {
-      rootVariable: function(newValue) {
+      rootVariable: function() {
         this.resetVariableStacks();
       },
     },
