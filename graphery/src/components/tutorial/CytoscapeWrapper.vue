@@ -311,8 +311,9 @@
             this.cyInstance
               .style()
               .resetToDefault()
-              .fromJson(json.style)
+              .fromJson(this.defaultGraphStyle)
               .update();
+            this.addStyle(json.style);
           }
           this.clearStoredClassNames();
         }
