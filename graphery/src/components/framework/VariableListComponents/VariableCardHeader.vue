@@ -12,6 +12,7 @@
               icon="mdi-backburger"
               @click="emitBackAction"
             />
+            <!-- TODO: Use predefined tooltip component-->
             <q-tooltip
               v-if="!showPreviousButton"
               anchor="top middle"
@@ -22,8 +23,13 @@
             </q-tooltip>
           </div>
         </div>
-        <div class="col" style="flex-wrap: nowrap;">
-          <div @click="emitToggleAction" class="row justify-center">
+
+        <div class="col">
+          <div
+            @click="emitToggleAction"
+            class="row no-wrap justify-center"
+            style="padding-top: 5px"
+          >
             <div
               id="name-section"
               :style="{ 'background-color': elementColor }"
@@ -34,6 +40,7 @@
             </div>
           </div>
         </div>
+
         <div id="right-section" class="col" style="flex-grow: 1;">
           <div class="row justify-end" style="flex-wrap: nowrap;">
             <div id="toggle-section">
@@ -150,17 +157,26 @@
 </script>
 
 <style scoped lang="sass">
+  #header-wrapper
+    flex-wrap: nowrap
   #name-section
     font-size: 17px
-    padding: .01rem .3rem
+    padding: .2rem .3rem
     border-radius: 2rem
     opacity: .8
     text-overflow: ellipsis
     overflow: hidden
 
     code
-      text-wrap: normal
+      //text-wrap: normal
       transform: scaleX(0.9)
   .header
     padding: 0 8px
+
+  .name-background
+    display: flex
+    justify-content: center
+    flex: initial
+    background-color: yellow
+    margin-top: -4px // cover full header height: VariableList.vue > .variable-card
 </style>
