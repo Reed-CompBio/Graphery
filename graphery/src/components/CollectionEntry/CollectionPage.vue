@@ -60,7 +60,7 @@
             id="content-list"
             :class="['col-8', $q.screen.lt.sm ? 'full-width' : '']"
           >
-            <div id="page-manager" class="flex flex-center">
+            <div id="page-manager-top" class="flex flex-center">
               <q-pagination
                 :max="paginationMax"
                 v-model="currentPage"
@@ -77,6 +77,7 @@
               >
               </q-pagination>
             </div>
+
             <div class="q-mx-sm q-mt-lg">
               <div
                 class="relative-position"
@@ -93,6 +94,7 @@
               >
                 <EmptyEntryCard />
               </div>
+
               <ArticleCard
                 v-for="info in displayedInfos"
                 :key="info.url"
@@ -102,6 +104,24 @@
                 @category-filter="addToCategoryFilter"
               ></ArticleCard>
               <!-- TODO why do you want to filter authors? -->
+            </div>
+            <div id="page-manager-down" class="flex flex-center">
+              <q-pagination
+                :max="paginationMax"
+                v-model="currentPage"
+                :max-pages="6"
+                ellipses
+                direction-links
+                boundary-links
+                boundary-numbers
+                class="q-mx-auto"
+                icon-first="mdi-chevron-double-left"
+                icon-last="mdi-chevron-double-right"
+                icon-prev="mdi-chevron-left"
+                icon-next="mdi-chevron-right"
+                @click="scrollToTop"
+              >
+              </q-pagination>
             </div>
           </div>
         </div>
@@ -199,6 +219,10 @@
         if (this.categoryIds.indexOf(categoryId) < 0) {
           this.categoryIds.push(categoryId);
         }
+      },
+      scrollToTop() {
+        window.scroll({ top: 0, behavior: 'smooth' });
+        // TODO: dont scroll on clicking the current page and disable buttons
       },
     },
     mounted() {
