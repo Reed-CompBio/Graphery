@@ -14,27 +14,25 @@
             class="row content-center"
             v-for="(pairElement, index) in pairElementArray"
           >
-            <div id="row-key-container" class="col q-mx-xs">
+            <div id="row-key-container" class="col q-mx-xs center-item">
               <VariableDisplayElementWrapper
                 v-on="$listeners"
                 :init-object="pairElement['key']"
                 :index="`[${index}]`"
               />
             </div>
-            <div
-              id="row-separator-wrapper"
-              class="col-1"
-              style="justify-content: center;"
-            >
+            <div id="row-separator-wrapper">
               <div id="row-separator">
-                :
+                <div>
+                  {{ pairSeparator }}
+                </div>
               </div>
             </div>
-            <div id="row-value-container" class="col q-mx-xs">
+            <div id="row-value-container" class="col q-mx-xs fit">
               <VariableDisplayElementWrapper
                 v-on="$listeners"
                 :init-object="pairElement['value']"
-                :index="`[${pairElement['key']['repr']}]`"
+                :index="`[${pairElement['key'][reprHeader]}]`"
               />
             </div>
           </div>
@@ -55,6 +53,12 @@
         type: Object,
       },
     },
+    data() {
+      return {
+        pairSeparator: ':',
+        reprHeader: _REPR_HEADER,
+      };
+    },
     computed: {
       pairElementArray() {
         return this.initElement[_REPR_HEADER];
@@ -67,6 +71,11 @@
 </script>
 
 <style lang="sass" scoped>
+  #row-separator-wrapper
+    display: flex
+    justify-content: center
+    align-items: center
+
   #row-separator
     padding: .15rem .3rem
     margin: auto

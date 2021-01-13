@@ -6,7 +6,7 @@ from wsgiref.simple_server import make_server
 from multiprocessing import Pool, TimeoutError
 
 from bundle.server_utils.params import TIMEOUT_SECONDS, ONLY_ACCEPTED_ORIGIN, ACCEPTED_ORIGIN, \
-    REQUEST_GRAPH_NAME, REQUEST_CODE_NAME, REQUEST_VERSION_NAME, VERSION
+    REQUEST_GRAPH_NAME, REQUEST_CODE_NAME, REQUEST_VERSION_NAME, VERSION, ENV_NAME_COLLECTION
 from bundle.server_utils.utils import create_error_response, create_data_response, execute, \
     ExecutionException, ExecutionServerException
 
@@ -24,9 +24,12 @@ def main(url: str, port: int) -> None:
         print(f'Server Ver: {VERSION}. Press <ctrl+c> to stop the server.')
         print(f'Ready for Python code on {url}:{port} ...')
         print(f'Time out is set to {TIMEOUT_SECONDS}s.')
-        print(f'The origin is `{ACCEPTED_ORIGIN}`. Accepting other other origins too: {not ONLY_ACCEPTED_ORIGIN}')
+        print(f'The origin is `{ACCEPTED_ORIGIN}`. Accepting other origins too: {not ONLY_ACCEPTED_ORIGIN}')
         print(f'Request graph name: `{REQUEST_GRAPH_NAME}`; request code name: `{REQUEST_CODE_NAME}`; '
               f'request version name: `{REQUEST_VERSION_NAME}`;')
+        print('env:')
+        for env_name in ENV_NAME_COLLECTION:
+            print(env_name)
         httpd.serve_forever()
 
 

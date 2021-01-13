@@ -115,7 +115,6 @@
   import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper';
   import SplitterSeparator from '@/components/framework/SplitterSeparator';
   import EditorControlUnit from '@/components/framework/EditorControlUnit';
-  import SwitchTooltip from '@/components/framework/SwitchTooltip';
 
   const defaultCodeOption = [
     {
@@ -140,7 +139,7 @@
       return { title: graphTitle };
     },
     components: {
-      SwitchTooltip,
+      SwitchTooltip: () => import('@/components/framework/SwitchTooltip'),
       GraphInfoPopup: () => import('@/components/framework/GraphInfoPopup'),
       EditorWrapper,
       CytoscapeWrapper,

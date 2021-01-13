@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="header">
-      <div id="header-wrapper" class="row q-my-xs justify-center">
-        <div id="back-button" class="col" style="flex-grow: 1;">
-          <div class="row" style="flex-wrap: nowrap; justify-content: left;">
+      <div id="header-wrapper" class="row q-my-xs justify-center no-wrap-row">
+        <div id="left-section">
+          <div class="row no-wrap-row">
             <q-btn
               :flat="!showPreviousButton"
               :outline="showPreviousButton"
@@ -33,9 +33,8 @@
             </div>
           </div>
         </div>
-
-        <div id="right-section" class="col" style="flex-grow: 1;">
-          <div class="row justify-end no-wrap">
+        <div id="right-section">
+          <div class="row justify-end no-wrap-row">
             <div id="toggle-section">
               <q-btn
                 :flat="isInitEle"
@@ -207,6 +206,22 @@
 </script>
 
 <style scoped lang="sass">
+  .no-wrap-row
+    flex-wrap: nowrap
+
+  #left-section
+    flex-grow: 1
+    display: flex
+    align-items: center
+    margin-right: 0.1rem
+
+  #right-section
+    flex-grow: 1
+    display: flex
+    justify-content: flex-end
+    align-items: center
+    margin-left: 0.1rem
+
   #name-section
     font-size: 17px
     padding: .15rem .3rem

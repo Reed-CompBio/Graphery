@@ -8,7 +8,6 @@
     <div v-else id="singular-display">
       {{ displayObjectContent }}
     </div>
-    <!--  TODO cursor type change   -->
   </q-card>
 </template>
 
@@ -56,6 +55,7 @@
     margin: 0.4rem 0
     & #singular-display
       text-wrap: normal
+      overflow: hidden
       border-radius: 0.4rem
       padding: .2rem .3rem
       border: 0.1rem solid #1D1D1D
