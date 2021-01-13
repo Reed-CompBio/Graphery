@@ -95,7 +95,7 @@
       },
       clearHighlightsElementsFromVarList(bareClassName) {
         if (this.$refs.cytoscapeWrapper) {
-          this.$refs.cytoscapeWrapper?.clearHighLightByClass(bareClassName);
+          this.$refs.cytoscapeWrapper.clearHighLightByClass(bareClassName);
         }
       },
       highlightElementsFromVarList(bareClassName, graphElementIds, color) {
@@ -109,7 +109,7 @@
       },
       toggleHighlightsFromVarList(ids, bareClass, flag) {
         if (this.$refs.cytoscapeWrapper) {
-          this.$refs.cytoscapeWrapper?.toggleHighlight(ids, bareClass, flag);
+          this.$refs.cytoscapeWrapper.toggleHighlight(ids, bareClass, flag);
         }
       },
       viewUpdater(element, updateAccessed) {
