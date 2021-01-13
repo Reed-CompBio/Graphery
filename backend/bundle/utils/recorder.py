@@ -291,10 +291,10 @@ class Recorder:
 
         if var_id in memory_trace:
             # leave a note on the object and then trace back
-            variable_type = self._REFERENCE_TYPE_STRING
+            variable_type: str = self._REFERENCE_TYPE_STRING
         else:
-            variable_type = self._search_type_string(variable_state)
-            memory_trace.add(id)
+            variable_type: str = self._search_type_string(variable_state)
+            memory_trace.add(var_id)
 
         state_mapping: MutableMapping = {
             self._TYPE_HEADER: variable_type,
