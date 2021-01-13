@@ -383,13 +383,15 @@ def test_recursive():
                                                      'type': 'Number'}],
                                            'type': 'List'}}},
               {'accesses': None, 'line': _anything, 'variables': None}]
-    with controller:
-        @tracer('a')
-        def t():
-            a = []
-            b = [1, 2, 3, a]
-            a.append(b)
-            a.append(4)
 
-        t()
-    assert controller.get_processed_result() == result
+    tracer.set_new_recorder(Recorder())
+    
+    @tracer('a')
+    def t():
+        a = []
+        b = [1, 2, 3, a]
+        a.append(b)
+        a.append(4)
+
+    t()
+    assert tracer.get_recorder().get_processed_change_list() == result
