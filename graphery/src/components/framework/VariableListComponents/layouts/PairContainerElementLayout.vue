@@ -18,7 +18,7 @@
               <VariableDisplayElementWrapper
                 v-on="$listeners"
                 :init-object="pairElement['key']"
-                :index="index"
+                :index="`[${index}]`"
               />
             </div>
             <div
@@ -34,7 +34,7 @@
               <VariableDisplayElementWrapper
                 v-on="$listeners"
                 :init-object="pairElement['value']"
-                :index="index"
+                :index="`[${pairElement['key']['repr']}]`"
               />
             </div>
           </div>

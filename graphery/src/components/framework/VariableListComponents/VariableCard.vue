@@ -2,7 +2,7 @@
   <q-card>
     <VariableCardHeader
       :has-previous="!isStackEmpty"
-      :init-element-name.sync="rootVariableName"
+      :init-element-name.sync="currentVariableName"
       :init-element.sync="currentVariableObject"
       :init-element-color="rootVariableColor"
       :init-toggle-state="toggleState"
