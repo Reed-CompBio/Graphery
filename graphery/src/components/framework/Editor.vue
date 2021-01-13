@@ -100,7 +100,11 @@
               }, 100)
             );
 
-            this.editor.onKeyUp(
+            this.editor.onKeyUp((__) => {
+              debounce((__) => {
+                this.clearDecoration();
+                this.$emit('editorUserTyped');
+              }, 20)();
               throttle((__) => {
                 if (this.isReadOnly) {
                   errorDialog(
@@ -112,8 +116,8 @@
                     3000
                   );
                 }
-              }, 1000)
-            );
+              }, 1000)();
+            });
             this.editor.onDidScrollChange(
               debounce((event) => {
                 this.$emit(
