@@ -1,5 +1,5 @@
 <template>
-  <q-header class="q-py-sm q-px-xs">
+  <q-header class="q-px-xs">
     <!--    TODO change the color in dark mode    -->
     <q-toolbar>
       <!-- TODO Make it clickable -->
@@ -14,12 +14,11 @@
         <!-- page buttons -->
         <q-btn
           flat
-          rounded
           v-for="button in buttons"
           :key="button.name"
           :to="{ name: button.name }"
           class="q-ml-sm"
-          size="20px"
+          size="16px"
           exact
         >
           {{ $t(`nav.${button.name}`) }}
