@@ -287,6 +287,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#more" class="md-nav__link">
+    More
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -480,6 +487,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#more" class="md-nav__link">
+    More
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -497,21 +511,43 @@
 <h2 id="introduction">Introduction</h2>
 <p>Local server is used to generate step by step debug info for the front end. Please check out <a href="/user-manual/utils/index.html">utils</a> before reading this. </p>
 <h2 id="install">Install</h2>
-<div class="codehilite"><pre><span></span><code>git clone https://github.com/FlickerSoul/Graphery.git
-<span class="nb">cd</span> Graphery/backend
-</code></pre></div>
-
+<ul>
+<li>
+<p>Go the <a href="https://github.com/FlickerSoul/Graphery/releases">release page</a>, and download the <code>user_server.zip</code> file. Extract everything in the zip file to a folder. </p>
+</li>
+<li>
+<p>Or you can clone the repository if the version is not available on the release page: 
+    <code>bash
+    git clone https://github.com/FlickerSoul/Graphery.git
+    cd Graphery/backend</code></p>
 <p>Under this director, you can see a <code>bundle</code> folder and a <code>user_server.py</code> file. Those two will be the only thing you need. You can copy them in to a separate folder and delete the rest. </p>
+</li>
+</ul>
 <h2 id="usage">Usage</h2>
-<p>Python 3.7 and above is required to run this server. Check you python version using the following command first. </p>
-<div class="codehilite"><pre><span></span><code>python --version
-</code></pre></div>
-
-<p>Then run under the folder which contains <code>bundle</code> and <code>user_server.py</code> </p>
-<div class="codehilite"><pre><span></span><code>python user_server.py
-</code></pre></div>
-
 <p>No dependencies required. </p>
+<ul>
+<li>
+<p>If you are a Unix user, please click on the <code>launch</code> file. If you are a Windows user, please click on the <code>launch.bat</code> file. </p>
+</li>
+<li>
+<p>You can also manually launch the server in a terminal if the script doesn't work. </p>
+<p>Python 3.7 and above is required to run this server. Check you python version using the following command first. </p>
+<p><code>bash 
+python --version</code></p>
+<p>Then run under the folder which contains <code>bundle</code> and <code>user_server.py</code> </p>
+<p><code>bash
+python user_server.py</code></p>
+</li>
+</ul>
+<h2 id="more">More</h2>
+<p>The execution log file are located in <code>~/.graphery_cache/log/graphery_controller_execution.log</code>. </p>
+<p>If you want the controller to output the log on the terminal, you can type the following shell command to your terminal: </p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span> <span class="nv">SEEKER_LOG_OUTPUT_FLAG</span><span class="o">=</span><span class="m">0</span>
+</code></pre></div>
+
+<p>If you also want to turn off the on-screen output, you also need the following shell command: </p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span> <span class="nv">SEEKER_DEFAULT_OUTPUT_FLAG</span><span class="o">=</span><span class="m">0</span>
+</code></pre></div>
                 
               
               
