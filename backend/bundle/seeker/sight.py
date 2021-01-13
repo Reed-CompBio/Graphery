@@ -168,8 +168,8 @@ class Tracer:
     _logger: logging.Logger = None
 
     def __init__(self, *watch_list,
-                 default_output: bool = using_log_output,
-                 log_output: bool = using_default_output,
+                 default_output: bool = using_default_output,
+                 log_output: bool = using_log_output,
                  output: Union[str, Callable, utils.WritableStream, StringIO] = None,
                  watch=(), watch_explode=(), depth: int = 1, prefix: str = '', overwrite: bool = False,
                  thread_info: bool = False, custom_repr=(), max_variable_length: int = 100,
