@@ -154,6 +154,9 @@
           this.$refs.editorControlUnit.setPositionValueCopyFromJsonPos(pos);
           this.stepper(pos, pos);
         }
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper.restoreStyles();
+        }
       },
       resetContent() {
         const newPosition = this.getResultJsonPositionFromId(

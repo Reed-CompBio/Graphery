@@ -68,6 +68,9 @@
         });
       },
       clearStoredClassNames() {
+        for (const className of this.storedClassNames_) {
+          this.removeElementsClassName(className);
+        }
         this.storedClassNames_ = [];
       },
       addStyle(styleJsonObject) {
