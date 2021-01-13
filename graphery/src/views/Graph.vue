@@ -50,6 +50,16 @@
                 </template>
               </q-select>
             </div>
+            <div id="graph-info-toggle" class="q-ml-md">
+              <q-btn
+                dense
+                outline
+                size="md"
+                icon="mdi-book-information-variant"
+                @click="graphInfoPopupShow = true"
+              ></q-btn>
+              <SwitchTooltip :text="$t('graph.Show Graph Info')" />
+            </div>
           </q-bar>
           <EditorControlUnit
             ref="editorControlUnit"
@@ -105,6 +115,7 @@
   import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper';
   import SplitterSeparator from '@/components/framework/SplitterSeparator';
   import EditorControlUnit from '@/components/framework/EditorControlUnit';
+  import SwitchTooltip from '@/components/framework/SwitchTooltip';
 
   const defaultCodeOption = [
     {
@@ -129,6 +140,7 @@
       return { title: graphTitle };
     },
     components: {
+      SwitchTooltip,
       GraphInfoPopup: () => import('@/components/framework/GraphInfoPopup'),
       EditorWrapper,
       CytoscapeWrapper,
