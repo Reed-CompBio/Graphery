@@ -155,11 +155,10 @@
         for (const tag of this.$refs.markdownMountingPoint.getElementsByTagName(
           'img'
         )) {
-          console.log(tag);
           tag.addEventListener('click', (event) => {
             this.$emit('pictureZoomRequest', event.target.getAttribute('src'));
           });
-          tag.classList.add('picture-zoom-ready');
+          // tag.classList.add('picture-zoom-ready');
         }
       },
       postRenderProcessing() {
