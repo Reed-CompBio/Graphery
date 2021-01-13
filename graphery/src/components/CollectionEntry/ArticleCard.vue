@@ -65,7 +65,9 @@
           <q-btn
             flat
             class="q-mt-sm"
-            :to="info.url"
+            type="a"
+            target="__blank"
+            :href="info.url"
             :disable="noContentNoClick"
           >
             {{ moreButtonText }}
