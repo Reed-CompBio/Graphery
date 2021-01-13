@@ -76,7 +76,7 @@ def time_out_execute(*args, **kwargs) -> Mapping:
                 exec_info = e.related_exec_info[-1]
                 response_dict = create_error_response(f'{e}\n' +
                                                       'At line {}: `{}`\n'
-                                                      'In function {}'.format(*exec_info))
+                                                      'in {}'.format(*exec_info))
         except ExecutionServerException as e:
             response_dict = create_error_response(f'Server Exception: {e}')
         except Exception as e:

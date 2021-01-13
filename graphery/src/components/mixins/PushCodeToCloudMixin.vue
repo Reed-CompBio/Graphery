@@ -61,7 +61,7 @@
         clearTimeout(this.timer);
         errorDialog(
           {
-            message: `Executed is stopped unexpectedly. ${data.errors[0].message}`,
+            message: `Error: ${data.errors[0].message}`,
           },
           0
         );

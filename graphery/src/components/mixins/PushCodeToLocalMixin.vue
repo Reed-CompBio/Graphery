@@ -48,7 +48,7 @@
           .catch((err) => {
             errorDialog(
               {
-                message: 'An error occurs when talking to local server. ' + err,
+                message: 'Error: ' + err,
               },
               0
             );
