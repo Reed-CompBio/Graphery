@@ -164,11 +164,12 @@ class EdgeSet(ElementSet):
                 raise GraphJsonFormatError(f'invalid format for Edge {edge}')
 
             data_field = edge['data']
+            id_str = data_field['id']
 
             if all_has_name:
                 name = data_field['name']
             else:
-                name = data_field['id']
+                name = id_str
 
             if not ('source' in data_field and 'target' in data_field):
                 raise GraphJsonFormatError(f'The edge {edge} entry must contain `source` and `target` fields')
@@ -180,6 +181,7 @@ class EdgeSet(ElementSet):
                                    source_node,
                                    target_node
                                ))
+            stored_edge.cy_id = id_str
             if 'displayed' in data_field:
                 stored_edge.update_properties(data_field['displayed'])
 

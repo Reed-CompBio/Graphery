@@ -45,11 +45,6 @@
         type: Boolean,
       },
     },
-    model: {
-      prop: 'dialogModel',
-      model: 'dialogModelChange',
-      // don't know why this doesn't work
-    },
     computed: {
       popupModel: {
         set(d) {
