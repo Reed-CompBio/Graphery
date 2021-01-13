@@ -103,6 +103,9 @@
     "Show Graph Info": "Show Graph Info",
     "No Result": "No Result"
   },
+  "article": {
+    "Figure": "Figure"
+  },
   "variable": {
     "Toggle Graph Highlights": "Toggle Graph Highlights",
     "Go Back": "Go Back",

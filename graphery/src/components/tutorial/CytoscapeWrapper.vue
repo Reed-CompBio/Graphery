@@ -86,6 +86,7 @@
   let fcose;
   let Tippy;
   let popper;
+  let lasso;
 
   import { graphMenuHeaderSize } from '@/store/states/meta';
   import { mapState, mapGetters } from 'vuex';
@@ -235,6 +236,16 @@
                 this.setupTooltips(this.cyInstance);
               });
           });
+
+        import('cytoscape-lasso').then((ls) => {
+          console.debug('cytoscape lasso module', ls);
+
+          lasso = ls.default;
+          cytoscape.use(lasso);
+          this.cyInstance.lassoSelectionEnabled(true);
+
+          this.moduleLoad();
+        });
       },
       makeTippy(node, text) {
         const ref = node.popperRef();

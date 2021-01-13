@@ -61,6 +61,7 @@
   import JsonCreation from './JsonCreation';
   import NoCodeTutorialSelection from '../parts/selectors/NoCodeTutorialSelection';
   import InfoCard from '@/components/ControlPanel/parts/cards/InfoCard';
+  import { debounce } from 'quasar';
 
   export default {
     mixins: [loadingMixin, pushToMixin, leaveConfirmMixin],
@@ -105,11 +106,14 @@
               theme: this.dark ? 'vs-dark' : 'vs',
               language: 'python',
             });
+            return this.editor;
           })
-          .then(() => {
-            this.editor.getModel().onDidChangeContent((_) => {
-              this.codeObject.code = this.editor.getValue();
-            });
+          .then((editor) => {
+            editor.getModel().onDidChangeContent(
+              debounce((_) => {
+                this.codeObject.code = this.editor.getValue();
+              }, 30)
+            );
             this.initCode();
           })
           .catch((err) => {
@@ -181,8 +185,10 @@
       },
     },
     mounted() {
-      this.initCodeEditor();
-      this.fetchCode();
+      this.$nextTick(() => {
+        this.initCodeEditor();
+        this.fetchCode();
+      });
     },
     beforeDestroy() {
       if (this.editor) {

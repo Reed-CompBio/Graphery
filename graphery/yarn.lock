@@ -3746,6 +3746,13 @@ cytoscape-fcose@^1.2.3:
   dependencies:
     cose-base "^1.0.0"
 
+cytoscape-lasso@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/cytoscape-lasso/-/cytoscape-lasso-1.1.4.tgz#fdf87de62c81a8d33a856c82428445abe5b655bc"
+  integrity sha512-c0OAm1586wPhIPVeH8teIUJTNgjojagilO0p7T0SABeTor7wmpjqaxmBhR+1QnQ3uQ1yUchPoEeNzlzqR2WM8Q==
+  dependencies:
+    point-in-polygon "^1.0.1"
+
 cytoscape-panzoom@^2.5.3:
   version "2.5.3"
   resolved "https://registry.yarnpkg.com/cytoscape-panzoom/-/cytoscape-panzoom-2.5.3.tgz#edf041b5aa8be1cbe3c001f16a8b2193b46127a7"
@@ -8363,6 +8370,11 @@ pnp-webpack-plugin@^1.6.4:
   dependencies:
     ts-pnp "^1.1.6"
 
+point-in-polygon@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/point-in-polygon/-/point-in-polygon-1.0.1.tgz#d59b64e8fee41c49458aac82b56718c5957b2af7"
+  integrity sha1-1Ztk6P7kHElFiqyCtWcYxZV7Kvc=
+
 popper.js@^1.0.0, popper.js@^1.16.0:
   version "1.16.1"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
@@ -10985,6 +10997,11 @@ vue-template-es2015-compiler@^1.6.0, vue-template-es2015-compiler@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
+
+vue-zoomer@^0.3.9:
+  version "0.3.9"
+  resolved "https://registry.yarnpkg.com/vue-zoomer/-/vue-zoomer-0.3.9.tgz#bedd08983def6f0e355a5571dd748b5522eb2668"
+  integrity sha512-WGIkwL/Rq//f3KQaAY0HEXVgr1OlDjabGL7wM21koHiFOFO233jsJtGEKovc32CQu2JW5dYAn0SBzmzgeZHXHQ==
 
 vue@^2.6.11, vue@^2.6.12:
   version "2.6.12"
