@@ -9,11 +9,11 @@ Local server is used to generate step by step debug info for the front end.
     
  -  Or you can clone the repository if the version is not available on the release page: 
     
-    ```bash
+    ```
     git clone https://github.com/FlickerSoul/Graphery.git && cd Graphery/backend
     ```
 
-    Under this director, you can see a `bundle` folder and a `user_server.py` file, as well as `launch` and `launch.bat` files. Those two will be the only thing you need. You can copy them in to a separate folder and delete the rest. 
+    Under this director, you can see a `bundle` folder and a `user_server.py` file, as well as `launch` and `launch.bat` files. Those four files will be the only thing you need. You can copy them in to a separate folder and delete the rest. 
 
 ## Usage 
 
@@ -28,13 +28,9 @@ python --version
 
 -   If you are a Unix user, please click on the `launch` file. If you are a Windows user, please click on the `launch.bat` file. 
 
--   You can also manually launch the server in a terminal if the script doesn't work. 
+-   You can also manually launch the server in a terminal if the `launch` script doesn't work. 
 
-    Then run under the folder which contains `bundle` and `user_server.py` 
-
-    ```bash
-    python user_server.py
-    ```
+    Then `cd` to the folder which contains `bundle` and `user_server.py` and execute `python user_server.py`
 
 ## More
 
