@@ -32,6 +32,8 @@
     _COLOR_HEADER,
     _LABEL_HEADER,
     _PYTHON_ID_HEADER,
+    _REFERENCE_TYPE_STRING,
+    _TYPE_HEADER,
     BAD_REFERENCE_OBJECT,
   } from '@/components/framework/VariableListComponents/variableListConstants';
   import { revertNameCombo } from '@/components/framework/GraphEditorControls/ElementsUtils';
@@ -97,16 +99,18 @@
         }
       },
       handlePushVariableStack(name, element) {
-        if (typeof element === 'string' || element instanceof String) {
-          for (let i = this.variableStack_.length - 1; i >= 0; i--) {
-            if (element === this.variableStack_[i][_PYTHON_ID_HEADER]) {
-              element = this.variableStack_[i];
+        if (element[_TYPE_HEADER] === _REFERENCE_TYPE_STRING) {
+          const elePyId = element[_PYTHON_ID_HEADER];
+          for (let i = this.variableStack.length - 1; i >= 0; i--) {
+            if (elePyId === this.variableStack[i][_PYTHON_ID_HEADER]) {
+              console.log(this.variableStack[i]);
+              element = this.variableStack[i];
               break;
             }
           }
-        }
-        if (typeof element === 'string' || element instanceof String) {
-          element = BAD_REFERENCE_OBJECT;
+          if (element[_TYPE_HEADER] === _REFERENCE_TYPE_STRING) {
+            element = BAD_REFERENCE_OBJECT;
+          }
         }
         this.variableStack_.push(element);
         this.variableNameStack_.push(name);

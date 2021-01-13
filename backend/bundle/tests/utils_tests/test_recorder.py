@@ -7,9 +7,11 @@ from collections.abc import Mapping, Set
 
 import pytest
 
+from bundle.seeker import tracer
 from bundle.GraphObjects.Edge import Edge
 from bundle.GraphObjects.Node import Node
 from bundle.utils.recorder import Recorder, identifier_to_string, IDENTIFIER_SEPARATOR
+from bundle.controller import controller
 
 
 @pytest.fixture()
@@ -336,3 +338,58 @@ def test_json_dump(empty_recorder):
 
     assert json.loads(empty_recorder.get_change_list_json()) == result_string
     # print(empty_recorder.get_change_list_json())
+
+
+def test_recursive():
+    result = [{'accesses': None,
+               'line': _anything,
+               'variables': {'t\u200b@a': {'color': '#A6CEE3',
+                                           'repr': None,
+                                           'type': 'init'}}},
+              {'accesses': None, 'line': _anything, 'variables': None},
+              {'accesses': None,
+               'line': _anything,
+               'variables': {'t\u200b@a': {'color': '#A6CEE3',
+                                           'python_id': _anything,
+                                           'repr': [],
+                                           'type': 'List'}}},
+              {'accesses': None, 'line': _anything, 'variables': None},
+              {'accesses': None,
+               'line': _anything,
+               'variables': {'t\u200b@a': {'color': '#A6CEE3',
+                                           'python_id': _anything,
+                                           'repr': [{'color': '#828282',
+                                                     'python_id': _anything,
+                                                     'repr': [{'color': '#828282',
+                                                               'python_id': _anything,
+                                                               'repr': '1',
+                                                               'type': 'Number'},
+                                                              {'color': '#828282',
+                                                               'python_id': _anything,
+                                                               'repr': '2',
+                                                               'type': 'Number'},
+                                                              {'color': '#828282',
+                                                               'python_id': _anything,
+                                                               'repr': '3',
+                                                               'type': 'Number'},
+                                                              {'color': '#828282',
+                                                               'python_id': _anything,
+                                                               'repr': None,
+                                                               'type': 'reference'}],
+                                                     'type': 'List'},
+                                                    {'color': '#828282',
+                                                     'python_id': _anything,
+                                                     'repr': '4',
+                                                     'type': 'Number'}],
+                                           'type': 'List'}}},
+              {'accesses': None, 'line': _anything, 'variables': None}]
+    with controller:
+        @tracer('a')
+        def t():
+            a = []
+            b = [1, 2, 3, a]
+            a.append(b)
+            a.append(4)
+
+        t()
+    assert controller.get_processed_result() == result

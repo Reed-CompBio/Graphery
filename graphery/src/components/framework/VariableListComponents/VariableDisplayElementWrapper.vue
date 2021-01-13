@@ -1,6 +1,6 @@
 <template>
   <q-card flat id="display-element-wrapper">
-    <div v-if="isContainer" id="container-abbr">
+    <div v-if="showAbbr" id="container-abbr">
       <q-btn outline dense :label="containerAbbr" @click="handleContainerClick">
         <SwitchTooltip :text="$t('variable.Expand Element')" />
       </q-btn>
@@ -13,7 +13,11 @@
 </template>
 
 <script>
-  import { _REPR_HEADER } from '@/components/framework/VariableListComponents/variableListConstants';
+  import {
+    _REFERENCE_TYPE_STRING,
+    _REPR_HEADER,
+    _TYPE_HEADER,
+  } from '@/components/framework/VariableListComponents/variableListConstants';
   import SwitchTooltip from '@/components/framework/SwitchTooltip';
 
   export default {
@@ -26,8 +30,12 @@
       displayObjectContent() {
         return this.displayObject[_REPR_HEADER];
       },
-      isContainer() {
-        return Array.isArray(this.displayObjectContent);
+      showAbbr() {
+        return (
+          Array.isArray(this.displayObjectContent) ||
+          (this.initObject[_TYPE_HEADER] === _REFERENCE_TYPE_STRING &&
+            this.displayObjectContent === null)
+        );
       },
     },
     data() {
