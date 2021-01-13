@@ -70,7 +70,16 @@
                   $emit('breakpointClicked', position);
                 }
               "
-            ></MarkdownSection>
+              @pictureZoomRequest="setRequestPictureIndex"
+              @updatePictureSrcList="changePictureList"
+            />
+            <MarkdownPictureDisplay
+              :photo-list="currentPictureList"
+              :photo-index="currentPictureIndex"
+              :display="currentDisplayState"
+              @pictureDisplayChange="changeDisplayState"
+              @pictureIndexUpdate="changeCurrentPictureIndex"
+            />
           </div>
 
           <LicenseCard></LicenseCard>
@@ -124,13 +133,17 @@
     successDialog,
   } from '@/services/helpers';
   import MarkdownSection from '@/components/framework/md/MarkdownSection';
+  import PictureDisplayMixin from '@/components/framework/md/PictureDisplayMixin';
 
   export default {
+    mixins: [PictureDisplayMixin],
     metaInfo() {
       const articleTitle = this.headerTitle;
       return { title: articleTitle };
     },
     components: {
+      MarkdownPictureDisplay: () =>
+        import('@/components/framework/md/MarkdownPictureDisplay'),
       MarkdownSection,
       SwitchTooltip: () => import('@/components/framework/SwitchTooltip.vue'),
       LicenseCard: () => import('@/components/framework/LicenseCard.vue'),

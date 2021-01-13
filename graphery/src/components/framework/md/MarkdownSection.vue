@@ -152,14 +152,19 @@
         }
       },
       processPictureZoom() {
+        const picList = [];
         for (const tag of this.$refs.markdownMountingPoint.getElementsByTagName(
           'img'
         )) {
+          picList.push(tag.getAttribute('src'));
+
           tag.addEventListener('click', (event) => {
             this.$emit('pictureZoomRequest', event.target.getAttribute('src'));
           });
-          // tag.classList.add('picture-zoom-ready');
+
+          tag.classList.add('picture-zoom-ready');
         }
+        this.$emit('updatePictureSrcList', picList);
       },
       postRenderProcessing() {
         this.$nextTick(() => {
