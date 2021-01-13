@@ -8,7 +8,7 @@ from multiprocessing import Pool, TimeoutError
 from bundle.server_utils.params import TIMEOUT_SECONDS, ONLY_ACCEPTED_ORIGIN, ACCEPTED_ORIGIN, \
     REQUEST_GRAPH_NAME, REQUEST_CODE_NAME, REQUEST_VERSION_NAME, VERSION
 from bundle.server_utils.utils import create_error_response, create_data_response, execute, \
-    ExecutionException
+    ExecutionException, ExecutionServerException
 
 
 class StringEncoder(json.JSONEncoder):
@@ -70,7 +70,15 @@ def time_out_execute(*args, **kwargs) -> Mapping:
         except TimeoutError:
             response_dict = create_error_response(f'Timeout: Code running timed out after {TIMEOUT_SECONDS}s.')
         except ExecutionException as e:
-            response_dict = create_error_response(f'Exception: {e}.')
+            if e.empty:
+                response_dict = create_error_response('Unknown Exception')
+            else:
+                exec_info = e.related_exec_info[-1]
+                response_dict = create_error_response(f'{e}\n' +
+                                                      'At line {}: `{}`\n'
+                                                      'In function {}'.format(*exec_info))
+        except ExecutionServerException as e:
+            response_dict = create_error_response(f'Server Exception: {e}')
         except Exception as e:
             response_dict = create_error_response(f'Unknown Exception: {e}.')
 

@@ -46,9 +46,12 @@
             // TODO use it to pass the actual content
           })
           .catch((err) => {
-            errorDialog({
-              message: 'An error occurs when talking to local server. ' + err,
-            });
+            errorDialog(
+              {
+                message: 'An error occurs when talking to local server. ' + err,
+              },
+              0
+            );
           })
           .finally(() => {
             this.finishedExecutingLocally();

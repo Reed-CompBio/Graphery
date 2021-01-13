@@ -59,9 +59,12 @@
       },
       onStopped(data) {
         clearTimeout(this.timer);
-        errorDialog({
-          message: `Executed is stopped unexpectedly. ${data.errors[0].message}`,
-        });
+        errorDialog(
+          {
+            message: `Executed is stopped unexpectedly. ${data.errors[0].message}`,
+          },
+          0
+        );
         this.finishedCloudExecution();
       },
       onWebsocketError() {
