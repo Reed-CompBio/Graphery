@@ -1,6 +1,9 @@
 from __future__ import annotations
+
+import warnings
+
 from .Base import Comparable, HasProperty, Stylable, ElementSet
-from typing import Iterable, Mapping, Union
+from typing import Iterable, Mapping, Union, Tuple
 
 from .Errors import GraphJsonFormatError
 
@@ -26,13 +29,13 @@ class Node(Comparable, HasProperty, Stylable):
         )
 
     def __str__(self):
-        return 'Node(id: %s)' % self.identity
+        return 'Node(%s)' % self.identity
 
     def __repr__(self):
         return self.__str__()
 
     @staticmethod
-    def return_node(identity: Union[str, 'Node'], styles: Iterable[Mapping] = (), classes: Iterable[str] = ()):
+    def return_node(identity: Union[str, Node], styles: Iterable[Mapping] = (), classes: Iterable[str] = ()):
         if isinstance(identity, str):
             return Node(identity=identity, styles=styles, classes=classes)
         elif isinstance(identity, Node):
@@ -50,22 +53,36 @@ class NodeSet(ElementSet):
         super(NodeSet, self).__init__(nodes, Node)
 
     @staticmethod
-    def generate_node_set(nodes: Iterable[Mapping]) -> 'NodeSet':
-        stored_nodes = []
+    def generate_node_set(nodes: Iterable[Mapping]) -> Tuple[NodeSet, Mapping]:
+        stored_nodes = {}
+        all_has_id = all('id' in edge['data'] for edge in nodes)
+        all_has_name = all('name' in edge['data'] for edge in nodes)
+
+        if not (all_has_id or all_has_name) or (all_has_name and not all_has_id):
+            raise GraphJsonFormatError('All Node entry must contain `name` and `id` fields or only `id` fields.')
+
         for node in nodes:
             if not (isinstance(node, Mapping) and 'data' in node):
                 raise GraphJsonFormatError(f'invalid format for Node {node}')
 
             data_field = node['data']
-            if not ('id' in data_field):
-                raise GraphJsonFormatError(f'The node {node} entry must contain a `id` field')
+            if all_has_name:
+                name = data_field['name']
+                id_str = data_field['id']
+            else:
+                name = id_str = data_field['id']
 
-            stored_node = Node(data_field['id'])
+            stored_node = Node(name)
+
             if 'displayed' in data_field:
                 stored_node.update_properties(data_field['displayed'])
-            stored_nodes.append(stored_node)
 
-        return NodeSet(stored_nodes)
+            if name in stored_nodes:
+                warnings.warn('Detected Duplicated Node in the graph.')
+
+            stored_nodes[id_str] = stored_node
+
+        return NodeSet(stored_nodes.values()), stored_nodes
 
 
 class MutableNodeSet(NodeSet):

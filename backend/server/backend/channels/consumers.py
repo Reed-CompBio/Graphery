@@ -66,7 +66,7 @@ class RequestConsumer(JsonWebsocketConsumer):
             raise UnknownRequestType('Invalid instruction')
 
         content_handler = getattr(self, instruction)
-        content_handler(content)
+        content_handler(content, **kwargs)
 
     def after_parsing_request(self, content: Mapping, **kwargs):
         pass
@@ -90,7 +90,8 @@ class RequestConsumer(JsonWebsocketConsumer):
         if get_time_stamp() - time_stamp > TIME_STAMP_DIFF:
             raise RequestDataInvalid('Time stamp is invalid')
 
-    def enqueue(self, content: Mapping, **kwargs) -> None:
+    def enqueue(self, content: Mapping) -> None:
+        """Request Handler"""
         self.request_data = content['data']
         self.validate_request_data(self.request_data)
         self.send_json(generate_respond_message(
@@ -108,14 +109,14 @@ class RequestConsumer(JsonWebsocketConsumer):
         ))
 
     def executed(self, response_mapping: Mapping) -> None:
-        execution_logger.info(f'code (hash: {response_mapping["data"]["codeHash"]}) '
-                              f'provided by {self} consumer is executed.')
         if 'errors' in response_mapping:
             self.send_json(generate_respond_message(
                 response_type=ResponseType.STOPPED.value,
                 response_mapping=response_mapping
             ))
         else:
+            execution_logger.info(f'code (hash: {response_mapping["data"]["codeHash"]}) '
+                                  f'provided by {self} consumer is executed.')
             self.send_json(generate_respond_message(
                 response_type=ResponseType.EXECUTED.value,
                 response_mapping={**response_mapping, 'timeStamp': self.request_data.get(TIME_STAMP_INTERFACE_NAME)}

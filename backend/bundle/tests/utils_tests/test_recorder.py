@@ -1,16 +1,17 @@
 import json
 from collections import deque
 from numbers import Number
-from textwrap import dedent
-from typing import List, Tuple, Deque, Sequence
+from typing import List, Tuple, Deque, Sequence, Any
 from collections import Counter
 from collections.abc import Mapping, Set
 
 import pytest
 
+from bundle.seeker import tracer
 from bundle.GraphObjects.Edge import Edge
 from bundle.GraphObjects.Node import Node
 from bundle.utils.recorder import Recorder, identifier_to_string, IDENTIFIER_SEPARATOR
+from bundle.controller import controller
 
 
 @pytest.fixture()
@@ -102,9 +103,13 @@ def test_process_variable_state(empty_recorder):
 def test_generating_changes(empty_recorder):
     first_line_no = 1
     empty_recorder.add_record(first_line_no)
+
     change_list = empty_recorder.get_change_list()
+
     assert len(change_list) == 1
+
     first_change = change_list[0]
+
     assert first_change[empty_recorder._LINE_HEADER] == first_line_no
     assert first_change[empty_recorder._VARIABLE_HEADER] is None
     assert first_change[empty_recorder._ACCESS_HEADER] is None
@@ -119,7 +124,7 @@ def test_generating_changes(empty_recorder):
 
     assert first_change[empty_recorder._VARIABLE_HEADER] is not None
     assert first_change[empty_recorder._VARIABLE_HEADER][first_var_id_string][
-               empty_recorder._REPR_HEADER] == empty_recorder.custom_repr(first_var_value, target_type)
+               empty_recorder._REPR_HEADER] == empty_recorder.custom_repr(first_var_value, target_type, set())
     assert first_change[empty_recorder._VARIABLE_HEADER][first_var_id_string][
                empty_recorder._TYPE_HEADER] == target_type
 
@@ -130,58 +135,148 @@ def test_generating_changes(empty_recorder):
     target_type = empty_recorder._TYPE_MAPPING[Node]
     assert first_change[empty_recorder._ACCESS_HEADER] is not None
     assert first_change[empty_recorder._ACCESS_HEADER][0][empty_recorder._REPR_HEADER] == empty_recorder.custom_repr(
-        accessed_var_value, target_type)
+        accessed_var_value, target_type, set())
     assert first_change[empty_recorder._ACCESS_HEADER][0][empty_recorder._TYPE_HEADER] == target_type
 
     default_start = empty_recorder.get_processed_change_list()[0]
     assert default_start[empty_recorder._LINE_HEADER] == 0
     assert all(item[empty_recorder._TYPE_HEADER] == empty_recorder._INIT_TYPE_STRING and
                item[empty_recorder._REPR_HEADER] is None and
-               item[empty_recorder._COLOR_HEADER] is None
+               item[empty_recorder._COLOR_HEADER] is not None
                for item in default_start[empty_recorder._VARIABLE_HEADER].values())
+
+
+class _Any:
+    def __init__(self, v: Any = object):
+        self.value = v
+
+    def __eq__(self, other):
+        if self.value == object:
+            return True
+        elif isinstance(other, _Any):
+            return self.value == other.value
+        else:
+            return self.value == other
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+
+_anything = _Any()
 
 
 def test_json_dump(empty_recorder):
     result_string = [{'accesses': None,
                       'line': 0,
-                      'variables': {'main\u200b@var_1': {'color': None,
+                      'variables': {'main\u200b@var_1': {'color': '#A6CEE3',
                                                          'repr': None,
                                                          'type': 'init'},
-                                    'main\u200b@var_2': {'color': None,
+                                    'main\u200b@var_2': {'color': '#1F78B4',
                                                          'repr': None,
                                                          'type': 'init'},
-                                    'main\u200b@var_3': {'color': None,
+                                    'main\u200b@var_3': {'color': '#B2DF8A',
                                                          'repr': None,
                                                          'type': 'init'},
-                                    'main\u200b@var_4': {'color': None,
+                                    'main\u200b@var_4': {'color': '#33A02C',
                                                          'repr': None,
                                                          'type': 'init'}}},
                      {'accesses': [{'color': '#B15928',
-                                    'id': '1',
-                                    'properties': '{}',
-                                    'repr': 'Node(id: 1)',
+                                    'id': _anything,
+                                    'properties': {'color': '#828282',
+                                                   'python_id': _anything,
+                                                   'repr': [],
+                                                   'type': 'Mapping'},
+                                    'python_id': _anything,
+                                    'repr': 'Node(1)',
                                     'type': 'Node'}],
                       'line': 1,
-                      'variables': {'main\u200b@var_1': {'repr': '1', 'type': 'Number'},
+                      'variables': {'main\u200b@var_1': {'color': '#A6CEE3',
+                                                         'python_id': _anything,
+                                                         'repr': '1',
+                                                         'type': 'Number'},
                                     'main\u200b@var_2': {'color': '#1F78B4',
-                                                         'id': '1',
-                                                         'properties': '{}',
-                                                         'repr': 'Node(id: 1)',
+                                                         'id': _anything,
+                                                         'properties': {'color': '#828282',
+                                                                        'python_id': _anything,
+                                                                        'repr': [],
+                                                                        'type': 'Mapping'},
+                                                         'python_id': _anything,
+                                                         'repr': 'Node(1)',
                                                          'type': 'Node'},
-                                    'main\u200b@var_3': {'color': None,
+                                    'main\u200b@var_3': {'color': '#B2DF8A',
                                                          'repr': None,
                                                          'type': 'init'},
-                                    'main\u200b@var_4': {'repr': 'None', 'type': 'None'}}},
-                     {'accesses': [{'repr': '{1: {2: 3, 4: 5}, (6, 7, 8): 9}', 'type': 'Mapping'}],
+                                    'main\u200b@var_4': {'color': '#33A02C',
+                                                         'python_id': _anything,
+                                                         'repr': 'None',
+                                                         'type': 'None'}}},
+                     {'accesses': [{'color': '#B15928',
+                                    'python_id': _anything,
+                                    'repr': [{'key': {'color': '#828282',
+                                                      'python_id': _anything,
+                                                      'repr': '1',
+                                                      'type': 'Number'},
+                                              'value': {'color': '#828282',
+                                                        'python_id': _anything,
+                                                        'repr': [{'key': {'color': '#828282',
+                                                                          'python_id': _anything,
+                                                                          'repr': '2',
+                                                                          'type': 'Number'},
+                                                                  'value': {'color': '#828282',
+                                                                            'python_id': _anything,
+                                                                            'repr': '3',
+                                                                            'type': 'Number'}},
+                                                                 {'key': {'color': '#828282',
+                                                                          'python_id': _anything,
+                                                                          'repr': '4',
+                                                                          'type': 'Number'},
+                                                                  'value': {'color': '#828282',
+                                                                            'python_id': _anything,
+                                                                            'repr': '5',
+                                                                            'type': 'Number'}}],
+                                                        'type': 'Mapping'}},
+                                             {'key': {'color': '#828282',
+                                                      'python_id': _anything,
+                                                      'repr': [{'color': '#828282',
+                                                                'python_id': _anything,
+                                                                'repr': '6',
+                                                                'type': 'Number'},
+                                                               {'color': '#828282',
+                                                                'python_id': _anything,
+                                                                'repr': '7',
+                                                                'type': 'Number'},
+                                                               {'color': '#828282',
+                                                                'python_id': _anything,
+                                                                'repr': '8',
+                                                                'type': 'Number'}],
+                                                      'type': 'Tuple'},
+                                              'value': {'color': '#828282',
+                                                        'python_id': _anything,
+                                                        'repr': '9',
+                                                        'type': 'Number'}}],
+                                    'type': 'Mapping'}],
                       'line': 2,
-                      'variables': {'main\u200b@var_1': {'repr': '1', 'type': 'Number'},
+                      'variables': {'main\u200b@var_1': {'color': '#A6CEE3',
+                                                         'python_id': _anything,
+                                                         'repr': '1',
+                                                         'type': 'Number'},
                                     'main\u200b@var_2': {'color': '#1F78B4',
-                                                         'id': '1',
-                                                         'properties': '{}',
-                                                         'repr': 'Node(id: 1)',
+                                                         'id': _anything,
+                                                         'properties': {'color': '#828282',
+                                                                        'python_id': _anything,
+                                                                        'repr': [],
+                                                                        'type': 'Mapping'},
+                                                         'python_id': _anything,
+                                                         'repr': 'Node(1)',
                                                          'type': 'Node'},
-                                    'main\u200b@var_3': {'repr': "'ab'", 'type': 'String'},
-                                    'main\u200b@var_4': {'repr': 'None', 'type': 'None'}}},
+                                    'main\u200b@var_3': {'color': '#B2DF8A',
+                                                         'python_id': _anything,
+                                                         'repr': "'ab'",
+                                                         'type': 'String'},
+                                    'main\u200b@var_4': {'color': '#33A02C',
+                                                         'python_id': _anything,
+                                                         'repr': 'None',
+                                                         'type': 'None'}}},
                      {'accesses': None, 'line': 20, 'variables': None}]
     first_line_no = 1
     empty_recorder.add_record(first_line_no)
@@ -243,3 +338,60 @@ def test_json_dump(empty_recorder):
 
     assert json.loads(empty_recorder.get_change_list_json()) == result_string
     # print(empty_recorder.get_change_list_json())
+
+
+def test_recursive():
+    result = [{'accesses': None,
+               'line': _anything,
+               'variables': {'t\u200b@a': {'color': '#A6CEE3',
+                                           'repr': None,
+                                           'type': 'init'}}},
+              {'accesses': None, 'line': _anything, 'variables': None},
+              {'accesses': None,
+               'line': _anything,
+               'variables': {'t\u200b@a': {'color': '#A6CEE3',
+                                           'python_id': _anything,
+                                           'repr': [],
+                                           'type': 'List'}}},
+              {'accesses': None, 'line': _anything, 'variables': None},
+              {'accesses': None,
+               'line': _anything,
+               'variables': {'t\u200b@a': {'color': '#A6CEE3',
+                                           'python_id': _anything,
+                                           'repr': [{'color': '#828282',
+                                                     'python_id': _anything,
+                                                     'repr': [{'color': '#828282',
+                                                               'python_id': _anything,
+                                                               'repr': '1',
+                                                               'type': 'Number'},
+                                                              {'color': '#828282',
+                                                               'python_id': _anything,
+                                                               'repr': '2',
+                                                               'type': 'Number'},
+                                                              {'color': '#828282',
+                                                               'python_id': _anything,
+                                                               'repr': '3',
+                                                               'type': 'Number'},
+                                                              {'color': '#828282',
+                                                               'python_id': _anything,
+                                                               'repr': None,
+                                                               'type': 'reference'}],
+                                                     'type': 'List'},
+                                                    {'color': '#828282',
+                                                     'python_id': _anything,
+                                                     'repr': '4',
+                                                     'type': 'Number'}],
+                                           'type': 'List'}}},
+              {'accesses': None, 'line': _anything, 'variables': None}]
+
+    tracer.set_new_recorder(Recorder())
+
+    @tracer('a')
+    def t():
+        a = []
+        b = [1, 2, 3, a]
+        a.append(b)
+        a.append(4)
+
+    t()
+    assert tracer.get_recorder().get_processed_change_list() == result

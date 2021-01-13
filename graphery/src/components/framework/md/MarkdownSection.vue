@@ -8,8 +8,6 @@
 
 <script>
   import markdown from '@/components/framework/md/markdown';
-  import hljs from 'highlight.js/lib/core';
-  import python from 'highlight.js/lib/languages/python.js';
 
   export default {
     props: {
@@ -26,6 +24,10 @@
         default: false,
       },
       breakpointReact: {
+        type: Boolean,
+        default: false,
+      },
+      pictureZoom: {
         type: Boolean,
         default: false,
       },
@@ -123,20 +125,11 @@
             this.renderHtml();
           }
         );
-        // Markdown css
-        this.loadLink(
-          'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css'
-        );
 
         // Katex css
         this.loadLink(
           'https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css'
         );
-      },
-      highlightCode() {
-        document.querySelectorAll('pre div.hljs code').forEach((block) => {
-          hljs.highlightBlock(block);
-        });
       },
       renderHtml() {
         this.renderedHtml = this.markdownIt.render(this.markdownRaw, {
@@ -158,13 +151,23 @@
           });
         }
       },
+      processPictureZoom() {
+        for (const tag of this.$refs.markdownMountingPoint.getElementsByTagName(
+          'img'
+        )) {
+          tag.addEventListener('click', (event) => {
+            this.$emit('pictureZoomRequest', event.target.getAttribute('src'));
+          });
+          // tag.classList.add('picture-zoom-ready');
+        }
+      },
       postRenderProcessing() {
         this.$nextTick(() => {
-          if (this.highlight) {
-            this.highlightCode();
-          }
           if (this.breakpointReact) {
             this.replaceBreakpoints();
+          }
+          if (this.pictureZoom) {
+            this.processPictureZoom();
           }
         });
       },
@@ -179,8 +182,6 @@
       },
     },
     beforeMount() {
-      hljs.registerLanguage('python', python);
-      hljs.initHighlightingOnLoad();
       this.loadExternalResources();
     },
     mounted() {
@@ -201,27 +202,6 @@
 
 <style lang="sass">
   @import "~highlight.js/styles/github.css"
-  .markdown-body pre
-    box-shadow: 0 1px 5px rgba(0,0,0,0.2), 0 2px 2px rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12)
-  .markdown-body pre > .hljs
-    font-size: 1rem !important
-    background-color: #f6f8fa
-
-  .markdown-body span.tutorial-breakpoint
-    padding: 2px
-    background-color: #00acc1
-    border-radius: 30px
-    cursor: pointer
-
-  .markdown-body strong
-    font-weight: bolder
-  .markdown-body .hljs-center
-    text-align: center
-  .markdown-body .hljs-right
-    text-align: right
-  .markdown-body .hljs-left
-    text-align: left
-
-  .markdown-body .footnote-backref
-    font-family: auto,sans-serif
+  @import "~@/styles/github-markdown.min.css"
+  @import "~@/styles/markdown.sass"
 </style>

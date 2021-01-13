@@ -1,5 +1,5 @@
 import json
-import urllib
+from urllib import request
 from os import getenv
 from queue import Queue
 from typing import Mapping
@@ -15,9 +15,9 @@ _REMOTE_URL = getenv('GRAPHERY_REMOTE_EXECUTE_URL', 'http://localhost')
 
 def post_request(url: str, data: Mapping[str, str]) -> Mapping:
     encoded_data = json.dumps(data).encode('UTF-8')
-    req = urllib.request.Request(url, data=encoded_data,
+    req = request.Request(url, data=encoded_data,
                                  headers={'content-type': 'application/json'})
-    return json.loads(urllib.request.urlopen(req).read().decode('UTF-8'))
+    return json.loads(request.urlopen(req).read().decode('UTF-8'))
 
 
 class ProcessHandler:
@@ -50,9 +50,6 @@ class ProcessHandler:
                                     data={'code': code,
                                           'graph': graph_json_obj,
                                           'version': VERSION})
-            if 'errors' in response:
-                return create_error_response(response['errors'][0]['message'])
-
             return response
 
         return create_error_response('Cannot Read Code Or Graph Object')

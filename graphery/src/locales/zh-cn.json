@@ -17,7 +17,7 @@
     "editor": "编辑器",
     "howTo": "使用帮助",
     "notAvailableCurrently": "暂时无法使用",
-    "goToSettingsToChangeEditingPermission": "请前往设置开关编辑权限",
+    "goToSettingsToChangeEditingPermission": "请点击这个锁以开关编辑权限",
     "changeVariableListOrientation": "改变变量表朝向",
     "openWorkSpace": "打开工作区"
   },
@@ -60,7 +60,8 @@
     "enableEditing": "开启编辑"
   },
   "notify": {
-    "editorEntry": "按下 {...} 按钮打开编辑器"
+    "editorEntry": "按下 {...} 按钮打开编辑器",
+    "Please click the lock on the top right of the editor to enable editing": "请点击编辑器右上角的锁以开始编辑"
   },
   "license": {
     "licenseInfo1": "所有文章在没有特殊说明的情况下都遵循",
@@ -94,5 +95,18 @@
   },
   "metaInfo": {
     "Tutorial": "教程"
+  },
+  "graph": {
+    "Close": "关闭",
+    "Always Show": "永远显示",
+    "You can also edit this in the Settings page": "你可以到设置页面开关此选项",
+    "Show Graph Info": "展示图详情",
+    "No Result": "无结果"
+  },
+  "variable": {
+    "Toggle Graph Highlights": "开关图上高亮",
+    "Go Back": "上一级",
+    "Top Level Already": "已是最顶层",
+    "Expand Element": "展开内容"
   }
 }

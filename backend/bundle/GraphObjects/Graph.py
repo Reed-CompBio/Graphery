@@ -26,15 +26,15 @@ class Graph(Stylable, Generic[Node_C, Edge_C]):
     default_styles = [{
         "selector": "node",
         "style": {
-            "label": "data(id)",
+            "label": "data(name)",
             "text-valign": "center",
             "text-halign": "center",
             "text-outline-color": "white",
             "text-outline-opacity": 1,
             "text-outline-width": 1,
-            "height": "10px",
-            "width": "10px",
-            "font-size": "5px",
+            "height": "20px",
+            "width": "20px",
+            "font-size": "8px",
             "border-color": "black",
             "border-opacity": 1,
             "border-width": 1
@@ -124,6 +124,12 @@ class Graph(Stylable, Generic[Node_C, Edge_C]):
             return self.has_edge(item)
         return False
 
+    def set_layout(self, layout_name: GraphLayout) -> None:
+        if isinstance(layout_name, GraphLayout):
+            self.layout = layout_name.value
+        else:
+            print('Wrong layout name. Nothing is changed. Please use GraphLayout Enum.')
+
     @staticmethod
     def graph_generator(graph_json: Union[str, Mapping] = '') -> 'Graph':
         """
@@ -173,15 +179,23 @@ class Graph(Stylable, Generic[Node_C, Edge_C]):
 
         if 'elements' in graph_dict:
             element_dict = graph_dict['elements']
+            layout_dict = graph_dict.get('layout', None)
+            layout_name = GraphLayout(layout_dict) if layout_dict else GraphLayout.fcose
             if isinstance(element_dict, Mapping):
                 parsed_node_set = []
                 parsed_edge_set = []
-                if 'nodes' in element_dict:
-                    parsed_node_set = NodeSet.generate_node_set(element_dict['nodes'])
-                if 'edges' in element_dict:
-                    parsed_edge_set = EdgeSet.generate_edge_set(element_dict['edges'], parsed_node_set)
+                node_ids_instance_mapping = {}
 
-                return Graph(parsed_node_set, parsed_edge_set)
+                if 'nodes' in element_dict:
+                    parsed_node_set, node_ids_instance_mapping = NodeSet.generate_node_set(element_dict['nodes'])
+
+                if 'edges' in element_dict:
+                    parsed_edge_set = EdgeSet.generate_edge_set(element_dict['edges'],
+                                                                node_ids_instance_mapping)
+
+                g = Graph(parsed_node_set, parsed_edge_set)
+                g.set_layout(layout_name)
+                return g
         else:
             raise GraphJsonFormatError('malformed json file')
 
@@ -231,12 +245,6 @@ class MutableGraph(Graph):
 
         self.edges.remove_edge(edge)
         return True
-
-    def set_layout(self, layout_name: GraphLayout) -> None:
-        if isinstance(layout_name, GraphLayout):
-            self.layout = layout_name.value
-        else:
-            print('Wrong layout name. Nothing is changed. Please use GraphLayout Enum.')
 
     def generate_json(self, indent: int = None) -> str:
         return json.dumps(self, indent=indent, cls=MutableGraph.GraphObjectEncoder)

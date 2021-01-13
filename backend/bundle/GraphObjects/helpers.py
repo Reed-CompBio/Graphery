@@ -22,7 +22,8 @@ class GraphObjectEncoder(json.JSONEncoder):
         return cls.displayed_encoding_added(
             {
                 'data': {
-                    'id': node.identity,
+                    'id': node.cy_id,
+                    'name': node.identity
                 },
                 'style': [node.styles],
             },
@@ -34,9 +35,10 @@ class GraphObjectEncoder(json.JSONEncoder):
         return cls.displayed_encoding_added(
             {
                 'data': {
-                    'id': edge.identity,
-                    'source': edge.get_incident_node().identity,
-                    'target': edge.get_final_node().identity
+                    'id': edge.cy_id,
+                    'name': edge.identity,
+                    'source': edge.get_incident_node().cy_id,
+                    'target': edge.get_final_node().cy_id
                 },
                 'style': [
                     edge.styles,
@@ -62,7 +64,6 @@ class GraphObjectEncoder(json.JSONEncoder):
                 'edges': cls.return_edge_set_encoding(graph.E)
             },
             'style': [
-                # *default_graph_styles,
                 *graph.styles
             ],
             'layout': graph.layout

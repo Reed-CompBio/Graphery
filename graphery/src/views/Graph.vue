@@ -22,7 +22,7 @@
         <SplitterSeparator :horizontal="verticalSplitter" />
       </template>
       <template v-slot:after>
-        <div>
+        <div id="editor-section">
           <q-bar class="graph-menu-bar">
             <div class="graph-menu-wrapper">
               <q-select
@@ -41,7 +41,7 @@
                 <template v-slot:no-option>
                   <q-item>
                     <q-item-section class="text-grey">
-                      No results
+                      {{ $t('graph.No Result') }}
                     </q-item-section>
                   </q-item>
                 </template>
@@ -49,6 +49,16 @@
                   <q-icon name="code"></q-icon>
                 </template>
               </q-select>
+            </div>
+            <div id="graph-info-toggle" class="q-ml-md">
+              <q-btn
+                dense
+                outline
+                size="md"
+                icon="mdi-book-information-variant"
+                @click="graphInfoPopupShow = true"
+              ></q-btn>
+              <SwitchTooltip :text="$t('graph.Show Graph Info')" />
             </div>
           </q-bar>
           <EditorControlUnit
@@ -70,11 +80,23 @@
             :editorLoadingOverride="execLoading"
             @editorContentChanged="onEditorContentChanged"
             @editorInstanceLoaded.once="onEditorInstanceLoaded"
+            @clearHighlightFromVarList="clearHighlightsElementsFromVarList"
+            @highlightFromVarList="highlightElementsFromVarList"
+            @toggleHighlightFromVarList="toggleHighlightsFromVarList"
           ></EditorWrapper>
         </div>
       </template>
     </q-splitter>
     <MobileViewWarningPopup v-if="onXsScreen" />
+    <GraphInfoPopup
+      :dialog-model="graphInfoPopupShow"
+      @dialogModelChange="
+        (val) => {
+          this.graphInfoPopupShow = val;
+        }
+      "
+      :graph-abstract-markdown="graphInfoMarkdown"
+    />
   </div>
 </template>
 
@@ -92,6 +114,7 @@
   import EditorWrapper from '@/components/tutorial/EditorWrapper';
   import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper';
   import SplitterSeparator from '@/components/framework/SplitterSeparator';
+  import EditorControlUnit from '@/components/framework/EditorControlUnit';
 
   const defaultCodeOption = [
     {
@@ -116,17 +139,19 @@
       return { title: graphTitle };
     },
     components: {
+      SwitchTooltip: () => import('@/components/framework/SwitchTooltip'),
+      GraphInfoPopup: () => import('@/components/framework/GraphInfoPopup'),
       EditorWrapper,
       CytoscapeWrapper,
       SplitterSeparator,
       MobileViewWarningPopup: () =>
         import('@/components/framework/MobileViewWarningPopup'),
-      EditorControlUnit: () =>
-        import('@/components/framework/EditorControlUnit'),
+      EditorControlUnit,
     },
     data() {
       return {
         codeOptions: defaultCodeOption,
+        graphInfoPopupShow_: false,
       };
     },
     computed: {
@@ -137,6 +162,19 @@
         'getCurrentCodeId',
         'codeObjectListEmpty',
       ]),
+      graphInfoPopupShow: {
+        set(d) {
+          this.graphInfoPopupShow_ = d;
+        },
+        get() {
+          return this.graphInfoPopupShow_;
+        },
+      },
+      graphInfoMarkdown() {
+        return this.currentGraphObject
+          ? this.currentGraphObject['content']['abstract']
+          : '';
+      },
       headerTitle() {
         return this.getCurrentGraphObjectTitle
           ? this.getCurrentGraphObjectTitle
@@ -176,6 +214,9 @@
       },
     },
     methods: {
+      flipGraphInfoDialog() {
+        this.graphInfoPopupShow = !this.graphInfoPopupShow;
+      },
       generateDefaultJsonResults(graphId) {
         return [
           {
@@ -252,6 +293,10 @@
                 codeId: obj.codeId,
               }))
             );
+
+            if (this.$store.getters['settings/graphAbstractPopupShow']) {
+              this.flipGraphInfoDialog();
+            }
           })
           .catch((err) => {
             errorDialog({

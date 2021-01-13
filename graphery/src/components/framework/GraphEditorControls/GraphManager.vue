@@ -13,7 +13,7 @@
         },
       },
       currentGraphObject() {
-        return this.getCurrentGraphObject();
+        return this.getCurrentGraphObject;
       },
     },
     methods: {
