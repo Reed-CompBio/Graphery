@@ -4,7 +4,7 @@
       Language
     </template>
     <div class="text-center">
-      {{ lang }}
+      {{ displayedLang }}
     </div>
   </InfoCard>
 </template>

@@ -81,23 +81,6 @@
       multipleSteps(noneEmptyElement, updateAccessed) {
         this.viewUpdater(noneEmptyElement, updateAccessed);
       },
-      highlightVariablesOnCytoscapeView(variables) {
-        if (this.$refs.cytoscapeWrapper) {
-          this.$refs.cytoscapeWrapper.highlightVarObj(variables);
-        }
-      },
-      highlightAccessedVariablesOnCytoscapeView(accessedVariables) {
-        if (this.$refs.cytoscapeWrapper) {
-          this.$refs.cytoscapeWrapper.highlightAccessedVariables(
-            accessedVariables
-          );
-        }
-      },
-      unhighlightAccessedVariablesOnCytoscapeView() {
-        if (this.$refs.cytoscapeWrapper) {
-          this.$refs.cytoscapeWrapper.unhighlightAccessedVariables();
-        }
-      },
       updateVariableList(variables) {
         this.$store.commit('variables/LOAD_CURRENT_VARIABLES', variables);
       },
@@ -110,22 +93,38 @@
       clearAccessedVariables() {
         this.$store.commit('variables/CLEAR_CURRENT_ACCESSES');
       },
+      clearHighlightsElementsFromVarList(bareClassName) {
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper?.clearHighLightByClass(bareClassName);
+        }
+      },
+      highlightElementsFromVarList(bareClassName, graphElementIds, color) {
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper.highlightByClassAndIds(
+            bareClassName,
+            graphElementIds,
+            color
+          );
+        }
+      },
+      toggleHighlightsFromVarList(ids, bareClass, flag) {
+        if (this.$refs.cytoscapeWrapper) {
+          this.$refs.cytoscapeWrapper?.toggleHighlight(ids, bareClass, flag);
+        }
+      },
       viewUpdater(element, updateAccessed) {
         // elements: non null
         if (updateAccessed) {
           // update accessed variables
           const accessedVariables = element['accesses'];
           this.updateAccessedVariables(accessedVariables);
-          this.highlightAccessedVariablesOnCytoscapeView(accessedVariables);
         } else {
           // clear accessed variables
           this.clearAccessedVariables();
-          this.unhighlightAccessedVariablesOnCytoscapeView();
         }
 
         const variables = element['variables'];
         this.updateVariableList(variables);
-        this.highlightVariablesOnCytoscapeView(variables);
       },
       stepper(newPosition, steps) {
         this.updateResultJsonPosition(this.currentPositionId, newPosition);

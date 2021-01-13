@@ -1,5 +1,3 @@
-const hljsLangs = { python: 'python', py: 'python', gyp: 'python' };
-
 import markdownIt from 'markdown-it';
 
 import emoji from 'markdown-it-emoji';
@@ -16,38 +14,37 @@ import katexExternal from 'markdown-it-katex-external';
 import miip from 'markdown-it-images-preview';
 import bp from './breakpoint';
 
-// default mode
-const markdownConfig = {
+import hljs from 'highlight.js';
+
+const markdown = markdownIt({
   html: true, // Enable HTML tags in source
   xhtmlOut: true, // Use '/' to close single tags (<br />).
   breaks: true, // Convert '\n' in paragraphs into <br>
   langPrefix: 'language-', // CSS language prefix for fenced blocks. Can be
-  linkify: false, // 自动识别url
+  linkify: false, //Auto-convert URL-like text to links
   typographer: true,
   quotes: '“”‘’',
   highlight: function(str, lang) {
-    if (lang && hljsLangs[lang]) {
-      return (
-        '<pre><div class="hljs"><code class="' +
-        lang +
-        '">' +
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        markdown.utils.escapeHtml(str) +
-        '</code></div></pre>'
-      );
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return (
+          '<pre class="hljs"><code>' +
+          hljs.highlight(lang, str, true).value +
+          '</code></pre>'
+        );
+      } catch (__) {
+        //
+      }
     }
+
     return (
-      '<pre><code class="' +
-      lang +
-      '">' +
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      // eslint-disable-next-line no-undef
+      '<pre class="hljs"><code>' +
       markdown.utils.escapeHtml(str) +
       '</code></pre>'
     );
   },
-};
-
-const markdown = markdownIt(markdownConfig);
+});
 
 // add target="_blank" to all link
 const defaultRender =

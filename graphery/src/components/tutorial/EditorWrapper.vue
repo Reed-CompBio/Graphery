@@ -17,8 +17,7 @@
               ref="editorComponent"
               class="full-height"
               :loadingOverride="editorLoadingOverride"
-              @editorContentChanged="emitEditorContentChanged"
-              @editorInstanceLoaded.once="onEditorInstanceLoaded"
+              v-on="$listeners"
             ></Editor>
           </q-card>
         </template>
@@ -26,36 +25,10 @@
           <SplitterSeparator :horizontal="variableListHorizontal" />
         </template>
         <template v-slot:after>
-          <VariableList></VariableList>
+          <VariableList v-on="$listeners"></VariableList>
         </template>
       </q-splitter>
     </div>
-    <!--    <q-dialog v-model="isWorkSpaceSelectionOpen">-->
-    <!--      <q-card>-->
-    <!--        <q-toolbar>-->
-    <!--          <TutorialWorkSpaceController-->
-    <!--            style="width: 30%"-->
-    <!--            class="q-mr-md"-->
-    <!--          ></TutorialWorkSpaceController>-->
-    <!--          <q-space />-->
-    <!--          <q-btn flat round dense icon="close" v-close-popup />-->
-    <!--        </q-toolbar>-->
-
-    <!--        <q-drawer :v-model="true" persistent bordered>-->
-    <!--          <q-list>-->
-    <!--            <q-item v-for="i in [1, 2, 3]" :key="i">-->
-    <!--              {{ i }}-->
-    <!--            </q-item>-->
-    <!--          </q-list>-->
-    <!--        </q-drawer>-->
-    <!--        <q-card-section>-->
-    <!--          Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum-->
-    <!--          repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis-->
-    <!--          perferendis totam, ea at omnis vel numquam exercitationem aut, natus-->
-    <!--          minima, porro labore.-->
-    <!--        </q-card-section>-->
-    <!--      </q-card>-->
-    <!--    </q-dialog>-->
   </div>
 </template>
 
@@ -86,7 +59,7 @@
     data() {
       return {
         sliderPos: 1,
-        codeValueListSplitPos: (5 / 6) * 100,
+        codeValueListSplitPos: 70,
       };
     },
     computed: {
@@ -128,12 +101,6 @@
           'settings/changeVariableListOrientation',
           !this.variableListHorizontal
         );
-      },
-      emitEditorContentChanged(newCode) {
-        this.$emit('editorContentChanged', newCode);
-      },
-      onEditorInstanceLoaded() {
-        this.$emit('editorInstanceLoaded');
       },
     },
   };

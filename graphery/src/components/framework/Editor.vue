@@ -11,7 +11,7 @@
 <script>
   import { mapState } from 'vuex';
   import { errorDialog } from '@/services/helpers';
-  import { debounce } from 'quasar';
+  import { debounce, throttle } from 'quasar';
   let monacoEditor;
 
   export default {
@@ -36,6 +36,10 @@
         type: String,
         default: null,
       },
+      editOverride: {
+        type: Boolean,
+        default: false,
+      },
     },
     data() {
       return {
@@ -54,6 +58,9 @@
         'fontSize',
         'wrap',
       ]),
+      isReadOnly() {
+        return !(this.enableEditing || this.editOverride);
+      },
       editorAndContentLoading() {
         return this.editor === null || this.loadingOverride;
       },
@@ -74,7 +81,7 @@
                 automaticLayout: true, // auto resize
                 overviewRulerBorder: false, // scroll bar no boarder
                 scrollBeyondLastLine: false, // remove blank space at the end of the editor
-                readOnly: !this.enableEditing,
+                readOnly: this.isReadOnly,
                 theme: this.dark ? 'vs-dark' : 'vs',
                 language: this.lang,
                 wordWrap: this.wrap || this.wrapLine ? 'on' : 'off',
@@ -84,6 +91,7 @@
                 glyphMargin: true,
               }
             );
+
             this.editor.getModel().onDidChangeContent(
               debounce((_) => {
                 const codeContent = this.editor.getValue();
@@ -92,6 +100,24 @@
               }, 100)
             );
 
+            this.editor.onKeyUp((__) => {
+              debounce((__) => {
+                this.clearDecoration();
+                this.$emit('editorUserTyped');
+              }, 20)();
+              throttle((__) => {
+                if (this.isReadOnly) {
+                  errorDialog(
+                    {
+                      message: this.$t(
+                        'notify.Please click the lock on the top right of the editor to enable editing'
+                      ),
+                    },
+                    3000
+                  );
+                }
+              }, 1000)();
+            });
             this.editor.onDidScrollChange(
               debounce((event) => {
                 this.$emit(
@@ -100,7 +126,7 @@
                     (this.editor.getScrollHeight() -
                       this.editor.getLayoutInfo().height)
                 );
-              }, 100)
+              }, 20)
             );
 
             this.editor.layout();
@@ -164,6 +190,11 @@
         if (this.editor) {
           this.editor.setValue(content);
         }
+      },
+    },
+    watch: {
+      enableEditing: function() {
+        this.editor.updateOptions({ readOnly: this.isReadOnly });
       },
     },
     mounted() {

@@ -111,7 +111,7 @@
     <q-btn-group flat class="q-mr-md">
       <q-btn
         dense
-        disable
+        @click="onEditingLockStateChange"
         :icon="$store.state.settings.enableEditing ? 'lock_open' : 'lock'"
       >
       </q-btn>
@@ -228,6 +228,12 @@
       },
       onChangeVariableListOrientation() {
         this.$emit('onChangeVariableListOrientation');
+      },
+      onEditingLockStateChange() {
+        this.$store.dispatch(
+          'settings/changeEnableEditing',
+          !this.$store.getters['settings/getEnableEditing']
+        );
       },
       // onCallWorkSpace() {
       //   this.$emit('onCallWorkSpace');

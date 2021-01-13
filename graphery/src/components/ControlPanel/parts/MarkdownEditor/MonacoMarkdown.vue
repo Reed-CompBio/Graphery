@@ -17,6 +17,7 @@
             :wrapLine="true"
             :miniMapEnable="true"
             :init-value="initValue"
+            :edit-override="true"
             @editorContentChanged="onEditorContentChanged"
             @editorScrollChanged="onEditorScrollChanged"
             @editorInstanceLoaded="onEditorLoaded"
@@ -99,7 +100,9 @@
         this.$emit('change', this.rawMarkdown, processedHtml);
       },
       onEditorScrollChanged(percentage) {
-        // console.log('scroll to ', percentage);
+        if (this.$refs.scrollArea) {
+          this.$refs.scrollArea.setScrollPercentage(percentage, 300);
+        }
       },
       onEditorLoaded() {
         this.loadingContent = false;
