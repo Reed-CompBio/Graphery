@@ -8,7 +8,6 @@
     <div v-else id="singular-display">
       {{ displayObjectContent }}
     </div>
-    <!--  TODO cursor type change   -->
   </q-card>
 </template>
 

@@ -103,7 +103,6 @@
           const elePyId = element[_PYTHON_ID_HEADER];
           for (let i = this.variableStack.length - 1; i >= 0; i--) {
             if (elePyId === this.variableStack[i][_PYTHON_ID_HEADER]) {
-              console.log(this.variableStack[i]);
               element = this.variableStack[i];
               break;
             }

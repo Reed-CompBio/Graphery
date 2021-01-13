@@ -24,7 +24,7 @@
             <div id="row-separator-wrapper">
               <div id="row-separator">
                 <div>
-                  :
+                  {{ pairSeparator }}
                 </div>
               </div>
             </div>
@@ -32,7 +32,7 @@
               <VariableDisplayElementWrapper
                 v-on="$listeners"
                 :init-object="pairElement['value']"
-                :index="`[${pairElement['key']['repr']}]`"
+                :index="`[${pairElement['key'][reprHeader]}]`"
               />
             </div>
           </div>
@@ -52,6 +52,12 @@
       initElement: {
         type: Object,
       },
+    },
+    data() {
+      return {
+        pairSeparator: ':',
+        reprHeader: _REPR_HEADER,
+      };
     },
     computed: {
       pairElementArray() {
