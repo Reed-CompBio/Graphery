@@ -207,32 +207,18 @@
 </script>
 
 <style scoped lang="sass">
-    #header-wrapper
-      flex-wrap: nowrap
-    #name-section
-      font-size: 17px
-  <<<<<<< HEAD
-      padding: .2rem .3rem
-      border-radius: 2rem
-  =======
-      padding: .15rem .3rem
-      border-radius: 0.4rem
-  >>>>>>> 285964b1f7264990c628ee8b80bfa019dfc62abc
-      opacity: .8
-      text-overflow: ellipsis
-      overflow: hidden
-      &.toggle-off
-        opacity: .3
-      code
-        //text-wrap: normal
-        transform: scaleX(0.9)
-    .header
-      padding: 0 8px
-
-    .name-background
-      display: flex
-      justify-content: center
-      flex: initial
-      background-color: yellow
-      margin-top: -4px // cover full header height: VariableList.vue > .variable-card
+  #name-section
+    font-size: 17px
+    padding: .15rem .3rem
+    border-radius: 0.4rem
+    opacity: .8
+    text-overflow: ellipsis
+    overflow: hidden
+    &.toggle-off
+      opacity: .3
+    code
+      text-wrap: normal
+      transform: scaleX(0.9)
+  .header
+    padding: 0 8px
 </style>
