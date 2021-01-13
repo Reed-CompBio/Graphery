@@ -314,6 +314,9 @@
           this.closeTippy();
         });
       },
+      restoreStyles() {
+        this.clearStoredClassNames();
+      },
       reloadCyWithFullJson(json) {
         if (this.cyInstance && json) {
           this.cyInstance.elements().remove();
