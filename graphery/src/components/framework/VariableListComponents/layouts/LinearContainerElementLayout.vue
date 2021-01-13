@@ -10,7 +10,7 @@
         <div id="linear-list-container">
           <VariableDisplayElementWrapper
             :init-object="arrayElement"
-            :index="index"
+            :index="`[${index}]`"
             :key="index"
             v-on="$listeners"
             v-for="(arrayElement, index) in arrayElements"

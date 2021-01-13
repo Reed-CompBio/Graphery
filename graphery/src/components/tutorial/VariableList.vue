@@ -36,8 +36,10 @@
 
   const _EMPTY_VARIABLE_LIST_OBJ = [
     {
-      label: 'Status',
-      value: _EMPTY_VALUE_STRING,
+      label: 'No Variables',
+      type: 'init',
+      repr: _EMPTY_VALUE_STRING,
+      color: '#9f9f9f',
     },
   ];
 

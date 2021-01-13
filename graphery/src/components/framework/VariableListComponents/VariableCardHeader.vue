@@ -5,22 +5,19 @@
         <div id="back-button" class="col" style="flex-grow: 1;">
           <div class="row" style="flex-wrap: nowrap; justify-content: left;">
             <q-btn
-              flat
+              :flat="!showPreviousButton"
+              :outline="showPreviousButton"
               dense
               :size="btnSize"
               :disable="!showPreviousButton"
               icon="mdi-backburger"
               @click="emitBackAction"
             />
-            <!-- TODO: Use predefined tooltip component-->
-            <q-tooltip
-              v-if="!showPreviousButton"
-              anchor="top middle"
-              content-style="font-size: 13px"
-              :offset="[10, 35]"
-            >
-              It's now at the <strong>root</strong>!
-            </q-tooltip>
+            <SwitchTooltip
+              v-if="showPreviousButton"
+              :text="$t('variable.Go Back')"
+            />
+            <SwitchTooltip v-else :text="$t('variable.Top Level Already')" />
           </div>
         </div>
         <div class="col no-wrap">
@@ -38,13 +35,24 @@
         </div>
 
         <div id="right-section" class="col" style="flex-grow: 1;">
-          <div class="row justify-end no-wrap"></div>
+          <div class="row justify-end no-wrap">
+            <div id="toggle-section">
+              <q-btn
+                :flat="isInitEle"
+                :outline="!isInitEle"
+                dense
+                :disable="isInitEle"
+                :size="btnSize"
+                :icon="hightlightButtonIcon"
+                @click="emitToggleAction"
+              />
+              <SwitchTooltip :text="$t('variable.Toggle Graph Highlights')" />
+            </div>
             <div id="icon-section">
               <div>
                 <q-btn
                   flat
                   dense
-                  round
                   :size="btnSize"
                   :icon="elementIcon"
                   @click="typeButtonClickHandler"
@@ -136,6 +144,29 @@
       isInitEle() {
         return isInitElement(this.element);
       },
+      hightlightButtonIcon() {
+        if (
+          isSingularElement(this.element) ||
+          isLinearContainerElement(this.element)
+        ) {
+          if (this.toggleState) {
+            return 'mdi-lightbulb';
+          } else {
+            return 'mdi-lightbulb-off-outline';
+          }
+        } else if (isPairContainerElement(this.element)) {
+          switch (this.toggleState) {
+            case 1:
+              return 'mdi-alpha-k';
+            case 2:
+              return 'mdi-alpha-v';
+            case 0:
+              return 'mdi-lightbulb-off-outline';
+          }
+        }
+        // which should never happen
+        return 'mdi-close-circle-outline';
+      },
       toggleStateClass() {
         if (
           isSingularElement(this.element) ||
@@ -149,7 +180,7 @@
           return {
             'toggle-key-on': this.toggleState === 1,
             'toggle-value-on': this.toggleState === 2,
-            'toggle-off': this.toggleState === 3,
+            'toggle-off': this.toggleState === 0,
           };
         } else {
           return ['toggle-off'];
@@ -159,6 +190,9 @@
     methods: {
       emitBackAction() {
         this.$emit('popVariableStack');
+      },
+      emitToggleAction() {
+        this.$emit('toggleAction');
       },
       typeButtonClickHandler() {
         successDialog(
@@ -173,27 +207,32 @@
 </script>
 
 <style scoped lang="sass">
-  #header-wrapper
-    flex-wrap: nowrap
-  #name-section
-    font-size: 17px
-    padding: .2rem .3rem
-    border-radius: 2rem
-    opacity: .8
-    text-overflow: ellipsis
-    overflow: hidden
-    &.toggle-off
-      opacity: .2
-    code
-      //text-wrap: normal
-      transform: scaleX(0.9)
-  .header
-    padding: 0 8px
+    #header-wrapper
+      flex-wrap: nowrap
+    #name-section
+      font-size: 17px
+  <<<<<<< HEAD
+      padding: .2rem .3rem
+      border-radius: 2rem
+  =======
+      padding: .15rem .3rem
+      border-radius: 0.4rem
+  >>>>>>> 285964b1f7264990c628ee8b80bfa019dfc62abc
+      opacity: .8
+      text-overflow: ellipsis
+      overflow: hidden
+      &.toggle-off
+        opacity: .3
+      code
+        //text-wrap: normal
+        transform: scaleX(0.9)
+    .header
+      padding: 0 8px
 
-  .name-background
-    display: flex
-    justify-content: center
-    flex: initial
-    background-color: yellow
-    margin-top: -4px // cover full header height: VariableList.vue > .variable-card
+    .name-background
+      display: flex
+      justify-content: center
+      flex: initial
+      background-color: yellow
+      margin-top: -4px // cover full header height: VariableList.vue > .variable-card
 </style>

@@ -11,7 +11,7 @@
         Graph Abstract
         <q-space />
         <div>
-          {{ $t('graph.Never Show Again') }}
+          {{ $t('graph.Always Show') }}
         </div>
         <div class="q-mr-md">
           <q-toggle v-model="showAbstractToggle" />
@@ -64,7 +64,9 @@
           this.$store.commit('settings/CHANGE_GRAPH_ABSTRACT_POPUP_SHOW', d);
           successDialog(
             {
-              message: this.$t('You can also edit this in the Settings page.'),
+              message: this.$t(
+                'graph.You can also edit this in the Settings page.'
+              ),
             },
             3000
           );

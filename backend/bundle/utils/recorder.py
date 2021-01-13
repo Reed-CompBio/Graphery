@@ -263,7 +263,11 @@ class Recorder:
 
     def custom_repr(self, variable_state: Any, variable_type: str, memory_trace: Set) -> Any:
         if variable_type == self._REFERENCE_TYPE_STRING:
-            repr_result = None
+            var_real_type = self._search_type_string(variable_state)
+            repr_result = self._generate_repr(variable_state) \
+                if var_real_type in self._SINGULAR_TYPES or var_real_type == self._OBJECT_TYPE_STRING \
+                else None
+            # which should always None
         elif variable_type in self._SINGULAR_TYPES or variable_type == self._OBJECT_TYPE_STRING:
             repr_result = self._generate_singular_repr(variable_state)
         elif variable_type in self._LINEAR_CONTAINER_TYPES:
@@ -291,10 +295,10 @@ class Recorder:
 
         if var_id in memory_trace:
             # leave a note on the object and then trace back
-            variable_type = self._REFERENCE_TYPE_STRING
+            variable_type: str = self._REFERENCE_TYPE_STRING
         else:
-            variable_type = self._search_type_string(variable_state)
-            memory_trace.add(id)
+            variable_type: str = self._search_type_string(variable_state)
+            memory_trace.add(var_id)
 
         state_mapping: MutableMapping = {
             self._TYPE_HEADER: variable_type,

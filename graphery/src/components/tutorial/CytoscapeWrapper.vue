@@ -28,8 +28,8 @@
         </q-select>
       </div>
       <div class="menu-button-group-wrapper">
-        <q-btn-group rounded flat class="menu-button-group q-mx-auto">
-          <q-btn-dropdown>
+        <q-btn-group rounded class="menu-button-group q-mx-auto">
+          <q-btn-dropdown outline>
             <template v-slot:label>
               <q-icon name="mdi-share-variant" />
               <SwitchTooltip :text="$t('tooltips.Share')"></SwitchTooltip>
@@ -311,8 +311,9 @@
             this.cyInstance
               .style()
               .resetToDefault()
-              .fromJson(json.style)
+              .fromJson(this.defaultGraphStyle)
               .update();
+            this.addStyle(json.style);
           }
           this.clearStoredClassNames();
         }
@@ -336,7 +337,9 @@
       },
       // toggle highlight interface
       toggleHighlight(ids, bareClassName, flag) {
-        this.toggleElementsByIds(ids, bareClassName, flag);
+        if (ids && bareClassName) {
+          this.toggleElementsByIds(ids, bareClassName, flag);
+        }
       },
       // highlight interface
       highlightByClassAndIds(className, elementIds, color) {

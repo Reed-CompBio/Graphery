@@ -5,6 +5,25 @@
     data() {
       return {
         storedClassNames_: [],
+        defaultGraphStyle: [
+          {
+            selector: 'node',
+            style: {
+              label: 'data(name)',
+              'text-valign': 'center',
+              'text-halign': 'center',
+              'text-outline-color': 'white',
+              'text-outline-opacity': 1,
+              'text-outline-width': 1,
+              height: '20px',
+              width: '20px',
+              'font-size': '8px',
+              'border-color': 'black',
+              'border-opacity': 1,
+              'border-width': 1,
+            },
+          },
+        ],
       };
     },
     computed: {

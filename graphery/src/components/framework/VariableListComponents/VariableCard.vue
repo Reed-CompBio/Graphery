@@ -12,6 +12,7 @@
     <q-separator />
     <VariableCardDisplay
       ref="variableCardDisplay"
+      :init-variable-state="toggleState"
       :init-element="currentVariableObject"
       :init-root-element-name="rootVariableName"
       @clearHighlight="emitClearHighlight"
@@ -31,6 +32,9 @@
     _COLOR_HEADER,
     _LABEL_HEADER,
     _PYTHON_ID_HEADER,
+    _REFERENCE_TYPE_STRING,
+    _TYPE_HEADER,
+    BAD_REFERENCE_OBJECT,
   } from '@/components/framework/VariableListComponents/variableListConstants';
   import { revertNameCombo } from '@/components/framework/GraphEditorControls/ElementsUtils';
   export default {
@@ -74,8 +78,13 @@
       rootVariableColor() {
         return this.rootVariable[_COLOR_HEADER];
       },
-      toggleState() {
-        return this.toggleState_;
+      toggleState: {
+        set(d) {
+          this.toggleState_ = d;
+        },
+        get() {
+          return this.toggleState_;
+        },
       },
     },
     methods: {
@@ -90,12 +99,17 @@
         }
       },
       handlePushVariableStack(name, element) {
-        if (typeof element === 'string' || element instanceof String) {
-          for (let i = this.variableStack_.length - 1; i >= 0; i--) {
-            if (element === this.variableStack_[i][_PYTHON_ID_HEADER]) {
-              element = this.variableStack_[i];
+        if (element[_TYPE_HEADER] === _REFERENCE_TYPE_STRING) {
+          const elePyId = element[_PYTHON_ID_HEADER];
+          for (let i = this.variableStack.length - 1; i >= 0; i--) {
+            if (elePyId === this.variableStack[i][_PYTHON_ID_HEADER]) {
+              console.log(this.variableStack[i]);
+              element = this.variableStack[i];
               break;
             }
+          }
+          if (element[_TYPE_HEADER] === _REFERENCE_TYPE_STRING) {
+            element = BAD_REFERENCE_OBJECT;
           }
         }
         this.variableStack_.push(element);
@@ -105,10 +119,7 @@
         this.$refs.variableCardDisplay.toggleVar(this.toggleState);
       },
       handleToggleStateChange(toggleStateChange) {
-        this.toggleState_ = toggleStateChange;
-      },
-      resetToggleState() {
-        this.toggleState_ = 1;
+        this.toggleState = toggleStateChange;
       },
       emitClearHighlight(bareClassName) {
         this.$emit('clearHighlightFromVarList', bareClassName);
