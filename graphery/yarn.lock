@@ -3746,6 +3746,13 @@ cytoscape-fcose@^1.2.3:
   dependencies:
     cose-base "^1.0.0"
 
+cytoscape-lasso@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/cytoscape-lasso/-/cytoscape-lasso-1.1.4.tgz#fdf87de62c81a8d33a856c82428445abe5b655bc"
+  integrity sha512-c0OAm1586wPhIPVeH8teIUJTNgjojagilO0p7T0SABeTor7wmpjqaxmBhR+1QnQ3uQ1yUchPoEeNzlzqR2WM8Q==
+  dependencies:
+    point-in-polygon "^1.0.1"
+
 cytoscape-panzoom@^2.5.3:
   version "2.5.3"
   resolved "https://registry.yarnpkg.com/cytoscape-panzoom/-/cytoscape-panzoom-2.5.3.tgz#edf041b5aa8be1cbe3c001f16a8b2193b46127a7"
@@ -8362,6 +8369,11 @@ pnp-webpack-plugin@^1.6.4:
   integrity sha512-7Wjy+9E3WwLOEL30D+m8TSTF7qJJUJLONBnwQp0518siuMxUQUbgZwssaFX+QKlZkjHZcw/IpZCt/H0srrntSg==
   dependencies:
     ts-pnp "^1.1.6"
+
+point-in-polygon@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/point-in-polygon/-/point-in-polygon-1.0.1.tgz#d59b64e8fee41c49458aac82b56718c5957b2af7"
+  integrity sha1-1Ztk6P7kHElFiqyCtWcYxZV7Kvc=
 
 popper.js@^1.0.0, popper.js@^1.16.0:
   version "1.16.1"
