@@ -335,3 +335,4 @@ def test_json_dump(empty_recorder):
     )
 
     assert json.loads(empty_recorder.get_change_list_json()) == result_string
+    # print(empty_recorder.get_change_list_json())
