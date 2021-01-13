@@ -385,7 +385,7 @@ def test_recursive():
               {'accesses': None, 'line': _anything, 'variables': None}]
 
     tracer.set_new_recorder(Recorder())
-    
+
     @tracer('a')
     def t():
         a = []

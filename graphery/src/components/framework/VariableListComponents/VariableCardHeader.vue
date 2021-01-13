@@ -52,7 +52,6 @@
                 <q-btn
                   flat
                   dense
-                  round
                   :size="btnSize"
                   :icon="elementIcon"
                   @click="typeButtonClickHandler"
