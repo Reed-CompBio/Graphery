@@ -84,14 +84,18 @@
         this.cytoscape_.$(ids).toggleClass(className, flag);
       },
       toggleElementsClassName(className, flag) {
-        this.cytoscape_
-          ?.$(this.genClassQueryName(className))
-          .toggleClass(TOGGLE_CLASS_NAME, !flag);
+        if (this.cytoscape_) {
+          this.cytoscape_
+            .$(this.genClassQueryName(className))
+            .toggleClass(TOGGLE_CLASS_NAME, !flag);
+        }
       },
       removeElementsClassName(className) {
-        this.cytoscape_
-          ?.$(this.genClassQueryName(className))
-          .removeClass(className);
+        if (this.cytoscape_) {
+          this.cytoscape_
+            .$(this.genClassQueryName(className))
+            .removeClass(className);
+        }
       },
       addClassNameByIds(className, ids) {
         this.cytoscape_.$(ids).addClass(className);
