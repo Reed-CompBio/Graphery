@@ -102,5 +102,11 @@
     "You can also edit this in the Settings page": "You can also edit this in the Settings page",
     "Show Graph Info": "Show Graph Info",
     "No Result": "No Result"
+  },
+  "variable": {
+    "Toggle Graph Highlights": "Toggle Graph Highlights",
+    "Go Back": "Go Back",
+    "Top Level Already": "Top Level",
+    "Expand Element": "Expand Element"
   }
 }

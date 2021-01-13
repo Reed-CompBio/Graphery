@@ -5,13 +5,19 @@
         <div id="back-button" class="col" style="flex-grow: 1;">
           <div class="row" style="flex-wrap: nowrap; justify-content: left;">
             <q-btn
-              flat
+              :flat="!showPreviousButton"
+              :outline="showPreviousButton"
               dense
               :size="btnSize"
               :disable="!showPreviousButton"
               icon="mdi-backburger"
               @click="emitBackAction"
             />
+            <SwitchTooltip
+              v-if="showPreviousButton"
+              :text="$t('variable.Go Back')"
+            />
+            <SwitchTooltip v-else :text="$t('variable.Top Level Already')" />
           </div>
         </div>
         <div class="col" style="flex-wrap: nowrap;">
@@ -31,14 +37,15 @@
           <div class="row justify-end" style="flex-wrap: nowrap;">
             <div id="toggle-section">
               <q-btn
-                flat
+                :flat="isInitEle"
+                :outline="!isInitEle"
                 dense
                 :disable="isInitEle"
                 :size="btnSize"
                 :icon="hightlightButtonIcon"
                 @click="emitToggleAction"
-              >
-              </q-btn>
+              />
+              <SwitchTooltip :text="$t('variable.Toggle Graph Highlights')" />
             </div>
             <div id="icon-section">
               <div>
