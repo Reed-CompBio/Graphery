@@ -32,6 +32,7 @@
     _COLOR_HEADER,
     _LABEL_HEADER,
     _PYTHON_ID_HEADER,
+    BAD_REFERENCE_OBJECT,
   } from '@/components/framework/VariableListComponents/variableListConstants';
   import { revertNameCombo } from '@/components/framework/GraphEditorControls/ElementsUtils';
   export default {
@@ -103,6 +104,9 @@
               break;
             }
           }
+        }
+        if (typeof element === 'string' || element instanceof String) {
+          element = BAD_REFERENCE_OBJECT;
         }
         this.variableStack_.push(element);
         this.variableNameStack_.push(name);

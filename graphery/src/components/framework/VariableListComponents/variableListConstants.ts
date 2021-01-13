@@ -60,6 +60,13 @@ export const _GRAPH_NODE_TYPE = 'Node';
 export const _GRAPH_EDGE_TYPE = 'Edge';
 export const _GRAPH_OBJECT_TYPES = [_GRAPH_NODE_TYPE, _GRAPH_EDGE_TYPE];
 
+export const BAD_REFERENCE_OBJECT = {
+  label: 'BAD ELEMENT',
+  type: 'init',
+  repr: 'BAD ELEMENT',
+  color: '#ea1e1e',
+};
+
 function zipArraysToObject<N extends number>(
   keyMap: ArrayOfFixedLength<string, N>,
   valueMap: ArrayOfFixedLength<string, N>,
