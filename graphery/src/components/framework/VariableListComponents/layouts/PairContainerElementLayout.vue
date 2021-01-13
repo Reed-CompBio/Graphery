@@ -14,7 +14,7 @@
             class="row content-center"
             v-for="(pairElement, index) in pairElementArray"
           >
-            <div id="row-key-container" class="col-5 q-mx-xs">
+            <div id="row-key-container" class="col q-mx-xs">
               <VariableDisplayElementWrapper
                 v-on="$listeners"
                 :init-object="pairElement['key']"
@@ -23,13 +23,14 @@
             </div>
             <div
               id="row-separator-wrapper"
-              class="col justify-center flex-center"
+              class="col-1"
+              style="justify-content: center;"
             >
               <div id="row-separator">
                 :
               </div>
             </div>
-            <div id="row-value-container" class="col-5 q-mx-xs">
+            <div id="row-value-container" class="col q-mx-xs">
               <VariableDisplayElementWrapper
                 v-on="$listeners"
                 :init-object="pairElement['value']"
@@ -67,10 +68,12 @@
 
 <style lang="sass" scoped>
   #row-separator
-    padding: .2em .4em
-    margin: 0
+    padding: .15rem .3rem
+    margin: auto
     background-color: rgba(130, 130, 130, 0.75)
-    border-radius: 6px
-    max-width: 15px
-    display: inline-block
+    border-radius: 0.4rem
+    max-width: 1rem
+    display: block
+    font-weight: bolder
+    font-size: 1rem
 </style>

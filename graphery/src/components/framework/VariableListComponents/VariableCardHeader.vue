@@ -202,13 +202,13 @@
 <style scoped lang="sass">
   #name-section
     font-size: 17px
-    padding: .01rem .3rem
-    border-radius: 2rem
+    padding: .15rem .3rem
+    border-radius: 0.4rem
     opacity: .8
     text-overflow: ellipsis
     overflow: hidden
     &.toggle-off
-      opacity: .2
+      opacity: .3
     code
       text-wrap: normal
       transform: scaleX(0.9)
