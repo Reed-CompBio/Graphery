@@ -10,17 +10,16 @@ Local server is used to generate step by step debug info for the front end.
  -  Or you can clone the repository if the version is not available on the release page: 
     
     ```bash
-    git clone https://github.com/FlickerSoul/Graphery.git
-    cd Graphery/backend
+    git clone https://github.com/FlickerSoul/Graphery.git && cd Graphery/backend
     ```
 
-    Under this director, you can see a `bundle` folder and a `user_server.py` file. Those two will be the only thing you need. You can copy them in to a separate folder and delete the rest. 
+    Under this director, you can see a `bundle` folder and a `user_server.py` file, as well as `launch` and `launch.bat` files. Those two will be the only thing you need. You can copy them in to a separate folder and delete the rest. 
 
 ## Usage 
 
 No dependencies required. 
 
-Python 3.7 and above is required to run this server. Check you python version using the following command first. 
+Python 3.7 or above is required to run this server. Check you python version using the following command first. 
 
 ```bash 
 python --version
