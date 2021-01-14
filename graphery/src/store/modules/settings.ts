@@ -1,4 +1,4 @@
-import { RootState, SettingInfos, SettingState } from '@/store/states/state';
+import { RootState, SettingState } from '@/store/states/state';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 
 const state: SettingState = {

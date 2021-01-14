@@ -1,6 +1,8 @@
 <template>
   <ControlPanelContentFrame>
-    <template slot="title"> Welcome {{ userObj.username }} </template>
+    <template slot="title">
+      Welcome {{ userObj.firstName }} {{ userObj.lastName }}
+    </template>
     <template>
       <div class="text-h4">
         <p>

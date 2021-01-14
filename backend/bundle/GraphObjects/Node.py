@@ -66,13 +66,15 @@ class NodeSet(ElementSet):
                 raise GraphJsonFormatError(f'invalid format for Node {node}')
 
             data_field = node['data']
+            id_str = data_field['id']
+
             if all_has_name:
                 name = data_field['name']
-                id_str = data_field['id']
             else:
-                name = id_str = data_field['id']
+                name = id_str
 
             stored_node = Node(name)
+            stored_node.cy_id = id_str
 
             if 'displayed' in data_field:
                 stored_node.update_properties(data_field['displayed'])

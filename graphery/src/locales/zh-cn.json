@@ -103,6 +103,9 @@
     "Show Graph Info": "展示图详情",
     "No Result": "无结果"
   },
+  "article": {
+    "Figure": "图示"
+  },
   "variable": {
     "Toggle Graph Highlights": "开关图上高亮",
     "Go Back": "上一级",
