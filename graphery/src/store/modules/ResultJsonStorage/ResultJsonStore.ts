@@ -21,8 +21,14 @@ const mutations: MutationTree<ResultJsonStateType> = {
   LOAD_RESULT_JSON_STRING_LIST(state, value: ResultJsonType[]) {
     state.resultJsonStringList = value;
   },
+  LOAD_ITEM_TO_RESULT_JSON_STRING_LIST(state, value: ResultJsonType) {
+    state.resultJsonStringList?.push(value);
+  },
   LOAD_RESULT_JSON_OBJECT_LIST(state, value: ResultJsonObjectType[]) {
     state.resultJsonObjectList = value;
+  },
+  LOAD_ITEM_TO_RESULT_JSON_OBJECT_LIST(state, value: ResultJsonObjectType) {
+    state.resultJsonObjectList?.push(value);
   },
   LOAD_JSON_LOCATIONS(state, value: PositionType) {
     state.resultJsonPositions = value;
@@ -30,29 +36,29 @@ const mutations: MutationTree<ResultJsonStateType> = {
   CHANGE_JSON_LOCATION(state, value: { positionId: string; position: number }) {
     state.resultJsonPositions[value.positionId].position = value.position;
   },
-  CHANGE_RESULT_JSON_STRING(
-    state,
-    value: { json: string; graphId: string; codeId: string }
-  ) {
+  CHANGE_RESULT_JSON_STRING(state, value: ResultJsonType) {
     if (state.resultJsonStringList) {
       const result = state.resultJsonStringList.find(
         (obj) => obj.graphId === value.graphId && obj.codeId === value.codeId
       );
       if (result) {
         result.json = value.json;
+      } else {
+        state.resultJsonStringList?.push({ ...value });
       }
     }
   },
-  CHANGE_RESULT_JSON_OBJECT(
-    state,
-    value: { jsonObject: object; graphId: string; codeId: string }
-  ) {
+  CHANGE_RESULT_JSON_OBJECT(state, value: ResultJsonObjectType) {
     if (state.resultJsonObjectList) {
       const result = state.resultJsonObjectList.find(
         (obj) => obj.graphId === value.graphId && obj.codeId === value.codeId
       );
       if (result) {
         result.jsonObject = value.jsonObject;
+      } else {
+        state.resultJsonObjectList?.push({
+          ...value,
+        });
       }
     }
   },
@@ -127,7 +133,7 @@ function generateResultJsonObjectFromStringType(stringType: ResultJsonType) {
     jsonObject: stringType.json ? JSON.parse(stringType.json) : [],
     graphId: stringType.graphId,
     codeId: stringType.codeId,
-  };
+  } as ResultJsonObjectType;
 }
 
 function generateResultJsonObjectList(stringList: ResultJsonType[]) {
@@ -222,7 +228,7 @@ const getters: GetterTree<ResultJsonStateType, RootState> = {
     position: number
   ) => {
     const jsonObject = getter.getCurrentJsonObject(keys);
-    return jsonObject.jsonObject && jsonObject.jsonObject[position];
+    return jsonObject?.jsonObject && jsonObject.jsonObject[position];
   },
   getResultJsonPositionObjectFromId: (state) => (positionId: string) => {
     return state.resultJsonPositions[positionId];

@@ -10,8 +10,22 @@ export interface ResultJsonType extends KeysType {
   json: string;
 }
 
+export interface ResultJsonInterface {
+  label: string;
+  type: string;
+  color: string;
+  python_id: string;
+  properties: object;
+  id?: string;
+}
+
+interface VariableListColorType {
+  [variableIdentifier: string]: string;
+}
+
 export interface ResultJsonObjectType extends KeysType {
-  jsonObject: object;
+  jsonObject: ResultJsonInterface[];
+  colorList: VariableListColorType;
 }
 
 export interface ResultJsonTypeFromQueryData {
@@ -20,8 +34,18 @@ export interface ResultJsonTypeFromQueryData {
   graph: GraphTypeFromQueryData;
 }
 
+export interface VariableListInfoType {
+  variableHighlightToggle: {
+    [varName: string]: number;
+  };
+}
+
 export interface PositionType {
-  [key: string]: { position: number };
+  [key: string]: {
+    position: number;
+    variableListInfo: VariableListInfoType;
+    variableListOrder: string[];
+  };
 }
 
 export interface ResultJsonStateType {
