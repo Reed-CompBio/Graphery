@@ -110,7 +110,7 @@
           })
           .then((editor) => {
             editor.getModel().onDidChangeContent(
-              debounce((_) => {
+              debounce(() => {
                 this.codeObject.code = this.editor.getValue();
               }, 30)
             );
