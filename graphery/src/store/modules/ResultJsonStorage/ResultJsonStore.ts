@@ -36,6 +36,15 @@ const mutations: MutationTree<ResultJsonStateType> = {
   CHANGE_JSON_LOCATION(state, value: { positionId: string; position: number }) {
     state.resultJsonPositions[value.positionId].position = value.position;
   },
+  UPDATE_VARIABLE_LIST_TOGGLE_STATE(
+    state,
+    value: { positionId: string; identifier: string; toggleState: number }
+  ) {
+    state.resultJsonPositions[
+      value.positionId
+    ].variableListInfo.variableHighlightToggle[value.identifier] =
+      value.toggleState;
+  },
   CHANGE_RESULT_JSON_STRING(state, value: ResultJsonType) {
     if (state.resultJsonStringList) {
       const result = state.resultJsonStringList.find(
@@ -203,6 +212,13 @@ const actions: ActionTree<ResultJsonStateType, RootState> = {
 };
 
 const getters: GetterTree<ResultJsonStateType, RootState> = {
+  getToggleState: (state, getters) => (
+    currentPositionId: string,
+    varIdentifier: string
+  ) => {
+    return getters.getResultJsonPositionObjectFromId(currentPositionId)
+      ?.variableListInfo.variableHighlightToggle[varIdentifier];
+  },
   resultJsonStringListEmpty(state) {
     return (
       state.resultJsonStringList && state.resultJsonStringList.length === 0

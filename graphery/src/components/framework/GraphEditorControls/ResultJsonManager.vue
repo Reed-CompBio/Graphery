@@ -44,7 +44,13 @@
           for (const codeId of codeIds) {
             resultJsonPositions[
               this.getIdFromGraphIdAndCodeId(graphId, codeId)
-            ] = { position: 0, variableListInfo: {} };
+            ] = {
+              position: 0,
+              variableListInfo: {
+                variableHighlightToggle: {},
+                variableListOrder: [],
+              },
+            };
           }
         }
         this.$store.commit('rj/LOAD_JSON_LOCATIONS', resultJsonPositions);

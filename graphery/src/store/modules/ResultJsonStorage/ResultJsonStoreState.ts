@@ -15,7 +15,7 @@ export interface ResultJsonInterface {
   type: string;
   color: string;
   python_id: string;
-  properties: object;
+  properties?: object;
   id?: string;
 }
 
@@ -38,13 +38,13 @@ export interface VariableListInfoType {
   variableHighlightToggle: {
     [varName: string]: number;
   };
+  variableListOrder: string[];
 }
 
 export interface PositionType {
   [key: string]: {
     position: number;
     variableListInfo: VariableListInfoType;
-    variableListOrder: string[];
   };
 }
 
