@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import json
 from random import random
-from typing import Optional, Iterable, Mapping, Type, Union, Any, TypeVar, Generic
+from typing import Optional, Iterable, Mapping, Type, Union, Any, TypeVar, Generic, List, Tuple
 
 from django.core.files import File
-from django.db.models import Model
+from django.db import transaction
+from django.db.models import Model, QuerySet
 
 from backend.intel_wrappers.validators import dummy_validator, category_validator, name_validator, url_validator, \
     categories_validator, code_validator, wrapper_validator, authors_validator, non_empty_text_validator, \
@@ -17,11 +18,38 @@ from backend.model.TranslationModels import TranslationBase, GraphTranslationBas
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
 from backend.model.UserModel import User
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper, VariedContentWrapper
+from bundle.server_utils.main_functions import time_out_execute
 
 
 def finalize_prerequisite_wrapper_iter(model_wrappers: Iterable[AbstractWrapper]) -> None:
     for model_wrapper in model_wrappers:
         model_wrapper.finalize_model(overwrite=False)
+
+
+def _result_json_updater(code_list: Iterable[Code], graph_list: Iterable[Graph]) -> List[Tuple]:
+    failed_code_and_graph = []
+    for code in code_list:
+        for graph in graph_list:
+            try:
+                response = time_out_execute(code=code.code, graph_json=graph.cyjs)
+                if 'data' not in response or 'errors' in response:
+                    raise ValueError('Execution went wrong with response: {}'.format(response))
+
+                with transaction.atomic():
+                    try:
+                        exec_result_json: ExecResultJson = ExecResultJson.objects.get(code=code, graph=graph)
+                    except ExecResultJson.DoesNotExist:
+                        exec_result_json: ExecResultJson = ExecResultJson(code=code, graph=graph)
+
+                    result_json: List[Mapping] = response['data']['execResult']
+                    exec_result_json.json = result_json
+                    exec_result_json.save()
+            except Exception as e:
+                failed_code_and_graph.append(
+                    (code, graph, e)
+                )
+
+    return failed_code_and_graph
 
 
 class UserWrapper(AbstractWrapper[User]):
@@ -156,7 +184,14 @@ class GraphWrapper(PublishedWrapper[Graph]):
             'priority': graph_priority_validator,
             'cyjs': json_validator,
             'tutorials': tutorial_anchors_validator
-        })
+        }, post_actions=[self._execute_code_after_submission])
+
+    def _execute_code_after_submission(self) -> None:
+        code_list: List[Code] = list(tutorial.code
+                                     for tutorial in self.model.tutorials.filter(code__isnull=False))
+        graph_list: List[Graph] = [self.model]
+        failed_missions = _result_json_updater(code_list, graph_list)
+        print(failed_missions)
 
     def load_model_var(self, loaded_model: Graph) -> None:
         super().load_model_var(loaded_model)
@@ -205,7 +240,13 @@ class CodeWrapper(AbstractWrapper[Code]):
             'name': non_empty_text_validator,
             'tutorial': wrapper_validator,
             'code': code_validator
-        })
+        }, post_actions=[self._execute_code_after_submission])
+
+    def _execute_code_after_submission(self) -> None:
+        code_list: List[Code] = [self.model]
+        graph_list: QuerySet[Graph] = self.tutorial.model.graph_set.all()
+        failed_missions = _result_json_updater(code_list, graph_list)
+        print(failed_missions)
 
     def load_model_var(self, loaded_model: Code) -> None:
         super().load_model_var(loaded_model)

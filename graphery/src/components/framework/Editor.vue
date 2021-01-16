@@ -93,19 +93,21 @@
             );
 
             this.editor.getModel().onDidChangeContent(
-              debounce((_) => {
+              debounce(() => {
                 const codeContent = this.editor.getValue();
                 this.content = codeContent;
                 this.$emit('editorContentChanged', codeContent);
               }, 100)
             );
 
-            this.editor.onKeyUp((__) => {
-              debounce((__) => {
-                this.clearDecoration();
+            this.editor.onKeyUp(() => {
+              debounce(() => {
+                if (!this.isReadOnly) {
+                  this.clearDecoration();
+                }
                 this.$emit('editorUserTyped');
               }, 20)();
-              throttle((__) => {
+              throttle(() => {
                 if (this.isReadOnly) {
                   errorDialog(
                     {
@@ -174,7 +176,6 @@
         }
       },
       moveToLine(line, message = 'Executing this line') {
-        // TODO scroll into view
         this.changeDecoration(this.generateDecoration(line, message));
         this.focusToLine(line);
       },
