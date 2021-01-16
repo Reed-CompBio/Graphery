@@ -67,7 +67,7 @@ jobs:
   build-frontend:
     working_directory: ~/Graphery/graphery
     docker: 
-      - image: cimg/python:3-node
+      - image: cimg/python:3.9.1-node
     steps:
       - checkout:
           path: ~/Graphery
