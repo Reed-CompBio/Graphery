@@ -50,10 +50,10 @@ jobs:
           # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
       - run: 
           name: Bundle Test 
-          command: cd ./backend/bundle && sudo pipenv run pytest -vv -ra -s
+          command: cd ./bundle && sudo pipenv run pytest -vv -ra -s
       - run: 
           name: Server Test 
-          command: cd ./backend/server && sudo pipenv run pytest -vv -ra -s
+          command: cd ./server && sudo pipenv run pytest -vv -ra -s
           environment:
             GRAPHERY_NORMAL_LOG_PATH: graphery_normal.log
             GRAPHERY_EXECUTION_LOG_PATH: graphery_execution.log
@@ -68,7 +68,6 @@ jobs:
     steps:
       - checkout:
           path: ~/Graphery
-      - run: cd ./graphery
       - node/install-packages:
           pkg-manager: yarn
       - run: 
