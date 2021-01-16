@@ -40,11 +40,6 @@ jobs:
     steps:
       - checkout:
           path: ~/Graphery
-      # - run: psql -c 'create database graphery;' -U postgres
-      # - run: psql -c "create user graphery with encrypted password 'graphery';" -U postgres
-      # - run: psql -c 'ALTER USER graphery WITH SUPERUSER;' -U postgres
-      # - run: psql -c 'grant all privileges on database graphery to graphery;' -U postgres
-      - run: ls -l 
       - python/install-packages:
           pkg-manager: pipenv
           # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
@@ -71,9 +66,20 @@ jobs:
     steps:
       - checkout:
           path: ~/Graphery
-      - run: ls -l 
+      # - restore_cache:
+      #     name: Restore Yarn Package Cache
+      #     keys:
+      #       - yarn-packages-{{ checksum "yarn.lock" }}
       - node/install-packages:
           pkg-manager: yarn
+      # - run:
+      #     name: Install Dependencies
+      #     command: yarn install --immutable
+      # - save_cache:
+      #     name: Save Yarn Package Cache
+      #     key: yarn-packages-{{ checksum "yarn.lock" }}
+      #     paths:
+      #       - ~/.cache/yarn
       - run: 
           name: Build Frontend 
           command: yarn run build 
