@@ -20,27 +20,15 @@
           </div>
           <div>
             <q-btn
-              label="Exec"
-              :loading="loadingContent"
-              @click="notAvailableMessage"
-              class="q-mr-sm"
-            />
-            <q-btn
               label="Exec Locally"
               :loading="loadingContent"
-              @click="execCodeOnCurrentGraph"
-              class="q-mr-sm"
-            />
-            <q-btn
-              label="Exec All"
-              :loading="loadingContent"
-              @click="notAvailableMessage"
+              @click="execCodeOnCurrentGraphLocally"
               class="q-mr-sm"
             />
             <q-btn
               label="Exec All Locally"
               :loading="loadingContent"
-              @click="execCodeOnAllGraphs"
+              @click="execCodeOnAllGraphsLocally"
               class="q-mr-sm"
             />
           </div>
@@ -80,14 +68,13 @@
     errorDialog,
     successDialog,
     warningDialog,
-    notAvailableMessage,
   } from '@/services/helpers';
-  import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
+  import PushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
   import { newModelUUID } from '@/services/params';
 
   export default {
     props: ['codeId', 'codeContent'],
-    mixins: [loadingMixin, pushCodeToLocalMixin],
+    mixins: [loadingMixin, PushCodeToLocalMixin],
     components: {
       JSONSubmissionAttentionCard: () =>
         import(
@@ -185,7 +172,7 @@
           null
         );
       },
-      async execCodeOnCurrentGraph() {
+      async execCodeOnCurrentGraphLocally() {
         if (this.graphChoice) {
           const graphJson = JSON.parse(this.graphChoice.cyjs);
           const graphId = this.graphChoice.id;
@@ -198,7 +185,7 @@
           });
         }
       },
-      async execCodeOnAllGraphs() {
+      async execCodeOnAllGraphsLocally() {
         this.startLoading();
         for (const obj of this.graphOptions) {
           await this.localExec(JSON.parse(obj.cyjs), obj.id);
@@ -233,7 +220,6 @@
             this.finishedLoading();
           });
       },
-      notAvailableMessage,
     },
     mounted() {
       this.fetchTutorialGraphs();
