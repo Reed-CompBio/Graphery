@@ -24,9 +24,10 @@ jobs:
     # A list of available CircleCI docker convenience images are available here: https://circleci.com/developer/images/image/cimg/python
     # The executor is the environment in which the steps below will be executed - below will use a python 3.9 container
     # Change the version below to your required version of python
+    working_directory: ~/Graphery/backend
     docker:
       - image: cimg/python:3.8
-      - image: circleci/postgres:13-alpine-ram
+      - image: circleci/postgres:13-postgis-ram
         environment: 
           POSTGRES_USER: graphery
           POSTGRES_PASSWORD: graphery
@@ -37,22 +38,22 @@ jobs:
     # Then run your tests!
     # CircleCI will report the results back to your VCS provider.
     steps:
-      - checkout
+      - checkout:
+          path: ~/Graphery
       # - run: psql -c 'create database graphery;' -U postgres
       # - run: psql -c "create user graphery with encrypted password 'graphery';" -U postgres
       # - run: psql -c 'ALTER USER graphery WITH SUPERUSER;' -U postgres
       # - run: psql -c 'grant all privileges on database graphery to graphery;' -U postgres
-      - run: cd ./backend
       - python/install-packages:
           pkg-manager: pipenv
           # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
           # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
       - run: 
           name: Bundle Test 
-          command: cd ./bundle && sudo pipenv run pytest -vv -ra -s
+          command: cd ./backend/bundle && sudo pipenv run pytest -vv -ra -s
       - run: 
           name: Server Test 
-          command: cd ../server && sudo pipenv run pytest -vv -ra -s
+          command: cd ./backend/server && sudo pipenv run pytest -vv -ra -s
           environment:
             GRAPHERY_NORMAL_LOG_PATH: graphery_normal.log
             GRAPHERY_EXECUTION_LOG_PATH: graphery_execution.log
@@ -61,10 +62,12 @@ jobs:
       PIPENV_IGNORE_VIRTUALENVS: 1
  
   build-frontend:
+    working_directory: ~/Graphery/graphery
     docker: 
       - image: cimg/node:15.6.0
     steps:
-      - checkout
+      - checkout:
+          path: ~/Graphery
       - run: cd ./graphery
       - node/install-packages:
           pkg-manager: yarn
