@@ -9,7 +9,7 @@ orbs:
   node: circleci/node@4.1.0
 
 workflows:
-  sample:  # This is the name of the workflow, feel free to change it to better match your workflow.
+  graphery-build:  # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run. 
     # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows 
     jobs:
