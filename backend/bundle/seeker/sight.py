@@ -455,6 +455,7 @@ class Tracer:
         newish_string = ('Starting var:.. ' if event == 'call' else
                          'New var:....... ')
 
+        self.write('recorder line {}'.format(line_no))
         for name, (value, value_repr) in local_reprs.items():
             identifier = (self.prefix, name)
             identifier_string = self.recorder.register_variable(identifier)
@@ -466,7 +467,10 @@ class Tracer:
                     self.recorder.add_vc_to_previous_record(identifier_string, value)
                 self.write('{indent}{newish_string}{name} = {value_repr}'.format(**locals()))
             elif old_local_reprs[name][1] != value_repr:
-                self.recorder.add_vc_to_previous_record(identifier_string, value)
+                if event == 'return':
+                    self.recorder.add_vc_to_last_record(identifier_string, value)
+                else:
+                    self.recorder.add_vc_to_previous_record(identifier_string, value)
                 self.write('{indent}Modified var:.. {name} = {value_repr}'.format(**locals()))
 
         #                                                                     #
