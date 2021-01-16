@@ -26,7 +26,7 @@ jobs:
     # Change the version below to your required version of python
     working_directory: ~/Graphery/backend
     docker:
-      - image: cimg/python:3.8
+      - image: cimg/python:3.9
       - image: circleci/postgres:13-postgis-ram
         environment: 
           POSTGRES_USER: graphery
@@ -64,6 +64,7 @@ jobs:
   build-frontend:
     working_directory: ~/Graphery/graphery
     docker: 
+      - image: cimg/python:3.9
       - image: cimg/node:15.6.0
     steps:
       - checkout:
