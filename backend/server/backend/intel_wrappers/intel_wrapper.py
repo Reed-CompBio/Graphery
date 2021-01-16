@@ -18,7 +18,7 @@ from backend.model.TranslationModels import TranslationBase, GraphTranslationBas
 from backend.model.TutorialRelatedModel import Category, Tutorial, Graph, Code, ExecResultJson, Uploads, FAKE_UUID
 from backend.model.UserModel import User
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper, PublishedWrapper, VariedContentWrapper
-from server_utils.main_functions import time_out_execute
+from bundle.server_utils.main_functions import time_out_execute
 
 
 def finalize_prerequisite_wrapper_iter(model_wrappers: Iterable[AbstractWrapper]) -> None:
@@ -187,7 +187,8 @@ class GraphWrapper(PublishedWrapper[Graph]):
         }, post_actions=[self._execute_code_after_submission])
 
     def _execute_code_after_submission(self) -> None:
-        code_list: List[Code] = list(tutorial.code for tutorial in self.model.tutorials.all())
+        code_list: List[Code] = list(tutorial.code
+                                     for tutorial in self.model.tutorials.filter(code__isnull=False))
         graph_list: List[Graph] = [self.model]
         failed_missions = _result_json_updater(code_list, graph_list)
         print(failed_missions)
