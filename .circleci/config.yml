@@ -44,10 +44,13 @@ jobs:
       # - run: psql -c "create user graphery with encrypted password 'graphery';" -U postgres
       # - run: psql -c 'ALTER USER graphery WITH SUPERUSER;' -U postgres
       # - run: psql -c 'grant all privileges on database graphery to graphery;' -U postgres
+      - run: ls -l 
       - python/install-packages:
           pkg-manager: pipenv
           # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
           # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
+      - run: 
+          command: pipenv install -d
       - run: 
           name: Bundle Test 
           command: cd ./bundle && pipenv run pytest -vv -ra -s
@@ -64,11 +67,12 @@ jobs:
   build-frontend:
     working_directory: ~/Graphery/graphery
     docker: 
-      - image: cimg/python:3.9
       - image: cimg/node:15.6.0
+      - image: cimg/python:3.9
     steps:
       - checkout:
           path: ~/Graphery
+      - run: ls -l 
       - node/install-packages:
           pkg-manager: yarn
       - run: 
