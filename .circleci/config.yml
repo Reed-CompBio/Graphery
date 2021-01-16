@@ -14,6 +14,7 @@ workflows:
     # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows 
     jobs:
       - build-backend
+      - build-frontend 
 
 
 jobs:
@@ -25,7 +26,11 @@ jobs:
     # Change the version below to your required version of python
     docker:
       - image: cimg/python:3.8
-      - image: circleci/postgres:9.6-alpine-ram
+      - image: circleci/postgres:13-alpine-ram
+        environment: 
+          POSTGRES_USER: graphery
+          POSTGRES_PASSWORD: graphery
+          POSTGRES_DB: graphery 
     # Checkout the code as the first step. This is a dedicated CircleCI step.
     # The python orb's install-packages step will install the dependencies from a Pipfile via Pipenv by default.
     # Here we're making sure we use just use the system-wide pip. By default it uses the project root's requirements.txt.
@@ -33,10 +38,10 @@ jobs:
     # CircleCI will report the results back to your VCS provider.
     steps:
       - checkout
-      - run: psql -c 'create database graphery;' -U postgres
-      - run: psql -c "create user graphery with encrypted password 'graphery';" -U postgres
-      - run: psql -c 'ALTER USER graphery WITH SUPERUSER;' -U postgres
-      - run: psql -c 'grant all privileges on database graphery to graphery;' -U postgres
+      # - run: psql -c 'create database graphery;' -U postgres
+      # - run: psql -c "create user graphery with encrypted password 'graphery';" -U postgres
+      # - run: psql -c 'ALTER USER graphery WITH SUPERUSER;' -U postgres
+      # - run: psql -c 'grant all privileges on database graphery to graphery;' -U postgres
       - run: cd ./backend
       - python/install-packages:
           pkg-manager: pipenv
