@@ -14,20 +14,20 @@
               outlined
               map-options
               option-label="name"
-              :disable="loadingContent"
-              :loading="loadingContent"
+              :disable="customLoading"
+              :loading="customLoading"
             />
           </div>
           <div>
             <q-btn
               label="Exec Locally"
-              :loading="loadingContent"
+              :loading="customLoading"
               @click="execCodeOnCurrentGraphLocally"
               class="q-mr-sm"
             />
             <q-btn
               label="Exec All Locally"
-              :loading="loadingContent"
+              :loading="customLoading"
               @click="execCodeOnAllGraphsLocally"
               class="q-mr-sm"
             />
@@ -41,7 +41,7 @@
             type="textarea"
             outlined
             label="Execution Result Json (Read Only)"
-            :loading="loadingContent"
+            :loading="customLoading"
           />
         </div>
       </InfoCard>
@@ -50,7 +50,7 @@
       <JSONSubmissionAttentionCard />
       <SubmitButton
         class="full-width"
-        :loading="loadingContent"
+        :loading="customLoading"
         :action="postExecJson"
       />
     </template>
@@ -73,7 +73,7 @@
   import { newModelUUID } from '@/services/params';
 
   export default {
-    props: ['codeId', 'codeContent'],
+    props: ['codeId', 'codeContent', 'updating'],
     mixins: [loadingMixin, PushCodeToLocalMixin],
     components: {
       JSONSubmissionAttentionCard: () =>
@@ -99,6 +99,9 @@
           this.execResults &&
           this.execResults[this.graphChoice.id]
         );
+      },
+      customLoading() {
+        return this.loadingContent || this.updating;
       },
       allowSubmit() {
         if (this.graphOptions) {
@@ -146,6 +149,10 @@
             this.execResults = {};
             data.code.execresultjsonSet.forEach((obj) => {
               this.execResults[obj.graph.id] = obj.json;
+            });
+
+            successDialog({
+              message: 'Fetched result JSON set.',
             });
           })
           .catch((err) => {

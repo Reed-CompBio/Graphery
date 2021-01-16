@@ -9,7 +9,7 @@
           <IDCard :id="codeObject.id" />
           <q-card id="editor-wrapper" class="q-py-md q-px-sm q-mb-md">
             <div style="height: 70vh;" id="editor"></div>
-            <q-inner-loading :showing="editor === null">
+            <q-inner-loading :showing="editor === null || loadingContent">
               <q-spinner-pie size="64px" color="primary" />
             </q-inner-loading>
           </q-card>
@@ -37,13 +37,19 @@
           </div>
 
           <div id="submit-section">
-            <SubmitButton class="full-width" :action="postCode" />
+            <SubmitButton
+              class="full-width"
+              :loading="loadingContent"
+              :action="postCode"
+            />
           </div>
         </template>
       </EditorFrame>
       <JsonCreation
+        ref="resultJsonEditor"
         :codeId="codeObject.id"
         :codeContent="this.codeObject.code"
+        :updating="loadingContent"
       />
     </template>
   </ControlPanelContentFrame>
@@ -168,6 +174,7 @@
             successDialog({
               message: 'Update Code Successfully!',
             });
+            this.$refs.resultJsonEditor?.fetchTutorialGraphs();
           })
           .catch((err) => {
             errorDialog({
