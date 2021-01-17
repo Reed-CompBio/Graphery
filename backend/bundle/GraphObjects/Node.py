@@ -44,7 +44,7 @@ class Node(Comparable, HasProperty, Stylable):
             raise TypeError(f'identity must be a string or a node instance. You gave {type(identity)}')
 
 
-class NodeSet(ElementSet):
+class NodeSet(ElementSet[Node]):
     def __init__(self, nodes: Iterable[Node]):
         """
         Create an edge set with a pile of elements.

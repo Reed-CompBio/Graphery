@@ -133,7 +133,7 @@ class Edge(Comparable, HasProperty, Stylable):
                 raise TypeError('The edge must be a edge if the identity is not a string')
 
 
-class EdgeSet(ElementSet):
+class EdgeSet(ElementSet[Edge]):
     def __init__(self, edges: Iterable[Edge]):
         """
         Create an edge set with a pile of elements.
