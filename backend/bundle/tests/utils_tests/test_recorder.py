@@ -11,7 +11,6 @@ from bundle.seeker import tracer
 from bundle.GraphObjects.Edge import Edge
 from bundle.GraphObjects.Node import Node
 from bundle.utils.recorder import Recorder, identifier_to_string, IDENTIFIER_SEPARATOR
-from bundle.controller import controller
 
 
 @pytest.fixture()
