@@ -4,7 +4,7 @@ from collections import namedtuple
 
 from .Base import Comparable, HasProperty, Stylable, ElementSet
 from .Errors import GraphJsonFormatError
-from .Node import Node, NodeSet
+from .Node import Node
 
 NodeTuple = namedtuple('Edge', ('u', 'v'))
 EdgeIDTuple = namedtuple('edge_identities', ('incident_edge_identity', 'final_edge_identity'))
@@ -114,8 +114,8 @@ class Edge(Comparable, HasProperty, Stylable):
         return self.__str__()
 
     @staticmethod
-    def return_edge(identity: str = None, edge: Union['Edge', NodeTuple, Tuple[str, str]] = (),
-                    styles: Iterable[Mapping] = (), classes: Iterable[str] = ()) -> 'Edge':
+    def return_edge(identity: str = None, edge: Union[Edge, NodeTuple, Tuple[str, str]] = (),
+                    styles: Iterable[Mapping] = (), classes: Iterable[str] = ()) -> Edge:
 
         if isinstance(identity, str):
             if isinstance(edge, NodeTuple):
@@ -125,7 +125,7 @@ class Edge(Comparable, HasProperty, Stylable):
             else:
                 # TODO think about it
                 incident_node, final_node = None, None
-            return Edge(identity, NodeTuple(incident_node, final_node), styles, classes)
+            return Edge(identity, NodeTuple(incident_node, final_node), styles=styles, classes=classes)
         else:
             if isinstance(edge, Edge):
                 return edge
