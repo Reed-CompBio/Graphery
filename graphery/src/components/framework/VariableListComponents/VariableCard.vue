@@ -37,7 +37,12 @@
     BAD_REFERENCE_OBJECT,
   } from '@/components/framework/VariableListComponents/variableListConstants';
   import { revertNameCombo } from '@/components/framework/GraphEditorControls/ElementsUtils';
+  import ResultJsonVariableListPositionMixin from '@/components/framework/VariableListComponents/ResultJsonVariableListPositionMixin';
+
+  const DEFAULT_TOGGLE_STATE = 1;
+
   export default {
+    mixins: [ResultJsonVariableListPositionMixin],
     props: {
       initVariableObject: {
         type: Object,
@@ -50,7 +55,7 @@
         variableNameStack_: [],
         variableStack_: [],
         initVarColor_: null,
-        toggleState_: 1,
+        toggleState_: DEFAULT_TOGGLE_STATE,
       };
     },
     computed: {
@@ -80,6 +85,7 @@
       },
       toggleState: {
         set(d) {
+          this.updateVariableToggleState(this.rootVariableName, d);
           this.toggleState_ = d;
         },
         get() {
@@ -149,6 +155,10 @@
     watch: {
       rootVariable: function() {
         this.resetVariableStacks();
+      },
+      currentPositionId: function(newPositionId) {
+        const state = this.getToggleState(newPositionId, this.rootVariableName);
+        this.toggleState_ = state === undefined ? DEFAULT_TOGGLE_STATE : state;
       },
     },
   };

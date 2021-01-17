@@ -60,7 +60,7 @@
           successDialog(
             {
               message: this.$t(
-                'graph.You can also edit this in the Settings page.'
+                'graph.You can also edit this in the Settings page'
               ),
             },
             3000

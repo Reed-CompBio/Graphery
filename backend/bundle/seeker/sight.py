@@ -437,8 +437,7 @@ class Tracer:
         #                                                                     #
         # Finished dealing with misplaced function definition. ################
 
-        # TODO remove the if statement
-        if event != 'return':
+        if not (event == 'return' and line_no == self.recorder.get_last_record_line_number()):
             self.recorder.add_record(line_no)
 
         # Reporting newish and modified variables: ############################
@@ -466,7 +465,10 @@ class Tracer:
                     self.recorder.add_vc_to_previous_record(identifier_string, value)
                 self.write('{indent}{newish_string}{name} = {value_repr}'.format(**locals()))
             elif old_local_reprs[name][1] != value_repr:
-                self.recorder.add_vc_to_previous_record(identifier_string, value)
+                if event == 'return':
+                    self.recorder.add_vc_to_last_record(identifier_string, value)
+                else:
+                    self.recorder.add_vc_to_previous_record(identifier_string, value)
                 self.write('{indent}Modified var:.. {name} = {value_repr}'.format(**locals()))
 
         #                                                                     #

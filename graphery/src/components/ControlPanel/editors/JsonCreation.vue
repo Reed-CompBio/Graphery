@@ -14,33 +14,21 @@
               outlined
               map-options
               option-label="name"
-              :disable="loadingContent"
-              :loading="loadingContent"
+              :disable="customLoading"
+              :loading="customLoading"
             />
           </div>
           <div>
             <q-btn
-              label="Exec"
-              :loading="loadingContent"
-              @click="notAvailableMessage"
-              class="q-mr-sm"
-            />
-            <q-btn
               label="Exec Locally"
-              :loading="loadingContent"
-              @click="execCodeOnCurrentGraph"
-              class="q-mr-sm"
-            />
-            <q-btn
-              label="Exec All"
-              :loading="loadingContent"
-              @click="notAvailableMessage"
+              :loading="customLoading"
+              @click="execCodeOnCurrentGraphLocally"
               class="q-mr-sm"
             />
             <q-btn
               label="Exec All Locally"
-              :loading="loadingContent"
-              @click="execCodeOnAllGraphs"
+              :loading="customLoading"
+              @click="execCodeOnAllGraphsLocally"
               class="q-mr-sm"
             />
           </div>
@@ -53,7 +41,7 @@
             type="textarea"
             outlined
             label="Execution Result Json (Read Only)"
-            :loading="loadingContent"
+            :loading="customLoading"
           />
         </div>
       </InfoCard>
@@ -62,7 +50,7 @@
       <JSONSubmissionAttentionCard />
       <SubmitButton
         class="full-width"
-        :loading="loadingContent"
+        :loading="customLoading"
         :action="postExecJson"
       />
     </template>
@@ -80,14 +68,13 @@
     errorDialog,
     successDialog,
     warningDialog,
-    notAvailableMessage,
   } from '@/services/helpers';
-  import pushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
+  import PushCodeToLocalMixin from '@/components/mixins/PushCodeToLocalMixin';
   import { newModelUUID } from '@/services/params';
 
   export default {
-    props: ['codeId', 'codeContent'],
-    mixins: [loadingMixin, pushCodeToLocalMixin],
+    props: ['codeId', 'codeContent', 'updating'],
+    mixins: [loadingMixin, PushCodeToLocalMixin],
     components: {
       JSONSubmissionAttentionCard: () =>
         import(
@@ -112,6 +99,9 @@
           this.execResults &&
           this.execResults[this.graphChoice.id]
         );
+      },
+      customLoading() {
+        return this.loadingContent || this.updating;
       },
       allowSubmit() {
         if (this.graphOptions) {
@@ -160,6 +150,10 @@
             data.code.execresultjsonSet.forEach((obj) => {
               this.execResults[obj.graph.id] = obj.json;
             });
+
+            successDialog({
+              message: 'Fetched result JSON set.',
+            });
           })
           .catch((err) => {
             errorDialog({
@@ -185,7 +179,7 @@
           null
         );
       },
-      async execCodeOnCurrentGraph() {
+      async execCodeOnCurrentGraphLocally() {
         if (this.graphChoice) {
           const graphJson = JSON.parse(this.graphChoice.cyjs);
           const graphId = this.graphChoice.id;
@@ -198,7 +192,7 @@
           });
         }
       },
-      async execCodeOnAllGraphs() {
+      async execCodeOnAllGraphsLocally() {
         this.startLoading();
         for (const obj of this.graphOptions) {
           await this.localExec(JSON.parse(obj.cyjs), obj.id);
@@ -233,7 +227,6 @@
             this.finishedLoading();
           });
       },
-      notAvailableMessage,
     },
     mounted() {
       this.fetchTutorialGraphs();

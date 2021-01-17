@@ -2,6 +2,8 @@ import json
 from typing import List, Sequence, Mapping, Type, Optional, MutableMapping
 
 import graphene
+from django.db import transaction
+from django.db.models import QuerySet
 from graphene.types.generic import GenericScalar
 from graphql import GraphQLError
 
@@ -16,7 +18,7 @@ from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeTyp
 from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, get_wrapper_by_id
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper, \
-    GraphTranslationContentWrapper, ExecResultJsonWrapper, UploadsWrapper
+    GraphTranslationContentWrapper, ExecResultJsonWrapper, UploadsWrapper, _result_json_updater
 from backend.intel_wrappers.wrapper_bases import AbstractWrapper
 from backend.model.TranslationModels import TranslationBase, GraphTranslationBase
 from backend.model.TutorialRelatedModel import GraphPriority, Graph
@@ -176,12 +178,17 @@ class UpdateTutorialContent(SuccessMutationBase):
         content['authors'] = get_wrappers_by_ids(UserWrapper, content['authors'])
         content['tutorial_anchor'] = get_wrapper_by_id(TutorialAnchorWrapper, content['tutorial_anchor'])
 
-        graph_set: List[str] = content.pop('graph_set')
+        graph_set: QuerySet[Graph] = Graph.objects.filter(id__in=content.pop('graph_set'))
 
-        tutorial_content_wrapper = process_model_wrapper(TutorialTranslationContentWrapper,
-                                                         model_class=translation_table, **content)
+        with transaction.atomic():
+            tutorial_content_wrapper = process_model_wrapper(TutorialTranslationContentWrapper,
+                                                             model_class=translation_table, **content)
 
-        tutorial_content_wrapper.model.tutorial_anchor.graph_set.set(Graph.objects.filter(id__in=graph_set))
+            tutorial_content_wrapper.model.tutorial_anchor.graph_set.set(graph_set)
+
+            if hasattr(tutorial_content_wrapper.model, 'code'):
+                code_list = [tutorial_content_wrapper.model.code]
+                _result_json_updater(code_list, graph_set)
 
         return UpdateTutorialContent(success=True, model=tutorial_content_wrapper.model)
 

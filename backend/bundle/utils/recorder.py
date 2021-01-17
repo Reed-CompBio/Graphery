@@ -183,6 +183,9 @@ class Recorder:
         """
         return self._changes[-1]
 
+    def get_last_record_line_number(self) -> int:
+        return self.get_last_record()[self._LINE_HEADER]
+
     def get_previous_record(self) -> MutableMapping:
         """Get the second last record in the record list
 

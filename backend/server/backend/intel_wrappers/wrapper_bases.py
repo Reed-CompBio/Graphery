@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from abc import abstractmethod, ABC
 
-from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, MutableMapping, TypeVar, Generic
+from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, MutableMapping, TypeVar, Generic, Sequence, \
+    List
 
 from django.core.exceptions import ValidationError
 from django.db import models, IntegrityError, transaction
@@ -56,7 +57,7 @@ class ModelWrapperBase(Generic[_T], ABC):
         pass
 
     def load_model(self, loaded_model: _T, load_var: bool = True) -> ModelWrapperBase:
-        self.model = loaded_model
+        self.model: _T = loaded_model
 
         if load_var:
             self.load_model_var(loaded_model)
@@ -115,17 +116,33 @@ class SettableBase(ABC):
         return kwargs.get(var_name, None)
 
 
+class PostActionWrapper(ABC):
+    def __init__(self, actions: Sequence[Callable] = ()) -> None:
+        self.actions_ = actions
+
+    def set_actions(self, actions: Sequence[Callable]) -> None:
+        self.actions_ = actions
+
+    def _perform_post_actions(self) -> List[Any]:
+        output = []
+        for action in self.actions_:
+            output.append(action())
+        return output
+
+
 _S = TypeVar('_S', bound=UUIDMixin)
 
 
-class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, Generic[_S], ABC):
-    def __init__(self, validators: MutableMapping[str, Callable]):
+class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, PostActionWrapper, Generic[_S], ABC):
+    def __init__(self, validators: MutableMapping[str, Callable],
+                 post_actions: Sequence[Callable] = ()) -> None:
         self.id: Optional[str] = None
         validators['id'] = dummy_validator
 
         IntelWrapperBase.__init__(self, validators)
         ModelWrapperBase.__init__(self)
         SettableBase.__init__(self)
+        PostActionWrapper.__init__(self, post_actions)
 
         self.field_names = [*self.validators.keys()]
 
@@ -201,7 +218,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, Gene
             self.validate()
             self.overwrite_model()
 
-    def finalize_model(self, overwrite: bool = True, validate: bool = True) -> None:
+    def finalize_model(self, overwrite: bool = True, validate: bool = True) -> Mapping[str, Any]:
         with transaction.atomic():
             self.prepare_model()
             is_newly_created = self.get_model(validate=validate)
@@ -213,15 +230,20 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, Gene
             if overwrite and validate:
                 self.save_model()
 
+            post_action_output = self._perform_post_actions()
+        return {
+            'post_action_output': post_action_output
+        }
+
 
 _V = TypeVar('_V', bound=PublishedMixin)
 
 
 class PublishedWrapper(AbstractWrapper[_V], Generic[_V], ABC):
-    def __init__(self, validators: MutableMapping[str, Callable]):
+    def __init__(self, validators: MutableMapping[str, Callable], post_actions: Sequence[Callable] = ()):
         self.is_published: bool = False
         validators['is_published'] = is_published_validator
-        super(PublishedWrapper, self).__init__(validators)
+        super(PublishedWrapper, self).__init__(validators, post_actions)
 
     def load_model_var(self, loaded_model: _V) -> None:
         super().load_model_var(loaded_model)
@@ -229,7 +251,7 @@ class PublishedWrapper(AbstractWrapper[_V], Generic[_V], ABC):
 
 
 class VariedContentWrapper(PublishedWrapper[_V], Generic[_V], ABC):
-    def __init__(self, validators: MutableMapping[str, Callable]):
-        super(VariedContentWrapper, self).__init__(validators)
+    def __init__(self, validators: MutableMapping[str, Callable], post_actions: Sequence[Callable] = ()):
+        super(VariedContentWrapper, self).__init__(validators, post_actions)
 
-        self.model_class: _V = self.model_class
+        self.model_class: Type[_V] = self.model_class

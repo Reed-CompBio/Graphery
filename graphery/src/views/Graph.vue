@@ -294,7 +294,10 @@
               }))
             );
 
-            if (this.$store.getters['settings/graphAbstractPopupShow']) {
+            if (
+              this.$store.getters['settings/graphAbstractPopupShow'] &&
+              !this.onXsScreen
+            ) {
               this.flipGraphInfoDialog();
             }
           })
