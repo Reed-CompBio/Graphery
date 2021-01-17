@@ -167,7 +167,7 @@ _anything = _Any()
 
 def test_json_dump(empty_recorder):
     result_string = [{'accesses': None,
-                      'line': 0,
+                      'line': _anything,
                       'variables': {'main\u200b@var_1': {'color': '#A6CEE3',
                                                          'repr': None,
                                                          'type': 'init'},
@@ -189,7 +189,7 @@ def test_json_dump(empty_recorder):
                                     'python_id': _anything,
                                     'repr': 'Node(1)',
                                     'type': 'Node'}],
-                      'line': 1,
+                      'line': _anything,
                       'variables': {'main\u200b@var_1': {'color': '#A6CEE3',
                                                          'python_id': _anything,
                                                          'repr': '1',
@@ -255,7 +255,7 @@ def test_json_dump(empty_recorder):
                                                         'repr': '9',
                                                         'type': 'Number'}}],
                                     'type': 'Mapping'}],
-                      'line': 2,
+                      'line': _anything,
                       'variables': {'main\u200b@var_1': {'color': '#A6CEE3',
                                                          'python_id': _anything,
                                                          'repr': '1',
@@ -277,7 +277,7 @@ def test_json_dump(empty_recorder):
                                                          'python_id': _anything,
                                                          'repr': 'None',
                                                          'type': 'None'}}},
-                     {'accesses': None, 'line': 20, 'variables': None}]
+                     {'accesses': None, 'line': _anything, 'variables': None}]
     first_line_no = 1
     empty_recorder.add_record(first_line_no)
 
@@ -376,13 +376,36 @@ def test_recursive():
                                                                'python_id': _anything,
                                                                'repr': None,
                                                                'type': 'reference'}],
+                                                     'type': 'List'}],
+                                           'type': 'List'}}},
+              {'accesses': None,
+               'line': _anything,
+               'variables': {'t\u200b@a': {'color': '#A6CEE3',
+                                           'python_id': _anything,
+                                           'repr': [{'color': '#828282',
+                                                     'python_id': _anything,
+                                                     'repr': [{'color': '#828282',
+                                                               'python_id': _anything,
+                                                               'repr': '1',
+                                                               'type': 'Number'},
+                                                              {'color': '#828282',
+                                                               'python_id': _anything,
+                                                               'repr': '2',
+                                                               'type': 'Number'},
+                                                              {'color': '#828282',
+                                                               'python_id': _anything,
+                                                               'repr': '3',
+                                                               'type': 'Number'},
+                                                              {'color': '#828282',
+                                                               'python_id': _anything,
+                                                               'repr': None,
+                                                               'type': 'reference'}],
                                                      'type': 'List'},
                                                     {'color': '#828282',
                                                      'python_id': _anything,
                                                      'repr': '4',
                                                      'type': 'Number'}],
-                                           'type': 'List'}}},
-              {'accesses': None, 'line': _anything, 'variables': None}]
+                                           'type': 'List'}}}]
 
     tracer.set_new_recorder(Recorder())
 

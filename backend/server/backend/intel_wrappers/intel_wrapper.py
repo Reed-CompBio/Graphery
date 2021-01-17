@@ -186,12 +186,12 @@ class GraphWrapper(PublishedWrapper[Graph]):
             'tutorials': tutorial_anchors_validator
         }, post_actions=[self._execute_code_after_submission])
 
-    def _execute_code_after_submission(self) -> None:
+    def _execute_code_after_submission(self) -> List:
         code_list: List[Code] = list(tutorial.code
                                      for tutorial in self.model.tutorials.filter(code__isnull=False))
         graph_list: List[Graph] = [self.model]
         failed_missions = _result_json_updater(code_list, graph_list)
-        print(failed_missions)
+        return failed_missions
 
     def load_model_var(self, loaded_model: Graph) -> None:
         super().load_model_var(loaded_model)
@@ -242,11 +242,11 @@ class CodeWrapper(AbstractWrapper[Code]):
             'code': code_validator
         }, post_actions=[self._execute_code_after_submission])
 
-    def _execute_code_after_submission(self) -> None:
+    def _execute_code_after_submission(self) -> List:
         code_list: List[Code] = [self.model]
         graph_list: QuerySet[Graph] = self.tutorial.model.graph_set.all()
         failed_missions = _result_json_updater(code_list, graph_list)
-        print(failed_missions)
+        return failed_missions
 
     def load_model_var(self, loaded_model: Code) -> None:
         super().load_model_var(loaded_model)

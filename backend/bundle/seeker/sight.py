@@ -466,7 +466,10 @@ class Tracer:
                     self.recorder.add_vc_to_previous_record(identifier_string, value)
                 self.write('{indent}{newish_string}{name} = {value_repr}'.format(**locals()))
             elif old_local_reprs[name][1] != value_repr:
-                self.recorder.add_vc_to_previous_record(identifier_string, value)
+                if event == 'return':
+                    self.recorder.add_vc_to_last_record(identifier_string, value)
+                else:
+                    self.recorder.add_vc_to_previous_record(identifier_string, value)
                 self.write('{indent}Modified var:.. {name} = {value_repr}'.format(**locals()))
 
         #                                                                     #

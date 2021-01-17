@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from abc import abstractmethod, ABC
 
-from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, MutableMapping, TypeVar, Generic, Sequence
+from typing import Optional, Iterable, Mapping, Callable, Any, Type, Union, MutableMapping, TypeVar, Generic, Sequence, \
+    List
 
 from django.core.exceptions import ValidationError
 from django.db import models, IntegrityError, transaction
@@ -122,9 +123,11 @@ class PostActionWrapper(ABC):
     def set_actions(self, actions: Sequence[Callable]) -> None:
         self.actions_ = actions
 
-    def _perform_post_actions(self) -> None:
+    def _perform_post_actions(self) -> List[Any]:
+        output = []
         for action in self.actions_:
-            action()
+            output.append(action())
+        return output
 
 
 _S = TypeVar('_S', bound=UUIDMixin)
@@ -215,7 +218,7 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, Post
             self.validate()
             self.overwrite_model()
 
-    def finalize_model(self, overwrite: bool = True, validate: bool = True) -> None:
+    def finalize_model(self, overwrite: bool = True, validate: bool = True) -> Mapping[str, Any]:
         with transaction.atomic():
             self.prepare_model()
             is_newly_created = self.get_model(validate=validate)
@@ -227,7 +230,10 @@ class AbstractWrapper(IntelWrapperBase, ModelWrapperBase[_S], SettableBase, Post
             if overwrite and validate:
                 self.save_model()
 
-            self._perform_post_actions()
+            post_action_output = self._perform_post_actions()
+        return {
+            'post_action_output': post_action_output
+        }
 
 
 _V = TypeVar('_V', bound=PublishedMixin)
