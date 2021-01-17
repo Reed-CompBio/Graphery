@@ -455,7 +455,6 @@ class Tracer:
         newish_string = ('Starting var:.. ' if event == 'call' else
                          'New var:....... ')
 
-        self.write('recorder line {}'.format(line_no))
         for name, (value, value_repr) in local_reprs.items():
             identifier = (self.prefix, name)
             identifier_string = self.recorder.register_variable(identifier)
