@@ -143,7 +143,7 @@ class EdgeSet(ElementSet):
 
     @staticmethod
     def generate_edge_set(edges: Iterable[Mapping],
-                          ids_node_instance_mapping: Mapping[str, Node]) -> 'EdgeSet':
+                          ids_node_instance_mapping: Mapping[str, Node]) -> Tuple[EdgeSet, Mapping]:
         """
         generate an edge set by a given mapping (from cyjs) and the corresponding nodes
         @param edges:
@@ -151,7 +151,7 @@ class EdgeSet(ElementSet):
         @return: created edge set
         @raise ValueError: if the data is invalid
         """
-        stored_edges = []
+        stored_edges = {}
 
         all_has_id = all('id' in edge['data'] for edge in edges)
         all_has_name = all('name' in edge['data'] for edge in edges)
@@ -185,9 +185,9 @@ class EdgeSet(ElementSet):
             if 'displayed' in data_field:
                 stored_edge.update_properties(data_field['displayed'])
 
-            stored_edges.append(stored_edge)
+            stored_edges[stored_edge.cy_id] = stored_edge
 
-        return EdgeSet(stored_edges)
+        return EdgeSet(stored_edges.values()), stored_edges
 
 
 class MutableEdgeSet(EdgeSet):

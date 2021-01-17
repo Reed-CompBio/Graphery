@@ -190,8 +190,8 @@ class Graph(Stylable, Generic[Node_C, Edge_C]):
                     parsed_node_set, node_ids_instance_mapping = NodeSet.generate_node_set(element_dict['nodes'])
 
                 if 'edges' in element_dict:
-                    parsed_edge_set = EdgeSet.generate_edge_set(element_dict['edges'],
-                                                                node_ids_instance_mapping)
+                    parsed_edge_set, edge_ids_instance_mapping = EdgeSet.generate_edge_set(element_dict['edges'],
+                                                                                           node_ids_instance_mapping)
 
                 g = Graph(parsed_node_set, parsed_edge_set)
                 g.set_layout(layout_name)

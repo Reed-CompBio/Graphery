@@ -82,7 +82,7 @@ class NodeSet(ElementSet):
             if name in stored_nodes:
                 warnings.warn('Detected Duplicated Node in the graph.')
 
-            stored_nodes[id_str] = stored_node
+            stored_nodes[stored_node.cy_id] = stored_node
 
         return NodeSet(stored_nodes.values()), stored_nodes
 
