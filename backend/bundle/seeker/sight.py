@@ -437,8 +437,7 @@ class Tracer:
         #                                                                     #
         # Finished dealing with misplaced function definition. ################
 
-        # TODO remove the if statement
-        if event != 'return':
+        if not (event == 'return' and line_no == self.recorder.get_last_record_line_number()):
             self.recorder.add_record(line_no)
 
         # Reporting newish and modified variables: ############################
