@@ -44,7 +44,7 @@ class Node(Comparable, HasProperty, Stylable):
             raise TypeError(f'identity must be a string or a node instance. You gave {type(identity)}')
 
 
-class NodeSet(ElementSet):
+class NodeSet(ElementSet[Node]):
     def __init__(self, nodes: Iterable[Node]):
         """
         Create an edge set with a pile of elements.
@@ -82,7 +82,7 @@ class NodeSet(ElementSet):
             if name in stored_nodes:
                 warnings.warn('Detected Duplicated Node in the graph.')
 
-            stored_nodes[id_str] = stored_node
+            stored_nodes[stored_node.cy_id] = stored_node
 
         return NodeSet(stored_nodes.values()), stored_nodes
 

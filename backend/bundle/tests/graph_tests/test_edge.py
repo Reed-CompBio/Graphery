@@ -22,7 +22,7 @@ def multiple_edges(edge_json_obj):
 ])
 def test_multiple_edges(multiple_edges, expected):
     node_set, ids_node_mapping = NodeSet.generate_node_set(multiple_edges['nodes'])
-    edge_set = EdgeSet.generate_edge_set(multiple_edges['edges'], ids_node_mapping)
+    edge_set, edge_ids_instance_mapping = EdgeSet.generate_edge_set(multiple_edges['edges'], ids_node_mapping)
     assert len(edge_set) == 6
     for test_set in expected:
         assert gen_edge(test_set[0], 'n%s' % test_set[1], 'n%s' % test_set[2]) in edge_set

@@ -459,7 +459,7 @@ class Tracer:
             identifier_string = self.recorder.register_variable(identifier)
 
             if name not in old_local_reprs:
-                if event == 'call':
+                if event == 'call' or event == 'return':
                     self.recorder.add_vc_to_last_record(identifier_string, value)
                 else:
                     self.recorder.add_vc_to_previous_record(identifier_string, value)
