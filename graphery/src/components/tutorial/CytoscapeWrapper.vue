@@ -80,6 +80,7 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   let cytoscape;
   let panzoom;
   let dagre;
@@ -100,6 +101,9 @@
     successDialog,
   } from '@/services/helpers';
   import CytoscapeManager from '@/components/framework/GraphEditorControls/CytoscapeManager';
+  import TippyComponent from '@/components/framework/TippyComponent';
+
+  const tippyComponentClass = Vue.extend(TippyComponent);
 
   export default {
     mixins: [CytoscapeManager],
@@ -247,9 +251,13 @@
           this.moduleLoad();
         });
       },
-      makeTippy(node, text) {
+      makeTippy(node, componentPropData) {
         const ref = node.popperRef();
         const dummyDomEle = document.createElement('div');
+        const tc = new tippyComponentClass({
+          propsData: componentPropData,
+        }).$mount();
+
         return Tippy(dummyDomEle, {
           onCreate: function(instance) {
             instance.popperInstance.reference = ref;
@@ -258,13 +266,10 @@
           trigger: 'manual', // mandatory
 
           // dom element inside the tippy:
-          content: function() {
-            // function can be better for performance
-            const div = document.createElement('div');
-
-            div.innerHTML = text;
-
-            return div;
+          content: () => {
+            const c = document.createElement('div');
+            c.appendChild(tc.$el);
+            return c;
           },
 
           // your own preferences:
@@ -296,7 +301,9 @@
         // show node tooltips
         instance.on('mouseover', 'node', (event) => {
           const node = event.target;
-          this.tippy = this.makeTippy(node, `test content ${this.testValue}`);
+          this.tippy = this.makeTippy(node, {
+            initElementName: 'init node',
+          });
           this.tippy.show();
         });
         instance.on('mouseout', 'node', (_) => {
@@ -306,7 +313,9 @@
         // show edge tooltips
         instance.on('mouseover', 'edge', (event) => {
           const node = event.target;
-          this.tippy = this.makeTippy(node, `test content ${this.testValue}`);
+          this.tippy = this.makeTippy(node, {
+            initElementName: 'init edge',
+          });
           this.tippy.show();
         });
 
@@ -551,6 +560,9 @@
 <style lang="sass">
   @import '~@/styles/panzoom.css'
   @import '~tippy.js/dist/tippy.css'
+
+  .not-display
+    display: none
 
   .graph-menu-bar
     min-height: 56px
