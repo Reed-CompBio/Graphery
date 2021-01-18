@@ -86,6 +86,7 @@
   let dagre;
   let fcose;
   let Tippy;
+  let TippySticky;
   let popper;
   let lasso;
 
@@ -234,6 +235,7 @@
               .then((tp) => {
                 console.debug('Tippy module: ', tp);
                 Tippy = tp.default;
+                TippySticky = tp.sticky;
                 this.moduleLoad();
               })
               .then(() => {
@@ -274,15 +276,15 @@
           placement: 'bottom',
           theme: 'material',
           hideOnClick: 'true',
-          delay: [0, 2000],
+          delay: [650, 200],
           animation: 'fade',
           duration: [250, 275],
           allowHTML: true,
           touch: true,
-          // sticky: 'popper', // don't need it
-
-          // if interactive:
           interactive: true,
+          sticky: true,
+          plugins: [TippySticky],
+
           appendTo: document.body, // or append dummyDomEle to document.body
         });
       },
