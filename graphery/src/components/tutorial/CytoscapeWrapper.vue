@@ -258,12 +258,9 @@
           propsData: componentPropData,
         }).$mount();
 
-        return Tippy(dummyDomEle, {
-          onCreate: function(instance) {
-            instance.popperInstance.reference = ref;
-          },
-          lazy: false, // mandatory
-          trigger: 'manual', // mandatory
+        return new Tippy(dummyDomEle, {
+          getReferenceClientRect: ref.getBoundingClientRect, // https://atomiks.github.io/tippyjs/v6/all-props/#getreferenceclientrect
+          trigger: 'manual', // mandatory, we cause the tippy to show programmatically.
 
           // dom element inside the tippy:
           content: () => {
@@ -279,9 +276,6 @@
           hideOnClick: 'true',
           delay: [0, 2000],
           animation: 'fade',
-          multiple: false,
-          flip: true,
-          flipOnUpdate: true,
           duration: [250, 275],
           allowHTML: true,
           touch: true,
@@ -294,7 +288,7 @@
       },
       closeTippy() {
         if (this.tippy !== null) {
-          this.tippy.hide();
+          this.tippy.destroy();
         }
       },
       setupTooltips(instance) {
