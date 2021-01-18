@@ -1,6 +1,7 @@
 import json
 from collections import deque
 from numbers import Number
+from pprint import pprint
 from typing import List, Tuple, Deque, Sequence, Any
 from collections import Counter
 from collections.abc import Mapping, Set
@@ -11,6 +12,7 @@ from bundle.seeker import tracer
 from bundle.GraphObjects.Edge import Edge
 from bundle.GraphObjects.Node import Node
 from bundle.utils.recorder import Recorder, identifier_to_string, IDENTIFIER_SEPARATOR
+from .recorder_test_util import RecorderResultParser
 
 
 @pytest.fixture()
@@ -22,6 +24,11 @@ def empty_recorder():
 def default_identifier_and_string():
     identifier = ('namespace', 'variable')
     return identifier, identifier_to_string(identifier)
+
+
+@pytest.fixture()
+def set_new_recorder():
+    tracer.set_new_recorder(Recorder())
 
 
 def test_identifier_to_string(default_identifier_and_string):
@@ -339,7 +346,7 @@ def test_json_dump(empty_recorder):
     # print(empty_recorder.get_change_list_json())
 
 
-def test_recursive():
+def test_recursive(set_new_recorder):
     result = [{'accesses': None,
                'line': _anything,
                'variables': {'t\u200b@a': {'color': '#A6CEE3',
@@ -406,8 +413,6 @@ def test_recursive():
                                                      'type': 'Number'}],
                                            'type': 'List'}}}]
 
-    tracer.set_new_recorder(Recorder())
-
     @tracer('a')
     def t():
         a = []
@@ -416,4 +421,499 @@ def test_recursive():
         a.append(4)
 
     t()
-    assert tracer.get_recorder().get_processed_change_list() == result
+    assert RecorderResultParser(tracer.get_recorder().get_processed_change_list()) == RecorderResultParser(result)
+
+
+def test_one_func_assign(set_new_recorder):
+    @tracer('a')
+    def main():
+        a = 10
+
+    main()
+
+    result = [{'accesses': None,
+               'line': 0,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 442, 'variables': None},
+              {'accesses': None,
+               'line': 443,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4334516816,
+                                              'repr': '10',
+                                              'type': 'Number'}}}]
+
+    assert RecorderResultParser(result) == RecorderResultParser(tracer.get_recorder().get_processed_change_list())
+    pprint(tracer.get_recorder().get_processed_change_list())
+
+
+def test_end_of_func_modify(set_new_recorder):
+    @tracer('a')
+    def main():
+        a = ''
+        a = 1
+
+    main()
+
+    result = [{'accesses': None,
+               'line': 0,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 456, 'variables': None},
+              {'accesses': None,
+               'line': 457,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4374603376,
+                                              'repr': "''",
+                                              'type': 'String'}}},
+              {'accesses': None,
+               'line': 458,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4374415664,
+                                              'repr': '1',
+                                              'type': 'Number'}}}]
+
+    assert RecorderResultParser(result) == RecorderResultParser(tracer.get_recorder().get_processed_change_list())
+    pprint(tracer.get_recorder().get_processed_change_list())
+
+
+def test_end_of_func_new_var(set_new_recorder):
+    @tracer('a', 'b')
+    def main():
+        a = ''
+        b = 1
+
+    main()
+
+    result = [{'accesses': None,
+               'line': 0,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'repr': None,
+                                              'type': 'init'},
+                             'main\u200b@b': {'color': '#1F78B4',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 484, 'variables': None},
+              {'accesses': None,
+               'line': 485,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4514518640,
+                                              'repr': "''",
+                                              'type': 'String'},
+                             'main\u200b@b': {'color': '#1F78B4',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None,
+               'line': 486,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4514518640,
+                                              'repr': "''",
+                                              'type': 'String'},
+                             'main\u200b@b': {'color': '#1F78B4',
+                                              'python_id': 4514330928,
+                                              'repr': '1',
+                                              'type': 'Number'}}}]
+
+    assert RecorderResultParser(result) == RecorderResultParser(tracer.get_recorder().get_processed_change_list())
+    pprint(tracer.get_recorder().get_processed_change_list())
+
+
+def test_call_not_traced_func_return_val(set_new_recorder):
+    def call_test(a: int = 2):
+        a **= a
+        return a
+
+    @tracer('a', 'b')
+    def main():
+        a = ''
+        a = call_test()
+
+    main()
+
+    result = [{'accesses': None,
+               'line': 0,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 529, 'variables': None},
+              {'accesses': None,
+               'line': 530,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4341716592,
+                                              'repr': "''",
+                                              'type': 'String'}}},
+              {'accesses': None,
+               'line': 531,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4341528880,
+                                              'repr': '4',
+                                              'type': 'Number'}}}]
+
+    assert RecorderResultParser(result) == RecorderResultParser(tracer.get_recorder().get_processed_change_list())
+    pprint(tracer.get_recorder().get_processed_change_list())
+
+
+def test_call_not_traced_func_return_none(set_new_recorder):
+    def call_test(a: int = 2):
+        a **= a
+
+    @tracer('a', 'b')
+    def main():
+        a = ''
+        call_test()
+
+    main()
+
+    result = [{'accesses': None,
+               'line': 0,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 563, 'variables': None},
+              {'accesses': None,
+               'line': 564,
+               'variables': {'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4509455984,
+                                              'repr': "''",
+                                              'type': 'String'}}},
+              {'accesses': None, 'line': 565, 'variables': None}]
+
+    assert RecorderResultParser(result) == RecorderResultParser(tracer.get_recorder().get_processed_change_list())
+    pprint(tracer.get_recorder().get_processed_change_list())
+
+
+def test_call_traced_func_default_val_no_return(set_new_recorder):
+    @tracer('a')
+    def call_test(a: int = 2):
+        a **= a
+
+    @tracer('a', 'b')
+    def main():
+        a = ''
+        call_test()
+
+    main()
+
+    result = [{'accesses': None,
+               'line': 0,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'repr': None,
+                                                   'type': 'init'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 593, 'variables': None},
+              {'accesses': None,
+               'line': 594,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'repr': None,
+                                                   'type': 'init'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4449818224,
+                                              'repr': "''",
+                                              'type': 'String'}}},
+              {'accesses': None, 'line': 595, 'variables': None},
+              {'accesses': None,
+               'line': 589,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'python_id': 4449630544,
+                                                   'repr': '2',
+                                                   'type': 'Number'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4449818224,
+                                              'repr': "''",
+                                              'type': 'String'}}},
+              {'accesses': None,
+               'line': 590,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'python_id': 4449630608,
+                                                   'repr': '4',
+                                                   'type': 'Number'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4449818224,
+                                              'repr': "''",
+                                              'type': 'String'}}},
+              {'accesses': None, 'line': 595, 'variables': None}]
+
+    assert RecorderResultParser(result) == RecorderResultParser(tracer.get_recorder().get_processed_change_list())
+    pprint(tracer.get_recorder().get_processed_change_list())
+
+
+def test_call_traced_func_default_var_return_val(set_new_recorder):
+    @tracer('a')
+    def call_test(a: int = 2):
+        a **= a
+        return a
+
+    @tracer('a', 'b')
+    def main():
+        a = ''
+        a = call_test()
+
+    main()
+
+    result = [{'accesses': None,
+               'line': 0,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'repr': None,
+                                                   'type': 'init'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 651, 'variables': None},
+              {'accesses': None,
+               'line': 652,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'repr': None,
+                                                   'type': 'init'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4435457648,
+                                              'repr': "''",
+                                              'type': 'String'}}},
+              {'accesses': None, 'line': 653, 'variables': None},
+              {'accesses': None,
+               'line': 646,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'python_id': 4435269968,
+                                                   'repr': '2',
+                                                   'type': 'Number'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4435457648,
+                                              'repr': "''",
+                                              'type': 'String'}}},
+              {'accesses': None,
+               'line': 647,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'python_id': 4435270032,
+                                                   'repr': '4',
+                                                   'type': 'Number'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4435457648,
+                                              'repr': "''",
+                                              'type': 'String'}}},
+              {'accesses': None, 'line': 648, 'variables': None},
+              {'accesses': None,
+               'line': 653,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'python_id': 4435270032,
+                                                   'repr': '4',
+                                                   'type': 'Number'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4435270032,
+                                              'repr': '4',
+                                              'type': 'Number'}}}]
+
+    assert RecorderResultParser(result) == RecorderResultParser(tracer.get_recorder().get_processed_change_list())
+    pprint(tracer.get_recorder().get_processed_change_list())
+
+
+def test_call_traced_func_no_default_val(set_new_recorder):
+    @tracer('a')
+    def call_test(a):
+        a **= a
+        return a
+
+    @tracer('a', 'b')
+    def main():
+        a = ''
+        a = call_test(3)
+
+    main()
+
+    result = [{'accesses': None,
+               'line': 0,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'repr': None,
+                                                   'type': 'init'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 719, 'variables': None},
+              {'accesses': None,
+               'line': 720,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'repr': None,
+                                                   'type': 'init'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4500768368,
+                                              'repr': "''",
+                                              'type': 'String'}}},
+              {'accesses': None, 'line': 721, 'variables': None},
+              {'accesses': None,
+               'line': 714,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'python_id': 4500580720,
+                                                   'repr': '3',
+                                                   'type': 'Number'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4500768368,
+                                              'repr': "''",
+                                              'type': 'String'}}},
+              {'accesses': None,
+               'line': 715,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'python_id': 4500581488,
+                                                   'repr': '27',
+                                                   'type': 'Number'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4500768368,
+                                              'repr': "''",
+                                              'type': 'String'}}},
+              {'accesses': None, 'line': 716, 'variables': None},
+              {'accesses': None,
+               'line': 721,
+               'variables': {'call_test\u200b@a': {'color': '#1F78B4',
+                                                   'python_id': 4500581488,
+                                                   'repr': '27',
+                                                   'type': 'Number'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4500581488,
+                                              'repr': '27',
+                                              'type': 'Number'}}}]
+
+    assert RecorderResultParser(result) == RecorderResultParser(tracer.get_recorder().get_processed_change_list())
+    pprint(tracer.get_recorder().get_processed_change_list())
+
+
+def test_call_traced_func_new_var(set_new_recorder):
+    @tracer('b')
+    def call_test(c):
+        b = c ** c
+        return b
+
+    @tracer('a', 'b')
+    def main():
+        a = ''
+        b = call_test(3)
+
+    main()
+
+    result = [{'accesses': None,
+               'line': 0,
+               'variables': {'call_test\u200b@b': {'color': '#1F78B4',
+                                                   'repr': None,
+                                                   'type': 'init'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'repr': None,
+                                              'type': 'init'},
+                             'main\u200b@b': {'color': '#B2DF8A',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 787, 'variables': None},
+              {'accesses': None,
+               'line': 788,
+               'variables': {'call_test\u200b@b': {'color': '#1F78B4',
+                                                   'repr': None,
+                                                   'type': 'init'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4430603888,
+                                              'repr': "''",
+                                              'type': 'String'},
+                             'main\u200b@b': {'color': '#B2DF8A',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 789, 'variables': None},
+              {'accesses': None, 'line': 782, 'variables': None},
+              {'accesses': None,
+               'line': 783,
+               'variables': {'call_test\u200b@b': {'color': '#1F78B4',
+                                                   'python_id': 4430417008,
+                                                   'repr': '27',
+                                                   'type': 'Number'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4430603888,
+                                              'repr': "''",
+                                              'type': 'String'},
+                             'main\u200b@b': {'color': '#B2DF8A',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 784, 'variables': None},
+              {'accesses': None,
+               'line': 789,
+               'variables': {'call_test\u200b@b': {'color': '#1F78B4',
+                                                   'python_id': 4430417008,
+                                                   'repr': '27',
+                                                   'type': 'Number'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4430603888,
+                                              'repr': "''",
+                                              'type': 'String'},
+                             'main\u200b@b': {'color': '#B2DF8A',
+                                              'python_id': 4430417008,
+                                              'repr': '27',
+                                              'type': 'Number'}}}]
+
+    assert RecorderResultParser(result) == RecorderResultParser(tracer.get_recorder().get_processed_change_list())
+    pprint(tracer.get_recorder().get_processed_change_list())
+
+
+def test_call_traced_func_direct_return(set_new_recorder):
+    @tracer('c')
+    def call_test(c):
+        return c ** c
+
+    @tracer('a', 'b')
+    def main():
+        a = ''
+        b = call_test(3)
+
+    main()
+
+    result = [{'accesses': None,
+               'line': 0,
+               'variables': {'call_test\u200b@c': {'color': '#1F78B4',
+                                                   'repr': None,
+                                                   'type': 'init'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'repr': None,
+                                              'type': 'init'},
+                             'main\u200b@b': {'color': '#B2DF8A',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 858, 'variables': None},
+              {'accesses': None,
+               'line': 859,
+               'variables': {'call_test\u200b@c': {'color': '#1F78B4',
+                                                   'repr': None,
+                                                   'type': 'init'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4490438256,
+                                              'repr': "''",
+                                              'type': 'String'},
+                             'main\u200b@b': {'color': '#B2DF8A',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 860, 'variables': None},
+              {'accesses': None,
+               'line': 854,
+               'variables': {'call_test\u200b@c': {'color': '#1F78B4',
+                                                   'python_id': 4490250608,
+                                                   'repr': '3',
+                                                   'type': 'Number'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4490438256,
+                                              'repr': "''",
+                                              'type': 'String'},
+                             'main\u200b@b': {'color': '#B2DF8A',
+                                              'repr': None,
+                                              'type': 'init'}}},
+              {'accesses': None, 'line': 855, 'variables': None},
+              {'accesses': None,
+               'line': 860,
+               'variables': {'call_test\u200b@c': {'color': '#1F78B4',
+                                                   'python_id': 4490250608,
+                                                   'repr': '3',
+                                                   'type': 'Number'},
+                             'main\u200b@a': {'color': '#A6CEE3',
+                                              'python_id': 4490438256,
+                                              'repr': "''",
+                                              'type': 'String'},
+                             'main\u200b@b': {'color': '#B2DF8A',
+                                              'python_id': 4490251376,
+                                              'repr': '27',
+                                              'type': 'Number'}}}]
+
+    assert RecorderResultParser(result) == RecorderResultParser(tracer.get_recorder().get_processed_change_list())
+    pprint(tracer.get_recorder().get_processed_change_list())
