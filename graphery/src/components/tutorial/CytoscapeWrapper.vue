@@ -102,7 +102,7 @@
     successDialog,
   } from '@/services/helpers';
   import CytoscapeManager from '@/components/framework/GraphEditorControls/CytoscapeManager';
-  import TippyComponent from '@/components/framework/TippyComponent';
+  import TippyComponent from '@/components/framework/TippyComponents/TippyComponent';
 
   const tippyComponentClass = Vue.extend(TippyComponent);
 
@@ -261,8 +261,10 @@
         }).$mount();
 
         return new Tippy(dummyDomEle, {
-          getReferenceClientRect: ref.getBoundingClientRect, // https://atomiks.github.io/tippyjs/v6/all-props/#getreferenceclientrect
-          trigger: 'manual', // mandatory, we cause the tippy to show programmatically.
+          getReferenceClientRect: ref.getBoundingClientRect,
+          // https://atomiks.github.io/tippyjs/v6/all-props/#getreferenceclientrect
+          trigger: 'manual',
+          // mandatory, we cause the tippy to show programmatically.
 
           // dom element inside the tippy:
           content: () => {
@@ -274,7 +276,7 @@
           // your own preferences:
           arrow: true,
           placement: 'bottom',
-          theme: 'material',
+          theme: 'light',
           hideOnClick: 'true',
           delay: [650, 200],
           animation: 'fade',
@@ -284,6 +286,8 @@
           interactive: true,
           sticky: true,
           plugins: [TippySticky],
+          maxWidth: 500,
+          interactiveBorder: 4,
 
           appendTo: document.body, // or append dummyDomEle to document.body
         });
@@ -297,25 +301,31 @@
         // show node tooltips
         instance.on('mouseover', 'node', (event) => {
           const node = event.target;
+          const nodeData = node.data();
           this.tippy = this.makeTippy(node, {
-            initElementName: 'init node',
+            initElement: {
+              name: nodeData['name'],
+            },
           });
           this.tippy.show();
         });
-        instance.on('mouseout', 'node', (_) => {
+        instance.on('mouseout', 'node', () => {
           this.closeTippy();
         });
 
         // show edge tooltips
         instance.on('mouseover', 'edge', (event) => {
           const node = event.target;
+          const nodeData = node.data();
           this.tippy = this.makeTippy(node, {
-            initElementName: 'init edge',
+            initElement: {
+              name: nodeData['name'],
+            },
           });
           this.tippy.show();
         });
 
-        instance.on('mouseout', 'edge', (_) => {
+        instance.on('mouseout', 'edge', () => {
           this.closeTippy();
         });
       },
@@ -556,6 +566,7 @@
 <style lang="sass">
   @import '~@/styles/panzoom.css'
   @import '~tippy.js/dist/tippy.css'
+  @import "~tippy.js/themes/light.css"
 
   .not-display
     display: none
