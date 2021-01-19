@@ -206,11 +206,8 @@ class ElementSet(Generic[_T]):
         else:
             raise KeyError('elements are not all %s type' % self.element_type)
 
-    def _rm_element(self, element):
-        if isinstance(element, self.element_type) and element in self.elements:
-            self.elements.remove(element)
-
-    def is_empty(self):
+    def is_empty(self) -> bool:
+        """returns a boolean value indicating if the set is empty"""
         return len(self.elements) == 0
 
     def __len__(self):
