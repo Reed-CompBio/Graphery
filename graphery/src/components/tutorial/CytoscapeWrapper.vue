@@ -568,9 +568,6 @@
   @import '~tippy.js/dist/tippy.css'
   @import "~tippy.js/themes/light.css"
 
-  .not-display
-    display: none
-
   .graph-menu-bar
     min-height: 56px
     max-height: 56px
