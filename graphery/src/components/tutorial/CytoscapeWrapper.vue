@@ -80,11 +80,13 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   let cytoscape;
   let panzoom;
   let dagre;
   let fcose;
   let Tippy;
+  let TippySticky;
   let popper;
   let lasso;
 
@@ -100,6 +102,9 @@
     successDialog,
   } from '@/services/helpers';
   import CytoscapeManager from '@/components/framework/GraphEditorControls/CytoscapeManager';
+  import TippyComponent from '@/components/framework/TippyComponents/TippyComponent';
+
+  const tippyComponentClass = Vue.extend(TippyComponent);
 
   export default {
     mixins: [CytoscapeManager],
@@ -230,6 +235,7 @@
               .then((tp) => {
                 console.debug('Tippy module: ', tp);
                 Tippy = tp.default;
+                TippySticky = tp.sticky;
                 this.moduleLoad();
               })
               .then(() => {
@@ -247,70 +253,79 @@
           this.moduleLoad();
         });
       },
-      makeTippy(node, text) {
+      makeTippy(node, componentPropData) {
         const ref = node.popperRef();
         const dummyDomEle = document.createElement('div');
-        return Tippy(dummyDomEle, {
-          onCreate: function(instance) {
-            instance.popperInstance.reference = ref;
-          },
-          lazy: false, // mandatory
-          trigger: 'manual', // mandatory
+        const tc = new tippyComponentClass({
+          propsData: componentPropData,
+        }).$mount();
+
+        return new Tippy(dummyDomEle, {
+          getReferenceClientRect: ref.getBoundingClientRect,
+          // https://atomiks.github.io/tippyjs/v6/all-props/#getreferenceclientrect
+          trigger: 'manual',
+          // mandatory, we cause the tippy to show programmatically.
 
           // dom element inside the tippy:
-          content: function() {
-            // function can be better for performance
-            const div = document.createElement('div');
-
-            div.innerHTML = text;
-
-            return div;
+          content: () => {
+            const c = document.createElement('div');
+            c.appendChild(tc.$el);
+            return c;
           },
 
           // your own preferences:
           arrow: true,
           placement: 'bottom',
-          theme: 'material',
+          theme: 'light',
           hideOnClick: 'true',
-          delay: [0, 2000],
+          delay: [650, 200],
           animation: 'fade',
-          multiple: false,
-          flip: true,
-          flipOnUpdate: true,
           duration: [250, 275],
           allowHTML: true,
           touch: true,
-          // sticky: 'popper', // don't need it
-
-          // if interactive:
           interactive: true,
+          sticky: true,
+          plugins: [TippySticky],
+          maxWidth: 500,
+          interactiveBorder: 4,
+
           appendTo: document.body, // or append dummyDomEle to document.body
         });
       },
       closeTippy() {
         if (this.tippy !== null) {
-          this.tippy.hide();
+          this.tippy.destroy();
         }
       },
       setupTooltips(instance) {
         // show node tooltips
         instance.on('mouseover', 'node', (event) => {
           const node = event.target;
-          this.tippy = this.makeTippy(node, `test content ${this.testValue}`);
+          const nodeData = node.data();
+          this.tippy = this.makeTippy(node, {
+            initElement: {
+              name: nodeData['name'],
+            },
+          });
           this.tippy.show();
         });
-        instance.on('mouseout', 'node', (_) => {
+        instance.on('mouseout', 'node', () => {
           this.closeTippy();
         });
 
         // show edge tooltips
         instance.on('mouseover', 'edge', (event) => {
           const node = event.target;
-          this.tippy = this.makeTippy(node, `test content ${this.testValue}`);
+          const nodeData = node.data();
+          this.tippy = this.makeTippy(node, {
+            initElement: {
+              name: nodeData['name'],
+            },
+          });
           this.tippy.show();
         });
 
-        instance.on('mouseout', 'edge', (_) => {
+        instance.on('mouseout', 'edge', () => {
           this.closeTippy();
         });
       },
@@ -551,6 +566,7 @@
 <style lang="sass">
   @import '~@/styles/panzoom.css'
   @import '~tippy.js/dist/tippy.css'
+  @import "~tippy.js/themes/light.css"
 
   .graph-menu-bar
     min-height: 56px

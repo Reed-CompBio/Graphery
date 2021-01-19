@@ -17,7 +17,10 @@ static_pages = ['', '/tutorials', '/graphs', '/about', ]
 
 
 def get_trans_url(trans: str) -> str:
-    return f'{trans[0:2]}-{trans[2:4]}'
+    if len(trans) > 2:
+        return f'{trans[0:2]}-{trans[2:]}'
+    else:
+        return trans
 
 
 def get_content_link(queryset: QuerySet, trans_collection: List[str], prefix: str):
