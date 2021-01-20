@@ -44,13 +44,14 @@
               $q.screen.lt.sm ? 'row' : '',
             ]"
           >
-            <div id="filter-section" class=" full-width">
-              <div class="q-mr-lg">
-                <h5 style="margin-bottom: 16px;">
-                  {{ $t('collectionPage.Filter') }}
-                </h5>
-              </div>
-              <div style="flex: 1 1 auto">
+            <div id="filter-section" class="full-width">
+              <!--              <div class="q-mr-lg">-->
+              <!-- FIXME: What is the q-mr-lg for? -->
+              <!--                <h5 style="margin-bottom: 16px;">-->
+              <!--                  {{ $t('collectionPage.Filter') }}-->
+              <!--                </h5>-->
+              <!--              </div>-->
+              <div style="flex: 1 1 auto; margin-top: 45px;">
                 <CategorySelection v-model="categoryIds" />
               </div>
             </div>

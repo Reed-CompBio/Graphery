@@ -1,7 +1,7 @@
 <template>
   <InfoCard>
     <template v-slot:title>
-      Categories
+      <span class="text">{{ $t('collectionPage.Filter') }}</span>
     </template>
     <q-select
       multiple
@@ -49,7 +49,6 @@
     data() {
       return {
         categoryOptions: null,
-        labelName: 'Categories',
       };
     },
     methods: {
@@ -84,6 +83,9 @@
         get() {
           return this.categorySelection;
         },
+      },
+      labelName() {
+        return this.$t('collectionPage.Categories');
       },
     },
     mounted() {
