@@ -26,57 +26,46 @@
     </div>
     <q-separator />
     <div class="quick-facts flex-center">
-      <div class="feature">
+      <div :key="item" v-for="item in features" class="feature">
         <div class="icon">
-          <q-icon name="announcement"></q-icon>
+          <q-icon :name="item.icon"></q-icon>
         </div>
-        <div class="title">Feature</div>
-        <div class="description">Description</div>
-      </div>
-      <div class="feature">
-        <div class="icon">
-          <q-icon name="announcement"></q-icon>
-        </div>
-        <div class="title">Feature</div>
-        <div class="description">Description</div>
-      </div>
-      <div class="feature">
-        <div class="icon">
-          <q-icon name="announcement"></q-icon>
-        </div>
-        <div class="title">Feature</div>
-        <div class="description">Description</div>
+        <div class="title">{{ item.title }}</div>
+        <div class="description">{{ item.description }}</div>
       </div>
     </div>
     <!-- TODO:Alter these buttons below-->
-    <div class="q-mx-auto">
-      <div
-        :class="{
-          'flex-center': true,
-          'q-my-md': true,
-          row: $q.screen.gt.xs,
-          column: $q.screen.lt.sm,
-        }"
-      >
-        <div class="button-wrapper">
-          <q-btn size="lg" :to="{ name: 'Tutorials' }" exact>
-            {{ $t('nav.Tutorials') }}
-          </q-btn>
-        </div>
-        <div class="button-wrapper">
-          <q-btn size="lg" :to="{ name: 'Graphs' }" exact>
-            {{ $t('nav.Graphs') }}
-          </q-btn>
-        </div>
-        <div class="button-wrapper">
-          <q-btn size="lg" :to="{ name: 'Account' }" exact>
-            {{ $t('nav.Account') }}
-          </q-btn>
-        </div>
-        <div class="button-wrapper">
-          <FeedbackDropdown />
-        </div>
-      </div>
+    <!--    <div class="q-mx-auto">-->
+    <!--      <div-->
+    <!--        :class="{-->
+    <!--          'flex-center': true,-->
+    <!--          'q-my-md': true,-->
+    <!--          row: $q.screen.gt.xs,-->
+    <!--          column: $q.screen.lt.sm,-->
+    <!--        }"-->
+    <!--      >-->
+    <!--        <div class="button-wrapper">-->
+    <!--          <q-btn size="lg" :to="{ name: 'Tutorials' }" exact>-->
+    <!--            {{ $t('nav.Tutorials') }}-->
+    <!--          </q-btn>-->
+    <!--        </div>-->
+    <!--        <div class="button-wrapper">-->
+    <!--          <q-btn size="lg" :to="{ name: 'Graphs' }" exact>-->
+    <!--            {{ $t('nav.Graphs') }}-->
+    <!--          </q-btn>-->
+    <!--        </div>-->
+    <!--        <div class="button-wrapper">-->
+    <!--          <q-btn size="lg" :to="{ name: 'Account' }" exact>-->
+    <!--            {{ $t('nav.Account') }}-->
+    <!--          </q-btn>-->
+    <!--        </div>-->
+    <!--        <div class="button-wrapper">-->
+    <!--          <FeedbackDropdown />-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <div class="footer flex-center">
+      This is the footer
     </div>
   </div>
   <!--  </MaterialPage>-->
@@ -91,12 +80,30 @@
     },
     components: {
       // MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
-      FeedbackDropdown: () =>
-        import('@/components/framework/FeedbackDropdown.vue'),
+      // remove the button groups
+      // FeedbackDropdown: () =>
+      //   import('@/components/framework/FeedbackDropdown.vue'),
     },
     data() {
       return {
         logoSrc: require('@/assets/images/compbio-lab.png'),
+        features: [
+          {
+            title: 'Tutorial',
+            description: 'description',
+            icon: 'announcement',
+          },
+          {
+            title: 'Feature',
+            description: 'description',
+            icon: 'announcement',
+          },
+          {
+            title: 'Feature',
+            description: 'description',
+            icon: 'announcement',
+          },
+        ],
       };
     },
   };
