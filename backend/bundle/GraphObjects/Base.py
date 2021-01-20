@@ -1,6 +1,7 @@
 from __future__ import annotations
 from abc import ABCMeta
-from typing import Union, Iterable, Mapping, Type, MutableMapping, List, Callable
+from typing import Union, Iterable, Mapping, Type, MutableMapping, List, Callable, TypeVar, Generic, Set, Optional, \
+    Generator
 import json
 import logging
 
@@ -188,25 +189,25 @@ class Stylable(metaclass=ABCMeta):
                                               f'(classes: {classes}).')
 
 
-class ElementSet:
-    def __init__(self, elements: Iterable[Comparable], element_type: Type[Comparable]):
+_T = TypeVar('_T', bound=Comparable)
+
+
+class ElementSet(Generic[_T]):
+    def __init__(self, elements: Iterable[_T], element_type: Type[_T]):
         """
         Element set base class
         @param elements:
         @param element_type:
         """
-        self.elements = set()
-        self.element_type = element_type
+        self.elements: Set[_T] = set()
+        self.element_type: Type[_T] = element_type
         if isinstance(elements, Iterable) and all(isinstance(element, self.element_type) for element in elements):
             self.elements.update(elements)
         else:
             raise KeyError('elements are not all %s type' % self.element_type)
 
-    def _rm_element(self, element):
-        if isinstance(element, self.element_type) and element in self.elements:
-            self.elements.remove(element)
-
-    def is_empty(self):
+    def is_empty(self) -> bool:
+        """returns a boolean value indicating if the set is empty"""
         return len(self.elements) == 0
 
     def __len__(self):
@@ -216,7 +217,7 @@ class ElementSet:
         """
         return len(self.elements)
 
-    def __getitem__(self, identity):
+    def __getitem__(self, identity: str) -> Optional[_T]:
         """
         use subscript [] to get item
         @param identity:
@@ -228,7 +229,7 @@ class ElementSet:
 
         return None
 
-    def __iter__(self):
+    def __iter__(self) -> Generator[_T, None, None]:
         """
         iterator that goes through the elements in the set
         @return:
@@ -236,7 +237,7 @@ class ElementSet:
         for element in self.elements:
             yield element
 
-    def __contains__(self, item):
+    def __contains__(self, item: Union[str, _T]) -> bool:
         """
         whether this set contains a given item
         @param item:
@@ -249,8 +250,8 @@ class ElementSet:
             return any(element.identity == item for element in self.elements)
         return False
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.elements)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()

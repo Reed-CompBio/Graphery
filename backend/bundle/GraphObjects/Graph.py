@@ -16,11 +16,11 @@ class GraphLayout(Enum):
     random = {'name': 'random'}
 
 
-Node_C = TypeVar('Node_C')
-Edge_C = TypeVar('Edge_C')
+_Node_C = TypeVar('_Node_C')
+_Edge_C = TypeVar('_Edge_C')
 
 
-class Graph(Stylable, Generic[Node_C, Edge_C]):
+class Graph(Stylable, Generic[_Node_C, _Edge_C]):
     """The graph object"""
 
     default_styles = [{
@@ -42,8 +42,8 @@ class Graph(Stylable, Generic[Node_C, Edge_C]):
     }, ]
 
     def __init__(self, nodes: Iterable[Node], edges: Iterable[Edge],
-                 node_container: Type[Node_C] = NodeSet,
-                 edge_container: Type[Edge_C] = EdgeSet,
+                 node_container: Type[_Node_C] = NodeSet,
+                 edge_container: Type[_Edge_C] = EdgeSet,
                  styles: Iterable[Mapping] = (), classes: Iterable[str] = (),
                  add_default_styles: bool = True,
                  add_default_classes: bool = True):
@@ -190,8 +190,8 @@ class Graph(Stylable, Generic[Node_C, Edge_C]):
                     parsed_node_set, node_ids_instance_mapping = NodeSet.generate_node_set(element_dict['nodes'])
 
                 if 'edges' in element_dict:
-                    parsed_edge_set = EdgeSet.generate_edge_set(element_dict['edges'],
-                                                                node_ids_instance_mapping)
+                    parsed_edge_set, edge_ids_instance_mapping = EdgeSet.generate_edge_set(element_dict['edges'],
+                                                                                           node_ids_instance_mapping)
 
                 g = Graph(parsed_node_set, parsed_edge_set)
                 g.set_layout(layout_name)

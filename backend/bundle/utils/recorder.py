@@ -8,6 +8,8 @@ from numbers import Number
 from random import randint
 from typing import Any, List, MutableMapping, Sequence, Tuple, Deque, Union, Dict, Optional
 
+from bundle.GraphObjects.Base import ElementSet
+
 from ..GraphObjects.Edge import Edge
 from ..GraphObjects.Node import Node
 
@@ -90,6 +92,7 @@ class Recorder:
         Deque: 'Deque',
         Set: 'Set',  # which includes Set, set, KeyView(dict_keys), ValueView(dict_values), ItemView(dict_items),
         # frozenset, MutableSet
+        ElementSet: 'ElementSet',
         Sequence: 'Sequence',  # which includes tuple, str, range, memoryview, MutableSequence, list, bytearray
     }
 
@@ -196,6 +199,9 @@ class Recorder:
         # this should not be a problem in official use, since the first line in the main function
         # ie. `def main()`: has no variables.
         return self._changes[-2] if len(self._changes) > 1 else self._changes[-1]
+
+    def get_previous_record_line_number(self) -> int:
+        return self.get_previous_record()[self._LINE_HEADER]
 
     def get_last_vc(self) -> MutableMapping:
         """get the last variable change dict

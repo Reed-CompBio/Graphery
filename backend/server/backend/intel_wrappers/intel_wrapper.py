@@ -26,7 +26,7 @@ def finalize_prerequisite_wrapper_iter(model_wrappers: Iterable[AbstractWrapper]
         model_wrapper.finalize_model(overwrite=False)
 
 
-def _result_json_updater(code_list: Iterable[Code], graph_list: Iterable[Graph]) -> List[Tuple]:
+def _result_json_updater(code_list: Iterable[Code], graph_list: Iterable[Graph]) -> List[Tuple[Code, Graph, Exception]]:
     failed_code_and_graph = []
     for code in code_list:
         for graph in graph_list:

@@ -4,7 +4,7 @@ from collections import namedtuple
 
 from .Base import Comparable, HasProperty, Stylable, ElementSet
 from .Errors import GraphJsonFormatError
-from .Node import Node, NodeSet
+from .Node import Node
 
 NodeTuple = namedtuple('Edge', ('u', 'v'))
 EdgeIDTuple = namedtuple('edge_identities', ('incident_edge_identity', 'final_edge_identity'))
@@ -114,8 +114,8 @@ class Edge(Comparable, HasProperty, Stylable):
         return self.__str__()
 
     @staticmethod
-    def return_edge(identity: str = None, edge: Union['Edge', NodeTuple, Tuple[str, str]] = (),
-                    styles: Iterable[Mapping] = (), classes: Iterable[str] = ()) -> 'Edge':
+    def return_edge(identity: str = None, edge: Union[Edge, NodeTuple, Tuple[str, str]] = (),
+                    styles: Iterable[Mapping] = (), classes: Iterable[str] = ()) -> Edge:
 
         if isinstance(identity, str):
             if isinstance(edge, NodeTuple):
@@ -125,7 +125,7 @@ class Edge(Comparable, HasProperty, Stylable):
             else:
                 # TODO think about it
                 incident_node, final_node = None, None
-            return Edge(identity, NodeTuple(incident_node, final_node), styles, classes)
+            return Edge(identity, NodeTuple(incident_node, final_node), styles=styles, classes=classes)
         else:
             if isinstance(edge, Edge):
                 return edge
@@ -133,7 +133,7 @@ class Edge(Comparable, HasProperty, Stylable):
                 raise TypeError('The edge must be a edge if the identity is not a string')
 
 
-class EdgeSet(ElementSet):
+class EdgeSet(ElementSet[Edge]):
     def __init__(self, edges: Iterable[Edge]):
         """
         Create an edge set with a pile of elements.
@@ -143,7 +143,7 @@ class EdgeSet(ElementSet):
 
     @staticmethod
     def generate_edge_set(edges: Iterable[Mapping],
-                          ids_node_instance_mapping: Mapping[str, Node]) -> 'EdgeSet':
+                          ids_node_instance_mapping: Mapping[str, Node]) -> Tuple[EdgeSet, Mapping]:
         """
         generate an edge set by a given mapping (from cyjs) and the corresponding nodes
         @param edges:
@@ -151,7 +151,7 @@ class EdgeSet(ElementSet):
         @return: created edge set
         @raise ValueError: if the data is invalid
         """
-        stored_edges = []
+        stored_edges = {}
 
         all_has_id = all('id' in edge['data'] for edge in edges)
         all_has_name = all('name' in edge['data'] for edge in edges)
@@ -185,9 +185,9 @@ class EdgeSet(ElementSet):
             if 'displayed' in data_field:
                 stored_edge.update_properties(data_field['displayed'])
 
-            stored_edges.append(stored_edge)
+            stored_edges[stored_edge.cy_id] = stored_edge
 
-        return EdgeSet(stored_edges)
+        return EdgeSet(stored_edges.values()), stored_edges
 
 
 class MutableEdgeSet(EdgeSet):

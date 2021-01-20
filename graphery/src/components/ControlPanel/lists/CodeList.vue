@@ -18,6 +18,7 @@
         <template v-slot:top>
           <RefreshButton :fetch-func="fetchCode" />
           <AddNewButton :create-func="createCode" />
+          <ExecuteAllButton :execute-func="executeCode" />
         </template>
         <template v-slot:header="props">
           <q-tr :props="props">
@@ -115,14 +116,20 @@
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import { apiCaller } from '@/services/apis';
-  import { codeListQuery } from '@/services/queries';
-  import { errorDialog, resolveAndOpenLink } from '@/services/helpers';
+  import { codeListQuery, executeAllCode } from '@/services/queries';
+  import {
+    errorDialog,
+    resolveAndOpenLink,
+    successDialog,
+  } from '@/services/helpers';
   import { newModelUUID } from '@/services/params';
   import DeleteTableHeader from '../parts/table/DeleteTableHeader.vue';
 
   export default {
     mixins: [loadingMixin],
     components: {
+      ExecuteAllButton: () =>
+        import('@/components/ControlPanel/parts/buttons/ExecuteAllButton'),
       DeleteTableCell: () =>
         import('@/components/ControlPanel/parts/table/DeleteTableCell'),
       DeleteTableHeader,
@@ -219,6 +226,31 @@
             id: newModelUUID,
           },
         });
+      },
+      executeCode() {
+        this.startLoading();
+        apiCaller(executeAllCode)
+          .then((data) => {
+            if (!data || !('executeAllCode' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            if (data.executeAllCode.success) {
+              successDialog({
+                message: 'Executed all successfully!',
+              });
+            } else {
+              throw Error;
+            }
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during executing code. ${err}`,
+            });
+          })
+          .finally(() => {
+            this.finishedLoading();
+          });
       },
     },
     mounted() {

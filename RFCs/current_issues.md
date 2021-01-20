@@ -20,7 +20,7 @@
 
 - [ ] The code for the step controller must be tested. There are still some minor errors when dealing with edge cases. 
 
-- [ ] Create an API for user server (the snooper) and the front end. The stepper works OK right now but some work should be done to make the experience of variable list better. It's are to see the variable names and variable detail right now. The user server should follow the API when sending information to the frontend. The frontend should have a tokenizer that interprets the information sent from the backend. _A separate document will be posted. [user_server_api.md](./user_server_api.md)_
+- [x] Create an API for user server (the snooper) and the front end. The stepper works OK right now but some work should be done to make the experience of variable list better. It's are to see the variable names and variable detail right now. The user server should follow the API when sending information to the frontend. The frontend should have a tokenizer that interprets the information sent from the backend. _A separate document will be posted. [user_server_api.md](./user_server_api.md)_
 
 - [x] Unify `Processor` and `Recorder`. There is no need to collect variables first and then serialize them.
 
@@ -40,7 +40,7 @@
 
 - [x] Add name to code snippets. 
 
-- [ ] Add "run all code snippets" in the code list on the admin panel. 
+- [x] Add "run all code snippets" in the code list on the admin panel. 
 
 - [ ] Add i18n to the error response. 
 
@@ -65,7 +65,7 @@
 
 - [ ] Fix the unsaved change notification always showing up in the admin panel. Probably by adding a wrapper function and all changes go through the wrapper. 
 
-- [ ] The code editor on the admin panel sometimes respond "null event listener". 
+- [x] The code editor on the admin panel sometimes respond "null event listener". 
 
 ### Features 
 

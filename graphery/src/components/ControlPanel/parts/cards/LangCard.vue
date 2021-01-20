@@ -19,7 +19,7 @@
     },
     computed: {
       displayedLang() {
-        if (this.lang || !(this.lang in langList)) {
+        if (this.lang && !langList.includes(this.lang)) {
           return `Language "${this.lang}" NOT supported!`;
         }
         return this.lang;

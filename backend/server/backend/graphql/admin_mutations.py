@@ -262,3 +262,19 @@ class RefreshInvitationCode(SuccessMutationBase):
     @graphene.resolve_only_args
     def mutate(self):
         raise DeprecationWarning('This API is deprecated.')
+
+
+class ExecuteAllCode(SuccessMutationBase):
+    failed_missions = graphene.List(graphene.List(graphene.String, required=True), required=True)
+
+    @admin_required
+    @graphene.resolve_only_args
+    def mutate(self, *args, **kwargs):
+        failed_missions = []
+        for code in CodeWrapper.model_class.objects.all():
+            code_graph = code.tutorial.graph_set.all()
+            failed_missions.extend(_result_json_updater([code], code_graph))
+
+        success = len(failed_missions) == 0
+
+        return ExecuteAllCode(success=success, failed_missions=list([m[0].name, m[1].name] for m in failed_missions))
