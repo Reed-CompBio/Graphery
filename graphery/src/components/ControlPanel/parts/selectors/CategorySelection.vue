@@ -12,7 +12,7 @@
       map-options
       option-label="category"
       option-value="id"
-      :label="labelName"
+      :label="$t('collectionPage.Categories')"
       :loading="loadingContent"
     >
       <template v-slot:no-option>
@@ -83,9 +83,6 @@
         get() {
           return this.categorySelection;
         },
-      },
-      labelName() {
-        return this.$t('collectionPage.Categories');
       },
     },
     mounted() {
