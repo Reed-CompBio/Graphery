@@ -552,3 +552,10 @@ mutation ($oldPassword: String!, $newPassword: String!) {
     }
   }
 }`;
+
+export const executeAllCode = `
+mutation {
+  executeAllCode {
+    success
+  }
+}`;
