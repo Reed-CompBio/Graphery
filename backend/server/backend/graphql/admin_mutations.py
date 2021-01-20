@@ -265,7 +265,7 @@ class RefreshInvitationCode(SuccessMutationBase):
 
 
 class ExecuteAllCode(SuccessMutationBase):
-    failed_code = graphene.List(CodeType, required=True)
+    failed_missions = graphene.List(graphene.List(graphene.String, required=True), required=True)
 
     @admin_required
     @graphene.resolve_only_args
@@ -277,4 +277,4 @@ class ExecuteAllCode(SuccessMutationBase):
 
         success = len(failed_missions) == 0
 
-        return ExecuteAllCode(success=success, failed_code=list(m[0] for m in failed_missions))
+        return ExecuteAllCode(success=success, failed_missions=list([m[0].name, m[1].name] for m in failed_missions))
