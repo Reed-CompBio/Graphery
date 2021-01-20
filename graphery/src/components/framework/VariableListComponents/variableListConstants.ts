@@ -43,12 +43,14 @@ export const _LINEAR_CONTAINER_TYPES = [
   'Tuple',
   'Deque',
   'Set',
+  'ElementSet',
   'Sequence',
 ];
 export const _LINEAR_CONTAINER_TYPE_ICON = [
   'mdi-code-brackets',
   'mdi-code-parentheses',
   'mdi-arrow-collapse-vertical',
+  'mdi-set-center',
   'mdi-set-center',
   'mdi-playlist-minus',
 ];
