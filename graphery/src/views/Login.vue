@@ -58,7 +58,8 @@
                   >
                     <div class="q-ma-sm">
                       <q-btn
-                        flat
+                        outline
+                        color="primary"
                         :label="$t('account.Login')"
                         type="submit"
                         :loading="loading"
