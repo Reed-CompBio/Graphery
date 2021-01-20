@@ -21,4 +21,4 @@ def main() -> None:
 # https://github.com/FlickerSoul/Graphery/tree/master/backend/bundle#readme
 `;
 
-export const localServerTargetVersion = '0.2.4';
+export const localServerTargetVersion = '0.2.5';

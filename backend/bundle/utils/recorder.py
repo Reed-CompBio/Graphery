@@ -8,6 +8,8 @@ from numbers import Number
 from random import randint
 from typing import Any, List, MutableMapping, Sequence, Tuple, Deque, Union, Dict, Optional
 
+from bundle.GraphObjects.Base import ElementSet
+
 from ..GraphObjects.Edge import Edge
 from ..GraphObjects.Node import Node
 
@@ -90,6 +92,7 @@ class Recorder:
         Deque: 'Deque',
         Set: 'Set',  # which includes Set, set, KeyView(dict_keys), ValueView(dict_values), ItemView(dict_items),
         # frozenset, MutableSet
+        ElementSet: 'ElementSet',
         Sequence: 'Sequence',  # which includes tuple, str, range, memoryview, MutableSequence, list, bytearray
     }
 
