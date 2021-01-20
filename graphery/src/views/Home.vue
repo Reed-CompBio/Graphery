@@ -90,18 +90,18 @@
         features: [
           {
             title: 'Tutorial',
-            description: 'description',
-            icon: 'announcement',
+            description: 'Graphery is a tutorial based webservice.',
+            icon: 'mdi-cat',
           },
           {
             title: 'Feature',
             description: 'description',
-            icon: 'announcement',
+            icon: 'mdi-fishbowl-outline',
           },
           {
             title: 'Feature',
             description: 'description',
-            icon: 'announcement',
+            icon: 'mdi-flag-checkered',
           },
         ],
       };
