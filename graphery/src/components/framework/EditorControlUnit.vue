@@ -3,9 +3,7 @@
     <q-icon name="mdi-function" />
     <div style="text-transform: uppercase;">Editor</div>
     <q-space />
-    <!-- try-out of floating slider -->
 
-    <!-- <div class="gf"> -->
     <q-slider
       id="stepper-slider"
       v-model="modelSliderPos"
@@ -20,7 +18,6 @@
       :label-always="sliderLabelAlways"
       :disable="disableStepSlider"
     ></q-slider>
-    <!-- </div>-->
     <!--    abcde FIXME-->
     <!-- FIXME: pop-up slider, style -->
     <!-- FIXME: middle, calc the width of editor -->
@@ -249,16 +246,4 @@
   };
 </script>
 
-<style lang="sass" scoped>
-  .gf
-    // try-out
-    position: absolute
-    background: #9C27B0
-    margin-top: -250px
-    width: 200px
-    padding: 20px
-    opacity: .4
-    transition: .2s ease
-    &:hover
-      opacity: 1
-</style>
+<style lang="sass" scoped></style>
