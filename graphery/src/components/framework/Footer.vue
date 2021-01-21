@@ -14,17 +14,28 @@
             href="https://github.com/FlickerSoul/Graphery"
             target="_blank"
             rel="noreferrer"
+            title="Github Repo"
           >
             <q-icon name="mdi-github"></q-icon>
           </a>
-          <a :href="issueLink" target="_blank" rel="noreferrer">
+          <a
+            :href="issueLink"
+            target="_blank"
+            rel="noreferrer"
+            title="Github Issues"
+          >
             <q-icon name="mdi-information"></q-icon>
           </a>
           <!-- TODO: Q and A section -->
-          <!--            <a :href="issueLink" target="_blank" rel="noreferrer">-->
+          <!--            <a :href="issueLink" target="_blank" rel="noreferrer" title="Q&A">-->
           <!--              <q-icon name="mdi-comment-question"></q-icon>-->
           <!--            </a>-->
-          <a :href="mailToLink" target="_blank" rel="noreferrer">
+          <a
+            :href="mailToLink"
+            target="_blank"
+            rel="noreferrer"
+            title="Email Us"
+          >
             <q-icon name="mdi-email"></q-icon>
           </a>
         </div>
