@@ -1,7 +1,5 @@
 <template>
-  <!--  <MaterialPage>-->
   <div class="page">
-    <!-- <div class="flex-center text-center">-->
     <div class="welcome-box flex-center">
       <!-- FIXME: mobile breakpoint (responsive adaption)-->
       <!-- FIXME: beautify the logo -->
@@ -26,7 +24,7 @@
     </div>
     <q-separator />
     <div class="quick-facts flex-center">
-      <div :key="item" v-for="item in features" class="feature">
+      <div :key="item.title" v-for="item in features" class="feature">
         <div class="icon">
           <q-icon :name="item.icon"></q-icon>
         </div>
@@ -34,38 +32,7 @@
         <div class="description">{{ item.description }}</div>
       </div>
     </div>
-    <!-- TODO:Alter these buttons below-->
-    <!--    <div class="q-mx-auto">-->
-    <!--      <div-->
-    <!--        :class="{-->
-    <!--          'flex-center': true,-->
-    <!--          'q-my-md': true,-->
-    <!--          row: $q.screen.gt.xs,-->
-    <!--          column: $q.screen.lt.sm,-->
-    <!--        }"-->
-    <!--      >-->
-    <!--        <div class="button-wrapper">-->
-    <!--          <q-btn size="lg" :to="{ name: 'Tutorials' }" exact>-->
-    <!--            {{ $t('nav.Tutorials') }}-->
-    <!--          </q-btn>-->
-    <!--        </div>-->
-    <!--        <div class="button-wrapper">-->
-    <!--          <q-btn size="lg" :to="{ name: 'Graphs' }" exact>-->
-    <!--            {{ $t('nav.Graphs') }}-->
-    <!--          </q-btn>-->
-    <!--        </div>-->
-    <!--        <div class="button-wrapper">-->
-    <!--          <q-btn size="lg" :to="{ name: 'Account' }" exact>-->
-    <!--            {{ $t('nav.Account') }}-->
-    <!--          </q-btn>-->
-    <!--        </div>-->
-    <!--        <div class="button-wrapper">-->
-    <!--          <FeedbackDropdown />-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
   </div>
-  <!--  </MaterialPage>-->
 </template>
 
 <script>
@@ -75,12 +42,7 @@
       const titleText = this.$t('nav.Home');
       return { title: titleText };
     },
-    components: {
-      // MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
-      // remove the button groups
-      // FeedbackDropdown: () =>
-      //   import('@/components/framework/FeedbackDropdown.vue'),
-    },
+
     data() {
       return {
         logoSrc: require('@/assets/images/compbio-lab.png'),
