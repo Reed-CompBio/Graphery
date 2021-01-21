@@ -2,8 +2,8 @@
   <q-card>
     <VariableCardHeader
       :has-previous="!isStackEmpty"
-      :init-element-name.sync="currentVariableName"
-      :init-element.sync="currentVariableObject"
+      :init-element-name="currentVariableName"
+      :init-element="currentVariableObject"
       :init-element-color="rootVariableColor"
       :init-toggle-state="toggleState"
       @popVariableStack="handlePopVariableStack"
@@ -13,7 +13,7 @@
     <VariableCardDisplay
       ref="variableCardDisplay"
       :init-variable-state="toggleState"
-      :init-element.sync="currentVariableObject"
+      :init-element="currentVariableObject"
       :init-root-element-name="rootVariableName"
       @clearHighlight="emitClearHighlight"
       @highlight="emitHighlight"

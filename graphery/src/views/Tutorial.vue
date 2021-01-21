@@ -13,6 +13,7 @@
       "
       class="overflow-hidden-splitter"
     >
+      <!-- FIXME: using computed-->
       <template v-slot:before>
         <q-splitter
           id="graph-code-section"

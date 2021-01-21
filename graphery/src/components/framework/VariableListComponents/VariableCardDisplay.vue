@@ -32,13 +32,13 @@
     nameComboToClassName,
   } from '@/components/framework/GraphEditorControls/ElementsUtils';
   import SingularElementLayout from '@/components/framework/VariableListComponents/layouts/SingularElementLayout';
-  import LinearContainerElementLayout from '@/components/framework/VariableListComponents/layouts/LinearContainerElementLayout';
   import PairContainerElementLayout from '@/components/framework/VariableListComponents/layouts/PairContainerElementLayout';
+  import LinearContainerElementLayout from '@/components/framework/VariableListComponents/layouts/LinearContainerElementLayout';
 
   export default {
     components: {
-      PairContainerElementLayout,
       LinearContainerElementLayout,
+      PairContainerElementLayout,
       SingularElementLayout,
     },
     props: {

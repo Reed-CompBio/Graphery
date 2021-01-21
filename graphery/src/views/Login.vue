@@ -58,7 +58,8 @@
                   >
                     <div class="q-ma-sm">
                       <q-btn
-                        flat
+                        outline
+                        color="primary"
                         :label="$t('account.Login')"
                         type="submit"
                         :loading="loading"
@@ -85,6 +86,7 @@
               class="col q-ml-md q-pr-xl q-my-md"
             >
               <div style="display: flex;" class="flex-center">
+                <!-- FIXME: The mobile breakpoint is improper.-->
                 <q-img :src="logoSrc" style="width: 90%"></q-img>
               </div>
             </div>
