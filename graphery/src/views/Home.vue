@@ -64,9 +64,6 @@
     <!--        </div>-->
     <!--      </div>-->
     <!--    </div>-->
-    <div class="footer flex-center">
-      This is the footer
-    </div>
   </div>
   <!--  </MaterialPage>-->
 </template>
@@ -110,7 +107,7 @@
 </script>
 
 <style lang="sass">
-    @import "~@/styles/home.sass"
+  @import "~@/styles/home.sass"
 
   .page
     background: #fff
