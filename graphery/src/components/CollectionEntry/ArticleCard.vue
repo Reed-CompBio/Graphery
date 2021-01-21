@@ -3,12 +3,18 @@
     <q-intersection once transition="scale" class="expandable-helper">
       <q-card class="article-card-wrapper">
         <section>
-          <div class="text-h5">
-            <div v-if="info.rank">
+          <div class="text-h5 tutorial-title-wrapper">
+            <div v-if="info.rank" class="tutorial-rank">
               {{ rankText }}
             </div>
             <div>
-              {{ info.title }}
+              <router-link
+                class="tutorial-title"
+                :to="info.url"
+                style="color: #000"
+              >
+                {{ info.title }}
+              </router-link>
             </div>
           </div>
         </section>
@@ -63,7 +69,9 @@
         <q-separator />
         <q-card-actions>
           <q-btn
-            flat
+            outline
+            color="primary"
+            rounded
             class="q-mt-sm"
             type="a"
             target="__blank"
@@ -117,4 +125,17 @@
   .article-abstract-section .markdown-body a
     color: #b12 !important
     text-decoration: none !important
+  .tutorial-title-wrapper
+    .tutorial-rank
+      background-color: yellow
+    .tutorial-title
+      &:after
+        content: ''
+        width: 0
+        height: 2px
+        display: block
+        background: black
+        transition: 300ms
+      &:hover:after
+        width: 100%
 </style>
