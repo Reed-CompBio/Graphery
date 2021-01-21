@@ -1,7 +1,7 @@
 <template>
   <InfoCard>
     <template v-slot:title>
-      Categories
+      <span class="text">{{ $t('collectionPage.Filter') }}</span>
     </template>
     <q-select
       multiple
@@ -12,6 +12,7 @@
       map-options
       option-label="category"
       option-value="id"
+      :label="$t('collectionPage.Categories')"
       :loading="loadingContent"
     >
       <template v-slot:no-option>

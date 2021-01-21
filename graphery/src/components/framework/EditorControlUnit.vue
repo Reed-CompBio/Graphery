@@ -3,6 +3,7 @@
     <q-icon name="mdi-function" />
     <div style="text-transform: uppercase;">Editor</div>
     <q-space />
+
     <q-slider
       id="stepper-slider"
       v-model="modelSliderPos"
@@ -17,6 +18,9 @@
       :label-always="sliderLabelAlways"
       :disable="disableStepSlider"
     ></q-slider>
+    <!--    abcde FIXME-->
+    <!-- FIXME: pop-up slider, style -->
+    <!-- FIXME: middle, calc the width of editor -->
     <!-- stepper button group -->
     <q-btn-group flat class="q-mr-md">
       <q-btn dense @click="showLabelAlwaysSwitch">
@@ -241,3 +245,5 @@
     },
   };
 </script>
+
+<style lang="sass" scoped></style>

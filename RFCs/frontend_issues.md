@@ -1,55 +1,44 @@
 # Frontend Issues
 
-A list contains the TODO and FIXME found in graphery frontend.
+Issues found in graphery frontend.
 
-**Continuously updating**
+**Table of Contents**
 
-Table of Contents
-=================
-
-   * [Frontend Issues](#frontend-issues)
-   * [Topography](#topography)
-   * [Header](#header)
-         * [Ajax bar](#ajax-bar)
+   * [Layout](#layout)
+      * [Header (Menu)](#header-menu)
+         * [Ajax bar (Top-loading-bar)](#ajax-bar-top-loading-bar)
       * [Drawer](#drawer)
+      * [Footer](#footer)
    * [Home](#home)
-   * [Footer](#footer)
    * [Graph](#graph)
-      * [Separator](#separator)
+      * [Tutorials](#tutorials)
+      * [Graphs](#graphs)
+      * [Separator of Column](#separator-of-column)
       * [Article](#article)
+   * [About](#about)
+   * [Account](#account)
+      * [Login/Register](#loginregister)
+      * [Control Panel](#control-panel)
+      * [Settings](#settings)
+   * [Miscellaneous](#miscellaneous)
+         * [Alert Notification (helper.ts)](#alert-notification-helperts)
    * [Accessibility](#accessibility)
       * [Colorblind Friendly](#colorblind-friendly)
       * [Tab navigation](#tab-navigation)
-   * [About](#about)
-   * [Account](#account)
-   * [Control Panel](#control-panel)
-   * [Settings](#settings)
-   * [Miscellaneous](#miscellaneous)
-         * [Alert Notification (helper.ts)](#alert-notification-helperts)
 
-Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
-# Topography
+# Layout
 
-Webpage headings should be unified, topography should be read-friendly in a mordern design fashion.
+## Header (Menu)
 
-~~`font-size`, `font-family`~~
+The height of header and the buttons (menu items) can be smaller. Larger one is unfriendly to relatively small screen user and can distract them.
 
-- Should the *global* design be looser or tighter?
-- FIXME: We should accentuate the content of the body, maybe the header needs to be smaller? (In order not to detract from the visual effect, too large header often leads to user distraction)
+### Ajax bar (Top-loading-bar)
 
-# Header
-
-The toolbar is implemented in the header and the buttons can be re-styled in a metaphorical way.
-
-Text button + Icon button(such as settings and login, or they are merged in a context menu)
-
-### Ajax bar
-
-Color?
+(low priority) Maybe adjust the color of ajax bar to something more compatible with primary color (reed red).
 
 ## Drawer
 
-FIXME
+(low priority)
 
 The drawer will only work if the screen width is smaller than the breakpoint `$q.screen.lt.md`
 
@@ -59,26 +48,41 @@ The drawer will only work if the screen width is smaller than the breakpoint `$q
   - Icon size and text size do not match perfectly
   - The color of the icons is too conspicuous, which affects the readability of the text.
 
+## Footer
+
+The footer content only shows in the non-graph page.
+
 # Home
 
-Or the Welcome interface.
-
-FIXME: The current buttons group is too boring, and should be redesigned in a more metaphor way.
-
-- reorganize in funtions
-- use button styles
-
-# Footer
-
-The footer content shows in the non-graph page.
-
-Maintaining the status quo.
-
-TODO: modify the content of footer
+Add welcome message, quick facts (features about graphery)...
 
 # Graph
 
-## Separator
+## Tutorials
+
+The page of archive indexing, redesign:
+
+- the search box
+
+  - currently one is too conspicuous
+
+- paginator
+
+  - add paginator both top and bottom in *Tutorials* List
+
+- Filter categories placeholder blank - label name
+
+  already added *in* `/src/components/ControlPanel/parts/selectors/CategorySelection.vue`
+  
+  - TODO: move “Fliter” to the title of q-card title, or just leave dropdown box without q-card title “Categories”
+  
+    (make sure the design language simple and concise)
+
+## Graphs
+
+(low priority) I think *Graphs* can have a different design from *Tutorials*, making multiple cards in grid to guide users to access.
+
+## Separator of Column
 
 (Maybe) An option for remember/ not remember the position of the separators
 
@@ -111,7 +115,36 @@ FIXME: The position of the vertical separators (**Split Pos**) on the following 
 - FIXME: style of chips
 - FIXME: hide back-to-top button when it’s already at the top
 
-- FIXME: redesign the CC declaration
+- (low priority) FIXME: redesign the CC declaration
+
+# About
+
+Imperfect.
+
+# Account
+
+## Login/Register
+
+## Control Panel
+
+## Settings
+
+
+
+# Miscellaneous
+
+### Alert Notification (helper.ts)
+
+<img src="./screenshots/err-popup.png" alt="err-popup" style="zoom:40%;" />
+
+(low priority) color is not improper 
+
+- warningDialog
+- errorDialog
+
+backend server downtime will trigger more alert pop-ups in the same time, unfriendly.
+
+
 
 # Accessibility
 
@@ -129,41 +162,3 @@ TBD
 
 The quasar framework has perfectly done the adaptation of the tab navigation for us, just click <kbd>Tab</kbd>, the content slection will be highlighted.
 
-
-
-# About
-
-Imperfect, just redesign
-
-# Account
-
-TODO: Redesign
-
-- Login
-
-- Accout
-
-# Control Panel
-
-Imperfect, just redesign
-
-# Settings
-
-the line-height and so on.
-
-Make it a compact layout
-
-
-
-# Miscellaneous
-
-### Alert Notification (helper.ts)
-
-FIXME
-
-Redesign with proper color
-
-- warningDialog
-- errorDialog
-
-backend server downtime will trigger more alert pop-ups in the same time, unfriendly.
