@@ -1,6 +1,6 @@
 <template>
   <q-page class="page">
-    <div class="container q-mx-auto shadow-12">
+    <div class="container q-mx-auto">
       <div class="content-container-wrapper">
         <slot></slot>
       </div>
@@ -8,11 +8,13 @@
   </q-page>
 </template>
 
-<style lang="sass">
+<style lang="sass" scoped>
   @import "src/styles/quasar.variables"
 
   .page
     clear: both
+    // accord with Material Cover
+    top: -8rem
 
   .page
     @media (max-width: $breakpoint-xs-max)
@@ -28,6 +30,7 @@
   .container
     min-height: inherit
     max-width: 1200px
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px
 
   .body--light .container
     background-color: #ffffff
@@ -52,7 +55,4 @@
   .content-container-wrapper
     margin: 0 auto
     max-width: 900px
-
-  .material-page-shorter-h3
-    margin-bottom: 20px
 </style>
