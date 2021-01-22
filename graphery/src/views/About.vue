@@ -1,9 +1,5 @@
 <template>
   <div>
-    <!--    <div class="cover-wrapper flex justify-between">-->
-    <!--      <div class="text-bold cover-text">About</div>-->
-    <!--      <img :src="logoWhiteSrc" class="logo" alt="" />-->
-    <!--    </div>-->
     <MaterialCover :cover-title="$t('nav.About')" />
     <MaterialPage class="content-wrapper">
       <article class="about-content">
@@ -184,7 +180,6 @@
     data() {
       return {
         logoSrc: require('@/assets/images/compbio-lab.png'),
-        logoWhiteSrc: require('@/assets/images/compbio-lab-white.png'),
       };
     },
     metaInfo() {
@@ -208,22 +203,6 @@
       font-size: 1rem
   .uo-list
     font-size: 1.1rem
-  .cover-wrapper
-    background-color: #A70E16
-    height: 180px
-    .cover-text
-      margin-left: 2rem
-      margin-top: -2rem
-      opacity: .1
-      color: #fff
-      font-size: 9rem
-
-    .logo
-      width: 300px
-      height: 300px
-      opacity: .1
-      margin-right: 2rem
-
 
   .content-wrapper
     //top: -8rem
