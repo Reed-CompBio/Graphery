@@ -26,16 +26,17 @@
   .cover-wrapper
     background-color: #A70E16
     height: 180px
+    $general-opacity: .15
     .cover-text
       margin-left: 2rem
       margin-top: -2rem
-      opacity: .1
+      opacity: $general-opacity
       color: #fff
       font-size: 9rem
 
     .logo
       width: 300px
       height: 300px
-      opacity: .1
+      opacity: $general-opacity
       margin-right: 2rem
 </style>
