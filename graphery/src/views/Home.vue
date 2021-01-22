@@ -32,7 +32,11 @@
         </div>
         <q-separator />
         <div class="quick-facts flex-center">
-          <div :class="[smRowControl]">
+          <div
+            :class="[smRowControl]"
+            class="fit"
+            style="justify-content: space-between"
+          >
             <div
               :key="index"
               v-for="(item, index) in features"
@@ -43,7 +47,9 @@
               </div>
               <div :class="['title', smColControl]">{{ item.title }}</div>
               <div :class="['description', smColControl]">
-                {{ item.description }}
+                <p>
+                  {{ item.description }}
+                </p>
               </div>
             </div>
           </div>
@@ -69,19 +75,21 @@
         logoSrc: require('@/assets/images/compbio-lab.png'),
         features: [
           {
-            title: 'Tutorial',
+            title: 'Tutorials',
             description: 'Graphery is a tutorial based webservice.',
-            icon: 'mdi-cat',
+            icon: 'mdi-script-text-outline',
           },
           {
-            title: 'Interactive',
-            description: 'description',
+            title: 'Interactive Graphs and Customizable Code',
+            description:
+              'Provide interactive graphs and allow users to write their own code to interact with existing graphs',
             icon: 'mdi-cursor-default-click-outline',
           },
           {
-            title: 'Customizable',
-            description: 'description',
-            icon: 'mdi-move-resize-variant',
+            title: 'Visualization',
+            description:
+              'Execute and visualize execution results of example code and customized code',
+            icon: 'mdi-eye-check-outline',
           },
         ],
       };
