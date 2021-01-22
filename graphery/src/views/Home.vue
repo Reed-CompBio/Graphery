@@ -68,7 +68,7 @@
   };
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
   @import "~@/styles/home.sass"
 
   .page
