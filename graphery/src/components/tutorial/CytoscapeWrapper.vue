@@ -28,8 +28,8 @@
         </q-select>
       </div>
       <div class="menu-button-group-wrapper">
-        <q-btn-group rounded class="menu-button-group q-mx-auto">
-          <q-btn-dropdown outline>
+        <q-btn-group rounded flat class="menu-button-group q-mx-auto">
+          <q-btn-dropdown>
             <template v-slot:label>
               <q-icon name="mdi-share-variant" />
               <SwitchTooltip :text="$t('tooltips.Share')"></SwitchTooltip>
