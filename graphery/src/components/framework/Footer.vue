@@ -3,16 +3,16 @@
     <div class="flex justify-between footer-container">
       <div class="left row">
         <div class="logo flex no-wrap justify-start">
-          <span class="logo-text">G</span>
-          <span class="logo-text">R</span>
-          <span class="logo-text">A</span>
-          <span class="logo-text">P</span>
-          <span class="logo-text">H</span>
-          <span class="logo-text">E</span>
-          <span class="logo-text">R</span>
-          <span class="logo-text">Y</span>
+          <div
+            class="logo-text"
+            v-for="(letter, index) in logoTextList"
+            :key="index"
+          >
+            {{ letter }}
+          </div>
         </div>
         <div class="icon-row">
+          <!-- TODO: The title of icon should go with i18n -->
           <div class="github"></div>
           <a
             href="https://github.com/FlickerSoul/Graphery"
@@ -73,6 +73,7 @@
   export default {
     data() {
       return {
+        logoTextList: ['G', 'R', 'A', 'P', 'H', 'E', 'R', 'Y'],
         issueLink: 'https://github.com/FlickerSoul/Graphery/issues',
         mailToLink:
           'mailto:graphery@groups.reed.edu?subject=Graphery%20Feedback&body=Please%20describe%20in%20detail%3A%0D%0A1.%20if%20something%20looks%20wrong%2C%20please%20tell%20us%20what%20it%20should%20be%20like%20and%20how%20we%20can%20reproduce%20the%20problem%0D%0A2.%20if%20something%20can%20be%20better%2C%20please%20tell%20us%20how%20we%20can%20improve%20and%20the%20reasons%0D%0A%0D%0AThank%20you%20so%20much!',
@@ -105,7 +106,7 @@
 
   .footer-wrapper
     color: grey
-    margin-top: 32px
+    margin-top: -70px
     margin-bottom: 48px
 
     .footer-container
@@ -118,13 +119,14 @@
             font-family: "Amiri", serif
             color: grey
             transition: .8s ease
+            user-select: none
             &:hover
               color: #A70E16
               transition: .1s ease
         .icon-row
           margin-left: 30px
           // adjust the line height
-          margin-top: 5px
+          margin-top: 3px
           & a
             // the size of icon
             font-size: 22px

@@ -1,99 +1,102 @@
 <template>
-  <div style="display: flex; margin: auto;" class="flex-center">
-    <q-card :style="responsiveStyle">
-      <q-card-section>
-        <div :class="$q.screen.gt.xs ? 'q-pl-xl' : 'q-pl.md'">
-          <h3 class="material-page-shorter-h3">
-            {{ $t('nav.Login') }}
-          </h3>
-        </div>
-        <div>
-          <div id="login-form" class="row">
-            <div
-              id="login-module-wrapper"
-              :class="[
-                $q.screen.gt.md ? 'col-8' : 'full-width',
-                $q.screen.gt.xs ? 'q-px-xl' : 'q-px.md',
-                'flex-center',
-              ]"
-            >
-              <div id="login-content">
-                <q-form @submit="login" @reset="resetForm">
-                  <div id="account" class="q-mb-md">
-                    <q-input
-                      outlined
-                      v-model="account"
-                      :label="$t('account.Username')"
-                      type="text"
-                      :rules="[(val) => !!val || $t('account.notEmpty')]"
-                      :lazy-rules="true"
-                      :loading="loading"
-                      :disable="loading"
-                    />
-                  </div>
-                  <div id="password" class="q-my-md">
-                    <q-input
-                      outlined
-                      v-model="password"
-                      :label="$t('account.Password')"
-                      :type="showPwd ? 'text' : 'password'"
-                      :rules="[(val) => !!val || $t('account.notEmpty')]"
-                      :lazy-rules="true"
-                      :loading="loading"
-                      :disable="loading"
+  <div>
+    <MaterialCover :cover-title="$t('account.Login')" />
+    <div style="display: flex; margin: -8rem auto 8rem;" class="flex-center">
+      <q-card :style="responsiveStyle">
+        <q-card-section>
+          <div :class="$q.screen.gt.xs ? 'q-pl-xl' : 'q-pl.md'">
+            <h3 class="material-page-shorter-h3">
+              {{ $t('nav.Login') }}
+            </h3>
+          </div>
+          <div>
+            <div id="login-form" class="row">
+              <div
+                id="login-module-wrapper"
+                :class="[
+                  $q.screen.gt.md ? 'col-8' : 'full-width',
+                  $q.screen.gt.xs ? 'q-px-xl' : 'q-px.md',
+                  'flex-center',
+                ]"
+              >
+                <div id="login-content">
+                  <q-form @submit="login" @reset="resetForm">
+                    <div id="account" class="q-mb-md">
+                      <q-input
+                        outlined
+                        v-model="account"
+                        :label="$t('account.Username')"
+                        type="text"
+                        :rules="[(val) => !!val || $t('account.notEmpty')]"
+                        :lazy-rules="true"
+                        :loading="loading"
+                        :disable="loading"
+                      />
+                    </div>
+                    <div id="password" class="q-my-md">
+                      <q-input
+                        outlined
+                        v-model="password"
+                        :label="$t('account.Password')"
+                        :type="showPwd ? 'text' : 'password'"
+                        :rules="[(val) => !!val || $t('account.notEmpty')]"
+                        :lazy-rules="true"
+                        :loading="loading"
+                        :disable="loading"
+                      >
+                        <template v-slot:append>
+                          <q-icon
+                            :name="showPwd ? 'visibility' : 'visibility_off'"
+                            class="cursor-pointer"
+                            @click="showPwd = !showPwd"
+                          />
+                        </template>
+                      </q-input>
+                    </div>
+                    <div
+                      id="login-actions"
+                      style="display: flex; flex-direction: row-reverse; flex-wrap: wrap;"
+                      class="q-my-md"
                     >
-                      <template v-slot:append>
-                        <q-icon
-                          :name="showPwd ? 'visibility' : 'visibility_off'"
-                          class="cursor-pointer"
-                          @click="showPwd = !showPwd"
-                        />
-                      </template>
-                    </q-input>
-                  </div>
-                  <div
-                    id="login-actions"
-                    style="display: flex; flex-direction: row-reverse; flex-wrap: wrap;"
-                    class="q-my-md"
-                  >
-                    <div class="q-ma-sm">
-                      <q-btn
-                        outline
-                        color="primary"
-                        :label="$t('account.Login')"
-                        type="submit"
-                        :loading="loading"
-                        :disable="loading"
-                      ></q-btn>
+                      <div class="q-ma-sm">
+                        <q-btn
+                          outline
+                          color="primary"
+                          :label="$t('account.Login')"
+                          type="submit"
+                          :loading="loading"
+                          :disable="loading"
+                        ></q-btn>
+                      </div>
+                      <div class="q-ma-sm">
+                        <q-btn
+                          flat
+                          :label="$t('account.Register')"
+                          @click.prevent="register"
+                          :loading="loading"
+                          :disable="loading"
+                        ></q-btn>
+                      </div>
                     </div>
-                    <div class="q-ma-sm">
-                      <q-btn
-                        flat
-                        :label="$t('account.Register')"
-                        @click.prevent="register"
-                        :loading="loading"
-                        :disable="loading"
-                      ></q-btn>
-                    </div>
-                  </div>
-                </q-form>
+                  </q-form>
+                </div>
               </div>
-            </div>
 
-            <div
-              id="info-wrapper"
-              v-if="$q.screen.gt.md"
-              class="col q-ml-md q-pr-xl q-my-md"
-            >
-              <div style="display: flex;" class="flex-center">
-                <!-- FIXME: The mobile breakpoint is improper.-->
-                <q-img :src="logoSrc" style="width: 90%"></q-img>
+              <div
+                id="info-wrapper"
+                v-if="$q.screen.gt.md"
+                class="col q-ml-md q-pr-xl q-my-md"
+              >
+                <div style="display: flex;" class="flex-center">
+                  <!-- FIXME: The mobile breakpoint is improper.-->
+                  <q-img :src="logoSrc" style="width: 90%"></q-img>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </q-card-section>
-    </q-card>
+        </q-card-section>
+      </q-card>
+    </div>
   </div>
 </template>
 
@@ -102,8 +105,10 @@
   import { loginMutation } from '@/services/queries';
   import { mapActions, mapState } from 'vuex';
   import { errorDialog, successDialog } from '@/services/helpers';
+  import MaterialCover from '@/components/framework/MaterialCover';
 
   export default {
+    components: { MaterialCover },
     metaInfo() {
       const titleText = this.$t('nav.Login');
       return { title: titleText };
