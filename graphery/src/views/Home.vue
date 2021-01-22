@@ -33,20 +33,20 @@
         <q-separator />
         <div class="quick-facts flex-center">
           <div
-            :class="[smRowControl]"
+            :class="[mdRowControl]"
             class="fit"
             style="justify-content: space-between"
           >
             <div
               :key="index"
               v-for="(item, index) in features"
-              :class="['feature', smColControl]"
+              :class="['feature', mdColControl]"
             >
               <div class="icon">
                 <q-icon :name="item.icon"></q-icon>
               </div>
-              <div :class="['title', smColControl]">{{ item.title }}</div>
-              <div :class="['description', smColControl]">
+              <div :class="['title', mdColControl]">{{ item.title }}</div>
+              <div :class="['description', mdColControl]">
                 <p>
                   {{ item.description }}
                 </p>
@@ -95,31 +95,14 @@
       };
     },
     computed: {
-      ltSmBreakpoint() {
-        return this.$q.screen.lt.sm;
-      },
       ltMdBreakpoint() {
         return this.$q.screen.lt.md;
-      },
-      smRowControl() {
-        if (this.ltSmBreakpoint) {
-          return 'col';
-        } else {
-          return 'row';
-        }
       },
       mdRowControl() {
         if (this.ltMdBreakpoint) {
           return 'col';
         } else {
           return 'row';
-        }
-      },
-      smColControl() {
-        if (this.ltSmBreakpoint) {
-          return 'row';
-        } else {
-          return 'col';
         }
       },
       mdColControl() {
@@ -135,8 +118,4 @@
 
 <style lang="sass" scoped>
   @import "~@/styles/home.sass"
-
-  .page
-    //background: #fff
-    //padding: 30px
 </style>
