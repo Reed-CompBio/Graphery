@@ -1,134 +1,131 @@
 <template>
-  <MaterialPage>
-    <div>
-      <div id="title-section">
-        <h3 class="material-page-shorter-h3">
-          {{ title }}
-        </h3>
-      </div>
-      <div id="search-section">
-        <q-input
-          outlined
-          clearable
-          :debounce="50"
-          :hint="$t('collectionPage.searchHint')"
-          v-model="searchText"
-          name="search-input"
-          :rules="[]"
-          :loading="loadingContent"
-          @keydown.enter="search"
-        >
-          <template v-slot:prepend>
-            <q-icon
-              name="mdi-magnify"
-              @click="search"
-              style="cursor: pointer;"
-            />
-          </template>
-        </q-input>
-      </div>
-      <div id="content-section">
-        <div
-          :class="{
-            row: $q.screen.gt.xs,
-            column: $q.screen.lt.sm,
-          }"
-        >
-          <div
-            id="left-side-section"
-            :class="[
-              'col-4',
-              'flex-center',
-              'q-px-xs',
-              'q-my-md',
-              $q.screen.lt.sm ? 'row' : '',
-            ]"
+  <div>
+    <MaterialCover :cover-title="title" />
+    <MaterialPage>
+      <div>
+        <div id="title-section">
+          <h3 class="material-page-shorter-h3">
+            {{ title }}
+          </h3>
+        </div>
+        <div id="search-section">
+          <q-input
+            outlined
+            clearable
+            :debounce="50"
+            :hint="$t('collectionPage.searchHint')"
+            v-model="searchText"
+            name="search-input"
+            :rules="[]"
+            :loading="loadingContent"
+            @keydown.enter="search"
           >
-            <div id="filter-section" class="full-width">
-              <!--              <div class="q-mr-lg">-->
-              <!-- FIXME: What is the q-mr-lg for? -->
-              <!--                <h5 style="margin-bottom: 16px;">-->
-              <!--                  {{ $t('collectionPage.Filter') }}-->
-              <!--                </h5>-->
-              <!--              </div>-->
-              <div style="flex: 1 1 auto; margin-top: 45px;">
-                <CategorySelection v-model="categoryIds" />
-              </div>
-            </div>
-          </div>
-
+            <template v-slot:prepend>
+              <q-icon
+                name="mdi-magnify"
+                @click="search"
+                style="cursor: pointer;"
+              />
+            </template>
+          </q-input>
+        </div>
+        <div id="content-section">
           <div
-            id="content-list"
-            :class="['col-8', $q.screen.lt.sm ? 'full-width' : '']"
+            :class="{
+              row: $q.screen.gt.xs,
+              column: $q.screen.lt.sm,
+            }"
           >
-            <div id="page-manager-top" class="flex flex-center">
-              <q-pagination
-                :max="paginationMax"
-                v-model="currentPage"
-                :max-pages="6"
-                ellipses
-                direction-links
-                boundary-links
-                boundary-numbers
-                class="q-mx-auto"
-                icon-first="mdi-chevron-double-left"
-                icon-last="mdi-chevron-double-right"
-                icon-prev="mdi-chevron-left"
-                icon-next="mdi-chevron-right"
-              >
-              </q-pagination>
+            <div
+              id="left-side-section"
+              :class="[
+                'col-4',
+                'flex-center',
+                'q-px-xs',
+                'q-my-md',
+                $q.screen.lt.sm ? 'row' : '',
+              ]"
+            >
+              <div id="filter-section" class="full-width">
+                <div style="flex: 1 1 auto; margin-top: 45px;">
+                  <CategorySelection v-model="categoryIds" />
+                </div>
+              </div>
             </div>
 
-            <div class="q-mx-sm q-mt-lg">
-              <div
-                class="relative-position"
-                id="inner-loader"
-                v-show="loadingContent"
-              >
-                <q-inner-loading :showing="loadingContent">
-                  <q-spinner-pie size="64"></q-spinner-pie>
-                </q-inner-loading>
-              </div>
-              <div
-                id="empty-indicator"
-                v-show="infos.length === 0 && !loadingContent"
-              >
-                <EmptyEntryCard />
+            <div
+              id="content-list"
+              :class="['col-8', $q.screen.lt.sm ? 'full-width' : '']"
+            >
+              <div id="page-manager-top" class="flex flex-center">
+                <q-pagination
+                  :max="paginationMax"
+                  v-model="currentPage"
+                  :max-pages="6"
+                  ellipses
+                  direction-links
+                  boundary-links
+                  boundary-numbers
+                  class="q-mx-auto"
+                  icon-first="mdi-chevron-double-left"
+                  icon-last="mdi-chevron-double-right"
+                  icon-prev="mdi-chevron-left"
+                  icon-next="mdi-chevron-right"
+                >
+                </q-pagination>
               </div>
 
-              <ArticleCard
-                v-for="info in displayedInfos"
-                :key="info.url"
-                :info="info"
-                :moreButtonText="moreButtonText"
-                :notClickableWhenNoContent="notClickableWhenNoContent"
-                @category-filter="addToCategoryFilter"
-              ></ArticleCard>
-              <!-- TODO why do you want to filter authors? -->
-            </div>
-            <div id="page-manager-down" class="flex flex-center">
-              <q-pagination
-                :max="paginationMax"
-                v-model="currentPage"
-                :max-pages="6"
-                ellipses
-                direction-links
-                boundary-links
-                boundary-numbers
-                class="q-mx-auto"
-                icon-first="mdi-chevron-double-left"
-                icon-last="mdi-chevron-double-right"
-                icon-prev="mdi-chevron-left"
-                icon-next="mdi-chevron-right"
-                @click="scrollToTop"
-              >
-              </q-pagination>
+              <div class="q-mx-sm q-mt-lg">
+                <div
+                  class="relative-position"
+                  id="inner-loader"
+                  v-show="loadingContent"
+                >
+                  <q-inner-loading :showing="loadingContent">
+                    <q-spinner-pie size="64"></q-spinner-pie>
+                  </q-inner-loading>
+                </div>
+                <div
+                  id="empty-indicator"
+                  v-show="infos.length === 0 && !loadingContent"
+                >
+                  <EmptyEntryCard />
+                </div>
+
+                <ArticleCard
+                  v-for="info in displayedInfos"
+                  :key="info.url"
+                  :info="info"
+                  :moreButtonText="moreButtonText"
+                  :notClickableWhenNoContent="notClickableWhenNoContent"
+                  @category-filter="addToCategoryFilter"
+                ></ArticleCard>
+                <!-- TODO why do you want to filter authors? -->
+              </div>
+              <div id="page-manager-down" class="flex flex-center">
+                <q-pagination
+                  :max="paginationMax"
+                  v-model="currentPage"
+                  :max-pages="6"
+                  ellipses
+                  direction-links
+                  boundary-links
+                  boundary-numbers
+                  class="q-mx-auto"
+                  icon-first="mdi-chevron-double-left"
+                  icon-last="mdi-chevron-double-right"
+                  icon-prev="mdi-chevron-left"
+                  icon-next="mdi-chevron-right"
+                  @click="scrollToTop"
+                >
+                </q-pagination>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </MaterialPage>
+    </MaterialPage>
+  </div>
 </template>
 
 <script>
@@ -138,10 +135,12 @@
   import loadingMixin from '@/components/ControlPanel/mixins/LoadingMixin';
   import { QPagination } from 'quasar';
   import MaterialPage from '@/components/framework/MaterialPage.vue';
+  import MaterialCover from '@/components/framework/MaterialCover';
 
   export default {
     mixins: [loadingMixin],
     components: {
+      MaterialCover,
       CategorySelection: () =>
         import('@/components/ControlPanel/parts/selectors/CategorySelection'),
       MaterialPage,
