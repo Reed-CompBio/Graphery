@@ -3,7 +3,11 @@
     <div class="flex justify-between footer-container">
       <div class="left row">
         <div class="logo flex no-wrap justify-start">
-          <div class="logo-text" v-for="letter in logoTextList" :key="letter">
+          <div
+            class="logo-text"
+            v-for="(letter, index) in logoTextList"
+            :key="index"
+          >
             {{ letter }}
           </div>
         </div>
