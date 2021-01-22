@@ -4,12 +4,6 @@
       Welcome {{ userObj.firstName }} {{ userObj.lastName }}
     </template>
     <template>
-      <div class="text-h4">
-        <p>
-          There ain't much you can do in this page, but I promise I will add
-          more fun.
-        </p>
-      </div>
       <MarkdownSection :markdownRaw="exampleMd"></MarkdownSection>
     </template>
   </ControlPanelContentFrame>
@@ -22,225 +16,51 @@
     data() {
       return {
         exampleMd:
-          '@12@\n' +
-          '@13@@14@\n' +
-          '@12.56@\n' +
-          '@sdafew@\n' +
-          '# h1 Heading 8-)\n' +
-          '## h2 Heading\n' +
-          '### h3 Heading\n' +
-          '#### h4 hhh\n' +
-          '##### h5 hhhhh\n' +
-          '<h2> h2 Heading by HTML</h2>\n' +
+          '## How to Upload Tutorial \n' +
           '\n' +
-          '## Horizontal Rules\n' +
-          ' $\\sqrt{2}$ 1' +
+          'A tutorial has three parts: text content, graph, and code. However, first you need to creat an anchor. By creating an anchor, you are specifying the URL which users can use to access the tutorial. \n' +
           '\n' +
-          '___\n' +
           '\n' +
-          '---\n' +
+          '### Create Anchor \n' +
           '\n' +
-          '***\n' +
+          'To create an anchor, click on the `Tutorial Anchors` on the left vertical menu. Then, you should be able to see a table displaying existing tutorial anchors, if there is any. To creat a new anchor, click on the `ADD NEW` on top of the table, which should open up a new page. \n' +
           '\n' +
-          '## Typographic replacements\n' +
+          'In that page, you can see that the ID is pending, which means nothing is created in the database now. Then you need to fill in the `tutorial URL`, `tutorial Name`, and `rank`, as well as categories if you want to. \n' +
           '\n' +
-          'Enable typographer option to see result.\n' +
+          'Tutorial Name is the name of the tutorial, which just serves as a human-readable string in the database query. However, the name should be informed. We recommend you use the English title of the tutorial as the name. \n' +
           '\n' +
-          '(c) (C) (r) (R) (tm) (TM) (p) (P) +-\n' +
+          "The tutorial URL should be informed, that is, users can know what's the tutorial is linked to this url by just looking at the URL. We recommend that you use the tutorial name with characters other than letters and numbers replaced by `-`. \n" +
           '\n' +
-          'test.. test... test..... test?..... test!....\n' +
+          "The rank is a set of number that specifies how tutorials should be order. It's in form of `xxx-x`. Choose the suitable one. The first digit represents the difficulty of the course. And the second two digits is the index of the tutorial within that rank. Since there can be tutorials discussing the same topic, the first three digits should be the same with the digit after the dash, `-`, representing the order of tutorials in the same topic. \n" +
           '\n' +
-          '!!!!!! ???? ,,  -- ---\n' +
+          'Then you can choose the categories if you like and set if publish status. After clicking the submit button and see a green popup, you are good to go. \n' +
           '\n' +
-          '"Smartypants, double quotes" and \'single quotes\'\n' +
           '\n' +
+          '### Upload Tutorial Text Content \n' +
           '\n' +
-          '## Emphasis\n' +
+          'After creating an anchor, you can upload the three parts of the tutorial. \n' +
           '\n' +
-          '**This is bold text**\n' +
+          'To upload the tutorial text content, click on `Tutorial Content` and it should bring you to a similar page with a list of stored tutorial text content. To change the language, click on the dropdown manual on the top of the list and chose the language you want. \n' +
           '\n' +
-          '__This is bold text__\n' +
+          'If the tutorial has uploaded content, you can click on the title to edit the existing tutorial. If not, the `Title` column will show `<None>` and you can click that to creat add new content.\n' +
           '\n' +
-          '*This is italic text*\n' +
+          'When you are in the editor page, you can just fill in the content and hit submit to write to the database. Please note that the title is different from the name of the anchor. The title is what users will see on actual tutorial text whereas the name of the anchor is a piece human-readable text for internal use.\n' +
           '\n' +
-          '_This is italic text_\n' +
+          'Sometime you may need to upload picture. In this case, please go to the `Uploads` tab on the left vertical menu, and hit `ADD NEW`. You can choose the file you want to upload in a proceeding popup.  \n' +
           '\n' +
-          '~~Strikethrough~~\n' +
+          '### Upload Graph \n' +
           '\n' +
+          'Currently, if you have a good graph, please contact the administrator. You can use the existing graphs in the tutorial. \n' +
           '\n' +
-          '## Blockquotes\n' +
+          '### Upload Graph Content\n' +
           '\n' +
+          'The graph content has a similar structure as the tutorial content. \n' +
           '\n' +
-          '> Blockquotes can also be nested...\n' +
-          '>> ...by using additional greater-than signs right next to each other...\n' +
-          '> > > ...or with spaces between arrows.\n' +
+          '### Upload Code \n' +
           '\n' +
+          "A tutorial should have a code working snippet. To upload a new code snippet, please go the Code tab in the left vertical menu. And click `ADD NEW` on the top of the list table. Simply paste your code in the editor and hit submit. You should wait for a moment since the code is not only being pushing to the database, it's also being run on the associated graphs to generate result JSON. There will be two green popup show if everything goes well. One indicates that the code is uploaded successfully, and the other one indicates that the result JSON is fetched again. At this point, you should check if all the graphs have proper results by going down to the card on the bottom, on which there is a drop down menu you can click to see the execution result for each graph.  \n" +
           '\n' +
-          '## Lists\n' +
-          '\n' +
-          'Unordered\n' +
-          '\n' +
-          '+ Create a list by starting a line with `+`, `-`, or `*`\n' +
-          '+ Sub-lists are made by indenting 2 spaces:\n' +
-          '  - Marker character change forces new list start:\n' +
-          '    * Ac tristique libero volutpat at\n' +
-          '    + Facilisis in pretium nisl aliquet\n' +
-          '    - Nulla volutpat aliquam velit\n' +
-          '+ Very easy!\n' +
-          '\n' +
-          'Ordered\n' +
-          '\n' +
-          '1. Lorem ipsum dolor sit amet\n' +
-          '2. Consectetur adipiscing elit\n' +
-          '3. Integer molestie lorem at massa\n' +
-          '\n' +
-          '\n' +
-          '1. You can use sequential numbers...\n' +
-          '1. ...or keep all the numbers as `1.`\n' +
-          '\n' +
-          'Start numbering with offset:\n' +
-          '\n' +
-          '57. foo\n' +
-          '1. bar\n' +
-          '\n' +
-          '\n' +
-          '## Code\n' +
-          '\n' +
-          'Inline `code`\n' +
-          '\n' +
-          'Indented code\n' +
-          '\n' +
-          '    // Some comments\n' +
-          '    line 1 of code\n' +
-          '    line 2 of code\n' +
-          '    line 3 of code\n' +
-          '\n' +
-          '\n' +
-          'Block code "fences"\n' +
-          '\n' +
-          '```\n' +
-          'Sample text here...\n' +
-          '```\n' +
-          'Syntax highlighting\n' +
-          '\n' +
-          '```python\n' +
-          'def hello():\n' +
-          '    print("hello world")\n' +
-          '    return None\n' +
-          '\n' +
-          '```\n' +
-          '\n' +
-          '\n' +
-          '## Tables\n' +
-          '\n' +
-          '| Option | Description |\n' +
-          '| ------ | ----------- |\n' +
-          '| data   | path to data files to supply the data that will be passed into templates. |\n' +
-          '| engine | engine to be used for processing templates. Handlebars is the default. |\n' +
-          '| ext    | extension to be used for dest files. |\n' +
-          '\n' +
-          'Right aligned columns\n' +
-          '\n' +
-          '| Option | Description |\n' +
-          '| ------:| -----------:|\n' +
-          '| data   | path to data files to supply the data that will be passed into templates. |\n' +
-          '| engine | engine to be used for processing templates. Handlebars is the default. |\n' +
-          '| ext    | extension to be used for dest files. |\n' +
-          '\n' +
-          '## Links\n' +
-          '\n' +
-          '[vue-markdown](https://github.com/miaolz123/vue-markdown)\n' +
-          '\n' +
-          '[link with title](https://github.com/miaolz123/vue-markdown "VueMarkdown")\n' +
-          '\n' +
-          'Autoconverted link https://github.com/miaolz123/vue-markdown (enable linkify to see)\n' +
-          '\n' +
-          '\n' +
-          '## Images\n' +
-          '\n' +
-          '![Minion](dist/img/minion.png)\n' +
-          '\n' +
-          'Like links, Images also have a footnote style syntax\n' +
-          '\n' +
-          '![Alt text][id]\n' +
-          '\n' +
-          'With a reference later in the document defining the URL location:\n' +
-          '\n' +
-          '[id]: dist/img/minion.png  "The Dojocat"\n' +
-          '\n' +
-          '\n' +
-          '### Emojies\n' +
-          '\n' +
-          '> Classic markup: :wink: :cry: :laughing: :yum:\n' +
-          '>\n' +
-          '> Shortcuts (emoticons): :-) :-( 8-) ;)\n' +
-          '\n' +
-          '\n' +
-          '### Subscript / Superscript\n' +
-          '\n' +
-          '- 19^th^\n' +
-          '- H~2~O\n' +
-          '\n' +
-          '\n' +
-          '### \\<ins>\n' +
-          '\n' +
-          '++Inserted text++\n' +
-          '\n' +
-          '\n' +
-          '### \\<mark>\n' +
-          '\n' +
-          '==Marked text==\n' +
-          '\n' +
-          '\n' +
-          '### Footnotes\n' +
-          '\n' +
-          'Footnote 1 link[^first].\n' +
-          '\n' +
-          'Footnote 2 link[^second].\n' +
-          '\n' +
-          'Inline footnote^[Text of inline footnote] definition.\n' +
-          '\n' +
-          'Duplicated footnote reference[^second].\n' +
-          '\n' +
-          '[^first]: Footnote **can have markup**\n' +
-          '\n' +
-          '    and multiple paragraphs.\n' +
-          '\n' +
-          '[^second]: Footnote text.\n' +
-          '\n' +
-          '\n' +
-          '### Definition lists\n' +
-          '\n' +
-          'Term 1\n' +
-          '\n' +
-          ':   Definition 1\n' +
-          'with lazy continuation.\n' +
-          '\n' +
-          'Term 2 with *inline markup*\n' +
-          '\n' +
-          ':   Definition 2\n' +
-          '\n' +
-          '        { some code, part of Definition 2 }\n' +
-          '\n' +
-          '    Third paragraph of definition 2.\n' +
-          '\n' +
-          '_Compact style:_\n' +
-          '\n' +
-          'Term 1\n' +
-          '  ~ Definition 1\n' +
-          '\n' +
-          'Term 2\n' +
-          '  ~ Definition 2a\n' +
-          '  ~ Definition 2b\n' +
-          '\n' +
-          '\n' +
-          '### Abbreviations\n' +
-          '\n' +
-          'This is HTML abbreviation example.\n' +
-          '\n' +
-          'It converts "HTML", but keep intact partial entries like "xxxHTMLyyy" and so on.\n' +
-          '\n' +
-          '*[HTML]: Hyper Text Markup Language',
+          '\n',
       };
     },
     components: {

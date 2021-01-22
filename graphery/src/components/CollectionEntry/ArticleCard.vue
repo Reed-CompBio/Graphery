@@ -3,11 +3,11 @@
     <q-intersection once transition="scale" class="expandable-helper">
       <q-card class="article-card-wrapper">
         <section>
-          <div class="text-h5 tutorial-title-wrapper">
+          <div class="tutorial-title-wrapper text-h5">
             <div v-if="info.rank" class="tutorial-rank">
               {{ rankText }}
             </div>
-            <div>
+            <div class="text-h5">
               <router-link
                 class="tutorial-title"
                 :to="info.url"
@@ -127,7 +127,10 @@
     text-decoration: none !important
   .tutorial-title-wrapper
     .tutorial-rank
-      background-color: yellow
+      display: inline-block
+      margin-bottom: 2px
+    & > .text-h5
+      display: inline-block
     .tutorial-title
       &:after
         content: ''

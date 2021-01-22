@@ -55,9 +55,9 @@
           Built with
           <q-icon name="mdi-heart" style="color: rgb(212, 63, 87);"></q-icon>
           and
-          <a href="https://quasar.dev" target="_blank" rel="noreferrer"
-            >Quasar</a
-          >
+          <a href="https://quasar.dev" target="_blank" rel="noreferrer">
+            Quasar
+          </a>
           <!-- TODO: import Quasar SVG as font icon / ref to iconmoon -->
           powered by
           <a href="https://vuejs.org" target="_blank" rel="noreferrer">
