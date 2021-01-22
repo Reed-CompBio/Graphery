@@ -53,14 +53,14 @@
             icon: 'mdi-cat',
           },
           {
-            title: 'Feature',
+            title: 'Interactive',
             description: 'description',
-            icon: 'mdi-fishbowl-outline',
+            icon: 'mdi-cursor-default-click-outline',
           },
           {
-            title: 'Feature',
+            title: 'Customizable',
             description: 'description',
-            icon: 'mdi-flag-checkered',
+            icon: 'mdi-move-resize-variant',
           },
         ],
       };

@@ -3,10 +3,14 @@
     <div class="flex justify-between footer-container">
       <div class="left row">
         <div class="logo flex no-wrap justify-start">
-          <span class="logo-text">G</span><span class="logo-text">R</span
-          ><span class="logo-text">A</span><span class="logo-text">P</span
-          ><span class="logo-text">H</span><span class="logo-text">E</span
-          ><span class="logo-text">R</span><span class="logo-text">Y</span>
+          <span class="logo-text">G</span>
+          <span class="logo-text">R</span>
+          <span class="logo-text">A</span>
+          <span class="logo-text">P</span>
+          <span class="logo-text">H</span>
+          <span class="logo-text">E</span>
+          <span class="logo-text">R</span>
+          <span class="logo-text">Y</span>
         </div>
         <div class="icon-row">
           <div class="github"></div>
@@ -51,9 +55,9 @@
           Built with
           <q-icon name="mdi-heart" style="color: rgb(212, 63, 87);"></q-icon>
           and
-          <a href="https://quasar.dev" target="_blank" rel="noreferrer"
-            >Quasar</a
-          >
+          <a href="https://quasar.dev" target="_blank" rel="noreferrer">
+            Quasar
+          </a>
           <!-- TODO: import Quasar SVG as font icon / ref to iconmoon -->
           powered by
           <a href="https://vuejs.org" target="_blank" rel="noreferrer">
