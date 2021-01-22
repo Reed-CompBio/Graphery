@@ -3,13 +3,18 @@
     <MaterialCover :cover-title="$t('nav.Home')" />
     <MaterialPage>
       <div class="page">
-        <div class="welcome-box flex-center">
+        <div
+          :class="['welcome-box', 'flex-center', mdRowControl]"
+          class="justify-center"
+        >
           <!-- FIXME: mobile breakpoint (responsive adaption)-->
           <!-- FIXME: beautify the logo -->
-          <img :src="logoSrc" class="logo" alt="" />
-          <div class="graphery-text">
+          <div :class="[mdColControl]" class="justify-center">
+            <img :src="logoSrc" class="logo" alt="site logo" />
+          </div>
+          <div :class="[mdColControl]" class="graphery-text justify-center">
             <h3 class="welcome-title">
-              Welcome to <br /><span class="logo-text">GRAPHERY</span>
+              Welcome to <span class="logo-text">GRAPHERY</span>
             </h3>
             <div class="home-intro-text">
               <p>
@@ -27,12 +32,20 @@
         </div>
         <q-separator />
         <div class="quick-facts flex-center">
-          <div :key="index" v-for="(item, index) in features" class="feature">
-            <div class="icon">
-              <q-icon :name="item.icon"></q-icon>
+          <div :class="[smRowControl]">
+            <div
+              :key="index"
+              v-for="(item, index) in features"
+              :class="['feature', smColControl]"
+            >
+              <div class="icon">
+                <q-icon :name="item.icon"></q-icon>
+              </div>
+              <div :class="['title', smColControl]">{{ item.title }}</div>
+              <div :class="['description', smColControl]">
+                {{ item.description }}
+              </div>
             </div>
-            <div class="title">{{ item.title }}</div>
-            <div class="description">{{ item.description }}</div>
           </div>
         </div>
       </div>
@@ -72,6 +85,42 @@
           },
         ],
       };
+    },
+    computed: {
+      ltSmBreakpoint() {
+        return this.$q.screen.lt.sm;
+      },
+      ltMdBreakpoint() {
+        return this.$q.screen.lt.md;
+      },
+      smRowControl() {
+        if (this.ltSmBreakpoint) {
+          return 'col';
+        } else {
+          return 'row';
+        }
+      },
+      mdRowControl() {
+        if (this.ltMdBreakpoint) {
+          return 'col';
+        } else {
+          return 'row';
+        }
+      },
+      smColControl() {
+        if (this.ltSmBreakpoint) {
+          return 'row';
+        } else {
+          return 'col';
+        }
+      },
+      mdColControl() {
+        if (this.ltMdBreakpoint) {
+          return 'row';
+        } else {
+          return 'col';
+        }
+      },
     },
   };
 </script>
