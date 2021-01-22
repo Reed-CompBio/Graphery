@@ -27,6 +27,7 @@
           </template>
         </q-select>
       </div>
+      <q-space />
       <div class="menu-button-group-wrapper">
         <q-btn-group rounded flat class="menu-button-group q-mx-auto">
           <q-btn-dropdown>
