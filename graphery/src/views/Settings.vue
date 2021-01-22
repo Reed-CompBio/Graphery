@@ -1,202 +1,204 @@
 <template>
-  <!-- the content is still very message -->
-  <MaterialPage>
-    <div>
-      <div id="header-section">
-        <h3 class="material-page-shorter-h3">
-          {{ $t('nav.Settings') }}
-        </h3>
+  <div>
+    <MaterialCover :cover-title="$t('nav.Settings')" />
+    <MaterialPage>
+      <div>
+        <div id="header-section">
+          <h3 class="material-page-shorter-h3">
+            {{ $t('nav.Settings') }}
+          </h3>
+        </div>
+        <div id="content-section">
+          <SettingDisplayCard :title="$t('settings.Display')">
+            <template v-slot:toggles>
+              <SettingUnit
+                :name="$t('settings.darkMode') + '  (Just DON\'T Use it )'"
+              >
+                <q-toggle
+                  left-label
+                  size="xl"
+                  v-model="setDarkMode"
+                  color="black"
+                  checked-icon="mdi-moon-waxing-crescent"
+                  unchecked-icon="mdi-white-balance-sunny"
+                />
+              </SettingUnit>
+              <SettingUnit :name="$t('settings.graphBackgroundDark')">
+                <q-toggle
+                  left-label
+                  size="xl"
+                  v-model="setGraphBackgroundDark"
+                  color="grey"
+                  checked-icon="mdi-decagram"
+                  unchecked-icon="mdi-decagram-outline"
+                />
+              </SettingUnit>
+              <SettingUnit :name="$t('settings.showTooltips')">
+                <q-toggle
+                  left-label
+                  size="xl"
+                  v-model="setTooltips"
+                  color="green-4"
+                  checked-icon="mdi-comment-check"
+                  unchecked-icon="mdi-comment-remove"
+                />
+              </SettingUnit>
+              <SettingUnit :name="$t('settings.Show Graph Abstract')">
+                <q-toggle
+                  left-label
+                  size="xl"
+                  v-model="setGraphAbstractPopupShow"
+                  checked-icon="mdi-layers"
+                  unchecked-icon="mdi-layers-off"
+                />
+              </SettingUnit>
+            </template>
+            <template v-slot:sliders>
+              <SettingUnit :name="$t('settings.cardsDisplayedNum')">
+                <q-slider
+                  label
+                  label-always
+                  markers
+                  snap
+                  v-model="setPageDisplayNum"
+                  color="amber"
+                  :min="1"
+                  :step="1"
+                  :max="10"
+                />
+              </SettingUnit>
+            </template>
+          </SettingDisplayCard>
+
+          <SettingDisplayCard :title="$t('settings.graphRender')">
+            <template v-slot:toggles>
+              <p>({{ $t('settings.performanceTip') }})</p>
+              <SettingUnit :name="$t('settings.hideEdgesWhenRendering')">
+                <q-toggle
+                  left-label
+                  size="xl"
+                  v-model="setHideEdgeWhenRendering"
+                  color="green"
+                  checked-icon="mdi-eye-off"
+                  unchecked-icon="mdi-eye"
+                />
+              </SettingUnit>
+              <SettingUnit :name="$t('settings.renderViewportOnly')">
+                <q-toggle
+                  left-label
+                  size="xl"
+                  v-model="setRenderViewportOnly"
+                  color="orange"
+                  checked-icon="mdi-fullscreen-exit"
+                  unchecked-icon="mdi-fullscreen"
+                />
+              </SettingUnit>
+
+              <SettingUnit :name="$t('settings.motionBlurEnabled')">
+                <q-toggle
+                  left-label
+                  size="xl"
+                  v-model="setMotionBlurEnabled"
+                  color="blue"
+                  checked-icon="mdi-run-fast"
+                  unchecked-icon="mdi-run"
+                />
+              </SettingUnit>
+            </template>
+            <template v-slot:sliders>
+              <SettingUnit :name="$t('settings.motionSensitivityLevel')">
+                <q-slider
+                  label
+                  label-always
+                  snap
+                  v-model="setMotionSensitivityLevel"
+                  color="teal"
+                  :min="0.5"
+                  :step="0.1"
+                  :max="2"
+                />
+              </SettingUnit>
+              <SettingUnit :name="$t('settings.splitPos')">
+                <q-slider
+                  label
+                  label-always
+                  snap
+                  v-model="setGraphSplitPos"
+                  color="deep-orange"
+                  :min="10"
+                  :step="0.1"
+                  :max="90"
+                />
+              </SettingUnit>
+            </template>
+          </SettingDisplayCard>
+
+          <SettingDisplayCard :title="$t('settings.editorSettings')">
+            <template v-slot:toggles>
+              <SettingUnit :name="$t('settings.enableEditing')">
+                <q-toggle
+                  left-label
+                  size="xl"
+                  v-model="setEnableEditing"
+                  color="accent"
+                  checked-icon="lock_open"
+                  unchecked-icon="lock"
+                ></q-toggle>
+              </SettingUnit>
+              <SettingUnit :name="$t('settings.softTab')">
+                <q-toggle
+                  left-label
+                  size="xl"
+                  v-model="setSoftTab"
+                  color="green-4"
+                  checked-icon="mdi-keyboard-space"
+                  unchecked-icon="mdi-keyboard-tab"
+                />
+              </SettingUnit>
+              <SettingUnit :name="$t('settings.lineWrap')">
+                <q-toggle
+                  left-label
+                  size="xl"
+                  v-model="setCodeWrap"
+                  color="orange-4"
+                  checked-icon="mdi-wrap"
+                  unchecked-icon="mdi-wrap-disabled"
+                />
+              </SettingUnit>
+            </template>
+            <template v-slot:sliders>
+              <SettingUnit :name="$t('settings.tabNum')">
+                <q-slider
+                  label
+                  label-always
+                  markers
+                  snap
+                  v-model="setTabNum"
+                  color="light-blue"
+                  :min="2"
+                  :step="1"
+                  :max="6"
+                />
+              </SettingUnit>
+              <SettingUnit :name="$t('settings.fontSize')">
+                <q-slider
+                  label
+                  label-always
+                  markers
+                  snap
+                  v-model="setFontSize"
+                  color="amber"
+                  :min="8"
+                  :step="1"
+                  :max="20"
+                />
+              </SettingUnit>
+            </template>
+          </SettingDisplayCard>
+        </div>
       </div>
-      <div id="content-section">
-        <SettingDisplayCard :title="$t('settings.Display')">
-          <template v-slot:toggles>
-            <SettingUnit
-              :name="$t('settings.darkMode') + '  (Just DON\'T Use it )'"
-            >
-              <q-toggle
-                left-label
-                size="xl"
-                v-model="setDarkMode"
-                color="black"
-                checked-icon="mdi-moon-waxing-crescent"
-                unchecked-icon="mdi-white-balance-sunny"
-              />
-            </SettingUnit>
-            <SettingUnit :name="$t('settings.graphBackgroundDark')">
-              <q-toggle
-                left-label
-                size="xl"
-                v-model="setGraphBackgroundDark"
-                color="grey"
-                checked-icon="mdi-decagram"
-                unchecked-icon="mdi-decagram-outline"
-              />
-            </SettingUnit>
-            <SettingUnit :name="$t('settings.showTooltips')">
-              <q-toggle
-                left-label
-                size="xl"
-                v-model="setTooltips"
-                color="green-4"
-                checked-icon="mdi-comment-check"
-                unchecked-icon="mdi-comment-remove"
-              />
-            </SettingUnit>
-            <SettingUnit :name="$t('settings.Show Graph Abstract')">
-              <q-toggle
-                left-label
-                size="xl"
-                v-model="setGraphAbstractPopupShow"
-                checked-icon="mdi-layers"
-                unchecked-icon="mdi-layers-off"
-              />
-            </SettingUnit>
-          </template>
-          <template v-slot:sliders>
-            <SettingUnit :name="$t('settings.cardsDisplayedNum')">
-              <q-slider
-                label
-                label-always
-                markers
-                snap
-                v-model="setPageDisplayNum"
-                color="amber"
-                :min="1"
-                :step="1"
-                :max="10"
-              />
-            </SettingUnit>
-          </template>
-        </SettingDisplayCard>
-
-        <SettingDisplayCard :title="$t('settings.graphRender')">
-          <template v-slot:toggles>
-            <p>({{ $t('settings.performanceTip') }})</p>
-            <SettingUnit :name="$t('settings.hideEdgesWhenRendering')">
-              <q-toggle
-                left-label
-                size="xl"
-                v-model="setHideEdgeWhenRendering"
-                color="green"
-                checked-icon="mdi-eye-off"
-                unchecked-icon="mdi-eye"
-              />
-            </SettingUnit>
-            <SettingUnit :name="$t('settings.renderViewportOnly')">
-              <q-toggle
-                left-label
-                size="xl"
-                v-model="setRenderViewportOnly"
-                color="orange"
-                checked-icon="mdi-fullscreen-exit"
-                unchecked-icon="mdi-fullscreen"
-              />
-            </SettingUnit>
-
-            <SettingUnit :name="$t('settings.motionBlurEnabled')">
-              <q-toggle
-                left-label
-                size="xl"
-                v-model="setMotionBlurEnabled"
-                color="blue"
-                checked-icon="mdi-run-fast"
-                unchecked-icon="mdi-run"
-              />
-            </SettingUnit>
-          </template>
-          <template v-slot:sliders>
-            <SettingUnit :name="$t('settings.motionSensitivityLevel')">
-              <q-slider
-                label
-                label-always
-                snap
-                v-model="setMotionSensitivityLevel"
-                color="teal"
-                :min="0.5"
-                :step="0.1"
-                :max="2"
-              />
-            </SettingUnit>
-            <SettingUnit :name="$t('settings.splitPos')">
-              <q-slider
-                label
-                label-always
-                snap
-                v-model="setGraphSplitPos"
-                color="deep-orange"
-                :min="10"
-                :step="0.1"
-                :max="90"
-              />
-            </SettingUnit>
-          </template>
-        </SettingDisplayCard>
-
-        <SettingDisplayCard :title="$t('settings.editorSettings')">
-          <template v-slot:toggles>
-            <SettingUnit :name="$t('settings.enableEditing')">
-              <q-toggle
-                left-label
-                size="xl"
-                v-model="setEnableEditing"
-                color="accent"
-                checked-icon="lock_open"
-                unchecked-icon="lock"
-              ></q-toggle>
-            </SettingUnit>
-            <SettingUnit :name="$t('settings.softTab')">
-              <q-toggle
-                left-label
-                size="xl"
-                v-model="setSoftTab"
-                color="green-4"
-                checked-icon="mdi-keyboard-space"
-                unchecked-icon="mdi-keyboard-tab"
-              />
-            </SettingUnit>
-            <SettingUnit :name="$t('settings.lineWrap')">
-              <q-toggle
-                left-label
-                size="xl"
-                v-model="setCodeWrap"
-                color="orange-4"
-                checked-icon="mdi-wrap"
-                unchecked-icon="mdi-wrap-disabled"
-              />
-            </SettingUnit>
-          </template>
-          <template v-slot:sliders>
-            <SettingUnit :name="$t('settings.tabNum')">
-              <q-slider
-                label
-                label-always
-                markers
-                snap
-                v-model="setTabNum"
-                color="light-blue"
-                :min="2"
-                :step="1"
-                :max="6"
-              />
-            </SettingUnit>
-            <SettingUnit :name="$t('settings.fontSize')">
-              <q-slider
-                label
-                label-always
-                markers
-                snap
-                v-model="setFontSize"
-                color="amber"
-                :min="8"
-                :step="1"
-                :max="20"
-              />
-            </SettingUnit>
-          </template>
-        </SettingDisplayCard>
-      </div>
-    </div>
-  </MaterialPage>
+    </MaterialPage>
+  </div>
 </template>
 
 <script>
@@ -204,12 +206,14 @@
   import MaterialPage from '@/components/framework/MaterialPage.vue';
   import SettingDisplayCard from '@/components/settings/SettingDisplayCard';
   import SettingUnit from '@/components/settings/SettingUnit';
+  import MaterialCover from '@/components/framework/MaterialCover';
   export default {
     metaInfo() {
       const titleText = this.$t('nav.Settings');
       return { title: titleText };
     },
     components: {
+      MaterialCover,
       MaterialPage,
       SettingDisplayCard,
       SettingUnit,
