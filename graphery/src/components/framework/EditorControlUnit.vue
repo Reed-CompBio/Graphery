@@ -52,6 +52,7 @@
         icon="mdi-skip-next"
         @click="onStepForward"
         :disable="isNextButtonDisable"
+        :color="showNextStepBackground"
       >
         <SwitchTooltip :text="$t('tooltips.oneStepForward')"></SwitchTooltip>
       </q-btn>
@@ -177,6 +178,13 @@
       },
       getSliderPosition() {
         return this.modelSliderPos;
+      },
+      showNextStepBackground() {
+        if (this.getSliderPosition === 1) {
+          return 'primary';
+        } else {
+          return undefined;
+        }
       },
     },
     methods: {
