@@ -3,14 +3,12 @@
     <div class="flex justify-between footer-container">
       <div class="left row">
         <div class="logo flex no-wrap justify-start">
-          <span
-            class="logo-text"
-            v-for="letter in logoTextList"
-            :key="letter"
-            >{{ letter }}</span
-          >
+          <div class="logo-text" v-for="letter in logoTextList" :key="letter">
+            {{ letter }}
+          </div>
         </div>
         <div class="icon-row">
+          <!-- TODO: The title of icon should go with i18n -->
           <div class="github"></div>
           <a
             href="https://github.com/FlickerSoul/Graphery"
@@ -117,13 +115,14 @@
             font-family: "Amiri", serif
             color: grey
             transition: .8s ease
+            user-select: none
             &:hover
               color: #A70E16
               transition: .1s ease
         .icon-row
           margin-left: 30px
           // adjust the line height
-          margin-top: 5px
+          margin-top: 3px
           & a
             // the size of icon
             font-size: 22px
