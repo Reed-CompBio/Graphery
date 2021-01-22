@@ -106,7 +106,7 @@
 
   .footer-wrapper
     color: grey
-    margin-top: 32px
+    margin-top: -70px
     margin-bottom: 48px
 
     .footer-container
