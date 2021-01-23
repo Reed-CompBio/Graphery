@@ -1,5 +1,5 @@
 <template>
-  <div class="footer-wrapper q-pa-md full-width">
+  <div class="footer-wrapper q-pa-md">
     <div class="justify-between footer-container">
       <div class="left-section row">
         <div class="logo flex no-wrap justify-start">
@@ -107,11 +107,10 @@
 
   .footer-wrapper
     color: grey
-    margin-top: -70px
-    margin-bottom: 48px
+    max-width: $material-page-max-width
+    margin: -70px auto 48px
 
     .footer-container
-      padding: 0 150px
       .left-section
         @media (max-width: $breakpoint-md-max)
           justify-content: center
