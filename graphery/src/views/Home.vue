@@ -82,7 +82,7 @@
             icon: 'mdi-script-text-outline',
           },
           {
-            title: 'Interactive',
+            title: 'Interaction and Customization',
             description:
               'Provide interactive graphs and allow users to write their own code to interact with existing graphs',
             icon: 'mdi-cursor-default-click-outline',
