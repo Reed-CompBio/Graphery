@@ -1,7 +1,7 @@
 <template>
-  <div class="footer-wrapper q-pa-md">
+  <div class="footer-wrapper">
     <div class="justify-between footer-container">
-      <div class="left-section row">
+      <div class="left-section">
         <div class="logo flex no-wrap justify-start">
           <div
             class="logo-text"
@@ -109,10 +109,19 @@
     color: grey
     max-width: $material-page-max-width
     margin: -70px auto 48px
+    padding: 0 32px
 
     .footer-container
+      display: flex
+      flex-direction: row
+      @media (max-width: $breakpoint-sm-max)
+        flex-direction: column
       .left-section
-        @media (max-width: $breakpoint-md-max)
+        display: flex
+        flex-direction: row
+        @media (max-width: $breakpoint-sm-max)
+          margin-bottom: 10px
+          flex-direction: column
           justify-content: center
           align-items: center
           text-align: center
@@ -130,7 +139,7 @@
         .icon-row
           margin-left: 30px
           margin-top: 3px
-          @media (max-width: $breakpoint-md-max)
+          @media (max-width: $breakpoint-sm-max)
             margin-left: 0
             margin-top: -6px
           // adjust the line height
@@ -142,7 +151,7 @@
 
       .right-section
         text-align: right
-        @media (max-width: $breakpoint-md-max)
+        @media (max-width: $breakpoint-sm-max)
           text-align: center
         & i
           margin-right: 1px

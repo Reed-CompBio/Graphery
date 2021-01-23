@@ -32,6 +32,7 @@
   .cover-wrapper
     background-color: #A70E16
     height: 180px
+    $general-opacity: .15
     .cover-text
       margin-left: 2rem
       margin-top: -2rem

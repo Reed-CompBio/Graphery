@@ -9,7 +9,7 @@
         >
           <!-- FIXME: mobile breakpoint (responsive adaption)-->
           <!-- FIXME: beautify the logo -->
-          <div :class="[mdColControl]" class="justify-center">
+          <div :class="[mdColControl]" class="flex justify-center">
             <img :src="logoSrc" class="logo" alt="site logo" />
           </div>
           <div :class="[mdColControl]" class="graphery-text justify-center">
@@ -45,11 +45,13 @@
               <div class="icon">
                 <q-icon :name="item.icon"></q-icon>
               </div>
-              <div :class="['title', mdColControl]">{{ item.title }}</div>
-              <div :class="['description', mdColControl]">
-                <p>
-                  {{ item.description }}
-                </p>
+              <div class="text-wrapper">
+                <div :class="['title', mdColControl]">{{ item.title }}</div>
+                <div :class="['description', mdColControl]">
+                  <p>
+                    {{ item.description }}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -80,7 +82,7 @@
             icon: 'mdi-script-text-outline',
           },
           {
-            title: 'Interactive Graphs and Customizable Code',
+            title: 'Interactive',
             description:
               'Provide interactive graphs and allow users to write their own code to interact with existing graphs',
             icon: 'mdi-cursor-default-click-outline',

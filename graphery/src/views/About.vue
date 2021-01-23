@@ -84,8 +84,7 @@
             This project is supported by an NSF CAREER Award (<a
               href="https://nsf.gov/awardsearch/showAward?AWD_ID=1750981"
               target="_blank"
-            >
-              DBI-1750981</a
+              >DBI-1750981</a
             >) to Anna Ritz.
           </p>
         </section>
