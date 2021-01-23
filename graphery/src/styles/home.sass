@@ -1,0 +1,80 @@
+@import "quasar.variables"
+// TODO: the color specification will be defined in one stylesheet.
+
+.button-wrapper
+  margin: 5px 10px
+  .feedback-item
+    text-align: center
+    font-weight: bold
+.welcome-box
+  margin: 1rem 0
+  align-items: center
+  flex-direction: row
+  padding: 0 4%
+  width: 100% !important
+  min-height: 400px
+  .logo
+    height: 250px
+    width: 250px
+    @media (max-width: $breakpoint-sm-max)
+      height: 150px
+      width: 150px
+  .graphery-text
+    text-align: center
+    padding: 0 30px
+    @media (max-width: $breakpoint-sm-min)
+      padding: 0
+    .welcome-title
+      font-family: Georgia, serif
+      margin: 20px auto
+      @media (max-width: $breakpoint-sm-max)
+        font-size: 40px
+      .logo-text
+        font-family: "Amiri", serif
+        color: $primary
+        margin-left: 100px
+        @media (max-width: $breakpoint-sm-max)
+          margin-left: 1px
+    .home-intro-text
+      text-align: left
+      font-size: 18px
+      line-height: 20px
+      @media (max-width: $breakpoint-sm-max)
+        text-align: center
+        font-size: 14px
+        line-height: 18px
+        margin: auto -10px
+
+      p
+        margin-bottom: 7px
+.quick-facts
+  display: flex
+  align-content: space-between
+  //flex-wrap: wrap
+  //align-items: center
+  //justify-content: flex-start
+  margin-top: 25px
+  .feature
+    display: flex
+    flex-direction: column
+    padding: 0 4px
+    //justify-content: space-between
+    align-items: center
+    //margin: 0 130px
+    text-align: center
+    .icon
+      font-size: 100px
+      color: $primary
+    .text-wrapper
+      display: flex
+      flex-direction: column
+      align-items: center
+      .title
+        font-size: 25px
+        font-family: "Amiri", serif
+        //font-weight: bold
+        margin-bottom: 10px
+      .description
+        p
+          font-size: 16px
+

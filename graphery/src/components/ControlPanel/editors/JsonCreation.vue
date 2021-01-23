@@ -31,6 +31,12 @@
               @click="execCodeOnAllGraphsLocally"
               class="q-mr-sm"
             />
+            <q-btn
+              label="Exec All On The Cloud"
+              :loading="customLoading"
+              @click="execCodeOnAllGraphsOnTheCloud"
+              class="q-mr-sm"
+            />
           </div>
         </template>
         <div>
@@ -60,6 +66,7 @@
 <script>
   import loadingMixin from '../mixins/LoadingMixin';
   import {
+    executeCode,
     resultJsonGetGraphsQuery,
     resultJsonsMutation,
   } from '@/services/queries';
@@ -221,6 +228,43 @@
           .catch((err) => {
             errorDialog({
               message: `An error occurs during updating result JSONs. ${err}`,
+            });
+          })
+          .finally(() => {
+            this.finishedLoading();
+          });
+      },
+      execCodeOnAllGraphsOnTheCloud() {
+        this.startLoading();
+        apiCaller(executeCode, {
+          codeIds: [this.codeId],
+        })
+          .then((data) => {
+            if (!data || !('executeCode' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            if (data.executeCode.success) {
+              successDialog({
+                message: 'Executed the code successfully!',
+              });
+            } else {
+              for (const obj of data.executeCode.failedMissions) {
+                errorDialog(
+                  {
+                    message: `An error occurs running code on graph ${obj.graph.name} with error ${obj.error}`,
+                  },
+                  0
+                );
+              }
+            }
+          })
+          .then(() => {
+            this.fetchTutorialGraphs();
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during executing code OL: ${err}`,
             });
           })
           .finally(() => {

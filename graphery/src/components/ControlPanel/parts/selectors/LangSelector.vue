@@ -13,8 +13,17 @@
         v-close-popup
         @click="changeCallback(lang)"
       >
-        <q-item-section thumbnail>
-          <q-icon v-if="currentLang === lang" name="keyboard_arrow_right" />
+        <q-item-section thumbnail class="q-px-sm">
+          <q-icon
+            v-if="currentLang === lang"
+            color="primary"
+            name="keyboard_arrow_right"
+          />
+          <q-icon
+            v-if="currentLang !== lang"
+            color="primary"
+            name="mdi-blank"
+          />
         </q-item-section>
         <q-item-section>
           <q-item-label class="lang-label">{{ lang }}</q-item-label>

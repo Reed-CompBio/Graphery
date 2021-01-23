@@ -11,7 +11,7 @@
       <q-item tag="a" :href="mailToLink" target="_blank">
         <q-item-section>
           <q-item-label class="feedback-item">
-            {{ $t('nav.EmailMe') }}
+            {{ $t('nav.EmailUs') }}
           </q-item-label>
         </q-item-section>
       </q-item>
