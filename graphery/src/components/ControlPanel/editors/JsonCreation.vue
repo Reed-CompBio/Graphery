@@ -246,13 +246,13 @@
 
             if (data.executeCode.success) {
               successDialog({
-                message: 'Executed all successfully!',
+                message: 'Executed the code successfully!',
               });
             } else {
               for (const obj of data.executeCode.failedMissions) {
                 errorDialog(
                   {
-                    message: `An error occurs running code ${obj.code.name} on graph ${obj.graph.name} with error ${obj.error}`,
+                    message: `An error occurs running code on graph ${obj.graph.name} with error ${obj.error}`,
                   },
                   0
                 );

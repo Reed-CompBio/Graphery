@@ -559,11 +559,9 @@ mutation ($codeIds: [UUID]) {
     success
     failedMissions {
       code {
-        id 
         name
       }
       graph {
-        id
         name
       }
       error 
