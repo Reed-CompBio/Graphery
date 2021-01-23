@@ -16,7 +16,7 @@
               </q-avatar>
             </q-item-section>
             <q-item-section>
-              <div class="text-h4" style="text-transform: uppercase">
+              <div class="site-logo">
                 {{ siteName }}
               </div>
             </q-item-section>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-  import { siteName, navigationButtons } from '../../store/states/meta';
+  import { siteName, navigationButtons } from '@/store/states/meta';
   import { mapState } from 'vuex';
 
   export default {
@@ -75,3 +75,11 @@
     },
   };
 </script>
+
+<style lang="sass" scoped>
+  .site-logo
+    text-transform: uppercase
+    font-family: "Amiri", serif
+    font-size: 2.2rem
+    text-align: center
+</style>
