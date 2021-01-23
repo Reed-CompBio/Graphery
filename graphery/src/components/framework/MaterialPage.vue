@@ -18,8 +18,8 @@
 
   .page
     @media (max-width: $breakpoint-xs-max)
-      padding-left: 0px
-      padding-right: 0px
+      padding-left: 0
+      padding-right: 0
     @media (min-width: $breakpoint-sm-min) and (max-width: $breakpoint-md-max)
       padding-left: 32px
       padding-right: 32px
