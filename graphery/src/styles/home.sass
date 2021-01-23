@@ -7,7 +7,8 @@
     text-align: center
     font-weight: bold
 .welcome-box
-  display: flex
+  //display: flex
+  margin: 1.5rem 0
   align-items: center
   flex-direction: row
   //justify-content: space-between
@@ -18,6 +19,7 @@
     height: 250px
     width: 250px
   .graphery-text
+    text-align: center
     padding: 0 30px
     .welcome-title
       font-family: Georgia, serif
@@ -26,9 +28,13 @@
         font-family: "Amiri", serif
         color: $primary
         margin-left: 50px
+        @media (max-width: $breakpoint-sm-max)
+          margin-left: 15px
     .home-intro-text
-      line-height: 12px
       font-size: 18px
+      line-height: 20px
+      p
+        margin-bottom: 7px
 .quick-facts
   display: flex
   align-content: space-between
@@ -39,13 +45,17 @@
   .feature
     display: flex
     flex-direction: column
-    justify-content: space-between
+    padding: 0 4px
+    //justify-content: space-between
     align-items: center
-    margin: 0 130px
+    //margin: 0 130px
+    text-align: center
     .icon
       font-size: 100px
       color: $primary
     .title
       font-size: x-large
-
+    .description
+      p
+        font-size: 18px
 

@@ -247,6 +247,12 @@ class ExecResultJsonType(DjangoObjectType):
                       'a graph. '
 
 
+class FailedMissionType(graphene.ObjectType):
+    code = graphene.Field(CodeType)
+    graph = graphene.Field(GraphType)
+    error = graphene.String(required=True)
+
+
 class UploadsType(PublishedFilterBase, DjangoObjectType):
     relative_url = graphene.String()
 

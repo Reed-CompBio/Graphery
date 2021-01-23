@@ -1,7 +1,7 @@
 <template>
-  <div class="footer-wrapper q-pa-md full-width">
-    <div class="flex justify-between footer-container">
-      <div class="left row">
+  <div class="footer-wrapper q-pa-md">
+    <div class="justify-between footer-container">
+      <div class="left-section row">
         <div class="logo flex no-wrap justify-start">
           <div
             class="logo-text"
@@ -44,7 +44,7 @@
           </a>
         </div>
       </div>
-      <div class="right">
+      <div class="right-section">
         <div>
           2020 ©
           <router-link :to="{ name: 'About' }">
@@ -83,6 +83,7 @@
 </script>
 
 <style lang="sass" scoped>
+  @import "~@/styles/quasar.variables"
 
   //.grey-a a
   //  color: grey
@@ -106,12 +107,15 @@
 
   .footer-wrapper
     color: grey
-    margin-top: -70px
-    margin-bottom: 48px
+    max-width: $material-page-max-width
+    margin: -70px auto 48px
 
     .footer-container
-      padding: 0 150px
-      .left
+      .left-section
+        @media (max-width: $breakpoint-md-max)
+          justify-content: center
+          align-items: center
+          text-align: center
         .logo
           cursor: default
           .logo-text
@@ -125,16 +129,21 @@
               transition: .1s ease
         .icon-row
           margin-left: 30px
-          // adjust the line height
           margin-top: 3px
+          @media (max-width: $breakpoint-md-max)
+            margin-left: 0
+            margin-top: -6px
+          // adjust the line height
           & a
             // the size of icon
             font-size: 22px
             // the padding between diff icons
             padding: 0 15px
 
-      .right
+      .right-section
         text-align: right
+        @media (max-width: $breakpoint-md-max)
+          text-align: center
         & i
           margin-right: 1px
 </style>

@@ -29,8 +29,8 @@
 
   .container
     min-height: inherit
-    max-width: 1200px
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px
+    max-width: $material-page-max-width
+    box-shadow: rgba(0, 0, 0, 0.25) 0 25px 50px -12px
 
   .body--light .container
     background-color: #ffffff

@@ -3,13 +3,18 @@
     <MaterialCover :cover-title="$t('nav.Home')" />
     <MaterialPage>
       <div class="page">
-        <div class="welcome-box flex-center">
+        <div
+          :class="['welcome-box', 'flex-center', mdRowControl]"
+          class="justify-center"
+        >
           <!-- FIXME: mobile breakpoint (responsive adaption)-->
           <!-- FIXME: beautify the logo -->
-          <img :src="logoSrc" class="logo" alt="" />
-          <div class="graphery-text">
+          <div :class="[mdColControl]" class="justify-center">
+            <img :src="logoSrc" class="logo" alt="site logo" />
+          </div>
+          <div :class="[mdColControl]" class="graphery-text justify-center">
             <h3 class="welcome-title">
-              Welcome to <br /><span class="logo-text">GRAPHERY</span>
+              Welcome to <span class="logo-text">GRAPHERY</span>
             </h3>
             <div class="home-intro-text">
               <p>
@@ -27,12 +32,26 @@
         </div>
         <q-separator />
         <div class="quick-facts flex-center">
-          <div :key="index" v-for="(item, index) in features" class="feature">
-            <div class="icon">
-              <q-icon :name="item.icon"></q-icon>
+          <div
+            :class="[mdRowControl]"
+            class="fit"
+            style="justify-content: space-between"
+          >
+            <div
+              :key="index"
+              v-for="(item, index) in features"
+              :class="['feature', mdColControl]"
+            >
+              <div class="icon">
+                <q-icon :name="item.icon"></q-icon>
+              </div>
+              <div :class="['title', mdColControl]">{{ item.title }}</div>
+              <div :class="['description', mdColControl]">
+                <p>
+                  {{ item.description }}
+                </p>
+              </div>
             </div>
-            <div class="title">{{ item.title }}</div>
-            <div class="description">{{ item.description }}</div>
           </div>
         </div>
       </div>
@@ -56,30 +75,47 @@
         logoSrc: require('@/assets/images/compbio-lab.png'),
         features: [
           {
-            title: 'Tutorial',
+            title: 'Tutorials',
             description: 'Graphery is a tutorial based webservice.',
-            icon: 'mdi-cat',
+            icon: 'mdi-script-text-outline',
           },
           {
-            title: 'Interactive',
-            description: 'description',
+            title: 'Interactive Graphs and Customizable Code',
+            description:
+              'Provide interactive graphs and allow users to write their own code to interact with existing graphs',
             icon: 'mdi-cursor-default-click-outline',
           },
           {
-            title: 'Customizable',
-            description: 'description',
-            icon: 'mdi-move-resize-variant',
+            title: 'Visualization',
+            description:
+              'Execute and visualize execution results of example code and customized code',
+            icon: 'mdi-eye-check-outline',
           },
         ],
       };
+    },
+    computed: {
+      ltMdBreakpoint() {
+        return this.$q.screen.lt.md;
+      },
+      mdRowControl() {
+        if (this.ltMdBreakpoint) {
+          return 'col';
+        } else {
+          return 'row';
+        }
+      },
+      mdColControl() {
+        if (this.ltMdBreakpoint) {
+          return 'row';
+        } else {
+          return 'col';
+        }
+      },
     },
   };
 </script>
 
 <style lang="sass" scoped>
   @import "~@/styles/home.sass"
-
-  .page
-    //background: #fff
-    //padding: 30px
 </style>

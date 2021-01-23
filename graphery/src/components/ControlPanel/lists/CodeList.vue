@@ -104,7 +104,15 @@
           <!-- Expand info -->
           <q-tr v-show="props.expand" :props="props">
             <q-td colspan="100%">
-              <div class="text-left">Currently Not Available</div>
+              <div>
+                <div>
+                  <ExecuteAllButton
+                    :execute-func="
+                      executeSingleCodeGen(props.row.id, props.row.name)
+                    "
+                  />
+                </div>
+              </div>
             </q-td>
           </q-tr>
         </template>
@@ -116,7 +124,7 @@
 <script>
   import loadingMixin from '../mixins/LoadingMixin.vue';
   import { apiCaller } from '@/services/apis';
-  import { codeListQuery, executeAllCode } from '@/services/queries';
+  import { codeListQuery, executeCode } from '@/services/queries';
   import {
     errorDialog,
     resolveAndOpenLink,
@@ -229,18 +237,64 @@
       },
       executeCode() {
         this.startLoading();
-        apiCaller(executeAllCode)
+        apiCaller(executeCode)
           .then((data) => {
-            if (!data || !('executeAllCode' in data)) {
+            if (!data || !('executeCode' in data)) {
               throw Error('Invalid data returned.');
             }
 
-            if (data.executeAllCode.success) {
+            if (data.executeCode.success) {
               successDialog({
                 message: 'Executed all successfully!',
               });
             } else {
-              throw Error;
+              for (const obj of data.executeCode.failedMissions) {
+                errorDialog(
+                  {
+                    message: `An error occurs running code ${obj.code.name} on graph ${obj.graph.name} with error ${obj.error}`,
+                  },
+                  0
+                );
+              }
+            }
+          })
+          .catch((err) => {
+            errorDialog({
+              message: `An error occurs during executing code. ${err}`,
+            });
+          })
+          .finally(() => {
+            this.finishedLoading();
+          });
+      },
+      executeSingleCodeGen(codeId, codeName) {
+        return () => {
+          this.executeSingleCode(codeId, codeName);
+        };
+      },
+      executeSingleCode(codeId, codeName) {
+        this.startLoading();
+        apiCaller(executeCode, {
+          codeIds: [codeId],
+        })
+          .then((data) => {
+            if (!data || !('executeCode' in data)) {
+              throw Error('Invalid data returned.');
+            }
+
+            if (data.executeCode.success) {
+              successDialog({
+                message: `Executed code ${codeName} successfully!`,
+              });
+            } else {
+              for (const obj of data.executeCode.failedMissions) {
+                errorDialog(
+                  {
+                    message: `An error occurs running code ${obj.code.name} on graph ${obj.graph.name} with error ${obj.error}`,
+                  },
+                  0
+                );
+              }
             }
           })
           .catch((err) => {

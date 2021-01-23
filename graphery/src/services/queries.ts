@@ -553,9 +553,18 @@ mutation ($oldPassword: String!, $newPassword: String!) {
   }
 }`;
 
-export const executeAllCode = `
-mutation {
-  executeAllCode {
+export const executeCode = `
+mutation ($codeIds: [UUID]) {
+  executeCode(codeIds: $codeIds){
     success
+    failedMissions {
+      code {
+        name
+      }
+      graph {
+        name
+      }
+      error 
+    }
   }
 }`;

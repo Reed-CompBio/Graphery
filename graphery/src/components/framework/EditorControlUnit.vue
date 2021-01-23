@@ -23,86 +23,121 @@
     <!-- FIXME: middle, calc the width of editor -->
     <!-- stepper button group -->
     <q-btn-group flat class="q-mr-md">
-      <q-btn dense @click="showLabelAlwaysSwitch">
-        <q-icon
-          :name="
-            sliderLabelAlways ? 'mdi-label-off-outline' : 'mdi-label-outline'
-          "
-        ></q-icon>
+      <div>
+        <q-btn flat dense @click="showLabelAlwaysSwitch">
+          <q-icon
+            :name="
+              sliderLabelAlways ? 'mdi-label-off-outline' : 'mdi-label-outline'
+            "
+          ></q-icon>
+        </q-btn>
         <SwitchTooltip :text="$t('tooltips.showLabelAlways')"></SwitchTooltip>
-      </q-btn>
-      <q-btn
-        dense
-        icon="mdi-skip-backward"
-        @click="onMultipleStepsBack"
-        :disable="isPreviousButtonDisable"
-      >
+      </div>
+      <div>
+        <q-btn
+          flat
+          dense
+          icon="mdi-skip-backward"
+          @click="onMultipleStepsBack"
+          :disable="isPreviousButtonDisable"
+        >
+        </q-btn>
         <SwitchTooltip :text="$t('tooltips.fiveStepsBack')"></SwitchTooltip>
-      </q-btn>
-      <q-btn
-        dense
-        icon="mdi-skip-previous"
-        @click="onStepBack"
-        :disable="isPreviousButtonDisable"
-      >
+      </div>
+      <div>
+        <q-btn
+          flat
+          dense
+          icon="mdi-skip-previous"
+          @click="onStepBack"
+          :disable="isPreviousButtonDisable"
+        >
+        </q-btn>
         <SwitchTooltip :text="$t('tooltips.oneStepBack')"></SwitchTooltip>
-      </q-btn>
-      <q-btn
-        dense
-        icon="mdi-skip-next"
-        @click="onStepForward"
-        :disable="isNextButtonDisable"
-      >
+      </div>
+      <div>
+        <q-btn
+          flat
+          dense
+          icon="mdi-skip-next"
+          @click="onStepForward"
+          :disable="isNextButtonDisable"
+          :color="showNextStepBackground"
+        >
+        </q-btn>
         <SwitchTooltip :text="$t('tooltips.oneStepForward')"></SwitchTooltip>
-      </q-btn>
-      <q-btn
-        dense
-        icon="mdi-skip-forward"
-        @click="onMultipleStepForward"
-        :disable="isNextButtonDisable"
-      >
+      </div>
+      <div>
+        <q-btn
+          flat
+          dense
+          icon="mdi-skip-forward"
+          @click="onMultipleStepForward"
+          :disable="isNextButtonDisable"
+        >
+        </q-btn>
         <SwitchTooltip :text="$t('tooltips.fiveStepsForward')"></SwitchTooltip>
-      </q-btn>
+      </div>
       <!-- TODO auto play maybe?  -->
     </q-btn-group>
 
     <!-- execution button group -->
     <q-btn-group flat class="q-mr-md">
-      <q-btn
-        dense
-        icon="mdi-cloud-upload"
-        :disable="isExecButtonDisable"
-        @click="onPushToCloudExec"
-        :loading="execLoading"
-      >
-        <SwitchTooltip :text="$t('tooltips.runCodeOnTheCloud')"></SwitchTooltip>
-      </q-btn>
-      <q-btn
-        dense
-        icon="mdi-cloud-download"
-        :disable="isExecButtonDisable"
-        @click.prevent="onPushToLocalExec"
-        :loading="execLoading"
-      >
+      <div>
+        <q-btn
+          flat
+          dense
+          icon="mdi-cloud-upload"
+          :disable="isExecButtonDisable"
+          @click="onPushToCloudExec"
+          :loading="execLoading"
+        >
+          <SwitchTooltip
+            :text="$t('tooltips.runCodeOnTheCloud')"
+          ></SwitchTooltip>
+        </q-btn>
+      </div>
+      <div>
+        <q-btn
+          flat
+          dense
+          icon="mdi-cloud-download"
+          :disable="isExecButtonDisable"
+          @click.prevent="onPushToLocalExec"
+          :loading="execLoading"
+        >
+        </q-btn>
         <SwitchTooltip :text="$t('tooltips.runCodeLocally')"></SwitchTooltip>
-      </q-btn>
+      </div>
     </q-btn-group>
 
     <!-- copy paste button group -->
     <q-btn-group flat class="q-mr-md">
-      <q-btn dense icon="mdi-content-copy" @click="onCopyCurrentCode">
+      <div>
+        <q-btn flat dense icon="mdi-content-copy" @click="onCopyCurrentCode">
+        </q-btn>
         <SwitchTooltip :text="$t('tooltips.copyCodes')" />
-      </q-btn>
-      <q-btn dense icon="mdi-content-paste" @click="onPasteFromClipboard">
+      </div>
+      <div>
+        <q-btn
+          flat
+          dense
+          icon="mdi-content-paste"
+          @click="onPasteFromClipboard"
+        >
+        </q-btn>
         <SwitchTooltip :text="$t('tooltips.pasteCodes')" />
-      </q-btn>
-      <q-btn
-        dense
-        icon="mdi-rotate-right-variant"
-        @click="onChangeVariableListOrientation"
-      >
+      </div>
+      <div>
+        <q-btn
+          flat
+          dense
+          icon="mdi-rotate-right-variant"
+          @click="onChangeVariableListOrientation"
+        >
+        </q-btn>
         <SwitchTooltip :text="$t('tooltips.changeVariableListOrientation')" />
-      </q-btn>
+      </div>
     </q-btn-group>
 
     <!--    <q-btn-group flat class="q-mr-md">-->
@@ -118,10 +153,10 @@
         @click="onEditingLockStateChange"
         :icon="$store.state.settings.enableEditing ? 'lock_open' : 'lock'"
       >
+        <SwitchTooltip
+          :text="$t('tooltips.goToSettingsToChangeEditingPermission')"
+        />
       </q-btn>
-      <SwitchTooltip
-        :text="$t('tooltips.goToSettingsToChangeEditingPermission')"
-      ></SwitchTooltip>
     </q-btn-group>
   </q-bar>
 </template>
@@ -177,6 +212,13 @@
       },
       getSliderPosition() {
         return this.modelSliderPos;
+      },
+      showNextStepBackground() {
+        if (this.getSliderPosition === 1) {
+          return 'primary';
+        } else {
+          return undefined;
+        }
       },
     },
     methods: {
