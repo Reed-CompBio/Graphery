@@ -229,6 +229,10 @@
               throw Error('Invalid data returned.');
             }
             this.$store.commit(
+              'tutorials/UPDATE_AUTHOR_META_DATA',
+              data.tutorial.content.authors
+            );
+            this.$store.commit(
               'tutorials/LOAD_ARTICLE_CONTENT',
               data.tutorial.content
             );

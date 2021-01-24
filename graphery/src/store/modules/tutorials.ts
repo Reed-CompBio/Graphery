@@ -1,4 +1,5 @@
 import {
+  AuthorState,
   RootState,
   TutorialArticleContent,
   TutorialDetailResponse,
@@ -17,6 +18,11 @@ const state: TutorialState = {
 const mutations: MutationTree<TutorialState> = {
   LOAD_META_STATE(state, value: TutorialMetaState) {
     state.metaState = value;
+  },
+  UPDATE_AUTHOR_META_DATA(state, value: AuthorState[]) {
+    if (state.metaState) {
+      state.metaState.authors = value;
+    }
   },
   LOAD_ARTICLE_CONTENT(state, value: TutorialArticleContent) {
     state.articleContent = value;
