@@ -104,6 +104,11 @@ export const pullTutorialArticle = `query ($url: String, $translation: String) {
     content(translation: $translation) {
       title
       contentHtml
+      authors {
+        username
+        firstName
+        lastName
+      }
     }
   }
 }`;
