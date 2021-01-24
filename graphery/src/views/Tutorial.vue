@@ -212,6 +212,7 @@
     watch: {
       currentLang: function(newVal) {
         this.$store.commit('tutorials/CLEAR_ARTICLE_CONTENT');
+        this.$store.commit('tutorials/CLEAR_AUTHOR_META_STATE');
 
         apiCaller(pullTutorialArticle, {
           url: this.url,
@@ -222,6 +223,7 @@
               throw Error('Invalid data returned.');
             }
             if (!data.content) {
+              this.$store.commit('tutorials/LOAD_ARTICLE_CONTENT', '');
               throw Error('No Such Translation');
             }
             this.$store.commit(

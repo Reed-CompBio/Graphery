@@ -31,6 +31,11 @@ const mutations: MutationTree<TutorialState> = {
   CLEAR_META_STATE(state) {
     state.metaState = null;
   },
+  CLEAR_AUTHOR_META_STATE(state) {
+    if (state.metaState) {
+      state.metaState.authors = [];
+    }
+  },
   CLEAR_ARTICLE_CONTENT(state) {
     state.articleContent = null;
   },
