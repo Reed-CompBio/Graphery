@@ -10,9 +10,10 @@
       </header>
       <body>
         <!-- example questions -->
-        1. What is Graphery?
-        <br />
-        2. How do I use it?
+        <p v-for="(item, index) in examples" :key="index">
+          {{ index + 1 }}.
+          {{ item }}
+        </p>
       </body>
     </MaterialPage>
   </div>
@@ -24,6 +25,17 @@
   export default {
     name: 'FAQ',
     components: { MaterialPage, MaterialCover },
+    data() {
+      return {
+        examples: [
+          'What is Graphery?',
+          'How do I use it?',
+          'How to run my own code on Graphery?',
+          'I found a bug, how to report it?',
+          'Can I make contributions to Graphery?',
+        ],
+      };
+    },
   };
 </script>
 
