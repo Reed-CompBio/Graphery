@@ -211,14 +211,16 @@
     },
     watch: {
       currentLang: function(newVal) {
-        this.$router.push({
+        this.$router.replace({
           name: 'Tutorial',
           params: {
             lang: newVal,
             url: this.$route.params.url,
           },
         });
+
         this.$store.commit('tutorials/CLEAR_ARTICLE_CONTENT');
+        this.$store.commit('tutorials/CLEAR_AUTHOR_META_STATE');
 
         apiCaller(pullTutorialArticle, {
           url: this.url,
@@ -228,6 +230,14 @@
             if (!data || !('tutorial' in data)) {
               throw Error('Invalid data returned.');
             }
+            if (data.tutorial.content === null) {
+              this.$store.commit('tutorials/LOAD_ARTICLE_CONTENT', '');
+              throw Error('No Such Translation');
+            }
+            this.$store.commit(
+              'tutorials/UPDATE_AUTHOR_META_DATA',
+              data.tutorial.content.authors
+            );
             this.$store.commit(
               'tutorials/LOAD_ARTICLE_CONTENT',
               data.tutorial.content

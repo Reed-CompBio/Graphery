@@ -1,4 +1,5 @@
 import {
+  AuthorState,
   RootState,
   TutorialArticleContent,
   TutorialDetailResponse,
@@ -18,12 +19,22 @@ const mutations: MutationTree<TutorialState> = {
   LOAD_META_STATE(state, value: TutorialMetaState) {
     state.metaState = value;
   },
+  UPDATE_AUTHOR_META_DATA(state, value: AuthorState[]) {
+    if (state.metaState) {
+      state.metaState.authors = value;
+    }
+  },
   LOAD_ARTICLE_CONTENT(state, value: TutorialArticleContent) {
     state.articleContent = value;
   },
   // clear states
   CLEAR_META_STATE(state) {
     state.metaState = null;
+  },
+  CLEAR_AUTHOR_META_STATE(state) {
+    if (state.metaState) {
+      state.metaState.authors = [];
+    }
   },
   CLEAR_ARTICLE_CONTENT(state) {
     state.articleContent = null;

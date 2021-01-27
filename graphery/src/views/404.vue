@@ -1,18 +1,24 @@
 <template>
-  <MaterialPage>
-    <!--    ugliest 404 page ever    -->
-    <div title="404" id="err">
-      404
-    </div>
-    <span class="text-h5">
-      The page <a class="err-url" :href="pageUrl">{{ pageUrl }}</a> is not found
-    </span>
-  </MaterialPage>
+  <div>
+    <MaterialCover cover-title="404" />
+    <MaterialPage>
+      <!--    ugliest 404 page ever    -->
+      <div title="404" id="err">
+        404
+      </div>
+      <span class="text-h5">
+        The page <a class="err-url" :href="pageUrl">{{ pageUrl }}</a> is not
+        found
+      </span>
+    </MaterialPage>
+  </div>
 </template>
 
 <script>
+  import MaterialCover from '@/components/framework/MaterialCover';
   export default {
     components: {
+      MaterialCover,
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
     },
     computed: {
