@@ -18,7 +18,7 @@
             href="https://github.com/FlickerSoul/Graphery"
             target="_blank"
             rel="noreferrer"
-            title="Github Repo"
+            :title="$t('nav.GithubRepo')"
           >
             <q-icon name="mdi-github"></q-icon>
           </a>
@@ -30,18 +30,17 @@
           >
             <q-icon name="mdi-information"></q-icon>
           </a>
-          <!-- TODO: Q and A section -->
-          <!--            <a :href="issueLink" target="_blank" rel="noreferrer" title="Q&A">-->
-          <!--              <q-icon name="mdi-comment-question"></q-icon>-->
-          <!--            </a>-->
           <a
             :href="mailToLink"
             target="_blank"
             rel="noreferrer"
-            title="Email Us"
+            :title="$t('nav.EmailUs')"
           >
             <q-icon name="mdi-email"></q-icon>
           </a>
+          <router-link :to="{ name: 'FAQ' }" :title="$t('nav.faq')">
+            <q-icon name="mdi-comment-question"></q-icon>
+          </router-link>
         </div>
       </div>
       <div class="right-section">
@@ -49,6 +48,14 @@
           2020 ©
           <router-link :to="{ name: 'About' }">
             Graphery
+          </router-link>
+          |
+          <router-link :to="{ name: 'FAQ' }" :title="$t('nav.faq')">
+            FAQ
+          </router-link>
+          |
+          <router-link :to="{ name: 'TOS' }" :title="$t('nav.tos')">
+            TOS
           </router-link>
         </div>
         <div>
@@ -84,20 +91,6 @@
 
 <style lang="sass" scoped>
   @import "~@/styles/quasar.variables"
-
-  //.grey-a a
-  //  color: grey
-  //  text-decoration: none
-  //  &:hover
-  //    color: #464646
-  //#footer-wrapper
-  //  /* TODO change the font color */
-  //  color: grey
-  //  margin-top: 32px
-  //  margin-bottom: 48px
-  //.icon-adjust
-  //  margin-right: 1px
-
 
   .footer-wrapper a
     color: grey

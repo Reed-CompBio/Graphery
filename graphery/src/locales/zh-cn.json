@@ -30,7 +30,10 @@
     "Settings": "设置",
     "Feedback": "反馈/新内容建议",
     "Login": "登录",
-    "EmailUs": "邮件反馈"
+    "EmailUs": "邮件反馈",
+    "GithubRepo": "代码仓库",
+    "tos": "用户协议",
+    "faq": "常见问题"
   },
   "collectionPage": {
     "Filter": "筛选",

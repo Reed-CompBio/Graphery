@@ -60,6 +60,16 @@ const routes: Array<RouteConfig> = [
       import(/* webpackChunkName: "about" */ '@/views/About.vue'),
   },
   {
+    path: '/faq',
+    name: 'FAQ',
+    component: () => import(/* webpackChunkName: "about" */ '@/views/FAQ.vue'),
+  },
+  {
+    path: '/tos',
+    name: 'TOS',
+    component: () => import(/* webpackChunkName: "about" */ '@/views/TOS.vue'),
+  },
+  {
     path: '/account',
     name: 'Account',
     component: () =>
