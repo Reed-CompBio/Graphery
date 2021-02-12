@@ -8,6 +8,12 @@ module.exports = {
   configureWebpack: {
     plugins: [new MonacoWebpackPlugin({ languages: ['python'] })],
   },
+  chainWebpack: (config) => {
+    config.plugin('html').tap((args) => {
+      args[0]['prod'] = process.env.NODE_ENV === 'production';
+      return args;
+    });
+  },
   pluginOptions: {
     quasar: {
       importStrategy: 'manual',
