@@ -6,6 +6,11 @@
         <h3 class="material-page-shorter-h3">{{ $t('nav.tos') }} (TOS)</h3>
         <q-separator />
       </header>
+      <section>
+        <div class="q-my-lg q-pa-sm q-px-md">
+          <MarkdownSection :markdown-raw="tosContent" />
+        </div>
+      </section>
     </MaterialPage>
   </div>
 </template>
@@ -13,9 +18,22 @@
 <script>
   import MaterialCover from '@/components/framework/MaterialCover';
   import MaterialPage from '@/components/framework/MaterialPage';
+  import MarkdownSection from '@/components/framework/md/MarkdownSection';
   export default {
     name: 'TOS',
-    components: { MaterialPage, MaterialCover },
+    components: { MarkdownSection, MaterialPage, MaterialCover },
+    data() {
+      return {
+        tosContent_: `Privacy Policy: By using [Graphery](https://graphery.reedcompbio.org), your visualized code, options, user interactions, and IP address are logged on our server and your activities (viewed pages, viewport movements, and click events) by Google Analytics. Nearly all web services collect this basic information from users in their server logs. However, Graphery does not collect any personally identifiable information from its users.
+
+Terms of Service: The Graphery service is provided for free on an as-is basis. Use this service at your own risk. Do not use it to share confidential information. The developers of Graphery are not responsible for the actions of any of the users on this website. We are also not responsible for any damages caused by using this website. Finally, it is your responsibility to follow appropriate academic integrity standards.`,
+      };
+    },
+    computed: {
+      tosContent() {
+        return this.tosContent_;
+      },
+    },
   };
 </script>
 
