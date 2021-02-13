@@ -107,6 +107,9 @@ export interface SettingInfos {
   language: string;
   tooltips: boolean;
   graphAbstractPopupShow: boolean;
+
+  // invisible state
+  tosAgreeAndDoNotShowAgain: boolean;
 }
 
 export interface SettingState extends SettingInfos {

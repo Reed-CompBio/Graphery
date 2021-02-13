@@ -9,7 +9,10 @@
         >
           <!-- FIXME: mobile breakpoint (responsive adaption)-->
           <!-- FIXME: beautify the logo -->
-          <div :class="[mdColControl]" class="flex justify-center">
+          <div
+            :class="[mdColControl]"
+            class="flex torial based webservice.justify-center"
+          >
             <img :src="logoSrc" class="logo" alt="site logo" />
           </div>
           <div :class="[mdColControl]" class="graphery-text justify-center">
@@ -78,7 +81,7 @@
         features: [
           {
             title: 'Tutorials',
-            description: 'Graphery is a tutorial based webservice.',
+            description: 'Graphery is a tutorial based webservice',
             icon: 'mdi-script-text-outline',
           },
           {

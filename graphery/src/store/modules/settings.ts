@@ -27,6 +27,9 @@ const state: SettingState = {
   language: 'en-us',
   tooltips: true,
   graphAbstractPopupShow: true,
+
+  // invisible states
+  tosAgreeAndDoNotShowAgain: false,
 };
 
 const mutations: MutationTree<SettingState> = {
@@ -80,6 +83,9 @@ const mutations: MutationTree<SettingState> = {
   },
   CHANGE_GRAPH_ABSTRACT_POPUP_SHOW(state, value: boolean) {
     state.graphAbstractPopupShow = value;
+  },
+  CHANGE_TOS_AGREE_AND_NOT_SHOW(state, value: boolean) {
+    state.tosAgreeAndDoNotShowAgain = value;
   },
 };
 
