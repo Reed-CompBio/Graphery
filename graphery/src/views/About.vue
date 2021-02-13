@@ -36,9 +36,9 @@
             webs, molecular interaction networks, and phylogenetic trees.
           </p>
           <p>
-            We collect By accessing Graphery, you agree to the terms of service
-            and privacy notice,
-            <router-link :to="{ name: 'TOS' }">learn more</router-link>.
+            By accessing Graphery, you agree to the terms of service and privacy
+            notice, which you can learn more from
+            <router-link :to="{ name: 'TOS' }">here</router-link>.
           </p>
         </section>
         <section>
