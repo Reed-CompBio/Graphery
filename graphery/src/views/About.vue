@@ -35,12 +35,24 @@
             biological applications such as animal social networks, ecology food
             webs, molecular interaction networks, and phylogenetic trees.
           </p>
+          <p>
+            We collect By accessing Graphery, you agree to the terms of service
+            and privacy notice,
+            <router-link :to="{ name: 'TOS' }">learn more</router-link>.
+          </p>
         </section>
         <section>
           <h4 id="feedback">
             Feedback
           </h4>
           <div>
+            <p>
+              Check
+              <router-link :to="{ name: 'FAQ' }"
+                >Frequently Asked Questions (FAQ)
+              </router-link>
+              first, or
+            </p>
             <FeedbackDropdown />
           </div>
         </section>
