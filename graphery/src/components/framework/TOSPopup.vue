@@ -46,3 +46,8 @@
     },
   };
 </script>
+
+<style lang="sass" scoped>
+  .gdpr
+    max-width: 350px !important
+</style>
