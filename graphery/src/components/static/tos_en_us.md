@@ -1,9 +1,8 @@
+By continuing to access Graphery, you agree to the terms of service and privacy notice.
+
 The Graphery service is provided for free on an as-is basis. Use this service at your own risk. Do not use it to share confidential information. The developers of Graphery are not responsible for the actions of any of the users on this website. We are also not responsible for any damages caused by using this website. Finally, it is your responsibility to follow appropriate academic integrity standards. All articles(tutorials, graphs, etc.) without special specification are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/)
-<img
-alt="Creative Commons License"
-style="border-width:0"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"
-/>
+
+![Creative Commons License](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)
 
 ### Privacy Policy
 
