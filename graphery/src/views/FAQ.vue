@@ -24,15 +24,27 @@
     components: { MarkdownSection, MaterialPage, MaterialCover },
     data() {
       return {
-        faq_: `### What is Graphery?
+        faq_: `
+### What is Graphery?
+
+Coming Soon
 
 ### How do I use it?
 
+Coming Soon
+
 ### How to run my own code on Graphery?
+
+Coming Soon
 
 ### I found a bug, how to report it?
 
+Coming Soon
+
 ### Can I make contributions to Graphery?
+
+Coming Soon
+
 `,
         examples: [
           'What is Graphery?',
