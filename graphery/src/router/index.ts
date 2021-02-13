@@ -62,12 +62,12 @@ const routes: Array<RouteConfig> = [
   {
     path: '/faq',
     name: 'FAQ',
-    component: () => import(/* webpackChunkName: "about" */ '@/views/FAQ.vue'),
+    component: () => import(/* webpackChunkName: "faq" */ '@/views/FAQ.vue'),
   },
   {
     path: '/tos',
     name: 'TOS',
-    component: () => import(/* webpackChunkName: "about" */ '@/views/TOS.vue'),
+    component: () => import(/* webpackChunkName: "tos" */ '@/views/TOS.vue'),
   },
   {
     path: '/account',
