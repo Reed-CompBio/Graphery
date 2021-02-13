@@ -17,11 +17,13 @@
   import NavigationDrawer from '@/components/framework/NavigationDrawer';
   import Header from '@/components/framework/Header';
   import { QAjaxBar } from 'quasar';
+  import TOSPopup from '@/components/framework/TOSPopup';
 
   const showFooterRe = /^(\/tutorial\/|\/graph\/|\/control-panel)/;
 
   export default Vue.extend({
     name: 'App',
+    mixins: [TOSPopup],
     metaInfo: {
       title: 'Main',
       titleTemplate: '%s | Graphery',
@@ -82,6 +84,7 @@
       this.asciiArt();
       this.loadLang();
       this.loadDarkTheme();
+      this.showTOSTerms();
     },
     watch: {
       dark: function() {
