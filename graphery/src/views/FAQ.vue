@@ -3,9 +3,7 @@
     <MaterialCover :cover-title="$t('nav.faq')" />
     <MaterialPage>
       <header>
-        <h3 class="material-page-shorter-h3">
-          {{ $t('nav.faq') }}
-        </h3>
+        <h3 class="material-page-shorter-h3">{{ $t('nav.faq') }} (FAQ)</h3>
         <q-separator />
       </header>
       <section>
