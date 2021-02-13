@@ -7,7 +7,7 @@
         <q-separator />
       </header>
       <section>
-        <div class="q-my-lg q-pa-sm q-px-md">
+        <div class="q-my-lg q-pa-sm ">
           <MarkdownSection :markdown-raw="tosContent" />
         </div>
       </section>
