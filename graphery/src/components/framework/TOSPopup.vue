@@ -2,20 +2,41 @@
   import { Notify } from 'quasar';
 
   export default {
+    data() {
+      return {
+        tosVersion_: '0.0.1',
+      };
+    },
+    computed: {
+      isShowingTOS() {
+        return !(
+          this.$store.state.settings.tosAgreeAndDoNotShowAgain &&
+          this.$store.state.settings.tosVersion === this.tosVersion_
+        );
+      },
+      selectMessage() {
+        if (this.$store.state.settings.tosVersion === this.tosVersion_) {
+          return 'Cookies helps us improve your experience';
+        } else {
+          return '[TOS Updated] Cookies helps us improve your experience';
+        }
+      },
+    },
     methods: {
       jumpToTOS() {
         this.$router.push({ name: 'TOS' });
       },
       agreeTos() {
         this.$store.commit('settings/CHANGE_TOS_AGREE_AND_NOT_SHOW', true);
+        this.$store.commit('settings/CHANGE_TOS_VERSION', this.tosVersion_);
       },
       showTOSTerms() {
-        if (!this.$store.state.settings.tosAgreeAndDoNotShowAgain) {
+        if (this.isShowingTOS) {
           Notify.create({
             type: 'gdpr',
             caption:
               'By continuing to access Graphery, you agree to the terms of service and privacy notice',
-            message: 'Cookies helps us improve your experience',
+            message: this.selectMessage,
             group: false,
             timeout: 0,
             multiLine: true,
@@ -26,9 +47,13 @@
                 handler: this.jumpToTOS,
               },
               {
-                label: 'Close',
+                label: 'Never Show Again',
                 color: 'white',
                 handler: this.agreeTos,
+              },
+              {
+                label: 'Close',
+                color: 'white',
               },
             ],
           });

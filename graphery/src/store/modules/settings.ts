@@ -30,6 +30,7 @@ const state: SettingState = {
 
   // invisible states
   tosAgreeAndDoNotShowAgain: false,
+  tosVersion: null,
 };
 
 const mutations: MutationTree<SettingState> = {
@@ -86,6 +87,9 @@ const mutations: MutationTree<SettingState> = {
   },
   CHANGE_TOS_AGREE_AND_NOT_SHOW(state, value: boolean) {
     state.tosAgreeAndDoNotShowAgain = value;
+  },
+  CHANGE_TOS_VERSION(state, value: string) {
+    state.tosVersion = value;
   },
 };
 
