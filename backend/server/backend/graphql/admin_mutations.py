@@ -14,7 +14,7 @@ from backend.graphql.decorators import write_required, admin_required
 from backend.graphql.mutation_base import SuccessMutationBase
 from backend.graphql.types import CategoryType, TutorialType, GraphType, CodeType, TutorialInterface, \
     TutorialContentInputType, GraphContentInputType, GraphContentInterface, ExecResultJsonType, DeletionEnum, \
-    RankInputType
+    RankInputType, FailedMissionType
 from backend.graphql.utils import process_model_wrapper, get_wrappers_by_ids, get_wrapper_by_id
 from backend.intel_wrappers.intel_wrapper import CategoryWrapper, \
     TutorialAnchorWrapper, UserWrapper, GraphWrapper, CodeWrapper, TutorialTranslationContentWrapper, \
@@ -53,10 +53,11 @@ class UpdateTutorialAnchor(SuccessMutationBase):
     model = graphene.Field(TutorialType, required=True)
 
     @write_required
-    def mutate(self, _, id: str, url: str, name: str, rank: Mapping, categories: Sequence[str] = (), is_published: bool = False):
+    def mutate(self, _, id: str, url: str, name: str, rank: Mapping, categories: Sequence[str] = (),
+               is_published: bool = False):
         if len(categories) == 0:
             categories: Sequence[str] = \
-                (CategoryWrapper.model_class.objects.get_or_create(category='uncategorized')[0].id, )
+                (CategoryWrapper.model_class.objects.get_or_create(category='uncategorized')[0].id,)
 
         url = url.strip()
         name = name.strip()
@@ -262,3 +263,28 @@ class RefreshInvitationCode(SuccessMutationBase):
     @graphene.resolve_only_args
     def mutate(self):
         raise DeprecationWarning('This API is deprecated.')
+
+
+class ExecuteCode(SuccessMutationBase):
+    class Arguments:
+        code_ids = graphene.List(graphene.UUID)
+
+    failed_missions = graphene.List(FailedMissionType, required=True)
+
+    @admin_required
+    @graphene.resolve_only_args
+    def mutate(self, code_ids: Optional[List] = None):
+        if code_ids is None:
+            code_objects = CodeWrapper.model_class.objects.all()
+        else:
+            code_objects = CodeWrapper.model_class.objects.filter(id__in=code_ids)
+        failed_missions = []
+
+        for code in code_objects:
+            code_graph = code.tutorial.graph_set.all()
+            failed_missions.extend(_result_json_updater([code], code_graph))
+
+        success = len(failed_missions) == 0
+        return ExecuteCode(success=success, failed_missions=list(
+            FailedMissionType(code=m[0], graph=m[1], error=str(m[2])) for m in failed_missions
+        ))

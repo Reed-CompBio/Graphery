@@ -95,7 +95,11 @@
       <q-spinner-pie size="64px" color="primary"></q-spinner-pie>
     </q-inner-loading>
 
-    <q-page-sticky position="bottom-right" :offset="[30, 30]">
+    <q-page-sticky
+      :class="articleViewPercentage === 0 ? 'back-to-top-hide' : 'back-to-top'"
+      position="bottom-right"
+      :offset="[30, 30]"
+    >
       <transition
         appear
         enter-active-class="animated zoomIn"
@@ -203,4 +207,19 @@
 
   #scroll-up-icon:hover
     cursor: pointer
+
+
+  .back-to-top
+    visibility: visible
+    opacity: 1
+    transition: visibility .2s, opacity 0.2s ease-out
+
+
+  .back-to-top-hide
+    visibility: hidden
+    opacity: 0
+    transition: visibility .2s, opacity 0.2s ease-out
+    //opacity: 0
+    //transition: .2s ease
+    //display: none
 </style>

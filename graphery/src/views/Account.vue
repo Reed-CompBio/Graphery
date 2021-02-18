@@ -1,18 +1,21 @@
 <template>
-  <MaterialPage>
-    <div>
-      <h3 class="material-page-shorter-h3">
-        {{ $t('nav.Account') }}
-      </h3>
-    </div>
-    <div>
-      <div id="user-info" class="row">
-        <div id="user-info-wrapper" class="col-12 flex-center q-my-md">
-          <UserInfoCards :userObj="userObj" @logout="logout"></UserInfoCards>
+  <div>
+    <MaterialCover :cover-title="$t('nav.Account')" />
+    <MaterialPage>
+      <div>
+        <h3 class="material-page-shorter-h3">
+          {{ $t('nav.Account') }}
+        </h3>
+      </div>
+      <div>
+        <div id="user-info" class="row">
+          <div id="user-info-wrapper" class="col-12 flex-center q-my-md">
+            <UserInfoCards :userObj="userObj" @logout="logout"></UserInfoCards>
+          </div>
         </div>
       </div>
-    </div>
-  </MaterialPage>
+    </MaterialPage>
+  </div>
 </template>
 
 <script>
@@ -20,6 +23,7 @@
   import { logoutMutation } from '@/services/queries';
   import { mapState, mapActions } from 'vuex';
   import { errorDialog } from '@/services/helpers';
+  import MaterialCover from '@/components/framework/MaterialCover';
 
   export default {
     metaInfo() {
@@ -27,6 +31,7 @@
       return { title: titleText };
     },
     components: {
+      MaterialCover,
       MaterialPage: () => import('@/components/framework/MaterialPage.vue'),
       UserInfoCards: () => import('@/components/user/UserInfoCards.vue'),
     },

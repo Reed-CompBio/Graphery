@@ -5,7 +5,23 @@
         How To
       </h1>
       <div>
-        <h2>More coming soon~</h2>
+        <h2>Simple Guides</h2>
+        <ul>
+          <li>
+            <a
+              href="https://graphery.reedcompbio.org/tutorial/en-us/get-started"
+              target="_blank"
+              >Get Started</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://graphery.reedcompbio.org/tutorial/en-us/get-started"
+              target="_blank"
+              >Programming in Graphery</a
+            >
+          </li>
+        </ul>
       </div>
       <div id="shortcuts-des">
         <h2>

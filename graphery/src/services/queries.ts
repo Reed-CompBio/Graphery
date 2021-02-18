@@ -104,6 +104,11 @@ export const pullTutorialArticle = `query ($url: String, $translation: String) {
     content(translation: $translation) {
       title
       contentHtml
+      authors {
+        username
+        firstName
+        lastName
+      }
     }
   }
 }`;
@@ -549,6 +554,22 @@ mutation ($oldPassword: String!, $newPassword: String!) {
       lastName
       email
       role
+    }
+  }
+}`;
+
+export const executeCode = `
+mutation ($codeIds: [UUID]) {
+  executeCode(codeIds: $codeIds){
+    success
+    failedMissions {
+      code {
+        name
+      }
+      graph {
+        name
+      }
+      error 
     }
   }
 }`;

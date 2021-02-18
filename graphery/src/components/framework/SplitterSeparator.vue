@@ -16,6 +16,7 @@
 </script>
 
 <style lang="sass">
+  // FIXME: scoped style issues
   $separator-height: 50px
   $separator-width: 4px
   .splitter-separator-horizontal

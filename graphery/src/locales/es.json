@@ -30,8 +30,13 @@
     "Settings": "Ajustes",
     "Feedback": "Consejos/Sugerencias",
     "Login": "Iniciar Sesión",
-    "EmailMe": "Envíeme Un Correo Electrónico"
+    "EmailUs": "Envíenos Un Correo Electrónico",
+    "GithubRepo": "Repositorio de Github",
+    "tos": "Términos del servicio",
+    "faq": "Preguntas frecuentes"
   },
+  "tos": {},
+  "faq": {},
   "collectionPage": {
     "Filter": "Filtrar",
     "searchHint": "Utilice palabras clave. Oprime Enter para buscar.",

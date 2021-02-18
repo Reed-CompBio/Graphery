@@ -30,8 +30,13 @@
     "Settings": "Settings",
     "Feedback": "Feedback/Suggest New",
     "Login": "Login",
-    "EmailMe": "Email Me"
+    "EmailUs": "Email Us",
+    "GithubRepo": "Github Repo",
+    "tos": "Terms of Services",
+    "faq": "Frequently Asked Questions"
   },
+  "tos": {},
+  "faq": {},
   "collectionPage": {
     "Filter": "Filter",
     "searchHint": "Please use keywords. Press enter to search.",

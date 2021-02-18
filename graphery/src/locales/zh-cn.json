@@ -30,8 +30,13 @@
     "Settings": "设置",
     "Feedback": "反馈/新内容建议",
     "Login": "登录",
-    "EmailMe": "邮件反馈"
+    "EmailUs": "邮件反馈",
+    "GithubRepo": "代码仓库",
+    "tos": "用户协议",
+    "faq": "常见问题"
   },
+  "tos": {},
+  "faq": {},
   "collectionPage": {
     "Filter": "筛选",
     "searchHint": "搜索时请使用关键词. 按下 Enter 进行搜索.",

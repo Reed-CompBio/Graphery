@@ -20,7 +20,7 @@
             <SwitchTooltip v-else :text="$t('variable.Top Level Already')" />
           </div>
         </div>
-        <div class="col" style="flex-wrap: nowrap;">
+        <div class="col no-wrap">
           <div class="row justify-center">
             <div
               id="name-section"
