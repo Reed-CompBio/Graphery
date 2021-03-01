@@ -110,6 +110,7 @@ export interface SettingInfos {
 
   // invisible state
   tosAgreeAndDoNotShowAgain: boolean;
+  tosVersion: string | null;
 }
 
 export interface SettingState extends SettingInfos {

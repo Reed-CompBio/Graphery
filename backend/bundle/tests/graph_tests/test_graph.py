@@ -53,9 +53,49 @@ def test_mutable_graph_add_node(mutable_graph: MutableGraph):
 
 
 def test_mutable_graph_add_edge(mutable_graph: MutableGraph):
+    n1 = mutable_graph.add_node('n1')
+    n2 = mutable_graph.add_node('n2')
+
     mutable_graph.add_edge('1', ('n1', 'n2'))
-    assert Edge('1', (Node('n1'), Node('n2'))) in mutable_graph
+    assert mutable_graph.has_edge('1')
+    recorded_edge = mutable_graph.get_edge('1')
+    assert recorded_edge.node_pair[0].identity == 'n1'
+    assert recorded_edge.node_pair[1].identity == 'n2'
+    # assert Edge('1', (Node('n1'), Node('n2'))) in mutable_graph
     assert len(mutable_graph.E) == 1
+
+    mutable_graph.add_edge('2', (n1, n2))
+    assert mutable_graph.has_edge('2')
+    recorded_edge = mutable_graph.get_edge('2')
+    assert recorded_edge.node_pair[0].identity == 'n1'
+    assert recorded_edge.node_pair[1].identity == 'n2'
+    # assert Edge('1', (Node('n1'), Node('n2'))) in mutable_graph
+    assert len(mutable_graph.E) == 2
+
+    mutable_graph.add_edge(edge=Edge('3', (n1, n2)))
+    assert mutable_graph.has_edge('3')
+    recorded_edge = mutable_graph.get_edge('3')
+    assert recorded_edge.node_pair[0].identity == 'n1'
+    assert recorded_edge.node_pair[1].identity == 'n2'
+    # assert Edge('1', (Node('n1'), Node('n2'))) in mutable_graph
+    assert len(mutable_graph.E) == 3
+
+
+def test_unresolvable_edge(mutable_graph: MutableGraph):
+    n1 = Node('n1')
+    n2 = Node('n2')
+    edge = Edge('n1->n2', (n1, n2))
+    with pytest.raises(ValueError):
+        mutable_graph.add_edge(edge=edge)
+
+    with pytest.raises(ValueError):
+        mutable_graph.add_edge('n1->n2', (n1, n2))
+
+    with pytest.raises(Exception):
+        mutable_graph.add_edge('n1->n2', ('n1', 'n2'))
+
+    with pytest.raises(TypeError):
+        mutable_graph.add_edge('n1->n2', (True, False))
 
 
 def test_mutable_graph_delete_node_no_conflict(mutable_graph: MutableGraph):

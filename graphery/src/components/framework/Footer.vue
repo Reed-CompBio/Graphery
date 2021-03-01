@@ -45,7 +45,7 @@
       </div>
       <div class="right-section">
         <div>
-          2020 ©
+          2020 - 2021 ©
           <router-link :to="{ name: 'About' }">
             Graphery
           </router-link>
