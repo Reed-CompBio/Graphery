@@ -11,7 +11,7 @@ def read_file(filename):
 
 setuptools.setup(
     name="bundle",
-    version="0.2.5",
+    version="0.2.6",
     packages=setuptools.find_packages(exclude=['tests*']),
     author="Heyuan Zeng",
     author_email="zengl@reed.edu",
