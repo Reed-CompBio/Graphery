@@ -213,6 +213,7 @@
         if (!this.checkPost()) {
           return;
         }
+        this.startLoading();
         apiCaller(updateGraphMutation, this.graphObj)
           .then((data) => {
             if (!data || !('updateGraph' in data)) {
