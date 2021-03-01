@@ -15,7 +15,7 @@ class Edge(Comparable, HasProperty, Stylable):
 
     default_directed_styles = []
 
-    def __init__(self, identity, node_pair: NodeTuple, name=None, directed=False,
+    def __init__(self, identity, node_pair: Union[NodeTuple, Tuple[Node, Node]], name=None, directed=False,
                  styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = (),
                  add_default_styles=False, add_default_classes=False):
         """
@@ -34,9 +34,10 @@ class Edge(Comparable, HasProperty, Stylable):
             self, [*styles, *(self.default_directed_styles if directed else ())], classes,
             add_default_styles=add_default_styles, add_default_classes=add_default_classes
         )
-
-        if isinstance(node_pair, Tuple) and all(isinstance(node, Node) for node in node_pair):
+        if isinstance(node_pair, NodeTuple):
             self.node_pair: NodeTuple = node_pair
+        if isinstance(node_pair, Tuple) and all(isinstance(node, Node) for node in node_pair):
+            self.node_pair: NodeTuple = NodeTuple(*node_pair)
         else:
             raise KeyError('%s is not a tuple or contains non-node element' % str(node_pair))
         self.directed: bool = directed

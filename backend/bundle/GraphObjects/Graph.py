@@ -5,7 +5,7 @@ from .Node import Node, NodeSet, MutableNodeSet
 from .Edge import Edge, EdgeSet, MutableEdgeSet, NodeTuple, EdgeIDTuple
 
 import json
-from typing import Iterable, Union, Optional, Mapping, Type, TypeVar, Generic
+from typing import Iterable, Union, Optional, Mapping, Type, TypeVar, Generic, Tuple
 from enum import Enum
 
 
@@ -207,20 +207,34 @@ class MutableGraph(Graph):
         super().__init__(nodes, edges, node_container=MutableNodeSet, edge_container=MutableEdgeSet)
 
     def add_node(self, identity: Union[str, Node] = None,
-                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = ()) -> Node:
-        node = Node.return_node(identity=identity, styles=styles, classes=classes)
+                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = (),
+                 add_default_styles: bool = False, add_default_classes: bool = False) -> Node:
+        node = Node.return_node(identity=identity, styles=styles, classes=classes,
+                                add_default_classes=add_default_classes, add_default_styles=add_default_styles)
         self.nodes.add_node(node)
         return node
 
     def add_edge(self,
                  identity: str = None,
-                 edge: Union[Edge, NodeTuple, EdgeIDTuple] = (),
-                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = ()) -> Optional[Edge]:
-        edge = Edge.return_edge(identity, edge, styles, classes)
-
-        # TODO think about it
-        for node in edge:
-            self.add_node(node)
+                 edge: Union[Edge, NodeTuple, Tuple[Node, Node], EdgeIDTuple, Tuple[str, str]] = (),
+                 styles: Union[str, Iterable[Mapping]] = (), classes: Iterable[str] = (),
+                 add_default_styles: bool = False, add_default_classes: bool = False) -> Optional[Edge]:
+        if isinstance(edge, Edge):
+            n1, n2 = edge.get_nodes()
+            if not self.has_node(n1) and not self.has_node(n2):
+                raise ValueError(f'You need to add nodes first. Unresolved node in {edge}')
+            edge = edge
+        elif isinstance(edge, NodeTuple) or (isinstance(edge, Tuple) and all(isinstance(ele, Node) for ele in edge)):
+            if not all(self.has_node(ele) for ele in edge):
+                raise ValueError(f'You need to add nodes first. Unresolved node in {edge}')
+            edge = Edge(identity, edge, styles=styles, classes=classes,
+                        add_default_styles=add_default_styles, add_default_classes=add_default_classes)
+        elif isinstance(edge, EdgeIDTuple) or (isinstance(edge, Tuple) and all(isinstance(ele, str) for ele in edge)):
+            node_pair = self.get_node(edge[0]), self.get_node(edge[1])
+            edge = Edge(identity, node_pair, styles=styles, classes=classes,
+                        add_default_styles=add_default_styles, add_default_classes=add_default_classes)
+        else:
+            raise TypeError('Invalid Type')
 
         self.edges.add_edge(edge)
         return edge

@@ -35,9 +35,11 @@ class Node(Comparable, HasProperty, Stylable):
         return self.__str__()
 
     @staticmethod
-    def return_node(identity: Union[str, Node], styles: Iterable[Mapping] = (), classes: Iterable[str] = ()):
+    def return_node(identity: Union[str, Node], styles: Iterable[Mapping] = (), classes: Iterable[str] = (),
+                    add_default_styles: bool = False, add_default_classes: bool = False):
         if isinstance(identity, str):
-            return Node(identity=identity, styles=styles, classes=classes)
+            return Node(identity=identity, styles=styles, classes=classes,
+                        add_default_styles=add_default_styles, add_default_classes=add_default_classes)
         elif isinstance(identity, Node):
             return identity
         else:
