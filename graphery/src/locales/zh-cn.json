@@ -36,7 +36,9 @@
     "faq": "常见问题"
   },
   "tos": {},
-  "faq": {},
+  "faq": {
+    "Browser Compatibility": "Browser Compatibility"
+  },
   "collectionPage": {
     "Filter": "筛选",
     "searchHint": "搜索时请使用关键词. 按下 Enter 进行搜索.",
