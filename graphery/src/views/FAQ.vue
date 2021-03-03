@@ -10,6 +10,16 @@
         <div class="q-my-lg q-pa-sm">
           <MarkdownSection :markdown-raw="faq" />
         </div>
+        <q-separator />
+        <div>
+          <q-table
+            :title="$t('Browser Compatibility')"
+            :columns="columns"
+            :data="compatibilityList"
+            row-key="os"
+          >
+          </q-table>
+        </div>
       </section>
     </MaterialPage>
   </div>
@@ -19,15 +29,13 @@
   import MaterialCover from '@/components/framework/MaterialCover';
   import MaterialPage from '@/components/framework/MaterialPage';
   import MarkdownSection from '@/components/framework/md/MarkdownSection';
+
   export default {
     name: 'FAQ',
     components: { MarkdownSection, MaterialPage, MaterialCover },
     data() {
       return {
-        faq_: `
-We prepared some frequently asked questions for you.
-
-### What is Graphery?
+        faq_: `### What is Graphery?
 
 Graphery is a platform with interactive tutorials about graph algorithms alongside real-world biological networks. It is designed with biological researchers in mind, where users can click through Python code and see _how_ the algorithms work on networks from different biological domains.
 
@@ -55,8 +63,53 @@ Graphery is currently under review. In the meantime, please cite our pre-print o
 
 Heyuan Zeng, Jinbiao Zhang, Gabriel A. Preising, Tobias Rubel, Pramesh Singh, Anna Ritz.
 [_Graphery: Interactive Tutorials for Biological Network Algorithms_](https://arxiv.org/abs/2102.03469)
-arXiv:2102.03469 [q-bio.MN], 2021
-`,
+arXiv:2102.03469 [q-bio.MN], 2021`,
+        columns: [
+          {
+            name: 'os',
+            required: true,
+            label: 'OS',
+            align: 'center',
+            field: 'os',
+          },
+          { name: 'chrome', label: 'Chrome', field: 'chrome', align: 'center' },
+          {
+            name: 'firefox',
+            label: 'Firefox',
+            field: 'firefox',
+            align: 'center',
+          },
+          {
+            name: 'msEdge',
+            label: 'Microsoft Edge (Chromium)',
+            field: 'msEdge',
+            align: 'center',
+          },
+          { name: 'safari', label: 'Safari', field: 'safari', align: 'center' },
+        ],
+        compatibilityList: [
+          {
+            os: 'Linux',
+            chrome: 'last 10 Chrome versions',
+            firefox: 'last 10 Firefox versions',
+            msEdge: 'last 4 Edge versions',
+            safari: 'N/A',
+          },
+          {
+            os: 'MacOS',
+            chrome: 'last 10 Chrome versions',
+            firefox: 'last 10 Firefox versions',
+            msEdge: 'last 4 Edge versions',
+            safari: 'last 7 Safari versions',
+          },
+          {
+            os: 'Windows',
+            chrome: 'last 10 Chrome versions',
+            firefox: 'last 10 Firefox versions',
+            msEdge: 'last 4 Edge versions',
+            safari: 'N/A',
+          },
+        ],
       };
     },
     computed: {
