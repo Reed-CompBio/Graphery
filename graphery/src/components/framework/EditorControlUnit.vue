@@ -33,6 +33,7 @@
       </div>
       <div>
         <q-btn
+          id="control-unit-backward-button"
           flat
           dense
           icon="mdi-skip-backward"
@@ -44,6 +45,7 @@
       </div>
       <div>
         <q-btn
+          id="control-unit-skip-button"
           flat
           dense
           icon="mdi-skip-previous"
@@ -55,6 +57,7 @@
       </div>
       <div>
         <q-btn
+          id="control-unit-next-button"
           flat
           dense
           icon="mdi-skip-next"
@@ -67,6 +70,7 @@
       </div>
       <div>
         <q-btn
+          id="control-unit-forward-button"
           flat
           dense
           icon="mdi-skip-forward"
@@ -161,6 +165,8 @@
 
 <script>
   import SwitchTooltip from '@/components/framework/SwitchTooltip';
+  import { errorDialog } from '../../services/helpers';
+
   export default {
     props: {
       sliderLength: {
@@ -286,7 +292,19 @@
       //   this.$emit('onCallWorkSpace');
       // },
     },
+    mounted() {
+      import('intro.js')
+        .then((module) => {
+          console.debug('intro', module.default);
+          module.default().start();
+        })
+        .catch((err) => {
+          errorDialog({ message: `Cannot load intro module. Error: ${err}` });
+        });
+    },
   };
 </script>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+  @import "~intro.js/minified/introjs.min.css"
+</style>
