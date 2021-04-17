@@ -36,7 +36,9 @@
     "faq": "Frequently Asked Questions"
   },
   "tos": {},
-  "faq": {},
+  "faq": {
+    "Browser Compatibility": "Browser Compatibility"
+  },
   "collectionPage": {
     "Filter": "Filter",
     "searchHint": "Please use keywords. Press enter to search.",
