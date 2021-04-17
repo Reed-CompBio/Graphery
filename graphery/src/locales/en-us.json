@@ -118,5 +118,23 @@
     "Go Back": "Go Back",
     "Top Level Already": "Top Level Already",
     "Expand Element": "Expand Element"
+  },
+  "product guide": {
+    "ui": {
+      "This is the text description of this tutorial":       "This is the text description of the tutorial",
+      "This is the visualization window on this specific graph":       "This is the visualization window on this specific graph",
+      "This is the code editor where you can see code execution process and write your own": "This is the code editor where you can see code execution process and write your own",
+      "This is the variable list where changes made to traced variables are shown": "This is the variable list where changes made to traced variables are shown"
+    },
+    "graph window": {
+      "You can click here to choose available graphs": "You can click here to choose available graphs",
+      "You can drag the nodes and adjust the viewport":       "You can drag the nodes and adjust the viewport",
+      "You can press shift and mouse drag to use the lasso tool": "You can press shift and mouse drag to use the lasso tool"
+    },
+    "control unit": {
+      "Click this to move execution forward": "Click this to move execution forward",
+      "Drag the slider to jump to a specific step":     "Drag the slider to jump to a specific step",
+      "Click this to open start editing the code":     "Click this to open start editing the code"
+    }
   }
 }
