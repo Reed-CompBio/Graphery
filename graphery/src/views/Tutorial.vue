@@ -100,9 +100,15 @@
   import EditorWrapper from '@/components/tutorial/EditorWrapper';
   import SplitterSeparator from '@/components/framework/SplitterSeparator';
   import EditorControlUnit from '@/components/framework/EditorControlUnit';
+  import ProductGuideMixin from '@/components/mixins/ProductGuideMixin';
 
   export default {
-    mixins: [GraphCodeBridge, TabSwitchMixin, OnXsScreenMixin],
+    mixins: [
+      GraphCodeBridge,
+      TabSwitchMixin,
+      OnXsScreenMixin,
+      ProductGuideMixin,
+    ],
     props: ['lang', 'url'],
     components: {
       SplitterSeparator,
@@ -144,6 +150,9 @@
       },
       currentLang() {
         return this.$i18n.locale;
+      },
+      showProductGuide() {
+        return true;
       },
     },
     methods: {

@@ -165,7 +165,6 @@
 
 <script>
   import SwitchTooltip from '@/components/framework/SwitchTooltip';
-  import { errorDialog } from '../../services/helpers';
 
   export default {
     props: {
@@ -292,19 +291,5 @@
       //   this.$emit('onCallWorkSpace');
       // },
     },
-    mounted() {
-      import('intro.js')
-        .then((module) => {
-          console.debug('intro', module.default);
-          module.default().start();
-        })
-        .catch((err) => {
-          errorDialog({ message: `Cannot load intro module. Error: ${err}` });
-        });
-    },
   };
 </script>
-
-<style lang="sass" scoped>
-  @import "~intro.js/minified/introjs.min.css"
-</style>
