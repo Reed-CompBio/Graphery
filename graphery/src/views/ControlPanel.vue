@@ -1,5 +1,5 @@
 <template>
-  <div style="height: calc(100vh - 66px);">
+  <div style="height: calc(100vh - 50px);">
     <!-- Left drawer-->
     <q-layout view="hHh Lpr lff" container class="full-height">
       <q-drawer

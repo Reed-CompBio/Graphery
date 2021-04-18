@@ -31,6 +31,11 @@ const state: SettingState = {
   // invisible states
   tosAgreeAndDoNotShowAgain: false,
   tosVersion: null,
+
+  showIntro: {
+    tutorialIntro: true,
+    graphIntro: true,
+  },
 };
 
 const mutations: MutationTree<SettingState> = {
@@ -90,6 +95,12 @@ const mutations: MutationTree<SettingState> = {
   },
   CHANGE_TOS_VERSION(state, value: string) {
     state.tosVersion = value;
+  },
+  CHANGE_TUTORIAL_INTRO(state, value: boolean) {
+    state.showIntro.tutorialIntro = value;
+  },
+  CHANGE_GRAPH_INTRO(state, value: boolean) {
+    state.showIntro.graphIntro = value;
   },
 };
 
@@ -159,6 +170,12 @@ const getters: GetterTree<SettingState, RootState> = {
   },
   graphAbstractPopupShow(state) {
     return state.graphAbstractPopupShow;
+  },
+  showTutorialIntro(state) {
+    return state.showIntro.tutorialIntro;
+  },
+  showGraphIntro(state) {
+    return state.showIntro.graphIntro;
   },
   getSettings(state) {
     return {
