@@ -157,6 +157,9 @@
       showProductGuide() {
         return true;
       },
+      shouldLoad() {
+        return this.$store.getters['settings/showTutorialIntro'];
+      },
     },
     methods: {
       ...mapActions('tutorials', ['clearAll', 'loadTutorial']),
@@ -220,6 +223,18 @@
           message: `breakpoint ${position} clicked`,
         });
       },
+      onCompleteCallback() {
+        this.$store.commit('settings/CHANGE_TUTORIAL_INTRO', false);
+      },
+      onBeforeExitCallback() {
+        return confirm(this.$i18n.t('product guide.before exit'));
+      },
+      onExitCallback() {
+        const showIntroAgain = confirm(
+          this.$i18n.t('product guide.show intro again')
+        );
+        this.$store.commit('settings/CHANGE_TUTORIAL_INTRO', showIntroAgain);
+      },
     },
     watch: {
       currentLang: function(newVal) {
@@ -277,6 +292,22 @@
 
       // pull tutorials
       this.updateTutorialContent();
+
+      // load intro guide
+      this.loadIntroModule().then(() => {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const m = require('../components/mixins/ProductGuideSteps');
+        this.addIntroSteps(
+          m.startIntro.concat(
+            m.tutorialUIProductGuide,
+            m.graphUIProductGuide,
+            m.editorProductGuide,
+            m.controlUnitProductGuide
+          )
+        );
+        this.startIntro();
+      });
+      // this.addIntroSteps(tutorialUIProductGuide);
     },
     destroyed() {
       this.clearAll();
