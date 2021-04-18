@@ -28,7 +28,7 @@ We are excited to add these graph algorithms and statistics to Graphery, probabl
 
 ### Can I make contributions to Graphery?
 
-Yes! If you have an idea for a **graph** or a **tutorial**, then file a [GitHub Issue](https://github.com/FlickerSoul/Graphery/issues).  If you would like to add content to the website, we are always looking for contributors to add **graphs**, **tutorials**, and **translations**. [Email us to learn more](graphery@groups.reed.edu).
+Yes! If you have an idea for a **graph** or a **tutorial**, then file a [GitHub Issue](https://github.com/FlickerSoul/Graphery/issues).  If you would like to add content to the website, we are always looking for contributors to add **graphs**, **tutorials**, and **translations**. [Email us to learn more](mailto:graphery@groups.reed.edu).
 
 ### How do I cite Graphery?
 
