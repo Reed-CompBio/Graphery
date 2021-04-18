@@ -312,35 +312,19 @@
             });
           });
       },
-      confirmIntroShowAgain() {
-        this.$q
-          .dialog({
-            title: 'Confirm',
-            message: this.$i18n.t('product guide.show intro again'),
-            cancel: { label: 'No' },
-            ok: { label: 'Yes' },
-            persistent: true,
-            noRouteDismiss: true,
-            noEscDismiss: true,
-            noBackdropDismiss: true,
-          })
-          .onOk(() => {
-            this.$store.commit('settings/CHANGE_GRAPH_INTRO', true);
-          })
-          .onCancel(() => {
-            this.$store.commit('settings/CHANGE_GRAPH_INTRO', false);
-            successDialog({
-              message: this.$t(
-                'graph.You can also edit this in the Settings page'
-              ),
-            });
-          });
-      },
       onBeforeExitCallback() {
-        return confirm(this.$i18n.t('product guide.before exit'));
-      },
-      onExitCallback() {
-        this.confirmIntroShowAgain();
+        if (
+          confirm(
+            this.$i18n.t('product guide.before exit') +
+              '\n' +
+              this.$i18n.t('product guide.open again')
+          )
+        ) {
+          this.$store.commit('settings/CHANGE_GRAPH_INTRO', false);
+          return true;
+        } else {
+          return false;
+        }
       },
     },
     created() {
