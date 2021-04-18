@@ -111,6 +111,12 @@ export interface SettingInfos {
   // invisible state
   tosAgreeAndDoNotShowAgain: boolean;
   tosVersion: string | null;
+
+  // intro state
+  showIntro: {
+    tutorialIntro: boolean;
+    graphIntro: boolean;
+  };
 }
 
 export interface SettingState extends SettingInfos {
