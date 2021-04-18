@@ -116,6 +116,7 @@
   import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper';
   import SplitterSeparator from '@/components/framework/SplitterSeparator';
   import EditorControlUnit from '@/components/framework/EditorControlUnit';
+  import { successDialog } from '../services/helpers';
 
   const defaultCodeOption = [
     {
@@ -328,6 +329,11 @@
           })
           .onCancel(() => {
             this.$store.commit('settings/CHANGE_GRAPH_INTRO', false);
+            successDialog({
+              message: this.$t(
+                'graph.You can also edit this in the Settings page'
+              ),
+            });
           });
       },
       onBeforeExitCallback() {

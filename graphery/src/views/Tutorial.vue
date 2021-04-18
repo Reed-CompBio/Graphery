@@ -239,6 +239,11 @@
           })
           .onCancel(() => {
             this.$store.commit('settings/CHANGE_TUTORIAL_INTRO', false);
+            successDialog({
+              message: this.$t(
+                'graph.You can also edit this in the Settings page'
+              ),
+            });
           });
       },
       onBeforeExitCallback() {
