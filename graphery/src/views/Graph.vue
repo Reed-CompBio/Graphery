@@ -222,6 +222,14 @@
       flipGraphInfoDialog() {
         this.graphInfoPopupShow = !this.graphInfoPopupShow;
       },
+      showGraphInfoDialog() {
+        if (
+          this.$store.getters['settings/graphAbstractPopupShow'] &&
+          !this.onXsScreen
+        ) {
+          this.graphInfoPopupShow = true;
+        }
+      },
       generateDefaultJsonResults(graphId) {
         return [
           {
@@ -299,11 +307,8 @@
               }))
             );
 
-            if (
-              this.$store.getters['settings/graphAbstractPopupShow'] &&
-              !this.onXsScreen
-            ) {
-              this.flipGraphInfoDialog();
+            if (this.introInstance === null) {
+              this.showGraphInfoDialog();
             }
           })
           .catch((err) => {
@@ -325,6 +330,9 @@
         } else {
           return false;
         }
+      },
+      onExitCallback() {
+        this.showGraphInfoDialog();
       },
     },
     created() {
