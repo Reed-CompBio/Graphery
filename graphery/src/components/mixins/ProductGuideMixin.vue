@@ -74,4 +74,7 @@
       font-size: 1.2rem
     .introjs-tooltiptext
       font-size: 1rem
+
+  .introjs-helperLayer
+    box-shadow: rgb(33 33 33 / 80%) 0px 0px 1px 2px, rgb(33 33 33 / 70%) 0px 0px 0px 5000px !important
 </style>
