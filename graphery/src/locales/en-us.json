@@ -126,9 +126,9 @@
   "product guide": {
     "ui": {
       "intro title": "Welcome!",
-      "tutorial intro": "This is going to guide you through how graphery tutorial works",
+      "tutorial intro": "This is going to guide you through how Graphery tutorial works",
       "tutorial details": "",
-      "graph intro" : "This is going to guide you through how graphery graph playground works",
+      "graph intro" : "This is going to guide you through how Graphery graph playground works",
       "graph details": "",
       "tutorial section":       "This is the text description of the tutorial",
       "graph section":       "This is the visualization window on this specific graph",
@@ -147,7 +147,8 @@
       "slider":     "Drag the slider to jump to a specific step",
       "edit lock":     "Click this to open start editing the code and see more control options"
     },
-    "before exit": "Do you want to exit the guide?",
+    "before exit": "Do you want to exit the guide? ",
+    "open again": "You can toggle it in the Settings page afterwards.",
     "show intro again": "Do you want to see the intro again next time?"
   }
 }
