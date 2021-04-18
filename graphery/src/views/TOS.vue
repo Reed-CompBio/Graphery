@@ -4,7 +4,7 @@
     <MaterialPage>
       <header>
         <h3 class="material-page-shorter-h3">
-          {{ $t('nav.tos') }} (TOS) and Privacy Notce
+          {{ $t('nav.tos') }} (TOS) and Privacy Notice
         </h3>
         <!-- TODO i18n -->
         <q-separator />
