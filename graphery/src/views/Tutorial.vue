@@ -223,17 +223,33 @@
           message: `breakpoint ${position} clicked`,
         });
       },
+      confirmShowAgain() {
+        this.$q
+          .dialog({
+            title: 'Confirm',
+            message: this.$i18n.t('product guide.show intro again'),
+            cancel: { label: 'No' },
+            ok: { label: 'Yes' },
+            persistent: true,
+            noRouteDismiss: true,
+            noEscDismiss: true,
+            noBackdropDismiss: true,
+          })
+          .onOk(() => {
+            this.$store.commit('settings/CHANGE_TUTORIAL_INTRO', true);
+          })
+          .onCancel(() => {
+            this.$store.commit('settings/CHANGE_TUTORIAL_INTRO', false);
+          });
+      },
       onCompleteCallback() {
-        this.$store.commit('settings/CHANGE_TUTORIAL_INTRO', false);
+        this.confirmShowAgain();
       },
       onBeforeExitCallback() {
         return confirm(this.$i18n.t('product guide.before exit'));
       },
       onExitCallback() {
-        const showIntroAgain = confirm(
-          this.$i18n.t('product guide.show intro again')
-        );
-        this.$store.commit('settings/CHANGE_TUTORIAL_INTRO', showIntroAgain);
+        this.confirmShowAgain();
       },
     },
     watch: {
