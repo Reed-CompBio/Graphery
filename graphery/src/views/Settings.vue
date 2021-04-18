@@ -52,6 +52,24 @@
                   unchecked-icon="mdi-layers-off"
                 />
               </SettingUnit>
+              <SettingUnit :name="$t('settings.Show Tutorial Intro Guide')">
+                <q-toggle
+                  left-label
+                  size="xl"
+                  v-model="setTutorialIntroShow"
+                  checked-icon="mdi-comment-arrow-right"
+                  unchecked-icon="mdi-comment-off"
+                />
+              </SettingUnit>
+              <SettingUnit :name="$t('settings.Show Graph Intro Guide')">
+                <q-toggle
+                  left-label
+                  size="xl"
+                  v-model="setGraphIntroShow"
+                  checked-icon="mdi-comment-arrow-right"
+                  unchecked-icon="mdi-comment-off"
+                />
+              </SettingUnit>
             </template>
             <template v-slot:sliders>
               <SettingUnit :name="$t('settings.cardsDisplayedNum')">
@@ -354,6 +372,22 @@
         },
         get() {
           return this.graphAbstractPopupShow;
+        },
+      },
+      setTutorialIntroShow: {
+        set(d) {
+          this.$store.commit('settings/CHANGE_TUTORIAL_INTRO', d);
+        },
+        get() {
+          return this.$store.getters['settings/showTutorialIntro'];
+        },
+      },
+      setGraphIntroShow: {
+        set(d) {
+          this.$store.commit('settings/CHANGE_GRAPH_INTRO', d);
+        },
+        get() {
+          return this.$store.getters['settings/showGraphIntro'];
         },
       },
     },
