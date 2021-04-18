@@ -1,5 +1,5 @@
 <template>
-  <q-bar>
+  <q-bar id="editor-control-unit">
     <q-icon name="mdi-function" />
     <div style="text-transform: uppercase;">Editor</div>
     <q-space />

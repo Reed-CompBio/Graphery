@@ -37,7 +37,6 @@
           <template v-slot:after>
             <EditorControlUnit
               ref="editorControlUnit"
-              id="editor-control-unit"
               :slider-length="editorControlSliderLength"
               :disable-override="execLoading"
               :execLoading="execLoading"
