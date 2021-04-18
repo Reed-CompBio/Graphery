@@ -8,7 +8,7 @@ export interface MetaState {
   siteName: string;
   navigationButtons: { name: string; icon: string }[];
   siteLogo: string;
-  headerSize: 66;
+  headerSize: 50;
   footerHTML: string;
 }
 
