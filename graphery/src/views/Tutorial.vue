@@ -223,7 +223,7 @@
           message: `breakpoint ${position} clicked`,
         });
       },
-      confirmShowAgain() {
+      confirmIntroShowAgain() {
         this.$q
           .dialog({
             title: 'Confirm',
@@ -242,14 +242,11 @@
             this.$store.commit('settings/CHANGE_TUTORIAL_INTRO', false);
           });
       },
-      onCompleteCallback() {
-        this.confirmShowAgain();
-      },
       onBeforeExitCallback() {
         return confirm(this.$i18n.t('product guide.before exit'));
       },
       onExitCallback() {
-        this.confirmShowAgain();
+        this.confirmIntroShowAgain();
       },
     },
     watch: {
@@ -314,7 +311,7 @@
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const m = require('../components/mixins/ProductGuideSteps');
         this.addIntroSteps(
-          m.startIntro.concat(
+          m.startTutorialIntro.concat(
             m.tutorialUIProductGuide,
             m.graphUIProductGuide,
             m.editorProductGuide,

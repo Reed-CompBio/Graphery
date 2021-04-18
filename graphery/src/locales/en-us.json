@@ -64,7 +64,11 @@
     "fontSize": "Font Size",
     "showTooltips": "Show Tooltips",
     "cardsDisplayedNum": "Number of Search Results in Each Page",
-    "enableEditing": "Enable Editing"
+    "enableEditing": "Enable Editing",
+    "Show Graph Abstract": "Show Graph Abstract",
+    "Show Tutorial Intro Guide": "Show Tutorial Intro Guide",
+    "Show Graph Intro Guide": "Show Graph Intro Guide",
+    "Show Control Unit Extra Control Guide": "Show Control Unit Extra Control Guide"
   },
   "notify": {
     "editorEntry": "Use {...} button to view graph details and more!",
@@ -122,7 +126,10 @@
   "product guide": {
     "ui": {
       "intro title": "Welcome!",
-      "intro": "This is going to guide you through graphery works",
+      "tutorial intro": "This is going to guide you through how graphery tutorial works",
+      "tutorial details": "",
+      "graph intro" : "This is going to guide you through how graphery graph playground works",
+      "graph details": "",
       "tutorial section":       "This is the text description of the tutorial",
       "graph section":       "This is the visualization window on this specific graph",
       "editor section": "This is the code editor where you can see code execution process and write your own",

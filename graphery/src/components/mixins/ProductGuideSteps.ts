@@ -1,9 +1,16 @@
 import i18n from '@/i18n';
 
-export const startIntro = [
+export const startTutorialIntro = [
   {
     title: i18n.tc('product guide.ui.intro title') + ' 👋 ',
-    intro: i18n.tc('product guide.ui.intro'),
+    intro: i18n.tc('product guide.ui.tutorial intro'),
+  },
+];
+
+export const startGraphIntro = [
+  {
+    title: i18n.tc('product guide.ui.intro title') + ' 👋 ',
+    intro: i18n.tc('product guide.ui.graph intro'),
   },
 ];
 
