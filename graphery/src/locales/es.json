@@ -64,7 +64,11 @@
     "fontSize": "Tamaño De La Fuente",
     "showTooltips": "Muestra Tooltips",
     "cardsDisplayedNum": "Número De Resultados De Búsqueda En Cada Página",
-    "enableEditing": "Activar La Edición"
+    "enableEditing": "Activar La Edición",
+    "Show Graph Abstract": "Show Graph Abstract",
+    "Show Tutorial Intro Guide": "Show Tutorial Intro Guide",
+    "Show Graph Intro Guide": "Show Graph Intro Guide",
+    "Show Control Unit Extra Control Guide": "Show Control Unit Extra Control Guide"
   },
   "notify": {
     "editorEntry": "Usa el botón {...} para ver los detalles del gráfico y mucho más!",
@@ -118,5 +122,33 @@
     "Go Back": "Go Back",
     "Top Level Already": "Top Level Already",
     "Expand Element": "Expand Element"
+  },
+  "product guide": {
+    "ui": {
+      "intro title": "Welcome!",
+      "tutorial intro": "This is going to guide you through how Graphery tutorial works",
+      "tutorial details": "",
+      "graph intro" : "This is going to guide you through how Graphery graph playground works",
+      "graph details": "",
+      "tutorial section":       "This is the text description of the tutorial",
+      "graph section":       "This is the visualization window on this specific graph",
+      "editor section": "This is the code editor where you can see code execution process and write your own",
+      "variable list section": "This is the variable list where changes made to traced variables are shown",
+      "control unit": "This is where you can control code execution"
+    },
+    "graph window": {
+      "choose graphs": "You can click here to choose available graphs",
+      "drag node and view port":       "You can drag the nodes and adjust the viewport",
+      "lasso tool": "You can press shift and mouse drag to use the lasso tool"
+    },
+    "control unit": {
+      "forward button": "Click this to move execution forward",
+      "step control group": "Click these buttons to move code execution steps",
+      "slider":     "Drag the slider to jump to a specific step",
+      "edit lock":     "Click this to open start editing the code and see more control options"
+    },
+    "before exit": "Do you want to exit the guide? ",
+    "open again": "You can toggle it in the Settings page afterwards.",
+    "show intro again": "Do you want to see the intro again next time?"
   }
 }
