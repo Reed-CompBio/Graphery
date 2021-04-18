@@ -110,6 +110,7 @@
 
   import GraphCodeBridge from '@/components/framework/GraphEditorControls/GraphCodeBridge';
   import OnXsScreenMixin from '@/components/mixins/OnXsScreenMixin';
+  import ProductGuideMixin from '../components/mixins/ProductGuideMixin';
 
   import EditorWrapper from '@/components/tutorial/EditorWrapper';
   import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper';
@@ -132,7 +133,7 @@
   ];
 
   export default {
-    mixins: [GraphCodeBridge, OnXsScreenMixin],
+    mixins: [GraphCodeBridge, OnXsScreenMixin, ProductGuideMixin],
     props: ['lang', 'url'],
     metaInfo() {
       const graphTitle = this.headerTitle;
@@ -211,6 +212,9 @@
       },
       verticalSplitter() {
         return this.$q.screen.lt.md;
+      },
+      shouldLoad() {
+        return this.$store.getters['settings/showGraphIntro'];
       },
     },
     methods: {
@@ -307,12 +311,52 @@
             });
           });
       },
+      confirmIntroShowAgain() {
+        this.$q
+          .dialog({
+            title: 'Confirm',
+            message: this.$i18n.t('product guide.show intro again'),
+            cancel: { label: 'No' },
+            ok: { label: 'Yes' },
+            persistent: true,
+            noRouteDismiss: true,
+            noEscDismiss: true,
+            noBackdropDismiss: true,
+          })
+          .onOk(() => {
+            this.$store.commit('settings/CHANGE_GRAPH_INTRO', true);
+          })
+          .onCancel(() => {
+            this.$store.commit('settings/CHANGE_GRAPH_INTRO', false);
+          });
+      },
+      onBeforeExitCallback() {
+        return confirm(this.$i18n.t('product guide.before exit'));
+      },
+      onExitCallback() {
+        this.confirmIntroShowAgain();
+      },
     },
     created() {
       this.$i18n.locale = this.lang;
     },
     mounted() {
       this.loadGraphAndCode();
+
+      // load intro module
+      this.loadIntroModule().then(() => {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const m = require('../components/mixins/ProductGuideSteps');
+
+        this.addIntroSteps(
+          m.startGraphIntro.concat(
+            m.graphUIProductGuide,
+            m.editorProductGuide,
+            m.controlUnitProductGuide
+          )
+        );
+        this.startIntro();
+      });
     },
   };
 </script>
