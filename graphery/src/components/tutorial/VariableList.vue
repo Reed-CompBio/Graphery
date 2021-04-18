@@ -1,6 +1,6 @@
 <template>
   <div
-    id="code-controller-wrapper"
+    id="variable-list-wrapper"
     class="full-height full-width row flex-center"
   >
     <q-scroll-area

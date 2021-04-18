@@ -3,6 +3,7 @@
     <q-bar class="graph-menu-bar">
       <div class="graph-menu-wrapper">
         <q-select
+          id="graph-selector"
           class="graph-selector"
           :options="getGraphObjectList"
           v-model="graphChoice"
