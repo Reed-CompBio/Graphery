@@ -25,6 +25,7 @@
           <template v-slot:before>
             <CytoscapeWrapper
               ref="cytoscapeWrapper"
+              id="cytoscape-wrapper"
               :selectLoadingOverride="execLoading"
               @cytoscapeInstanceLoaded.once="onCytoscapeInstanceLoaded"
               style="overflow-y: hidden;"
@@ -36,6 +37,7 @@
           <template v-slot:after>
             <EditorControlUnit
               ref="editorControlUnit"
+              id="editor-control-unit"
               :slider-length="editorControlSliderLength"
               :disable-override="execLoading"
               :execLoading="execLoading"
@@ -49,6 +51,7 @@
             />
             <EditorWrapper
               v-show="currentTab === 'editor'"
+              id="editor-wrapper"
               ref="editorWrapper"
               class="full-height"
               :editorLoadingOverride="execLoading"

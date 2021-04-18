@@ -5,7 +5,7 @@
     <q-space />
 
     <q-slider
-      id="stepper-slider"
+      id="control-unit-stepper-slider"
       v-model="modelSliderPos"
       :min="1"
       label
@@ -20,7 +20,11 @@
     <!-- FIXME: pop-up slider, style -->
     <!-- FIXME: middle, calc the width of editor -->
     <!-- stepper button group -->
-    <q-btn-group flat class="q-mr-md">
+    <q-btn-group
+      flat
+      class="q-mr-md"
+      id="control-unit-step-control-button-group"
+    >
       <div>
         <q-btn flat dense @click="showLabelAlwaysSwitch">
           <q-icon
@@ -152,6 +156,7 @@
     <q-btn-group flat class="q-mr-md">
       <q-btn
         dense
+        id="control-unit-editor-lock"
         @click="onEditingLockStateChange"
         :icon="canEdit ? 'lock_open' : 'lock'"
       >
