@@ -100,7 +100,7 @@ const mutations: MutationTree<SettingState> = {
     state.showIntro.tutorialIntro = value;
   },
   CHANGE_GRAPH_INTRO(state, value: boolean) {
-    state.showIntro.tutorialIntro = value;
+    state.showIntro.graphIntro = value;
   },
 };
 
