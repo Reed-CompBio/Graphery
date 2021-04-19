@@ -7,12 +7,7 @@
           :class="['welcome-box', 'flex-center', mdRowControl]"
           class="justify-center"
         >
-          <!-- FIXME: mobile breakpoint (responsive adaption)-->
-          <!-- FIXME: beautify the logo -->
-          <div
-            :class="[mdColControl]"
-            class="flex torial based webservice.justify-center"
-          >
+          <div :class="[mdColControl]" class="flex justify-center">
             <img :src="logoSrc" class="logo" alt="site logo" />
           </div>
           <div :class="[mdColControl]" class="graphery-text justify-center">
