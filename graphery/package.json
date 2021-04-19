@@ -1,6 +1,6 @@
 {
   "name": "graphery",
-  "version": "0.25.11",
+  "version": "0.25.12",
   "private": true,
   "repository": {
     "type": "git",
@@ -91,6 +91,7 @@
     "typescript": "^3.9.7",
     "vue-cli-plugin-i18n": "~1.0.1",
     "vue-cli-plugin-quasar": "~2.0.2",
-    "vue-template-compiler": "^2.6.12"
+    "vue-template-compiler": "^2.6.12",
+    "raw-loader": "^4.0.2"
   }
 }

@@ -13,6 +13,12 @@ module.exports = {
       args[0]['prod'] = process.env.NODE_ENV === 'production';
       return args;
     });
+    config.module
+      .rule('markdown-load')
+      .test(/\.md$/i)
+      .use('raw-loader')
+      .loader('raw-loader')
+      .end();
   },
   pluginOptions: {
     quasar: {

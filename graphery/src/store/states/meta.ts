@@ -9,6 +9,6 @@ export const navigationButtons = [
   { name: 'Settings', icon: 'mdi-cog' },
 ];
 
-export const headerSize = 66;
+export const headerSize = 50;
 export const graphMenuHeaderSize = 56;
 export const editorTabHeight = 48 + 48;
