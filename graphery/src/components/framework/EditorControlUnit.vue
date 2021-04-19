@@ -1,11 +1,11 @@
 <template>
-  <q-bar>
+  <q-bar id="editor-control-unit">
     <q-icon name="mdi-function" />
     <div style="text-transform: uppercase;">Editor</div>
     <q-space />
 
     <q-slider
-      id="stepper-slider"
+      id="control-unit-stepper-slider"
       v-model="modelSliderPos"
       :min="1"
       label
@@ -13,16 +13,18 @@
       :max="sliderLength"
       :step="1"
       snap
-      dense
       style="width: 40%;"
       :label-always="sliderLabelAlways"
       :disable="disableStepSlider"
     ></q-slider>
-    <!--    abcde FIXME-->
     <!-- FIXME: pop-up slider, style -->
     <!-- FIXME: middle, calc the width of editor -->
     <!-- stepper button group -->
-    <q-btn-group flat class="q-mr-md">
+    <q-btn-group
+      flat
+      class="q-mr-md"
+      id="control-unit-step-control-button-group"
+    >
       <div>
         <q-btn flat dense @click="showLabelAlwaysSwitch">
           <q-icon
@@ -35,6 +37,7 @@
       </div>
       <div>
         <q-btn
+          id="control-unit-backward-button"
           flat
           dense
           icon="mdi-skip-backward"
@@ -46,6 +49,7 @@
       </div>
       <div>
         <q-btn
+          id="control-unit-skip-button"
           flat
           dense
           icon="mdi-skip-previous"
@@ -57,6 +61,7 @@
       </div>
       <div>
         <q-btn
+          id="control-unit-next-button"
           flat
           dense
           icon="mdi-skip-next"
@@ -69,6 +74,7 @@
       </div>
       <div>
         <q-btn
+          id="control-unit-forward-button"
           flat
           dense
           icon="mdi-skip-forward"
@@ -82,7 +88,7 @@
     </q-btn-group>
 
     <!-- execution button group -->
-    <q-btn-group flat class="q-mr-md">
+    <q-btn-group flat class="q-mr-md" v-if="canEdit">
       <div>
         <q-btn
           flat
@@ -112,7 +118,7 @@
     </q-btn-group>
 
     <!-- copy paste button group -->
-    <q-btn-group flat class="q-mr-md">
+    <q-btn-group flat class="q-mr-md" v-if="canEdit">
       <div>
         <q-btn flat dense icon="mdi-content-copy" @click="onCopyCurrentCode">
         </q-btn>
@@ -128,17 +134,17 @@
         </q-btn>
         <SwitchTooltip :text="$t('tooltips.pasteCodes')" />
       </div>
-      <div>
-        <q-btn
-          flat
-          dense
-          icon="mdi-rotate-right-variant"
-          @click="onChangeVariableListOrientation"
-        >
-        </q-btn>
-        <SwitchTooltip :text="$t('tooltips.changeVariableListOrientation')" />
-      </div>
     </q-btn-group>
+    <div>
+      <q-btn
+        flat
+        dense
+        icon="mdi-rotate-right-variant"
+        @click="onChangeVariableListOrientation"
+      >
+      </q-btn>
+      <SwitchTooltip :text="$t('tooltips.changeVariableListOrientation')" />
+    </div>
 
     <!--    <q-btn-group flat class="q-mr-md">-->
     <!--      <q-btn dense icon="mdi-folder-network-outline" @click="onCallWorkSpace">-->
@@ -150,8 +156,9 @@
     <q-btn-group flat class="q-mr-md">
       <q-btn
         dense
+        id="control-unit-editor-lock"
         @click="onEditingLockStateChange"
-        :icon="$store.state.settings.enableEditing ? 'lock_open' : 'lock'"
+        :icon="canEdit ? 'lock_open' : 'lock'"
       >
         <SwitchTooltip
           :text="$t('tooltips.goToSettingsToChangeEditingPermission')"
@@ -163,6 +170,7 @@
 
 <script>
   import SwitchTooltip from '@/components/framework/SwitchTooltip';
+
   export default {
     props: {
       sliderLength: {
@@ -219,6 +227,9 @@
         } else {
           return undefined;
         }
+      },
+      canEdit() {
+        return this.$store.state.settings.enableEditing;
       },
     },
     methods: {
@@ -287,5 +298,3 @@
     },
   };
 </script>
-
-<style lang="sass" scoped></style>

@@ -110,11 +110,13 @@
 
   import GraphCodeBridge from '@/components/framework/GraphEditorControls/GraphCodeBridge';
   import OnXsScreenMixin from '@/components/mixins/OnXsScreenMixin';
+  import ProductGuideMixin from '../components/mixins/ProductGuideMixin';
 
   import EditorWrapper from '@/components/tutorial/EditorWrapper';
   import CytoscapeWrapper from '@/components/tutorial/CytoscapeWrapper';
   import SplitterSeparator from '@/components/framework/SplitterSeparator';
   import EditorControlUnit from '@/components/framework/EditorControlUnit';
+  import { successDialog } from '../services/helpers';
 
   const defaultCodeOption = [
     {
@@ -132,7 +134,7 @@
   ];
 
   export default {
-    mixins: [GraphCodeBridge, OnXsScreenMixin],
+    mixins: [GraphCodeBridge, OnXsScreenMixin, ProductGuideMixin],
     props: ['lang', 'url'],
     metaInfo() {
       const graphTitle = this.headerTitle;
@@ -212,10 +214,21 @@
       verticalSplitter() {
         return this.$q.screen.lt.md;
       },
+      shouldLoad() {
+        return this.$store.getters['settings/showGraphIntro'];
+      },
     },
     methods: {
       flipGraphInfoDialog() {
         this.graphInfoPopupShow = !this.graphInfoPopupShow;
+      },
+      showGraphInfoDialog() {
+        if (
+          this.$store.getters['settings/graphAbstractPopupShow'] &&
+          !this.onXsScreen
+        ) {
+          this.graphInfoPopupShow = true;
+        }
       },
       generateDefaultJsonResults(graphId) {
         return [
@@ -294,11 +307,8 @@
               }))
             );
 
-            if (
-              this.$store.getters['settings/graphAbstractPopupShow'] &&
-              !this.onXsScreen
-            ) {
-              this.flipGraphInfoDialog();
+            if (this.introInstance === null) {
+              this.showGraphInfoDialog();
             }
           })
           .catch((err) => {
@@ -307,12 +317,44 @@
             });
           });
       },
+      onBeforeExitCallback() {
+        if (
+          confirm(
+            this.$i18n.t('product guide.before exit') +
+              '\n' +
+              this.$i18n.t('product guide.open again')
+          )
+        ) {
+          this.$store.commit('settings/CHANGE_GRAPH_INTRO', false);
+          return true;
+        } else {
+          return false;
+        }
+      },
+      onExitCallback() {
+        this.showGraphInfoDialog();
+      },
     },
     created() {
       this.$i18n.locale = this.lang;
     },
     mounted() {
       this.loadGraphAndCode();
+
+      // load intro module
+      this.loadIntroModule().then(() => {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const m = require('../components/mixins/ProductGuideSteps');
+
+        this.addIntroSteps(
+          m.startGraphIntro.concat(
+            m.graphUIProductGuide,
+            m.editorProductGuide,
+            m.controlUnitProductGuide
+          )
+        );
+        this.startIntro();
+      });
     },
   };
 </script>

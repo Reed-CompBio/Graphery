@@ -25,6 +25,7 @@
           <template v-slot:before>
             <CytoscapeWrapper
               ref="cytoscapeWrapper"
+              id="cytoscape-wrapper"
               :selectLoadingOverride="execLoading"
               @cytoscapeInstanceLoaded.once="onCytoscapeInstanceLoaded"
               style="overflow-y: hidden;"
@@ -49,6 +50,7 @@
             />
             <EditorWrapper
               v-show="currentTab === 'editor'"
+              id="editor-wrapper"
               ref="editorWrapper"
               class="full-height"
               :editorLoadingOverride="execLoading"
@@ -100,9 +102,15 @@
   import EditorWrapper from '@/components/tutorial/EditorWrapper';
   import SplitterSeparator from '@/components/framework/SplitterSeparator';
   import EditorControlUnit from '@/components/framework/EditorControlUnit';
+  import ProductGuideMixin from '@/components/mixins/ProductGuideMixin';
 
   export default {
-    mixins: [GraphCodeBridge, TabSwitchMixin, OnXsScreenMixin],
+    mixins: [
+      GraphCodeBridge,
+      TabSwitchMixin,
+      OnXsScreenMixin,
+      ProductGuideMixin,
+    ],
     props: ['lang', 'url'],
     components: {
       SplitterSeparator,
@@ -144,6 +152,12 @@
       },
       currentLang() {
         return this.$i18n.locale;
+      },
+      showProductGuide() {
+        return true;
+      },
+      shouldLoad() {
+        return this.$store.getters['settings/showTutorialIntro'];
       },
     },
     methods: {
@@ -208,6 +222,20 @@
           message: `breakpoint ${position} clicked`,
         });
       },
+      onBeforeExitCallback() {
+        if (
+          confirm(
+            this.$i18n.t('product guide.before exit') +
+              '\n' +
+              this.$i18n.t('product guide.open again')
+          )
+        ) {
+          this.$store.commit('settings/CHANGE_TUTORIAL_INTRO', false);
+          return true;
+        } else {
+          return false;
+        }
+      },
     },
     watch: {
       currentLang: function(newVal) {
@@ -265,6 +293,22 @@
 
       // pull tutorials
       this.updateTutorialContent();
+
+      // load intro guide
+      this.loadIntroModule().then(() => {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const m = require('../components/mixins/ProductGuideSteps');
+        this.addIntroSteps(
+          m.startTutorialIntro.concat(
+            m.tutorialUIProductGuide,
+            m.graphUIProductGuide,
+            m.editorProductGuide,
+            m.controlUnitProductGuide
+          )
+        );
+        this.startIntro();
+      });
+      // this.addIntroSteps(tutorialUIProductGuide);
     },
     destroyed() {
       this.clearAll();

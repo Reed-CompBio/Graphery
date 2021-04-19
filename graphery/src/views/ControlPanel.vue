@@ -1,5 +1,5 @@
 <template>
-  <div style="height: calc(100vh - 66px);">
+  <div :style="panelStyle">
     <!-- Left drawer-->
     <q-layout view="hHh Lpr lff" container class="full-height">
       <q-drawer
@@ -66,6 +66,8 @@
 </template>
 
 <script>
+  import { headerSize } from '../store/states/meta';
+
   export default {
     components: {
       DrawerListItem: () =>
@@ -76,6 +78,13 @@
         showDrawer: true,
         tabName: 'main',
       };
+    },
+    computed: {
+      panelStyle() {
+        return {
+          height: `calc(100vh - ${headerSize}px)`,
+        };
+      },
     },
   };
 </script>
