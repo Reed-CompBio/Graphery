@@ -3,14 +3,20 @@ import i18n from '@/i18n';
 export const startTutorialIntro = [
   {
     title: i18n.tc('product guide.ui.intro title') + ' 👋 ',
-    intro: i18n.tc('product guide.ui.tutorial intro'),
+    intro:
+      i18n.tc('product guide.ui.tutorial intro') +
+      ' ' +
+      i18n.tc('product guide.ui.open again'),
   },
 ];
 
 export const startGraphIntro = [
   {
     title: i18n.tc('product guide.ui.intro title') + ' 👋 ',
-    intro: i18n.tc('product guide.ui.graph intro'),
+    intro:
+      i18n.tc('product guide.ui.graph intro') +
+      ' ' +
+      i18n.tc('product guide.ui.open again'),
   },
 ];
 
