@@ -1,154 +1,154 @@
 {
   "tooltips": {
-    "graphInfo": "Graph Info",
-    "Share": "Share",
-    "runCodeOnTheCloud": "Run code on the cloud",
-    "runCodeLocally": "Run code locally",
-    "copyCodes": "Copy code",
-    "pasteCodes": "Paste code",
-    "showEditorAndMore": "Show editor and more",
-    "oneStepBack": "One Step Back",
-    "oneStepForward": "One Step Forward",
-    "fiveStepsBack": "Five Steps Back",
-    "fiveStepsForward": "Five Steps Forward",
-    "autoRun": "Auto Run",
-    "showLabelAlways": "Show Slider Always",
-    "notShowLabelAlways": "Not Always Show Slider Label",
-    "editor": "Editor",
-    "howTo": "How To",
-    "notAvailableCurrently": "Not Available Currently",
-    "goToSettingsToChangeEditingPermission": "Please Click This To Change Editing Permission",
-    "changeVariableListOrientation": "Change Variable List Orientation",
-    "openWorkSpace": "Open Work Space"
+    "graphInfo": "图的资料",
+    "Share": "分享",
+    "runCodeOnTheCloud": "云端编译",
+    "runCodeLocally": "本地编译",
+    "copyCodes": "复制代码",
+    "pasteCodes": "粘贴代码",
+    "showEditorAndMore": "显示编辑器及更多",
+    "oneStepBack": "后退一步",
+    "oneStepForward": "前进一步",
+    "fiveStepsBack": "后退五步",
+    "fiveStepsForward": "前进五步",
+    "autoRun": "自动执行",
+    "showLabelAlways": "始终展示滑块标签",
+    "notShowLabelAlways": "不始终展示滑块标签",
+    "editor": "编辑器",
+    "howTo": "使用帮助",
+    "notAvailableCurrently": "暂时无法使用",
+    "goToSettingsToChangeEditingPermission": "请点击这个锁以开关编辑权限",
+    "changeVariableListOrientation": "改变变量表朝向",
+    "openWorkSpace": "打开工作区"
   },
   "nav": {
-    "Home": "Home",
-    "Tutorials": "Tutorials",
-    "Graphs": "Graphs",
-    "About": "About",
-    "Account": "Account",
-    "Settings": "Settings",
-    "Feedback": "Feedback/Suggest New",
-    "Login": "Login",
-    "EmailUs": "Email Us",
-    "GithubRepo": "Github Repo",
-    "tos": "Terms of Services",
-    "faq": "Frequently Asked Questions"
+    "Home": "首页",
+    "Tutorials": "教程",
+    "Graphs": "图库",
+    "About": "关于",
+    "Account": "账户",
+    "Settings": "设置",
+    "Feedback": "反馈/新内容建议",
+    "Login": "登录",
+    "EmailUs": "邮件反馈",
+    "GithubRepo": "代码仓库",
+    "tos": "用户协议",
+    "faq": "常见问题"
   },
   "tos": {},
   "faq": {
-    "Browser Compatibility": "Browser Compatibility"
+    "Browser Compatibility": "浏览器兼容性"
   },
   "collectionPage": {
-    "Filter": "Filter",
-    "searchHint": "Please use keywords. Press enter to search.",
-    "Categories": "Categories",
-    "ReadMore": "Read More",
-    "PlayWithIt": "Play With It"
+    "Filter": "筛选",
+    "searchHint": "搜索时请使用关键词. 按下 Enter 进行搜索.",
+    "Categories": "分类",
+    "ReadMore": "阅读更多",
+    "PlayWithIt": "自己尝试"
   },
   "settings": {
-    "Display": "Display",
-    "graphRender": "Graph Render",
-    "editorSettings": "Editor Settings",
-    "performanceTip": "Turn on to gain performance",
-    "darkMode": "Dark Mode",
-    "graphBackgroundDark": "Graph Background Dark",
-    "hideEdgesWhenRendering": "Hide Edges When Rendering (Moving Graphs) ",
-    "renderViewportOnly": "Render Viewport Only",
-    "motionBlurEnabled": "Motion Blur Enabled",
-    "motionSensitivityLevel": "Motion Sensitivity Level",
-    "splitPos": "Tutorial Page Default Split Pos",
-    "softTab": "Soft Tab",
-    "lineWrap": "Line Wrap",
-    "tabNum": "Tab Space Number",
-    "fontSize": "Font Size",
-    "showTooltips": "Show Tooltips",
-    "cardsDisplayedNum": "Number of Search Results in Each Page",
-    "enableEditing": "Enable Editing",
-    "Show Graph Abstract": "Show Graph Abstract",
-    "Show Tutorial Intro Guide": "Show Tutorial Intro Guide",
-    "Show Graph Intro Guide": "Show Graph Intro Guide",
-    "Show Control Unit Extra Control Guide": "Show Control Unit Extra Control Guide"
+    "Display": "显示设置",
+    "graphRender": "图渲染设置",
+    "editorSettings": "编辑器设置",
+    "performanceTip": "打开下列开关以保证流畅",
+    "darkMode": "黑暗模式",
+    "graphBackgroundDark": "图背景黑暗",
+    "hideEdgesWhenRendering": "渲染（移动图像）时隐藏边（edges） ",
+    "renderViewportOnly": "只渲染视野范围",
+    "motionBlurEnabled": "开启动作模糊",
+    "motionSensitivityLevel": "动作敏感度",
+    "splitPos": "分界位置（教程页面）",
+    "softTab": "使用空格取代 Tab",
+    "lineWrap": "自动换行",
+    "tabNum": "Tab 大小",
+    "fontSize": "字体大小",
+    "showTooltips": "打开显示提示",
+    "cardsDisplayedNum": "每页展示的搜索结果数量",
+    "enableEditing": "开启编辑",
+    "Show Graph Abstract": "展示图的简介",
+    "Show Tutorial Intro Guide": "打开教程指南",
+    "Show Graph Intro Guide": "打开图Playground指南",
+    "Show Control Unit Extra Control Guide": "显示 Control Unit Extra Control 引导"
   },
   "notify": {
-    "editorEntry": "Use {...} button to view graph details and more!",
-    "Please click the lock on the top right of the editor to enable editing": "Please click the lock on the top right of the editor to enable editing"
+    "editorEntry": "按下 {...} 按钮打开编辑器",
+    "Please click the lock on the top right of the editor to enable editing": "请点击编辑器右上角的锁以开始编辑"
   },
   "license": {
-    "licenseInfo1": "All the articles without special specification are licensed under a",
-    "licenseInfo2": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License"
+    "licenseInfo1": "所有文章在没有特殊说明的情况下都遵循",
+    "licenseInfo2": "署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0)"
   },
   "account": {
-    "Username": "Username",
-    "Email": "Email",
-    "Password": "Password",
-    "Role": "Role",
-    "Login": "Login",
-    "LogOut": "Log out",
-    "Register": "Register",
-    "ControlPanel": "Control Panel",
-    "DjangoAdminPage": "Django Admin Page",
-    "noNewAccount": "We don't accept new accounts for now.",
-    "notEmpty": "It cannot be empty",
-    "twoPwdNotMatch": "Two passwords must match!",
-    "ConfirmPassword": "Confirm Password",
-    "InvitationCode": "Invitation Code",
-    "firstName": "First Name",
-    "lastName": "Last Name",
-    "Old Password": "Old Password",
-    "New Password": "New Password",
-    "Confirm New Password": "Confirm New Password",
-    "Update Password": "Update Password"
+    "Username": "用户名",
+    "Email": "邮箱",
+    "Password": "密码",
+    "Role": "身份",
+    "Login": "登陆",
+    "LogOut": "登出",
+    "Register": "注册",
+    "ControlPanel": "控制面板",
+    "DjangoAdminPage": "Django 管理员页面",
+    "noNewAccount": "我们暂时不支持注册新用户",
+    "notEmpty": "它不能为空",
+    "twoPwdNotMatch": "两次输入不一致",
+    "ConfirmPassword": "确认密码",
+    "InvitationCode": "邀请码",
+    "firstName": "名",
+    "lastName": "姓",
+    "Old Password": "旧密码",
+    "New Password": "新密码",
+    "Confirm New Password": "确认新密码",
+    "Update Password": "修改密码"
   },
   "dialog": {
-    "ok": "OK!",
-    "mobileWarning": "We believe coding on a phone is a torture, so the mobile view is not perfected. Please use a larger screen to get the full experience"
+    "ok": "好的!\"",
+    "mobileWarning": "我们认为在手机上打代码是种折磨，所以我们没有完善移动端。请使用大屏获得完整体验。"
   },
   "metaInfo": {
-    "Tutorial": "Tutorial"
+    "Tutorial": "教程"
   },
   "graph": {
-    "Close": "Close",
-    "Always Show": "Always Show",
-    "You can also edit this in the Settings page": "You can also edit this in the Settings page",
-    "Show Graph Info": "Show Graph Info",
-    "No Result": "No Result"
+    "Close": "关闭",
+    "Always Show": "永远显示",
+    "You can also edit this in the Settings page": "你可以到设置页面开关此选项",
+    "Show Graph Info": "展示图详情",
+    "No Result": "无结果"
   },
   "article": {
-    "Figure": "Figure"
+    "Figure": "图示"
   },
   "variable": {
-    "Toggle Graph Highlights": "Toggle Graph Highlights",
-    "Go Back": "Go Back",
-    "Top Level Already": "Top Level Already",
-    "Expand Element": "Expand Element"
+    "Toggle Graph Highlights": "开关图上高亮",
+    "Go Back": "上一级",
+    "Top Level Already": "已是最顶层",
+    "Expand Element": "展开内容"
   },
   "product guide": {
     "ui": {
-      "intro title": "Welcome!",
-      "tutorial intro": "This is going to guide you through how Graphery tutorial works",
+      "intro title": "欢迎！",
+      "tutorial intro": "第一次使用 Graphery ？花一分钟的时间学习一下如何使用 Graphery Tutorial 吧！",
       "tutorial details": "",
-      "graph intro" : "This is going to guide you through how Graphery graph playground works",
+      "graph intro": "第一次使用 Graphery ？花一分钟的时间学习一下如何使用 Graphery Graph Playground 吧！",
       "graph details": "",
-      "tutorial section":       "This is the text description of the tutorial",
-      "graph section":       "This is the visualization window on this specific graph",
-      "editor section": "This is the code editor where you can see code execution process and write your own",
-      "variable list section": "This is the variable list where changes made to traced variables are shown",
-      "control unit": "This is where you can control code execution"
+      "tutorial section": "这一块是教程的文字描述部分",
+      "graph section": "教程中的算法可视化后的图在这里展示，在上方的下拉菜单中可以切换不同的图",
+      "editor section": "在代码编辑器里你可以看到代码的执行过程，你也可以自行修改要执行的代码",
+      "variable list section": "变量表里显示了被追踪的变量",
+      "control unit": "这里可以控制代码的执行"
     },
     "graph window": {
-      "choose graphs": "You can click here to choose available graphs",
-      "drag node and view port":       "You can drag the nodes and adjust the viewport",
-      "lasso tool": "You can press shift and mouse drag to use the lasso tool"
+      "choose graphs": "你可以从这里选择不同的图",
+      "drag node and view port": "你可以拖动图上的节点并且调整视野",
+      "lasso tool": "按住 Shift 键并用鼠标拖动来使用套索工具"
     },
     "control unit": {
-      "forward button": "Click this to move execution forward",
-      "step control group": "Click these buttons to move code execution steps",
-      "slider":     "Drag the slider to jump to a specific step",
-      "edit lock":     "Click this to open start editing the code and see more control options"
+      "forward button": "点击这里执行下一步",
+      "step control group": "这些按钮用来移动代码执行步骤",
+      "slider": "拖动滑块来跳转到具体的某一步",
+      "edit lock": "点击这里来开始编辑代码，你会看到更多的控制选项"
     },
-    "before exit": "Do you want to exit the guide? ",
-    "open again": "You can toggle it in the Settings page afterwards.",
+    "before exit": "你想要退出本次引导教程吗？",
+    "open again": "你可以在设置页面再一次打开它",
     "show intro again": "Do you want to see the intro again next time?"
   }
 }
