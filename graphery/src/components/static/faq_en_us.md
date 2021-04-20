@@ -1,3 +1,5 @@
+We prepared some frequently asked questions for you. 
+
 ### What is Graphery?
 
 Graphery is a platform with interactive tutorials about graph algorithms alongside real-world biological networks. It is designed with biological researchers in mind, where users can click through Python code and see _how_ the algorithms work on networks from different biological domains.
