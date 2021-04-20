@@ -1,6 +1,6 @@
 {
   "tooltips": {
-    "graphInfo": "图的信息",
+    "graphInfo": "图的资料",
     "Share": "分享",
     "runCodeOnTheCloud": "云端编译",
     "runCodeLocally": "本地编译",
@@ -37,14 +37,14 @@
   },
   "tos": {},
   "faq": {
-    "Browser Compatibility": "Browser Compatibility"
+    "Browser Compatibility": "浏览器兼容性"
   },
   "collectionPage": {
     "Filter": "筛选",
     "searchHint": "搜索时请使用关键词. 按下 Enter 进行搜索.",
     "Categories": "分类",
     "ReadMore": "阅读更多",
-    "PlayWithIt": "代码尝试"
+    "PlayWithIt": "自己尝试"
   },
   "settings": {
     "Display": "显示设置",
@@ -53,7 +53,7 @@
     "performanceTip": "打开下列开关以保证流畅",
     "darkMode": "黑暗模式",
     "graphBackgroundDark": "图背景黑暗",
-    "hideEdgesWhenRendering": "渲染（移动）时隐藏边（edges）",
+    "hideEdgesWhenRendering": "渲染（移动图像）时隐藏边（edges） ",
     "renderViewportOnly": "只渲染视野范围",
     "motionBlurEnabled": "开启动作模糊",
     "motionSensitivityLevel": "动作敏感度",
@@ -62,13 +62,13 @@
     "lineWrap": "自动换行",
     "tabNum": "Tab 大小",
     "fontSize": "字体大小",
-    "showTooltips": "显示提示",
-    "cardsDisplayedNum": "每页展示的搜索结果",
+    "showTooltips": "打开显示提示",
+    "cardsDisplayedNum": "每页展示的搜索结果数量",
     "enableEditing": "开启编辑",
-    "Show Graph Abstract": "Show Graph Abstract",
-    "Show Tutorial Intro Guide": "Show Tutorial Intro Guide",
-    "Show Graph Intro Guide": "Show Graph Intro Guide",
-    "Show Control Unit Extra Control Guide": "Show Control Unit Extra Control Guide"
+    "Show Graph Abstract": "展示图的简介",
+    "Show Tutorial Intro Guide": "打开教程指南",
+    "Show Graph Intro Guide": "打开图Playground指南",
+    "Show Control Unit Extra Control Guide": "显示 Control Unit Extra Control 引导"
   },
   "notify": {
     "editorEntry": "按下 {...} 按钮打开编辑器",
@@ -101,7 +101,7 @@
     "Update Password": "修改密码"
   },
   "dialog": {
-    "ok": "好的!",
+    "ok": "好的!\"",
     "mobileWarning": "我们认为在手机上打代码是种折磨，所以我们没有完善移动端。请使用大屏获得完整体验。"
   },
   "metaInfo": {
@@ -125,30 +125,30 @@
   },
   "product guide": {
     "ui": {
-      "intro title": "Welcome!",
-      "tutorial intro": "This is going to guide you through how Graphery tutorial works",
+      "intro title": "欢迎！",
+      "tutorial intro": "第一次使用 Graphery ？花一分钟的时间学习一下如何使用 Graphery Tutorial 吧！",
       "tutorial details": "",
-      "graph intro" : "This is going to guide you through how Graphery graph playground works",
+      "graph intro": "第一次使用 Graphery ？花一分钟的时间学习一下如何使用 Graphery Graph Playground 吧！",
       "graph details": "",
-      "tutorial section":       "This is the text description of the tutorial",
-      "graph section":       "This is the visualization window on this specific graph",
-      "editor section": "This is the code editor where you can see code execution process and write your own",
-      "variable list section": "This is the variable list where changes made to traced variables are shown",
-      "control unit": "This is where you can control code execution"
+      "tutorial section": "这一块是教程的文字描述部分",
+      "graph section": "教程中的算法可视化后的图在这里展示，在上方的下拉菜单中可以切换不同的图",
+      "editor section": "在代码编辑器里你可以看到代码的执行过程，你也可以自行修改要执行的代码",
+      "variable list section": "变量表里显示了被追踪的变量",
+      "control unit": "这里可以控制代码的执行"
     },
     "graph window": {
-      "choose graphs": "You can click here to choose available graphs",
-      "drag node and view port":       "You can drag the nodes and adjust the viewport",
-      "lasso tool": "You can press shift and mouse drag to use the lasso tool"
+      "choose graphs": "你可以从这里选择不同的图",
+      "drag node and view port": "你可以拖动图上的节点并且调整视野",
+      "lasso tool": "按住 Shift 键并用鼠标拖动来使用套索工具"
     },
     "control unit": {
-      "forward button": "Click this to move execution forward",
-      "step control group": "Click these buttons to move code execution steps",
-      "slider":     "Drag the slider to jump to a specific step",
-      "edit lock":     "Click this to open start editing the code and see more control options"
+      "forward button": "点击这里执行下一步",
+      "step control group": "这些按钮用来移动代码执行步骤",
+      "slider": "拖动滑块来跳转到具体的某一步",
+      "edit lock": "点击这里来开始编辑代码，你会看到更多的控制选项"
     },
-    "before exit": "Do you want to exit the guide? ",
-    "open again": "You can toggle it in the Settings page afterwards.",
+    "before exit": "你想要退出本次引导教程吗？",
+    "open again": "你可以在设置页面再一次打开它",
     "show intro again": "Do you want to see the intro again next time?"
   }
 }
