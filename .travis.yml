@@ -22,7 +22,7 @@ matrix:
         - cd ../server && sudo pipenv run pytest -vv -ra -s
 
     - language: node_js
-      node_js: node
+      node_js: 12
       cache: npm
       install:
         - cd graphery
