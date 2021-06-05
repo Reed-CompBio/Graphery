@@ -9,3 +9,11 @@ There are currently three category folders under the root folder: `backend`, `fr
 The subfolder, topic folder, in each category folder should concern one and only topic. There should not be any loose documents aside from `introduction.md` in each category folder, that is, every document except `introduction.md` in a category folder should be contained in a topic folder. 
 
 Each topic folder may have subfolders. The subfolders should be used to compartmentalize the documents in the topic folder. The structure of the subfolders depends on the author of the topic folder. 
+
+## Document Naming Convention
+
+The name of each document should be in lower case. The name of each document should be the clear, concise and impart the subject of that document. 
+
+## Committing and Pushing
+
+Each commit should only concern one topic. Do not commit multiple files residing in different topic folders. All the RFCs should be pushed to `RFCs-dev` branch. They must be reviewed before being PRed to `RFCs` branch. 
