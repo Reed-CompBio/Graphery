@@ -14,6 +14,12 @@ Each topic folder may have subfolders. The subfolders should be used to compartm
 
 The name of each document should be in lower case. The name of each document should be the clear, concise and impart the subject of that document. 
 
+## Document Writing
+
+Every document must have a H1 header which should be the same name as the document file name. Every document should concern one and only one topic. The subheaders should be in order. That is, a H3 header cannot be created without a H2 header as its parent. 
+
+There are no restrictions on the internal structure of each document. 
+
 ## Committing and Pushing
 
 Each commit should only concern one topic. Do not commit multiple files residing in different topic folders. All the RFCs should be pushed to `RFCs-dev` branch. They must be reviewed before being PRed to `RFCs` branch. 
