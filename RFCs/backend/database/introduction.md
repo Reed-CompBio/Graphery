@@ -1,0 +1,5 @@
+# Introduction 
+
+This topic directory concerns the design of the database scheme. 
+
+The description of each table is named `<table_name> table.md`. 
