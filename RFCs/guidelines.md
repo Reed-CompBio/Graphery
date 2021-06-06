@@ -2,21 +2,95 @@
 
 ## Directory Structure 
 
-The `RFCs` folder should be the root folder for all RFCs. No other folders should be create on the same level as the `RFCs` folder. 
+The `RFCs` folder should be the root folder for all RFCs. No other folders should be create on the same level as the `RFCs` folder. That is, the following structure is not acceptable. 
+
+<!-- 
+# RFCS
+## ...
+# something else 
+## ... 
+-->
+
+```text
+.
+├── RFCS
+│   └── ...
+└── something else
+    └── ...
+```
 
 There are currently three category folders under the root folder: `backend`, `frontend`, `tutorials`. The `backend` folder contains the RFCs that are related to the backend. Similarly, the RFCs for the frontend goes into the `frontend` folder. The `tutorials` folder contains the guidelines for the writers and editors of the tutorials. 
 
-The subfolder, topic folder, in each category folder should concern one and only topic. There should not be any loose documents aside from `introduction.md` in each category folder, that is, every document except `introduction.md` in a category folder should be contained in a topic folder. 
+The subfolder, topic folder, in each category folder should concern one and only topic. The name of each directory should be in English and in lower case. There should not be any loose documents aside from `introduction.md` in each category folder, that is, every document except `introduction.md` in a category folder should be contained in a topic folder. For example, 
+
+<!-- 
+# RFCs
+## backend 
+### introduction.md
+### database specification
+#### guidelines.md
+#### tutorial table.md
+#### member table.md
+#### ...
+### api specification
+#### guidelines.md 
+#### python seeker api.md
+#### ...
+## frontend
+### introduction.md
+### ui design
+#### ...
+### data/storage structure design
+#### ...
+### introduction.md
+## tutorials
+### introduction.md
+### for writers
+#### ...
+### for editors
+#### ... 
+-->
+
+```text
+.
+└── RFCs
+    ├── backend
+    │   ├── introduction.md
+    │   ├── database specification
+    │   │   ├── guidelines.md
+    │   │   ├── tutorial table.md
+    │   │   ├── member table.md
+    │   │   └── ...
+    │   └── api specification
+    │       ├── guidelines.md
+    │       ├── python seeker api.md
+    │       └── ...
+    ├── frontend
+    │   ├── introduction.md
+    │   ├── ui design
+    │   │   └── ...
+    │   ├── data/storage structure design
+    │   │   └── ...
+    │   └── introduction.md
+    └── tutorials
+        ├── introduction.md
+        ├── for writers
+        │   └── ...
+        └── for editors
+            └── ...
+```
 
 Each topic folder may have subfolders. The subfolders should be used to compartmentalize the documents in the topic folder. The structure of the subfolders depends on the author of the topic folder. 
 
 ## Document Naming Convention
 
-The name of each document should be in lower case. The name of each document should be the clear, concise and impart the subject of that document. 
+The name of each document should be in English and  in lower case. The names should be the clear, concise and impart the subject of that document. For example, the name of a document about websocket API can be `websocket api.md`. 
 
 ## Document Writing
 
-Every document must have a H1 header which should be the same name as the document file name. Every document should concern one and only one topic. The subheaders should be in order. That is, a H3 header cannot be created without a H2 header as its parent. 
+Every document must be in `markdown` format and have one and only one H1 header which should be the same as the document file name except the restriction on caps. For example, the file name of this document is `guidelines.md`, so the H1 header is `Guidelines`. 
+
+Every document should concern one and only one topic. The subheaders should be in order. That is, a H3 header cannot be created without a H2 header as its parent. 
 
 There are no restrictions on the internal structure of each document. 
 
