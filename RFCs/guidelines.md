@@ -5,7 +5,7 @@
 The `RFCs` folder should be the root folder for all RFCs. No other folders should be create on the same level as the `RFCs` folder. That is, the following structure is not acceptable. 
 
 <!-- 
-# RFCS
+# RFCs
 ## ...
 # something else 
 ## ... 
@@ -13,7 +13,7 @@ The `RFCs` folder should be the root folder for all RFCs. No other folders shoul
 
 ```text
 .
-├── RFCS
+├── RFCs
 │   └── ...
 └── something else
     └── ...
@@ -27,6 +27,7 @@ The subfolder, topic folder, in each category folder should concern one and only
 # RFCs
 ## backend 
 ### introduction.md
+### env list.md
 ### database specification
 #### guidelines.md
 #### tutorial table.md
@@ -37,6 +38,7 @@ The subfolder, topic folder, in each category folder should concern one and only
 #### python seeker api.md
 #### ...
 ## frontend
+### env list.md
 ### introduction.md
 ### ui design
 #### ...
@@ -56,6 +58,7 @@ The subfolder, topic folder, in each category folder should concern one and only
 └── RFCs
     ├── backend
     │   ├── introduction.md
+    │   ├── env list.md
     │   ├── database specification
     │   │   ├── guidelines.md
     │   │   ├── tutorial table.md
@@ -66,6 +69,7 @@ The subfolder, topic folder, in each category folder should concern one and only
     │       ├── python seeker api.md
     │       └── ...
     ├── frontend
+    │   ├── env list.md
     │   ├── introduction.md
     │   ├── ui design
     │   │   └── ...
