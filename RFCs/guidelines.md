@@ -21,35 +21,35 @@ The `RFCs` folder should be the root folder for all RFCs. No other folders shoul
 
 There are currently three category folders under the root folder: `backend`, `frontend`, `tutorials`. The `backend` folder contains the RFCs that are related to the backend. Similarly, the RFCs for the frontend goes into the `frontend` folder. The `tutorials` folder contains the guidelines for the writers and editors of the tutorials. 
 
-The subfolder, topic folder, in each category folder should concern one and only topic. The name of each directory should be in English and in lower case. There should not be any loose documents aside from `introduction.md` in each category folder, that is, every document except `introduction.md` in a category folder should be contained in a topic folder. For example, 
+The subfolder, topic folder, in each category folder should concern one and only topic. The name of each directory should follower the naming convention for variables in Python, which means the name should be in lower case and each word is separated by `_`. There should not be any loose documents aside from `introduction.md` and `env_list.md` in each category folder, that is, every document except `introduction.md` and `env_list.md` in a category folder should be contained in a topic folder. For example, 
 
 <!-- 
 # RFCs
 ## backend 
 ### introduction.md
-### env list.md
-### database specification
+### env_list.md
+### database_specification
 #### guidelines.md
-#### tutorial table.md
-#### member table.md
+#### tutorial_table.md
+#### member_table.md
 #### ...
-### api specification
+### api_specification
 #### guidelines.md 
-#### python seeker api.md
+#### python_seeker_api.md
 #### ...
 ## frontend
-### env list.md
+### env_list.md
 ### introduction.md
-### ui design
+### ui_design
 #### ...
-### data/storage structure design
+### data_storage_structure_design
 #### ...
 ### introduction.md
 ## tutorials
 ### introduction.md
-### for writers
+### for_writers
 #### ...
-### for editors
+### for_editors
 #### ... 
 -->
 
@@ -58,29 +58,29 @@ The subfolder, topic folder, in each category folder should concern one and only
 └── RFCs
     ├── backend
     │   ├── introduction.md
-    │   ├── env list.md
-    │   ├── database specification
+    │   ├── env_list.md
+    │   ├── database_specification
     │   │   ├── guidelines.md
-    │   │   ├── tutorial table.md
-    │   │   ├── member table.md
+    │   │   ├── tutorial_table.md
+    │   │   ├── member_table.md
     │   │   └── ...
-    │   └── api specification
+    │   └── api_specification
     │       ├── guidelines.md
-    │       ├── python seeker api.md
+    │       ├── python_seeker_api.md
     │       └── ...
     ├── frontend
-    │   ├── env list.md
+    │   ├── env_list.md
     │   ├── introduction.md
-    │   ├── ui design
+    │   ├── ui_design
     │   │   └── ...
-    │   ├── data/storage structure design
+    │   ├── data_storage_structure_design
     │   │   └── ...
     │   └── introduction.md
     └── tutorials
         ├── introduction.md
-        ├── for writers
+        ├── for_writers
         │   └── ...
-        └── for editors
+        └── for_editors
             └── ...
 ```
 
@@ -88,17 +88,17 @@ Each topic folder may have subfolders. The subfolders should be used to compartm
 
 ## Document Naming Convention
 
-The name of each document should be in English and  in lower case. The names should be the clear, concise and impart the subject of that document. For example, the name of a document about websocket API can be `websocket api.md`. 
+The name of each document should also follow the naming convention for variables in Python. That is, the name should be in lower case and each word is separated by `_`. The names should be the clear, concise and impart the subject of that document. For example, the name of a document about websocket API can be `websocket_api.md`. 
 
 ## Document Writing
 
-Every document must be in `markdown` format and have one and only one H1 header which should be the same as the document file name except the restriction on caps. For example, the file name of this document is `guidelines.md`, so the H1 header is `Guidelines`. 
+Every document must be in `markdown` format and have one and only one H1 header which should be the same as the document file name except it should be in plain English. For example, the file name of this document is `user_table.md`, so the H1 header is `User Table`. 
 
 Every document should concern one and only one topic. The subheaders should be in order. That is, a H3 header cannot be created without a H2 header as its parent. 
 
 There are no restrictions on the internal structure of each document. 
 
-There can be some places where authors would like to define some environment variables so that the values can be customized later. In this case, the environment variable should be indicated by a string enclosed in a code block (i.e. ``) which starts with a dollar sign ($) and the name of the variable matching the naming convention for constant variables. For example, a user should be removed if they have been unverified for some amount of time after the registration. The amount of time can be a environment variable `$UNVERIFIED_USER_REMOVE_AFTER`. All the environment variables should be compiled into the `env list.md` file in the corresponding category folder by the creator. 
+There can be some places where authors would like to define some environment variables so that the values can be customized later. In this case, the environment variable should be indicated by a string enclosed in a code block (i.e. ``) which starts with a dollar sign ($) and the name of the variable matching the naming convention for constant variables. For example, a user should be removed if they have been unverified for some amount of time after the registration. The amount of time can be a environment variable `$UNVERIFIED_USER_REMOVE_AFTER`. All the environment variables should be compiled into the `env_list.md` file in the corresponding category folder by the creator. 
 
 ## Committing and Pushing
 
