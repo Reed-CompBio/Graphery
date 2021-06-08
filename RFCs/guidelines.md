@@ -98,7 +98,7 @@ Every document should concern one and only one topic. The subheaders should be i
 
 There are no restrictions on the internal structure of each document. 
 
-There can be some places where authors would like to define some environment variables so that the values can be customized later. In this case, the environment variable should be indicated by a string enclosed in a code block (i.e. ``) which starts with a dollar sign ($) and the name of the variable matching the naming convention for constant variables. For example, a user should be removed if they have been unverified for some amount of time after the registration. The amount of time can be a environment variable `$UNVERIFIED_USER_REMOVE_AFTER`. 
+There can be some places where authors would like to define some environment variables so that the values can be customized later. In this case, the environment variable should be indicated by a string enclosed in a code block (i.e. ``) which starts with a dollar sign ($) and the name of the variable matching the naming convention for constant variables. For example, a user should be removed if they have been unverified for some amount of time after the registration. The amount of time can be a environment variable `$UNVERIFIED_USER_REMOVE_AFTER`. All the environment variables should be compiled into the `env list.md` file in the corresponding category folder by the creator. 
 
 ## Committing and Pushing
 
