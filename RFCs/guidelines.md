@@ -92,13 +92,69 @@ The name of each document should also follow the naming convention for variables
 
 ## Document Writing
 
+### Document Structure 
+
 Every document must be in `markdown` format and have one and only one H1 header which should be the same as the document file name except it should be in plain English. For example, the file name of this document is `user_table.md`, so the H1 header is `User Table`. 
 
 Every document should concern one and only one topic. The subheaders should be in order. That is, a H3 header cannot be created without a H2 header as its parent. 
 
 There are no restrictions on the internal structure of each document. 
 
-There can be some places where authors would like to define some environment variables so that the values can be customized later. In this case, the environment variable should be indicated by a string enclosed in a code block (i.e. ``) which starts with a dollar sign ($) and the name of the variable matching the naming convention for constant variables. For example, a user should be removed if they have been unverified for some amount of time after the registration. The amount of time can be a environment variable `$UNVERIFIED_USER_REMOVE_AFTER`. All the environment variables should be compiled into the `env_list.md` file in the corresponding category folder by the creator. 
+<!---
+### Numbers and Formulas 
+
+Since Github and Graphery support Katex, numbers and formulas in mathematical context should be enclosed in double dollar signs (`$$<numbers or formulas here>$$`). For example, the square root of $$6$$ is $$\sqrt{6}$$. 
+-->
+
+### Code Block
+
+Every code block should have a language indicator which is the string after the code fence (```). 
+
+For example, 
+
+````
+```python
+s = 'this is a string'
+print(s)
+```
+
+```typescript
+var s = "this is also a string";
+alert(s);
+```
+
+```text
+this is just plain text
+```
+````
+
+This is going to produce:
+
+```python
+s = 'this is a string'
+print(s)
+```
+
+```typescript
+var s = "this is also a string";
+alert(s);
+```
+
+```text
+this is just plain text
+```
+
+### Environment Variables
+
+There can be some places where authors would like to define some environment variables so that the values can be customized later. In this case, the environment variable should be indicated by a string enclosed in a code block (i.e. ``` `` ```) which starts with a dollar sign (`$`) and the name of the variable matching the naming convention for constant variables. For example, a user should be removed if they have been unverified for some amount of time after the registration. The amount of time can be a environment variable `$UNVERIFIED_USER_REMOVE_AFTER`. All the environment variables should be compiled into the `env_list.md` file in the corresponding category folder by the creator. The environment variables in the `env_list.md` should link to the document where they are defined. That means when authors define a environment variable, it should be enclosed by `<a id='env_name'>` tag with an `id` attribute whose content is the name of the env varaible (the string after the `$` sign). When referencing the variable in `env_list.md`, a hyper link should be used to point to the anchor in which the variable is defined. For example, 
+
+```markdown
+<!-- Defining a environment variable -->
+<a id="ENV_VAR">`$ENV_VAR`</a>
+
+<!-- Referencing a environment variable -->
+[`$ENV_VAR`](./some_document.md#ENV_VAR)
+```
 
 ## Committing and Pushing
 
