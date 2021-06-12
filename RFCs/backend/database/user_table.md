@@ -17,3 +17,4 @@ The user table inherits [`User`](https://docs.djangoproject.com/en/3.2/ref/contr
 |    `Visitor`    | `Visitors` can only `view` the tutorials and other content in the control panel. |                           |
 |    `Reader`     |                    No special privileges.                    |                           |
 
+The overwritten `User` model requires a matching [`UserManager`](https://github.com/django/django/blob/main/django/contrib/auth/models.py#L129). It should overwrite [`create_user`](https://github.com/django/django/blob/854e9b066850b9b4eb1171966e996322b2c16d27/django/contrib/auth/models.py#L149) and [`create_superuser`](https://github.com/django/django/blob/main/django/contrib/auth/models.py#L154) functions. Developers should create `User` object only through the helper functions. 
