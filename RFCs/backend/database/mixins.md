@@ -55,3 +55,24 @@ class TimeDateMixin(models.Model):
 
 ## PublishedMixin
 
+`PublishedMixin` is used to indicate whether an entry is publicly viewable without privileges. It has a `is_published` boolean field as the indicator. Additionally, a computed property `is_public_viewable` is provided to developers so that they use other conditions to determine whether an entry can be seen without privileges. `is_public_viewable` should be used, instead of `is_published`. 
+
+|     Field      |                             Type                             |                     Description                     |
+| :------------: | :----------------------------------------------------------: | :-------------------------------------------------: |
+| `is_published` | [`models.BooleanField` with `default` set to `False`](https://docs.djangoproject.com/en/3.2/ref/models/fields/#booleanfield) | This indicates whether an entry is published or not. |
+
+Additionally, this mixin has it's `objects` [manager](https://docs.djangoproject.com/en/3.2/topics/db/managers/#managers) overridden. Details will be posted later. 
+
+```python
+from django.db import models 
+
+class PublishedMixin(models.Model):
+    is_published = models.BooleanField(default=False)
+
+    @property
+    def is_public_viewable(self) -> bool:
+        return self.is_published
+
+    class Meta:
+        abstract = True
+```
