@@ -1,6 +1,6 @@
 # User Table 
 
-The user table inherits [`User`](https://docs.djangoproject.com/en/3.2/ref/contrib/auth/) model. View the link to see more properties of the `User` model. The inherited model extends `User` with new properties `role` and `is_verified`. 
+The user table inherits [`UUIDMixin`](./mixins.md#UUIDMixin) and [`User`](https://docs.djangoproject.com/en/3.2/ref/contrib/auth/) model. View the link to see more properties of the `User` model. The inherited model extends `User` with new properties `role` and `is_verified`. 
 
 |       Field        |                             Type                             |                         Description                          |
 | :----------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
