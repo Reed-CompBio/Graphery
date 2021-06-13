@@ -61,13 +61,28 @@ class TimeDateMixin(models.Model):
 | :------------: | :----------------------------------------------------------: | :-------------------------------------------------: |
 | `is_published` | [`models.BooleanField` with `default` set to `False`](https://docs.djangoproject.com/en/3.2/ref/models/fields/#booleanfield) | This indicates whether an entry is published or not. |
 
-Additionally, this mixin has it's `objects` [manager](https://docs.djangoproject.com/en/3.2/topics/db/managers/#managers) overridden. Details will be posted later. 
+Additionally, this mixin has it's `objects` [manager](https://docs.djangoproject.com/en/3.2/topics/db/managers/#managers) overridden. Details will be posted later. Here are some tools developers might need to create a manager: 
+
+* [`F()` expression](https://docs.djangoproject.com/en/3.2/ref/models/expressions/#f-expressions)
+
+* [`annotate(args*, **kwargs)`](https://docs.djangoproject.com/en/3.2/ref/models/querysets/#annotate)
+
+* [related post](https://stackoverflow.com/a/36996962)
+
+```python
+class PublishedManager(models.Manager):
+    """details coming later"""
+    pass
+
+```
 
 ```python
 from django.db import models 
 
 class PublishedMixin(models.Model):
     is_published = models.BooleanField(default=False)
+
+    objects = PublishedManager()
 
     @property
     def is_public_viewable(self) -> bool:
