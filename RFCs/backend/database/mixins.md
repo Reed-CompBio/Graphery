@@ -12,6 +12,29 @@ class PersonMixin(models.Model):
         abstract = True
 ```
 
+## UUIDMixin
+
+The `UUIDMixin` overrides the original primary key `id` so that it's a [`models.UUIDField`](https://docs.djangoproject.com/en/3.2/ref/models/fields/#uuidfield). 
+
+| Field |                             Type                             |              Description               |
+| :---: | :----------------------------------------------------------: | :------------------------------------: |
+| `id`  | [`models.UUIDField`](https://docs.djangoproject.com/en/3.2/ref/models/fields/#uuidfield) | Overrides the type of the primary key |
+
+**Every** model in Graphery must inherit this mixin. That is, every model in Graphery must use UUID as it's primary key. 
+
+```python
+from uuid import uuid4
+from django.db import models
+
+class UUIDMixin(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+
+    class Meta:
+        abstract = True
+```
+
+
+
 ## TimeDateMixin
 
 The `TimeDateMixin` is used to record the created time and modified time of entries in models inheriting this mixin. It has two fields: 
