@@ -12,7 +12,7 @@ class PersonMixin(models.Model):
         abstract = True
 ```
 
-## UUIDMixin
+## `UUIDMixin`
 
 The `UUIDMixin` overrides the original primary key `id` so that it's a [`models.UUIDField`](https://docs.djangoproject.com/en/3.2/ref/models/fields/#uuidfield). 
 
@@ -35,7 +35,7 @@ class UUIDMixin(models.Model):
 
 
 
-## TimeDateMixin
+## `TimeDateMixin`
 
 The `TimeDateMixin` is used to record the created time and modified time of entries in models inheriting this mixin. It has two fields: 
 
@@ -53,7 +53,7 @@ class TimeDateMixin(models.Model):
         abstract = True
 ```
 
-## PublishedMixin
+## `PublishedMixin`
 
 `PublishedMixin` is used to indicate whether an entry is publicly viewable without privileges. It has a `is_published` boolean field as the indicator. Additionally, a computed property `is_public_viewable` is provided to developers so that they use other conditions to determine whether an entry can be seen without privileges. `is_public_viewable` should be used, instead of `is_published`. 
 
@@ -91,3 +91,4 @@ class PublishedMixin(models.Model):
     class Meta:
         abstract = True
 ```
+
