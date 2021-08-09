@@ -53,42 +53,67 @@ class TimeDateMixin(models.Model):
         abstract = True
 ```
 
-## `PublishedMixin`
+## `PublicManager`
 
-`PublishedMixin` is used to indicate whether an entry is publicly viewable without privileges. It has a `is_published` boolean field as the indicator. Additionally, a computed property `is_public_viewable` is provided to developers so that they use other conditions to determine whether an entry can be seen without privileges. `is_public_viewable` should be used, instead of `is_published`. 
+Additionally, this mixin has it's `objects` [manager](https://docs.djangoproject.com/en/3.2/topics/db/managers/#managers) overridden. Details will be posted later. Here are some tools developers might need to create a manager: 
+
+* [`F()` expression](https://docs.djangoproject.com/en/3.2/ref/models/expressions/#f-expressions)
+* [`annotate(args*, **kwargs)`](https://docs.djangoproject.com/en/3.2/ref/models/querysets/#annotate)
+* [related post](https://stackoverflow.com/a/36996962)
+
+```python
+class PublicManager(models.Manager):
+    """details coming later"""
+    def __init__(self, *args, **kwargs) -> None:
+      
+    
+    def get_public_objects(self) -> QuerySet:
+			"""details coming later"""
+      pass
+```
+
+## `PublishedMixin` (Deprecated)
+
+`PublishedMixin` is used to indicate whether an entry is publicly viewable without privileges. It has a `is_published` boolean field as the indicator. Additionally, a computed property `is_public` is provided to developers so that they use other conditions to determine whether an entry can be seen without privileges. `is_public should be used, instead of `is_published`. 
 
 |     Field      |                             Type                             |                     Description                     |
 | :------------: | :----------------------------------------------------------: | :-------------------------------------------------: |
 | `is_published` | [`models.BooleanField` with `default` set to `False`](https://docs.djangoproject.com/en/3.2/ref/models/fields/#booleanfield) | This indicates whether an entry is published or not. |
 
-Additionally, this mixin has it's `objects` [manager](https://docs.djangoproject.com/en/3.2/topics/db/managers/#managers) overridden. Details will be posted later. Here are some tools developers might need to create a manager: 
-
-* [`F()` expression](https://docs.djangoproject.com/en/3.2/ref/models/expressions/#f-expressions)
-
-* [`annotate(args*, **kwargs)`](https://docs.djangoproject.com/en/3.2/ref/models/querysets/#annotate)
-
-* [related post](https://stackoverflow.com/a/36996962)
-
 ```python
-class PublishedManager(models.Manager):
-    """details coming later"""
-    pass
+from django.db import models
 
-```
-
-```python
-from django.db import models 
+class PublishedManager(PublicManager):
+  def get_public_objects(self) -> QuerySet:
+    return self.annotate()
 
 class PublishedMixin(models.Model):
     is_published = models.BooleanField(default=False)
 
-    objects = PublishedManager()
-
     @property
-    def is_public_viewable(self) -> bool:
+    def is_public(self) -> bool:
         return self.is_published
 
     class Meta:
         abstract = True
 ```
 
+## `StatusMixin`
+
+`StatusMixin` is intended to be a replacement for `PublishedMixin`. In the status mixin, developers can assign statuses other than `published` and `not published`, enabling for more flexible access control. 
+
+|     Field     |        Type        |                         Description                          |
+| :-----------: | :----------------: | :----------------------------------------------------------: |
+| `item_status` | `models.CharField` | This field, having a size of 20 chars, indicates the status of an item in the database. The content of the `CharIField` is restricted to the following status list. |
+
+### Status List
+
+The status list shows all the possible status code `item_status` can have. All the codes are all caps. 
+
+| Status Name | Status Code | Description                                                  |
+| :---------: | :---------: | ------------------------------------------------------------ |
+|    draft    |   `DRAFT`   | incomplete and only viewable by anyone with proper user role. |
+|  publisehd  | `PUBLISHED` | complete and viewable by everyone.                           |
+|  reviewing  | `REVIEWING` | waiting to be published by user with publishing capability.  |
+|   private   |  `PRIVATE`  | only viewable by internal staff.                             |
+|    trash    |   `TRASH`   | trashed.                                                     |
