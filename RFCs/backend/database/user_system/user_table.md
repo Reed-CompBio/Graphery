@@ -10,8 +10,8 @@ The user table inherits [`UUIDMixin`](./mixins.md#UUIDMixin) and [`User`](https:
 
 |     `role`      |                         Description                          | Restriction If Unverified |
 | :-------------: | :----------------------------------------------------------: | ------------------------- |
-| `Administrator` | `Administrator`s have all the privileges: `view`, `add`, `edit`, `delete` tutorials and other contents, `view`,  `add`, `change`, `delete` users and have access to the Django admin site. |                           |
-|    `Editor`     | `Editor`s have access to `view`,  `add`, `edit`, `delete` privileges for tutorials and other contents. |                           |
+| `Administrator` | `Administrator`s have all the privileges: `view`, `add`, `edit`, `publish`, `delete` tutorials and other contents, `view`,  `add`, `change`, `delete` users and have access to the Django admin site. |                           |
+|    `Editor`     | `Editor`s have access to `view`,  `add`, `edit`,  `publish`, `delete` privileges for tutorials and other contents. |                           |
 |    `Author`     | `Author`s have access to `view`, `add`, `edit` privileges for tutorials and other contents. |                           |
 |  `Translator`   | `Translators` have access to `view` and `edit` privileges for tutorials but only `view` privileges for other contents. |                           |
 |    `Visitor`    | `Visitors` can only `view` the tutorials and other content in the control panel. |                           |
