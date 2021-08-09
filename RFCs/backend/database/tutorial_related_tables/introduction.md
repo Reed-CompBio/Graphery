@@ -24,3 +24,12 @@ This document explains the terms used in the database classes.
 |     tutorial translation content      |          The main content of a tutorial translation          |
 | tutorial translation content markdown |    The markdown version of a tutorial translation content    |
 |   tutorial translation content html   |      The HTML version of a tutorial translation content      |
+
+## Graph
+
+## Code
+
+## Execution Result
+
+## Upload File
+
