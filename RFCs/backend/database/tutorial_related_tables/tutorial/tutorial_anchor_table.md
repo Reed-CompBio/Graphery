@@ -5,8 +5,8 @@ A tutorial anchor serves as an entry point to every tutorial, since it contains 
 ## Mixins
 
 * [`UUIDMixin`](/RFCs/backend/database/mixins.md#UUIDMixin)
-* `TimeDateMixin`
-* `StatusMixin`
+* [`TimeDateMixin`](/RFCs/backend/database/mixins.md#TimeDateMixin)
+* [`StatusMixin`](/RFCs/backend/database/mixins.md#StatusMixin)
 
 ## Fields 
 
