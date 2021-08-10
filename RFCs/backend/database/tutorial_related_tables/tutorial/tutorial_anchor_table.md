@@ -10,9 +10,9 @@ A tutorial anchor serves as an entry point to every tutorial, since it contains 
 
 ## Fields 
 
-| Field  |        Type        | Description |
-| :----: | :----------------: | :---------: |
-| `url`  | `models.CharField` |             |
-| `name` | `models.TextField` |             |
-| `tags` | `FK(TutorialTag)`  |             |
+| Field  |                             Type                             |                         Description                          |
+| :----: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+| `url`  |                      `models.CharField`                      | The unique URL pointing to the corresponding tutorial content. |
+| `name` |                      `models.TextField`                      |               The unique name for this anchor.               |
+| `tags` | [`FK(TutorialTag)`](/RFCs/backend/database/tutorial_related_tables/tag/tutorial_tag_table.md) |        The tutorial tags associated with this anchor.        |
 
