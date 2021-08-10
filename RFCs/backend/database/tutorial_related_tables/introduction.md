@@ -39,6 +39,9 @@ This document explains the terms used in the database classes.
 |          graph tag           |               Tag associated with this graph.                |
 |         graph maker          |                   Maker of the graph JSON.                   |
 |         graph source         |                   The source of the graph.                   |
+|      graph description       |       The table storing textual descriptions of graphs       |
+|   graph description title    |              The title of the graph description              |
+|  graph description content   |              The textual description of a graph              |
 | tutorial of this graph (TBD) |            The tutorial that's using this graph.             |
 
 ## Code
