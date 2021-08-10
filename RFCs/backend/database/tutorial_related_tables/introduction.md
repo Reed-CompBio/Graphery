@@ -27,6 +27,14 @@ This document explains the terms used in the database classes.
 
 ## Graph
 
+| Term | Description |
+| :--: | :---------: |
+|      |             |
+|      |             |
+|      |             |
+
+
+
 ## Code
 
 ## Execution Result
