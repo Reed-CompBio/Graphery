@@ -13,4 +13,5 @@ The `GraphContent` table stores abstract descriptions of graphs in JSON and othe
 |     Field      |                             Type                             |             Desciption              |
 | :------------: | :----------------------------------------------------------: | :---------------------------------: |
 | `graph_anchor` | [`OTO(GraphAnchor)`](/RFCs/backend/database/tutorial_related_tables/graph/graph_anchor_table.md) | The graph meta data of this graph.  |
+|    `makers`    | [`MTM(User)`](/RFCs/backend/database/user_system/user_table.md) |      The makers of this graph       |
 |     `cyjs`     |                      `models.JSONField`                      | graph description in `cyjs` format. |
