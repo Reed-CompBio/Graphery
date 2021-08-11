@@ -113,7 +113,14 @@ The status list shows all the possible status code `item_status` can have. All t
 | Status Name | Status Code | Description                                                  |
 | :---------: | :---------: | ------------------------------------------------------------ |
 |    draft    |   `DRAFT`   | incomplete and only viewable by anyone with proper user role. |
-|  publisehd  | `PUBLISHED` | complete and viewable by everyone.                           |
+|  published  | `PUBLISHED` | complete and viewable by everyone.                           |
 |  reviewing  | `REVIEWING` | waiting to be published by user with publishing capability.  |
 |   private   |  `PRIVATE`  | only viewable by internal staff.                             |
 |    trash    |   `TRASH`   | trashed.                                                     |
+
+## Additional Argument 
+
+| Variable Name     | Type  | Description                                              |
+| ----------------- | ----- | -------------------------------------------------------- |
+| `_default_status` | `str` | The default status used when no status code is supplied. |
+
