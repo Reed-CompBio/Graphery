@@ -15,7 +15,7 @@ Every entry in `TutorialTranslationBase` is linked to one anchor and is the one 
 | `tutorial_anchor` | [`OTO(TutorialAnchor)`](/RFCs/backend/database/tutorial_related_tables/tutorial/tutorial_anchor_table.md) |             |
 |     `authors`     | [`MTM(User)`](/RFCs/backend/database/user_system/user_table.md) |             |
 |      `title`      |                      `models.TextField`                      |             |
-|    `abstract`     |                       models.TextField                       |             |
-|   `content_md`    |                       models.TextField                       |             |
-|  `content_html`   |                       models.TextField                       |             |
+|    `abstract`     |                      `models.TextField`                      |             |
+|   `content_md`    |                      `models.TextField`                      |             |
+|  `content_html`   |                      `models.TextField`                      |             |
 
