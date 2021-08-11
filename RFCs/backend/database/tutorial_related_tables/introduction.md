@@ -17,7 +17,7 @@ This document explains the terms used in the database classes.
 |           textual tutorial            |         Also know as the text content of a tutorial          |
 |              tutorial ID              |               The unique UUID of the tutorial.               |
 |             tutorial URL              | The URL that users use to access the corresponding tutorial content. |
-|            tutorial anchor            | The table that is used to store tutorials' metadata. This includes the `tutorial url`, `tutorial anchor name`, `tutorial tags`, etc.  See `tutorial_anchor_table.md` for more information. |
+|            tutorial anchor            | a collection of a tutorial's metadata. This includes the `tutorial url`, `tutorial anchor name`, `tutorial tags`, etc.  See `tutorial_anchor_table.md` for more information. |
 |         tutorial anchor name          |                The name of a tutorial anchor.                |
 |             tutorial tag              |        See `tutorial tag` above in the `Tag` section.        |
 |         tutorial translation          | The translation of a tutorial. This includes the `tutorial translation title`, `tutorial translation authors`, `tutorial translation abstract`, etc. Note that English (the default language of this site) is a special case of tutorial content. See `tutorial_translation_table.md` and documents for its subclasses for more information. |
@@ -32,6 +32,7 @@ This document explains the terms used in the database classes.
 
 |             Term             |                         Description                          |
 | :--------------------------: | :----------------------------------------------------------: |
+|         graph anchor         |              a collection of a graph's metadata              |
 |           graph ID           |                The unique UUID of the graph.                 |
 |          graph URL           |  The URL that users use to access the corresponding graph.   |
 |          graph name          |                    The name of the graph.                    |
@@ -39,7 +40,8 @@ This document explains the terms used in the database classes.
 |          graph tag           |               Tag associated with this graph.                |
 |         graph maker          |                   Maker of the graph JSON.                   |
 |         graph source         |                   The source of the graph.                   |
-|      graph description       |       The table storing textual descriptions of graphs       |
+|        graph content         | The descrition of graphs in JSON and other format. This is different than the graph description. See below for more details. |
+|      graph description       | The table storing textual descriptionsof a graph, which states what the graph is about, etc. |
 |   graph description title    |              The title of the graph description              |
 |  graph description content   |              The textual description of a graph              |
 | tutorial of this graph (TBD) |            The tutorial that's using this graph.             |
