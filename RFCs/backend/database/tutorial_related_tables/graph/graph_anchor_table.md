@@ -10,10 +10,9 @@ The `GraphAnchor` is used to store all the graphs' metadata. This class is very 
 
 ## Fields
 
-| Field    | Type                                                         | Description                                         |
-| -------- | ------------------------------------------------------------ | --------------------------------------------------- |
-| `url`    | `models.CharField`                                           | The unique URL pointing to the corresponding graph. |
-| `name`   | `models.TextField`                                           | The unique name for this anchor.                    |
-| `tags`   | [`FK(TutorialTag)`](/RFCs/backend/database/tutorial_related_tables/tag/tutorial_tag_table.md) | The graph tags associated with this anchor.         |
-| `makers` | [`MTM(User)`](/RFCs/backend/database/user_system/user_table.md) | The makers of this graph                            |
+| Field  | Type                                                         | Description                                         |
+| ------ | ------------------------------------------------------------ | --------------------------------------------------- |
+| `url`  | `models.CharField`                                           | The unique URL pointing to the corresponding graph. |
+| `name` | `models.TextField`                                           | The unique name for this anchor.                    |
+| `tags` | [`FK(GraphTag)`](/RFCs/backend/database/tutorial_related_tables/tag/graph_tag_table.md) | The graph tags associated with this anchor.         |
 
