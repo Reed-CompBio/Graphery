@@ -4,9 +4,7 @@
 
 ## Mixins
 
-* [`UUIDMixin`](/RFCs/backend/database/mixins.md#UUIDMixin)
-* [`TimeDateMixin`](/RFCs/backend/database/mixins.md#TimeDateMixin)
-* [`StatusMixin`](/RFCs/backend/database/mixins.md#StatusMixin)
+No additional mixins. 
 
 ## Fields
 
