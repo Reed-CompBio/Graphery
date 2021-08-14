@@ -2,10 +2,17 @@
 
 ## API versions
 
-* <a href="#2.0">2.0</a>
-* <a href="#1.0">1.0 (Depricated)</a>
+*   <a href="#3-0">3.0</a>
+*   <a href="#2.0">2.0</a>
+*   <a href="#1-0">1.0 (Depricated)</a>
 
-## 2.0 API {#2.0}
+## 3.0 API {#3-0}
+
+Credit: a lot of changes were inspired by [PyTutor](https://github.com/okpy/pytutor/). 
+
+
+
+## 2.0 API {#2-0}
 
 A _record array_ looks like this. Each element in the record array is called _record object_ or simply _record_. 
 
@@ -161,7 +168,7 @@ Here is an example:
         "properties": {
             "property_1": "str or number"
             ...
-        },
+        },  # (required only by graph objects like nodes and edges)
         "python_id": 123456789
     }, 
     {
@@ -219,7 +226,7 @@ The `color` is used to in the visualization. The value of `color` must be a stri
 
 The field `id` is the id of the graph element. The field facilitates the interaction with and is required by the Cytoscape module. 
 
-##### `property`
+##### `property` (only bounded to graph objects like nodes and edges)
 
 The item is `property` which is a graph-element-specific item. That is, only graph elements have this item. The `property` contains the properties that's needed to be displayed on the tooltips in the Cytoscape window. Currently, the value of the `property` mapping should only be a string or a number. 
 
@@ -233,7 +240,7 @@ The `accesses` contains a list of accessed values from some function calls. If a
 
 The new variable list is going to bring up the changed variables. So `order` is a new field that going to specify the order of the variables on the variable list. Since the dictionary used in the variable list preserves the insertion order, one way to get around `order` field is by deleting the variable and add it back as if it's a new record. 
 
-## 1.0 API (Depricated) {#1.0}
+## 1.0 API (Depricated) {#1-0}
 
 ```python
 record_array = [
