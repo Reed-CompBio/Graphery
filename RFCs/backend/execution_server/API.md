@@ -16,12 +16,12 @@ interface request_object {
 }
 
 interface request_options {
-    version: '1';
+    version?: '3' | '2';
 		rand_seed?: int;
 }
 
 let default_request_options: request_options = {
-  version: '1';
+  version: '3';
   rand_seed: 0;
 }
 ```
