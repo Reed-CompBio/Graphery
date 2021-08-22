@@ -1,4 +1,6 @@
-# Environment Variables
+# Variables
+
+## Environment Variables
 
 The executor uses the a bunch of environment variables to determine the content it serves. Every environment variable starts with `GE_` which is short for graphery executor. 
 
@@ -9,4 +11,3 @@ The executor uses the a bunch of environment variables to determine the content 
 |   `ALLOWED_ORIGIN`   |     `None`     |      The allowed origin to access the executor server.       |
 | `EXECUTION_TIME_OUT` |      `5`       | The time in seconds during which the executor is allowed to run. |
 |   `CONSOLE_OUTPUT`   |     `True`     | The used to indicate if the exeuctor should output the execution process to the stdout. |
-
