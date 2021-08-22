@@ -11,3 +11,9 @@ The executor uses the a bunch of environment variables to determine the content 
 |   `ALLOWED_ORIGIN`   |     `None`     |      The allowed origin to access the executor server.       |
 | `EXECUTION_TIME_OUT` |      `5`       | The time in seconds during which the executor is allowed to run. |
 |   `CONSOLE_OUTPUT`   |     `True`     | The used to indicate if the exeuctor should output the execution process to the stdout. |
+
+## Custom Variables 
+
+|     Variable     | Default Values |         Description         |
+| :--------------: | :------------: | :-------------------------: |
+| `SERVER_VERSION` |    `3.0.0`     | The version of this server. |
