@@ -18,11 +18,13 @@ interface request_object {
 interface request_options {
     version?: '3' | '2';
 		rand_seed?: int;
+  	float_precision?: int;
 }
 
 let default_request_options: request_options = {
   version: '3';
   rand_seed: 0;
+  float_precision: 4;
 }
 ```
 
@@ -34,3 +36,4 @@ interface response_object {
 }
 ```
 
+where the `execution_result` follows the [`result JSON API `](/RFCs/backend/database/tutorial_related_tables/execution_result/result_json_api.md). 
