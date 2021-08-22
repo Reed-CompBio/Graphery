@@ -8,9 +8,89 @@
 
 ## 3.0 API {#3-0}
 
-Credit: a lot of changes were inspired by [PyTutor](https://github.com/okpy/pytutor/). 
+Credit: a lot of internal changes were inspired by [PyTutor](https://github.com/okpy/pytutor/). 
 
+```typescript
+type python_graph_object_type = "Node" | "Edge";
 
+type python_object_type =
+  | "Number"
+  | "String"
+  | "List"
+  | "Tuple"
+  | "Deque"
+  | "None"
+  | "Set"
+  | "Mapping"
+  | "Sequence"
+  | "Object";
+
+type special_object_type = "Init" | "Ref";
+
+type object_type =
+  | python_graph_object_type
+  | python_object_type
+  | special_object_type;
+
+type object_identity_seperator = "\u200b@";
+
+type object_identity_type = `${string}${object_identity_seperator}${string}`;
+
+interface compositional_object_identity_type {
+  type: object_type;
+  color: string;
+  repr: string;
+  properties?: {
+    graph_id: string;
+    [key: string]: string | number;
+  };
+  python_id: number;
+}
+
+interface record_type {
+  line: number;
+  variables: {
+    [key: string]: compositional_object_identity_type;
+  };
+  accesses?: compositional_object_identity_type[];
+  variable_orders?: string[];
+  stdout?: string;
+}
+
+type record_array_type = record_type[];
+```
+
+Examples:
+
+```typescript
+
+let an_example: compositional_object_identity_type = {
+  type: "Node",
+  color: "#3A5F99",
+  repr: "animal node",
+  properties: {
+    graph_id: "#19",
+    degree: 19,
+  },
+  python_id: 4411533616,
+};
+
+let two_example: compositional_object_identity_type = {
+  type: "Number",
+  color: "#334766",
+  repr: "20",
+  python_id: 4411533616,
+};
+
+let one_more_example: record_type = {
+  line: 18,
+  variables: {
+    "main\u200b@test_var": an_example,
+  },
+  accesses: [two_example],
+  stdout: "hello world! \n",
+};
+```
 
 ## 2.0 API {#2-0}
 
