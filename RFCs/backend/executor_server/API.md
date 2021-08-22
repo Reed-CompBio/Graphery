@@ -4,7 +4,10 @@
 
 There are two sets of API, one for incoming requests and one for responses. 
 
-## Request
+
+## 3.0 API
+
+### Request
 
 The request object looks like the following. 
 
@@ -35,7 +38,7 @@ let default_request_options: request_options = {
 }
 ```
 
-## Response
+### Response
 
 ```typescript
 interface response_object {
