@@ -19,12 +19,19 @@ interface request_options {
     version?: '3' | '2';
 		rand_seed?: int;
   	float_precision?: int;
+  	input_list?: string;
 }
 
+```
+
+If any of the request options is undefined, we use the default options to make sure it doesn't have undefined fields.
+
+```typescript
 let default_request_options: request_options = {
   version: '3';
   rand_seed: 0;
   float_precision: 4;
+  input_list: '';  // not decided yet 
 }
 ```
 
