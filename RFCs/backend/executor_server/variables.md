@@ -14,6 +14,7 @@ The executor uses the a bunch of environment variables to determine the content 
 
 ## Custom Variables 
 
-|     Variable     | Default Values |         Description         |
-| :--------------: | :------------: | :-------------------------: |
-| `SERVER_VERSION` |    `3.0.0`     | The version of this server. |
+|     Variable     | Default Values |                         Description                          |
+| :--------------: | :------------: | :----------------------------------------------------------: |
+| `SERVER_VERSION` |    `3.0.0`     | The version of this server. The first digit of the server version matches the version of the result JSON API version. |
+
