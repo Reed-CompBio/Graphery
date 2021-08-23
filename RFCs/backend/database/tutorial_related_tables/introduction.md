@@ -58,8 +58,8 @@ This document explains the terms used in the database classes.
 
 |        Term         |                   Description                    |
 | :-----------------: | :----------------------------------------------: |
-| Execution Result ID |      The unique UUID of a execution result.      |
-|  Execution Result   | The execution result of some code on some graph. |
+| execution result ID |      The unique UUID of a execution result.      |
+|  execution result   | The execution result of some code on some graph. |
 
 ## Uploads
 
