@@ -9,11 +9,11 @@ The `ExecutionResult` table contains the execution results. Each of the result i
 
 ## Fields
 
-| Field              | Type               | Description |
-| ------------------ | ------------------ | ----------- |
-| `code`             | `FK(Code)`         |             |
-| `graph`            | `FK(GraphAnchor)`  |             |
-| `result_json`      | `models.JSONField` |             |
+|       Field        |        Type        | Description |
+| :----------------: | :----------------: | :---------: |
+|       `code`       |     `FK(Code)`     |             |
+|      `graph`       | `FK(GraphAnchor)`  |             |
+|   `result_json`    | `models.JSONField` |             |
 | `result_json_meta` | `models.JSONField` |             |
 
 ## Result JSON API
