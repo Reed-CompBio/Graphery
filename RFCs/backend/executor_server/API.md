@@ -20,9 +20,9 @@ interface request_object {
 
 interface request_options {
     version?: '3' | '2';
-		rand_seed?: int;
-  	float_precision?: int;
-  	input_list?: string;
+    rand_seed?: int;
+    float_precision?: int;
+    input_list?: string;
 }
 
 ```
