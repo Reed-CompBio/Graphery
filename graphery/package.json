@@ -1,6 +1,6 @@
 {
   "name": "graphery",
-  "version": "0.25.13",
+  "version": "0.25.14",
   "private": true,
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
-    "@quasar/extras": "^1.9.12",
+    "@quasar/extras": "^1.12.4",
     "axios": "^0.21.1",
     "core-js": "^3.8.1",
     "cytoscape": "^3.17.1",
@@ -55,7 +55,7 @@
     "mime-types": "^2.1.27",
     "monaco-editor": "^0.20.0",
     "monaco-editor-webpack-plugin": "^1.9.1",
-    "quasar": "^1.15.0",
+    "quasar": "^1.17.8",
     "tippy.js": "^6.2.7",
     "vue": "^2.6.12",
     "vue-class-component": "^7.2.5",
