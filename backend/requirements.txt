@@ -10,7 +10,7 @@ cffi==1.14.5
 channels-redis==3.0.1
 channels==2.4.0
 constantly==15.1.0
-cryptography==3.4.7
+cryptography==39.0.1
 daphne==2.5.0
 django-cors-headers==3.5.0
 django-filter==2.4.0
